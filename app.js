@@ -25,7 +25,7 @@ global.environment  = require(__dirname + '/config/environments/' + ENV)
 _.extend(global.settings, global.environment)
  
 // boot 
-require('./server');
+require('./server').listen(global.environment.windshaft_port);
 
 
 
