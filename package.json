@@ -1,0 +1,29 @@
+{
+    "private": true,
+    "name": "windshaft",
+    "version": "0.0.1",
+    "description": "Simple PostGIS Mapnik tile server",
+    "url": "https://github.com/tokumine/windshaft",
+    "licenses": [{ "type": "MIT" }],
+    "repositories": [{
+        "type": "git",
+        "url": "git://github.com/tokumine/windshaft.git"
+    }],
+    "author": {
+      "name": "Simon Tokumine",
+      "url": "http://tokumine.com/",
+      "email": "si@tinypla.net"
+    },
+    "dependencies": {
+        "underscore"  : "1.1.x",
+        "step": "0.0.x",
+        "generic-pool": "1.0.x",
+        "grainstore": "0.0.2"
+    },
+    "devDependencies": {
+        "expresso": "0.8.x"
+    },
+    "scripts": {
+        "test": "which expresso | sh"
+    }
+}
