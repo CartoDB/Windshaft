@@ -15,8 +15,8 @@ var windshaft = function(){
   });
 
 
-  app.get('/tiles/db/:db_name/table/:table_name/:x/:y/:z.*', function(req, res){  
-    var mml_builder = mml_store.mml_builder(_.extend(req.query, req.params));
+  app.get('/tiles/db/:db_name/table/:table_name/:z/:x/:y/.*', function(req, res){  
+    var mml_builder = mml_store.mml_builder(_.extend(req.query, req.params)); //don't do this.
     
     mml_builder.toXML(function(err,data){
       if (err){
