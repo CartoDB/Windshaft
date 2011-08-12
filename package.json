@@ -20,6 +20,7 @@
         "generic-pool": "1.0.x",
         "grainstore": "0.0.2",
         "express": "2.4.3",
+        "tilelive": "4.0.4",
         "tilelive-mapnik": "0.2.1"
     },
     "devDependencies": {

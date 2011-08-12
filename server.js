@@ -1,7 +1,8 @@
 var express    = require('express')
   , grainstore = require('grainstore')
   , _          = require('underscore')
-  , mapnik     = require('tilelive-mapnik');
+  , tilelive = require('tilelive');
+  require('tilelive-mapnik').registerProtocols(tilelive);;
 
 var windshaft = function(){
   
@@ -15,8 +16,8 @@ var windshaft = function(){
   });
 
 
-  app.get('/tiles/db/:db_name/table/:table_name/:z/:x/:y/.*', function(req, res){  
-    var mml_builder = mml_store.mml_builder(_.extend(req.query, req.params)); //don't do this.
+  app.get('/tiles/db/:db_name/table/:table_name/:z/:x/:y.*', function(req, res){  
+    var mml_builder = mml_store.mml_builder(_.extend(req.query, req.params)); //TODO: make more secure
     
     mml_builder.toXML(function(err,data){
       if (err){
@@ -35,7 +36,7 @@ var windshaft = function(){
             }
         };              
         
-        new mapnik(uri, function(err, source) {
+        tilelive.load(uri, function(err, source) {
             if (err) throw err;
             
             var my_func = (req.params[0] === 'grid.json') ? 'getGrid' : 'getTile';
