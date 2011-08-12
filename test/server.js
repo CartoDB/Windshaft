@@ -144,3 +144,15 @@ tests["get'ing a tile with default style and sql should return a constrained ima
 };
 
 
+tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
+  var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950) as foo"})
+  assert.response(server, {
+    url: '/tiles/db/cartodb_user_123_db/table/gadm4/31/24/6.png?' + sql,
+    method: 'GET'
+  },{
+    status: 200,
+    headers: { 'Content-Type': 'image/png' }
+  });
+};
+
+
