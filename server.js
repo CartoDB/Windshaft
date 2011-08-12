@@ -1,8 +1,7 @@
 var express    = require('express')
   , grainstore = require('grainstore')
   , _          = require('underscore')
-  , tilelive = require('tilelive');
-  require('tilelive-mapnik').registerProtocols(tilelive);;
+  , mapnik     = require('tilelive-mapnik');
 
 var windshaft = function(){
   
@@ -36,7 +35,7 @@ var windshaft = function(){
             }
         };              
         
-        tilelive.load(uri, function(err, source) {
+        new mapnik(uri, function(err, source) {
             if (err) throw err;
             
             var my_func = (req.params[0] === 'grid.json') ? 'getGrid' : 'getTile';
