@@ -2,16 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="385e0db9-4d2f-4658-9e13-d1788d49b818" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/windshaft/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/windshaft/map_pool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/windshaft/windshaft.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/acceptance/server.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/unit/windshaft.test.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/map_pool.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/server.js" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/environments/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/cartodb/carto_data.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/cartodb/redis_pool.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/cartodb/server_options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/windshaft/server.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/test_helper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/unit/cartodb/redis_pool.test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/unit/windshaft/windshaft.test.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/windshaft/windshaft.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/unit/windshaft.test.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/environments/development.js" afterPath="$PROJECT_DIR$/config/environments/development.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/environments/production.js" afterPath="$PROJECT_DIR$/config/environments/production.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/windshaft/index.js" afterPath="$PROJECT_DIR$/lib/windshaft/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/acceptance/server.js" afterPath="$PROJECT_DIR$/test/acceptance/server.js" />
     </list>
     <ignored path="windshaft.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,37 +41,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="app.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app.js">
+      <file leaf-file-name="windshaft.test.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/unit/windshaft/windshaft.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="21" selection-end="21" vertical-scroll-proportion="0.0">
+            <state line="35" column="35" selection-start="1174" selection-end="1174" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="windshaft.test.js" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/unit/windshaft.test.js">
+      <file leaf-file-name="test_helper.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/test_helper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="0" selection-start="162" selection-end="162" vertical-scroll-proportion="0.06841505">
+            <state line="11" column="65" selection-start="299" selection-end="299" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="redis_pool.test.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/unit/cartodb/redis_pool.test.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="16" selection-start="798" selection-end="798" vertical-scroll-proportion="0.0">
+            <state line="2" column="56" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -73,7 +71,34 @@
       <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="5" selection-start="0" selection-end="5280" vertical-scroll-proportion="0.0">
+            <state line="118" column="50" selection-start="3645" selection-end="3645" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="58" column="23" selection-start="1745" selection-end="1745" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="0" selection-start="647" selection-end="720" vertical-scroll-proportion="0.017502917">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="server_options.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/cartodb/server_options.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="0" selection-start="970" selection-end="970" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -88,19 +113,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/windshaft/index.js">
+      <file leaf-file-name="carto_data.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/cartodb/carto_data.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="11" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0">
+            <state line="20" column="30" selection-start="468" selection-end="479" vertical-scroll-proportion="-5.4545455">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="windshaft.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/windshaft/windshaft.js">
+      <file leaf-file-name="redis_pool.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/cartodb/redis_pool.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="55" column="33" selection-start="1458" selection-end="1458" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -120,18 +145,40 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/server.js" />
-        <option value="$PROJECT_DIR$/test_arp.js" />
-        <option value="$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/mapnik.js" />
-        <option value="$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/render.js" />
-        <option value="$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/lockingcache.js" />
-        <option value="$PROJECT_DIR$/test/monkeytest/index.html" />
-        <option value="$PROJECT_DIR$/server.js" />
-        <option value="$PROJECT_DIR$/lib/map_pool.js" />
         <option value="$PROJECT_DIR$/lib/windshaft/index.js" />
         <option value="$PROJECT_DIR$/test/unit/windshaft.test.js" />
+        <option value="$PROJECT_DIR$/lib/windshaft/redis_pool.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/test/unit/redis_pool.test.js" />
+        <option value="$PROJECT_DIR$/lib/windshaft/server_options.js" />
+        <option value="$PROJECT_DIR$/lib/windshaft/metadata.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/metadata.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/test/unit/cartodb/redis_pool.test.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/redis_pool.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/carto_data.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/server_options.js" />
+        <option value="$PROJECT_DIR$/test/unit/windshaft/windshaft.test.js" />
+        <option value="$PROJECT_DIR$/lib/windshaft/server.js" />
+        <option value="$PROJECT_DIR$/test/acceptance/server.js" />
       </list>
     </option>
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Spelling</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -185,42 +232,6 @@
               <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="unit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="windshaft" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="windshaft" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="windshaft" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="windshaft" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="acceptance" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -240,6 +251,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="windshaft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="windshaft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cartodb" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -248,7 +277,7 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="preferences.sourceCode" />
+    <property name="options.lastSelected" value="Errors" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
   </component>
@@ -271,6 +300,7 @@
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
     <option name="FORCE_UPDATE" value="false" />
+    <configuration useDefault="true">$USER_HOME$/.subversion_IDEA</configuration>
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="TaskManager">
@@ -290,7 +320,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23053342" sideWeight="0.0" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19926426" sideWeight="0.0" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -346,44 +376,95 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/grainstore/package.json">
+    <entry file="file://$PROJECT_DIR$/config/environments/production.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/settings.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/environments/development.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/generic-pool/lib/generic-pool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="204" column="28" selection-start="5796" selection-end="5804" vertical-scroll-proportion="-10.884615" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/render.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="4" selection-start="3579" selection-end="3579" vertical-scroll-proportion="-8.653846" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/lockingcache.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="0" selection-start="393" selection-end="393" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/tilelive-mapnik/lib/mapnik.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="51" selection-start="1848" selection-end="1848" vertical-scroll-proportion="-33.46154" />
+        <state line="3" column="39" selection-start="247" selection-end="247" vertical-scroll-proportion="0.051311288">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/monkey/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="88" selection-start="458" selection-end="458" vertical-scroll-proportion="-10.0" />
+        <state line="20" column="11" selection-start="653" selection-end="653" vertical-scroll-proportion="0.3516999">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/environments/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="31" selection-start="31" selection-end="31" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="28" selection-start="678" selection-end="678" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="0" selection-start="685" selection-end="875" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/windshaft/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="9" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/cartodb/redis_pool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="33" selection-start="1458" selection-end="1458" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/cartodb/carto_data.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="30" selection-start="468" selection-end="479" vertical-scroll-proportion="-5.4545455">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/unit/windshaft/windshaft.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="35" selection-start="1174" selection-end="1174" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_helper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="65" selection-start="299" selection-end="299" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/unit/cartodb/redis_pool.test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="56" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/cartodb/server_options.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="0" selection-start="970" selection-end="970" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="50" selection-start="3645" selection-end="3645" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/windshaft/map_pool.js">
@@ -393,51 +474,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/windshaft/windshaft.js">
+    <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="58" column="23" selection-start="1745" selection-end="1745" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="16" selection-start="798" selection-end="798" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="21" selection-end="21" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="5" selection-start="0" selection-end="5280" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/windshaft/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="11" selection-start="30" selection-end="30" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/unit/windshaft.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="162" selection-end="162" vertical-scroll-proportion="0.06841505">
+        <state line="17" column="0" selection-start="647" selection-end="720" vertical-scroll-proportion="0.017502917">
           <folding />
         </state>
       </provider>

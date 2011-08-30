@@ -20,6 +20,8 @@
         "generic-pool": "1.0.x",
         "grainstore": "0.0.4",
         "express": "2.4.3",
+        "redis": "0.6.7",
+        "hiredis": "0.1.12",
         "tilelive": "4.0.4",
         "tilelive-mapnik": "0.2.1"
     },

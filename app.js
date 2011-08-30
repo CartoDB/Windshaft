@@ -1,7 +1,5 @@
-#!/usr/bin/env node
-
 /*
-* Windshaft loader
+* Windshaft
 * ===============
 *
 * ./app.js [environment]
@@ -10,6 +8,8 @@
 */
 
 var _ = require('underscore');
+var Windshaft = require('lib/windshaft');
+var serverOptions = require('lib/cartodb/server_options');
 
 // sanity check
 var ENV = process.argv[2]
@@ -23,9 +23,11 @@ if (ENV != 'development' && ENV != 'production'){
 global.settings     = require(__dirname + '/config/settings')
 global.environment  = require(__dirname + '/config/environments/' + ENV)
 _.extend(global.settings, global.environment)
- 
-// boot 
-require('./server').listen(global.environment.windshaft_port);
+
+
+// boot
+var ws = new Windshaft.Server(serverOptions);
+ws.listen(global.environment.windshaft_port);
 console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
 
 

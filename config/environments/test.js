@@ -1,4 +1,4 @@
-module.exports.name             = 'development';
+module.exports.name             = 'test';
 module.exports.db               = {user: 'postgres', host: '127.0.0.1', port: 5432};
 module.exports.redis            = {host: '127.0.0.1', 
                                    port: 6379, 
