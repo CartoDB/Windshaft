@@ -26,7 +26,7 @@ _.extend(global.settings, global.environment)
  
 // boot 
 require('./server').listen(global.environment.windshaft_port);
-
+console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
 
 
 
