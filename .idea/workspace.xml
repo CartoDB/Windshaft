@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="385e0db9-4d2f-4658-9e13-d1788d49b818" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/cartodb/carto_data.js" afterPath="$PROJECT_DIR$/lib/cartodb/carto_data.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/cartodb/server_options.js" afterPath="$PROJECT_DIR$/lib/cartodb/server_options.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/windshaft/server.js" afterPath="$PROJECT_DIR$/lib/windshaft/server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/acceptance/server.js" afterPath="$PROJECT_DIR$/test/acceptance/server.js" />
     </list>
     <ignored path="windshaft.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -55,19 +56,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="50" selection-start="3645" selection-end="3645" vertical-scroll-proportion="0.0">
+            <state line="153" column="0" selection-start="4565" selection-end="4565" vertical-scroll-proportion="0.8578199">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="7" selection-start="3019" selection-end="3019" vertical-scroll-proportion="0.84247375">
+            <state line="11" column="33" selection-start="323" selection-end="323" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -85,7 +86,7 @@
       <file leaf-file-name="server_options.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/cartodb/server_options.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="0" selection-start="1038" selection-end="1038" vertical-scroll-proportion="0.0">
+            <state line="49" column="35" selection-start="1432" selection-end="1432" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -103,7 +104,7 @@
       <file leaf-file-name="carto_data.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/cartodb/carto_data.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="0" selection-start="2934" selection-end="2934" vertical-scroll-proportion="-6.672727">
+            <state line="121" column="35" selection-start="3517" selection-end="3517" vertical-scroll-proportion="-9.672728">
               <folding />
             </state>
           </provider>
@@ -143,11 +144,11 @@
         <option value="$PROJECT_DIR$/test/unit/cartodb/redis_pool.test.js" />
         <option value="$PROJECT_DIR$/lib/cartodb/redis_pool.js" />
         <option value="$PROJECT_DIR$/test/unit/windshaft/windshaft.test.js" />
-        <option value="$PROJECT_DIR$/test/acceptance/server.js" />
         <option value="$PROJECT_DIR$/server.js" />
-        <option value="$PROJECT_DIR$/lib/cartodb/carto_data.js" />
-        <option value="$PROJECT_DIR$/lib/cartodb/server_options.js" />
         <option value="$PROJECT_DIR$/lib/windshaft/server.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/server_options.js" />
+        <option value="$PROJECT_DIR$/lib/cartodb/carto_data.js" />
+        <option value="$PROJECT_DIR$/test/acceptance/server.js" />
       </list>
     </option>
   </component>
@@ -217,6 +218,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="windshaft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="windshaft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="acceptance" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -433,13 +452,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="50" selection-start="3645" selection-end="3645" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/windshaft/map_pool.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="119" column="22" selection-start="4164" selection-end="4164" vertical-scroll-proportion="0.0">
@@ -454,23 +466,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/cartodb/carto_data.js">
+    <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="0" selection-start="2934" selection-end="2934" vertical-scroll-proportion="-6.672727">
+        <state line="11" column="33" selection-start="323" selection-end="323" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/cartodb/server_options.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="1038" selection-end="1038" vertical-scroll-proportion="0.0">
+        <state line="49" column="35" selection-start="1432" selection-end="1432" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
+    <entry file="file://$PROJECT_DIR$/lib/cartodb/carto_data.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="7" selection-start="3019" selection-end="3019" vertical-scroll-proportion="0.84247375">
+        <state line="121" column="35" selection-start="3517" selection-end="3517" vertical-scroll-proportion="-9.672728">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="153" column="0" selection-start="4565" selection-end="4565" vertical-scroll-proportion="0.8578199">
           <folding />
         </state>
       </provider>

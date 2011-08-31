@@ -112,6 +112,46 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
 };
 
 
+tests["get'ing blank infowindow returns blank"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.cartodb.com'},
+        url: '/tiles/my_tablez/infowindow',
+        method: 'GET'
+    },{
+        status: 200,
+        body: '{"infowindow":null}'
+    });
+};
+
+tests["get'ing blank infowindow with callback returns blank with callback"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.cartodb.com'},
+        url: '/tiles/my_tablez/infowindow?callback=simon',
+        method: 'GET'
+    },{
+        status: 200,
+        body: 'simon({"infowindow":null});'
+    });
+};
+
+
+// note requires:
+// SELECT 5
+// HSET rails:vizzbase:my_table infowindow "this, that, the other"
+tests["get'ing completed infowindow with callback returns information with callback"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.cartodb.com'},
+        url: '/tiles/my_table/infowindow?callback=simon',
+        method: 'GET'
+    },{
+        status: 200,
+        body: 'simon({"infowindow":"this, that, the other"});'
+    });
+};
+
+
+
+
 
 //
 //tests["get'ing a tile with default style should return an image"] = function(){
