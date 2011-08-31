@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="385e0db9-4d2f-4658-9e13-d1788d49b818" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/windshaft/render_cache.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/cartodb/server_options.js" afterPath="$PROJECT_DIR$/lib/cartodb/server_options.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/windshaft/render_cache.js" afterPath="$PROJECT_DIR$/lib/windshaft/render_cache.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/windshaft/server.js" afterPath="$PROJECT_DIR$/lib/windshaft/server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
     </list>
     <ignored path="windshaft.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,7 +65,7 @@
       <file leaf-file-name="server.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="133" column="30" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.82497084">
+            <state line="132" column="40" selection-start="4148" selection-end="4148" vertical-scroll-proportion="0.80746794">
               <folding />
             </state>
           </provider>
@@ -77,7 +74,7 @@
       <file leaf-file-name="render_cache.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/windshaft/render_cache.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="11" column="0" selection-start="231" selection-end="231" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -86,7 +83,7 @@
       <file leaf-file-name="server.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="8" selection-start="1106" selection-end="1628" vertical-scroll-proportion="0.0">
+            <state line="38" column="26" selection-start="1126" selection-end="1126" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -104,7 +101,7 @@
       <file leaf-file-name="map_pool.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/windshaft/map_pool.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="119" column="22" selection-start="4164" selection-end="4164" vertical-scroll-proportion="0.0">
+            <state line="7" column="34" selection-start="0" selection-end="265" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -133,7 +130,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/test/unit/windshaft.test.js" />
         <option value="$PROJECT_DIR$/lib/windshaft/redis_pool.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/test/unit/redis_pool.test.js" />
@@ -148,6 +144,7 @@
         <option value="$PROJECT_DIR$/test/acceptance/server.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/lib/cartodb/server_options.js" />
+        <option value="$PROJECT_DIR$/lib/windshaft/render_cache.js" />
         <option value="$PROJECT_DIR$/lib/windshaft/server.js" />
       </list>
     </option>
@@ -445,13 +442,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/windshaft/map_pool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="22" selection-start="4164" selection-end="4164" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/acceptance/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="168" column="0" selection-start="5013" selection-end="5013" vertical-scroll-proportion="0.0">
@@ -466,13 +456,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="8" selection-start="1106" selection-end="1628" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/cartodb/server_options.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="40" selection-start="918" selection-end="918" vertical-scroll-proportion="0.0">
@@ -480,16 +463,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/windshaft/map_pool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="34" selection-start="0" selection-end="265" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="26" selection-start="1126" selection-end="1126" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/windshaft/render_cache.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="11" column="0" selection-start="231" selection-end="231" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/windshaft/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="30" selection-start="4143" selection-end="4143" vertical-scroll-proportion="0.82497084">
+        <state line="132" column="40" selection-start="4148" selection-end="4148" vertical-scroll-proportion="0.80746794">
           <folding />
         </state>
       </provider>
