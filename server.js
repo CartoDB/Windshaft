@@ -26,11 +26,6 @@ var windshaft = function(){
   app.get('/tiles/db/:dbname/table/:table/:z/:x/:y.*', function(req, res){
 
     // Whitelist input
-    var good_query = ['sql', 'geom_type', 'cache_buster'];
-    var bad_query  = _.difference(_.keys(req.query), good_query);
-    _.each(bad_query, function(key){ delete req.query[key]; });
-    var params = _.extend(req.query, req.params);
-    params.format = req.params[0]
 
 
     Step(
