@@ -88,7 +88,6 @@ var windshaft = function(){
     }
   });
 
-  //add reset pool url for when edits happen?
 
 
   return app;
