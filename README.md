@@ -1,7 +1,14 @@
 Windshaft
 ----------
 
-Simple PostGIS map tiler.
+Windshaft makes generating map tiles and interactivity layers from PostGIS/Mapnik simple.
+It also has a built in map style API based on the Carto mapping language for setting the style of your rendered maps.
+
+
+Credits
+--------
+levers the wonderful tilelive-mapnik library from Mapbox.
+
 
 
 ToDo
