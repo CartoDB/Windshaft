@@ -14,7 +14,7 @@
 	<script>
 		var map = new L.Map('map');
 		
-		var testUrl = 'http://localhost:8080/tiles/db/cartodb_user_123_db/table/ine_poly/{z}/{x}/{y}.png8?geom_type=polygon',
+		var testUrl = 'http://vizzuality.localhost.lan:8080/tiles/ine_poly/{z}/{x}/{y}.png8',
 			  testMap = new L.TileLayer(testUrl, {maxZoom: 18, attribution: "tokumine"});
 		
 		map.setView(new L.LatLng(51.505, -0.09), 1).addLayer(testMap);
