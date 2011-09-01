@@ -23,7 +23,7 @@ tests["get call to server returns 200"] = function(){
 
 tests["get'ing blank style returns default style"] = function(){
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_table/style',
         method: 'GET'
     },{
@@ -36,7 +36,7 @@ tests["get'ing blank style returns default style"] = function(){
 
 tests["post'ing no style returns 400 with errors"] = function(){
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_table/style',
         method: 'POST'
     },{
@@ -51,7 +51,7 @@ tests["post'ing bad style returns 400 with error"] = function(){
     assert.response(server, {
         url: '/tiles/my_table3/style',
         method: 'POST',
-        headers: {host: 'vizzuality.cartodb.com', 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
     },{
         status: 400,
@@ -65,7 +65,7 @@ tests["post'ing multiple bad styles returns 400 with error array"] = function(){
     assert.response(server, {
         url: '/tiles/my_table4/style',
         method: 'POST',
-        headers: {host: 'vizzuality.cartodb.com', 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
     },{
         status: 400,
@@ -79,7 +79,7 @@ tests["post'ing good style returns 200"] = function(){
     assert.response(server, {
         url: '/tiles/my_table5/style',
         method: 'POST',
-        headers: {host: 'vizzuality.cartodb.com', 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: '#my_table5{background-color:#fff;}'})
     },{
         status: 200
@@ -94,7 +94,7 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
     assert.response(server, {
         url: '/tiles/my_table5/style',
         method: 'POST',
-        headers: {host: 'vizzuality.cartodb.com', 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: style})
     },{
         status: 200
@@ -102,7 +102,7 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
 
 
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_table5/style',
         method: 'GET'
     },{
@@ -114,7 +114,7 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
 
 tests["get'ing blank infowindow returns blank"] = function(){
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_tablez/infowindow',
         method: 'GET'
     },{
@@ -125,7 +125,7 @@ tests["get'ing blank infowindow returns blank"] = function(){
 
 tests["get'ing blank infowindow with callback returns blank with callback"] = function(){
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_tablez/infowindow?callback=simon',
         method: 'GET'
     },{
@@ -136,11 +136,11 @@ tests["get'ing blank infowindow with callback returns blank with callback"] = fu
 
 
 // note requires:
-// SELECT 5
-// HSET rails:vizzbase:my_table infowindow "this, that, the other"
+// SELECT 0
+// HSET rails:cartodb_user_123_db:my_table infowindow "this, that, the other"
 tests["get'ing completed infowindow with callback returns information with callback"] = function(){
     assert.response(server, {
-        headers: {host: 'vizzuality.cartodb.com'},
+        headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/my_table/infowindow?callback=simon',
         method: 'GET'
     },{
@@ -151,61 +151,66 @@ tests["get'ing completed infowindow with callback returns information with callb
 
 
 
+tests["get'ing a tile with default style should return an image"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.png?geom_type=polygon',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    });
+};
+
+tests["get'ing a json with default style should return an grid"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.grid.json',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    });
+};
 
 
-//
-//tests["get'ing a tile with default style should return an image"] = function(){
-//    assert.response(server, {
-//        url: '/tiles/db/cartodb_user_123_db/table/gadm4/6/31/24.png?geom_type=polygon',
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'image/png' }
-//    });
-//};
-//
-//tests["get'ing a json with default style should return an grid"] = function(){
-//    assert.response(server, {
-//        url: '/tiles/db/cartodb_user_123_db/table/gadm4/6/31/24.grid.json',
-//        method: 'GET'
-//    },{
-//        status: 200
-//        //headers: { 'Content-Type': 'text/javascript; charset=utf-8' }
-//    });
-//};
-//
-//tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
-//    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"})
-//    assert.response(server, {
-//        url: '/tiles/db/cartodb_user_123_db/table/gadm4/6/31/24.grid.json?' + sql,
-//        method: 'GET'
-//    },{
-//        status: 200
-//        //headers: { 'Content-Type': 'text/javascript; charset=utf-8' }
-//    });
-//};
-//
-//tests["get'ing a tile with default style and sql should return a constrained image"] = function(){
-//    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"})
-//    assert.response(server, {
-//        url: '/tiles/db/cartodb_user_123_db/table/gadm4/6/31/24.png?' + sql,
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'image/png' }
-//    });
-//};
-//
-//
-//tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
-//    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950) as foo"})
-//    assert.response(server, {
-//        url: '/tiles/db/cartodb_user_123_db/table/gadm4/6/31/24.png?' + sql,
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'image/png' }
-//    });
-//};
-//
-//
+tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
+    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"})
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    });
+};
+
+
+
+tests["get'ing a tile with default style and sql should return a constrained image"] = function(){
+    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"});
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.png?' + sql,
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    });
+};
+
+
+tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
+    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950) as foo"})
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.png?' + sql,
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    });
+};
+
+
