@@ -21,9 +21,9 @@ tests['render_cache can create a unique key from request, stripping xyz/callback
 };
 
 /**
-* THE FOLLOWING TESTS NEED SOME DB SETUP
-* They need a database setup as below with the table ine_poly defined
-*/
+ * THE FOLLOWING TESTS NEED SOME DB SETUP
+ * They need a database setup as below with the table ine_poly defined
+ */
 
 tests['render_cache can generate a tilelive object'] = function(){
     var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -95,6 +95,30 @@ tests['render_cache can delete only related tilelive objects when reset'] = func
                 solo_render_cache.reset(req);
 
                 assert.eql(_.keys(solo_render_cache.renderers).length, 1);
+            });
+        });
+    });
+};
+
+
+tests['render_cache can purge all tilelive objects'] = function(){
+    var solo_render_cache = new RenderCache();
+    var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+
+    solo_render_cache.getRenderer(req, function(err, renderer){
+        req.params.sql = "(SELECT * FROM ine_poly LIMIT 50) as q";
+
+        solo_render_cache.getRenderer(req, function(err, renderer){
+            delete req.params.sql;
+            req.params.table = 'gadm4';
+
+            solo_render_cache.getRenderer(req, function(err, renderer){
+                assert.eql(_.keys(solo_render_cache.renderers).length, 3);
+
+                req.params.table = 'ine_poly';
+                solo_render_cache.purge();
+
+                assert.eql(_.keys(solo_render_cache.renderers).length, 0);
             });
         });
     });
