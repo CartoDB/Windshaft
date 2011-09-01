@@ -123,3 +123,13 @@ tests['render_cache can purge all tilelive objects'] = function(){
         });
     });
 };
+
+tests['render_cache automatically deletes tilelive only after timeout'] = function(){
+    var solo_render_cache = new RenderCache(5); // means immediate purge
+    var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+
+    solo_render_cache.getRenderer(req, function(err, renderer){
+        assert.eql(_.keys(solo_render_cache.renderers).length, 1);
+        setTimeout(function(){assert.eql(_.keys(solo_render_cache.renderers).length, 0);},10);
+    });
+};
