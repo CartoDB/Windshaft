@@ -57,13 +57,13 @@ var   _         = require('underscore')
 //};
 
 tests['render_cache can delete all tilelive objects when reset'] = function(){
-    
+
     var SoloRenderCache = require('../../../lib/windshaft/render_cache');
     var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     SoloRenderCache.getRenderer(req, function(err, renderer){
         var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
-                   sql: "(SELECT * FROM ine_poly LIMIT 50) as q" }};
+            sql: "(SELECT * FROM ine_poly LIMIT 50) as q" }};
 
         SoloRenderCache.getRenderer(req, function(err, renderer){
             assert.eql(_.keys(SoloRenderCache.renderers).length, 2);
@@ -75,4 +75,26 @@ tests['render_cache can delete all tilelive objects when reset'] = function(){
     });
 };
 
+tests['render_cache can delete only related tilelive objects when reset'] = function(){
 
+    var SoloRenderCache = require('../../../lib/windshaft/render_cache');
+    var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+
+    SoloRenderCache.getRenderer(req, function(err, renderer){
+        req.sql = "(SELECT * FROM ine_poly LIMIT 50) as q";
+
+        SoloRenderCache.getRenderer(req, function(err, renderer){
+            delete req.sql;
+            req.table = 'gadm4';
+
+            SoloRenderCache.getRenderer(req, function(err, renderer){
+
+                assert.eql(_.keys(SoloRenderCache.renderers).length, 3);
+
+                SoloRenderCache.reset(req);
+
+                assert.eql(_.keys(SoloRenderCache.renderers).length, 1);
+            });
+        });
+    });
+};
