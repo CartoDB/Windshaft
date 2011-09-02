@@ -2,17 +2,17 @@
     "private": true,
     "name": "windshaft",
     "version": "0.0.1",
-    "description": "Simple PostGIS Mapnik tile server",
-    "url": "https://github.com/tokumine/windshaft",
+    "description": "A Node.js based map tile server for PostGIS & Mapnik",
+    "url": "https://github.com/Vizzuality/Windshaft",
     "licenses": [{ "type": "MIT" }],
     "repositories": [{
         "type": "git",
-        "url": "git://github.com/tokumine/windshaft.git"
+        "url": "git://github.com/Vizzuality/Windshaft.git"
     }],
     "author": {
-      "name": "Simon Tokumine",
-      "url": "http://tokumine.com/",
-      "email": "si@tinypla.net"
+      "name": "Simon Tokumine, Vizzuality",
+      "url": "http://vizzuality.com",
+      "email": "simon@vizzuality.com"
     },
     "dependencies": {
         "underscore"  : "1.1.x",
