@@ -51,7 +51,7 @@ var Windshaft = require('windshaft');
 // POST base_url + '/style' (allows specifying of a style in Carto markup in the 'style' form variable).
 //
 var config = {
-        base_url: '/database/:dbname/table/:table,
+        base_url: '/database/:dbname/table/:table',
         req2params: function(req, callback){callback(null,req);}
     };
 
