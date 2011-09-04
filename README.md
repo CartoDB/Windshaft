@@ -94,11 +94,7 @@ These will be configurable in future versions.
 
 Credits
 --------
-* mapnik
-* node-mapnik
-* tilelive-mapnik
-* Carto
-* Thanks to the Mapbox team for making such flexible tools
+* Thanks to the Mapnik and Mapbox team for making such flexible tools
 
 
 TODO
