@@ -44,7 +44,7 @@ var Windshaft = require('windshaft');
 // * sql - custom sql query to narrow results shown in map)
 // * geom_type - specify the geom type (point|polygon) to get more appropriate default styles
 // * cache_buster - forces the creation of a new render object, nullifying existing metatile caches
-// * interactivity - specify the column to use in the UTFGrid interactivity layer (defaults to 'id')
+// * interactivity - specify the column to use in the UTFGrid interactivity layer (defaults to null)
 //
 // the base url is also used for getting and setting styles via the urls:
 //
