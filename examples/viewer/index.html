@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Windshaft test</title>
+	<meta charset="utf-8" />
+	<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="leaflet.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            var map = new L.Map('map');
+            var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}.png8";
+            var layers = [];
+
+            $('#update_map').click(function(ev){
+               ev.preventDefault();
+
+               var dbname = $('#dbname').val();
+               var table = $('#table').val();
+
+               var url = _.template(baseURL, {dbname: dbname, table: table});
+
+               _.each(layers, function(layer){
+                  map.removeLayer(layer) 
+               });
+
+               var testMap = new L.TileLayer(url, {maxZoom: 20, attribution: "vizzuality"});
+               map.setView(new L.LatLng(51.505, -0.09), 1, true).addLayer(testMap);
+               layers.push(testMap);
+            });
+        });
+	</script>
+
+    <link rel="stylesheet" href="leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
+</head>
+<body>
+    <input type="text" value="database name" id="dbname">
+    <input type="text" value="table name" id="table">
+    <input type="button" id="update_map" value="Go">
+	<div id="map" style="width: 1500px; height: 900px"></div>
+</body>
+</html>

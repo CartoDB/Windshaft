@@ -66,7 +66,7 @@ console.log("map tiles are now being served out of: http://localhost:4000" + con
 // Specify .png, .png8 or .grid.json tiles.
 ```
 
-See examples directory for running server
+See examples directory for running server and maptile viewer
 
 Tile Caching
 ------------
