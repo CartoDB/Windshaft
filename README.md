@@ -35,10 +35,11 @@ var Windshaft = require('windshaft');
 
 // Configure pluggable URLs
 // =========================
-// The config object must define a base url and a function that adds 'dbname' and 'table' variables onto the Express.js req.params object.
-// In this example, the base URL is such that dbname and table will automatically be added to the req.params object by express.js.
-// req2params can be extended to allow full control over the specifying of dbname and table, and also allows for the req.params object to
-// be extended with other variables, such as:
+// The config object must define a base url and a function that adds 'dbname' and 'table'
+// variables onto the Express.js req.params object. In this example, the base URL is such that
+// dbname and table will automatically be added to the req.params object by express.js.
+// req2params can be extended to allow full control over the specifying of dbname and table,
+// and also allows for the req.params object to be extended with other variables, such as:
 //
 // * sql - custom sql query to narrow results shown in map)
 // * geom_type - specify the geom type (point|polygon) to get more appropriate default styles
