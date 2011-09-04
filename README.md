@@ -1,5 +1,5 @@
 Windshaft web map tiler
------------------------
+=======================
 
 * RESTful Node.js based webmercator map tiler for PostGIS, wrapping Express, Mapnik & tilelive-mapnik
 * Pluggable routing to provide customisable tile API URL endpoints
@@ -102,3 +102,4 @@ TODO
 * ETAG support
 * Make simple interface to test map and generate URL to use for your map.
 * HOW-TO for a caching HTTP-proxy layer in front of Windshaft
+* extend with LRU cache https://github.com/rsms/js-lru/blob/master/lru.js or https://github.com/monsur/jscache/blob/master/cache.js
