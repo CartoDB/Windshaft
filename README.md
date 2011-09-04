@@ -5,11 +5,11 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 
 * Pluggable routing to provide customisable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
-* Focussed on high speed generated tiles for single layers. No multi layer or composite support yet.
 * Generates image and UTFGrid tiles
 * Accepts, stores, serves, and applys map styles written in the Carto markup language (same markup as Mapbox Tilemill)
 * Accepts, stores and serves Infowindow information per map layer
 * limited caching, focus on handling concurrent renders
+* No multi layer or composite support yet
 
 
 Dependencies
