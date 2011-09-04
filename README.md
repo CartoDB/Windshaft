@@ -29,7 +29,7 @@ npm install windshaft
 
 Usage
 -----
-``` Javascript
+```javascript
 
 var Windshaft = require('windshaft');
 
