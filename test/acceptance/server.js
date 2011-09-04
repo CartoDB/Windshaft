@@ -213,4 +213,15 @@ tests["get'ing a tile with default style and complex sql should return a constra
     });
 };
 
+tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
+    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950) as foo"})
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.png?' + sql,
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    });
+};
 
