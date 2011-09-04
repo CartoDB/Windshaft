@@ -1,8 +1,6 @@
 Windshaft web map tiler
 -----------------------
 
-Windshaft:
-
 * RESTful Node.js based webmercator map tiler for PostGIS, wrapping Express, Mapnik & tilelive-mapnik
 * Pluggable routing to provide customisable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
