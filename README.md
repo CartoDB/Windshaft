@@ -1,13 +1,15 @@
 Windshaft web map tiler
 =======================
 
-* RESTful Node.js based webmercator map tiler for PostGIS, wrapping Express, Mapnik & tilelive-mapnik
+A Node.js based webmercator map tile server for PostGIS with Carto map styling API.
+
 * Pluggable routing to provide customisable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
 * Focussed on high speed generated tiles for single layers. No multi layer or composite support yet.
 * Generates image and UTFGrid tiles
 * Accepts, stores, serves, and applys map styles written in the Carto markup language (same markup as Mapbox Tilemill)
 * Accepts, stores and serves Infowindow information per map layer
+* limited caching, focus on handling concurrent renders
 
 
 Dependencies
@@ -68,7 +70,7 @@ Windshaft serves tiles from a single use metatile cache (from mapnik/tilelive-ma
 addition to keeping the served maps fresh should the underlying data change or be updated. It is not, however, a full caching solution.
 
 Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish infront of the
-tile url or your own custom cache implementation.
+tile url or your own custom cache implementation. Also, see notes below on caching
 
 
 Concurrency
@@ -97,10 +99,23 @@ Credits
 
 TODO
 -----
-* Allow configurable columns and projections
-* Allow postgis to be on any host
-* ETAG support
+* Allow postgis to be on any host (Allow grainstore options to be passed down)
+* Remove references to global from lib
+* remove all cartoDB references
 * Make simple interface to test map and generate URL to use for your map.
 * HOW-TO for a caching HTTP-proxy layer in front of Windshaft
-* Extend with mini LRU cache https://github.com/rsms/js-lru/blob/master/lru.js or https://github.com/monsur/jscache/blob/master/cache.js.Clear LRU without global puge and maintain access speed. 1 LRU per renderer?
-* limit total number of renderers that can be made (again, with LRU?)
+* limit total number of renderers that can be made (LRU?)
+
+
+Notes on Caching
+-----------------
+Consider at least 3 different types of cache:
+
+* Map config and setup (style, interactivity etc). Cache the renderer or Mapnik XML. Invalidation requires knowledge of changes in config or style. (done)
+* Serverside caching of generated map tiles cached in LRU or other. Other than simple TTL, Invalidation requires knowledge of changes in map style *or* underlying data.
+* Clientside caching by ETag. Requires server to manage ETags per tile and invalidate when style *or* data changes. See serverside caching.
+
+In the case of invalidation caused by data changes, flushing only tiles in the area edited and up their zoom stack is desirable rather than global flush.
+Microsoft Quadkeys are a one-dimensional index key that also  encodes properties (zoom level and parent tile) that would aid this style of invalidation. http://msdn.microsoft.com/en-us/library/bb259689.aspx
+
+mini JS LRU cache: https://github.com/rsms/js-lru/blob/master/lru.js or https://github.com/monsur/jscache/blob/master/cache.js.Clear LRU without global puge and maintain access speed. 1 LRU per renderer?
