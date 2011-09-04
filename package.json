@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "url": "https://github.com/Vizzuality/Windshaft",
     "licenses": [{ "type": "MIT" }],
