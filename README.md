@@ -53,19 +53,20 @@ var Windshaft = require('windshaft');
 //
 var config = {
         base_url: '/database/:dbname/table/:table',
-        req2params: function(req, callback){callback(null,req),
-        grainstore: {datasource: {user:postgres, host: '127.0.0.1', port: 5432}, //see grainstore npm for other options
-        redis: {host: '127.0.0.1', port: 6379};
-        }
+        req2params: function(req, callback){callback(null,req)},
+        grainstore: {datasource: {user:'postgres', host: '127.0.0.1', port: 5432}}, //see grainstore npm for other options
+        redis: {host: '127.0.0.1', port: 6379}
     };
 
 // Initialize tile server on port 4000
 var ws = new Windshaft.Server(config);
 ws.listen(4000);
+console.log("map tiles are now being served out of: http://localhost:4000" + config.base_url + '/:z/:x/:y.*');
 
-// Map tiles are now being served on base_url/:z/:x/:y.*'. Specify .png or .grid.json for image or UTFGrid tiles.
+// Specify .png, .png8 or .grid.json tiles.
 ```
 
+See examples directory for running server
 
 Tile Caching
 ------------
@@ -102,8 +103,6 @@ Credits
 
 TODO
 -----
-* Allow postgis to be on any host (Allow grainstore options to be passed down)
-* Remove references to global from lib
 * remove all cartoDB references and split into separate lib
 * release npm
 * Make simple interface to test map and generate URL to use for your map.
