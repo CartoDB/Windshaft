@@ -17,7 +17,7 @@ tests['render_cache has a cached of render objects'] = function(){
 tests['render_cache can create a unique key from request, stripping xyz/callback'] = function(){
     var req = {params: {dbname: "vizzuality", table: 'my_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
 
-    assert.eql(render_cache.createKey(req.params), 'vizzuality:my_table:png:point:select *:');
+    assert.eql(render_cache.createKey(req.params), 'vizzuality:my_table:png:point:select *::');
 };
 
 /**
@@ -29,7 +29,7 @@ tests['render_cache can generate a tilelive object'] = function(){
     var req = {params: {dbname: "cartodb_user_123_db", table: 'ine_poly', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
-        assert.eql(renderer._uri.query.base, 'cartodb_user_123_db:ine_poly:png:polygon::');
+        assert.eql(renderer._uri.query.base, 'cartodb_user_123_db:ine_poly:png:polygon:::');
     });
 };
 
