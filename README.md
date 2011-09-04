@@ -93,7 +93,7 @@ Credits
 * node-mapnik
 * tilelive-mapnik
 * Carto
-* Excellent work by the Mapbox team in making such flexible tools available
+* Thanks to the Mapbox team for making such flexible tools
 
 
 TODO
@@ -101,6 +101,5 @@ TODO
 * Allow configurable columns and projections
 * Allow postgis to be on any host
 * ETAG support
-* Allow URL cache_buster variable to be used
 * Make simple interface to test map and generate URL to use for your map.
 * HOW-TO for a caching HTTP-proxy layer in front of Windshaft
