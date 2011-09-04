@@ -1,5 +1,5 @@
-Windshaft web map tiler
-=======================
+Windshaft map tiler
+===================
 
 A Node.js based webmercator map tile server for PostGIS with Carto map styling API.
 
