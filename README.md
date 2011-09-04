@@ -103,3 +103,4 @@ TODO
 * Make simple interface to test map and generate URL to use for your map.
 * HOW-TO for a caching HTTP-proxy layer in front of Windshaft
 * extend with LRU cache https://github.com/rsms/js-lru/blob/master/lru.js or https://github.com/monsur/jscache/blob/master/cache.js
+* limit total number of renderers that can be made (again, with LRU?)
