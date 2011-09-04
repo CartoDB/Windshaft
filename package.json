@@ -1,5 +1,4 @@
 {
-    "private": true,
     "name": "windshaft",
     "version": "0.0.1",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
