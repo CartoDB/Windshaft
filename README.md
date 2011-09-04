@@ -35,10 +35,10 @@ var Windshaft = require('windshaft');
 
 // Configure pluggable URLs
 // =========================
-// The config object must define a base url and a function that adds 'dbname' and 'table'
-// variables onto the Express.js req.params object. In this example, the base URL is such that
-// dbname and table will automatically be added to the req.params object by express.js.
-// req2params can be extended to allow full control over the specifying of dbname and table,
+// The config object must define grainstore config (generally just postgres connection details), redis config,
+// a base url and a function that adds 'dbname' and 'table' variables onto the Express.js req.params object.
+// In this example, the base URL is such that dbname and table will automatically be added to the req.params
+// object by express.js. req2params can be extended to allow full control over the specifying of dbname and table,
 // and also allows for the req.params object to be extended with other variables, such as:
 //
 // * sql - custom sql query to narrow results shown in map)
@@ -53,7 +53,10 @@ var Windshaft = require('windshaft');
 //
 var config = {
         base_url: '/database/:dbname/table/:table',
-        req2params: function(req, callback){callback(null,req);}
+        req2params: function(req, callback){callback(null,req),
+        grainstore: {datasource: {user:postgres, host: '127.0.0.1', port: 5432}, //see grainstore npm for other options
+        redis: {host: '127.0.0.1', port: 6379};
+        }
     };
 
 // Initialize tile server on port 4000
