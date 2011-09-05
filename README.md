@@ -83,7 +83,7 @@ sudo apt-get update
 sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
 ```
 
-Harder but stable way
+Fiddly but stable way
 
 ```bash
 sudo apt-get install build-essential curl wget
