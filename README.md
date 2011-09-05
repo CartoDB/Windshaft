@@ -69,8 +69,10 @@ console.log("map tiles are now being served out of: http://localhost:4000" + con
 See examples directory for running server and maptile viewer
 
 
-Notes on installing Mapnik 2.0 in Ubuntu
------------------------------------------
+Notes on installing Mapnik 2.0
+------------------------------
+
+**Ubuntu**
 
 Easy way
 
@@ -95,6 +97,10 @@ sudo dpkg -i [each .deb]
 ```
 
 (tested on release 2+dev20110905.svn3272-1~lucid1.deb)
+
+**OSX**
+
+http://trac.mapnik.org/wiki/MacInstallation/Homebrew
 
 
 Tile Caching
