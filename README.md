@@ -124,13 +124,7 @@ Windshaft uses node.js and tilelive-mapnik's built in evented request handling, 
 Should render load get too high, you may like split load over loadbalancers.
 
 
-Credits
---------
-* Thanks to the Mapnik and Mapbox team for making such flexible tools
+--
+Thanks to the Mapnik and Mapbox team for making such flexible tools
 
 
-TODO
------
-* HOW-TO for a caching HTTP-proxy layer in front of Windshaft
-* limit total number of renderers that can be made (LRU?)
-* make test fixtures
