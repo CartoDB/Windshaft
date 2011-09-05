@@ -73,7 +73,8 @@ Notes on installing Mapnik 2.0 in Ubuntu
 -----------------------------------------
 
 Easy way
-```
+
+```bash
 sudo apt-get install build-essential curl wget
 sudo add-apt-repository ppa:mapnik/nightly-trunk
 sudo apt-get update
@@ -81,7 +82,8 @@ sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
 ```
 
 Harder but stable way
-```
+
+```bash
 sudo apt-get install build-essential curl wget
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2-dev_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb (or i386)
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
@@ -91,6 +93,7 @@ wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/python-mapnik2_
 
 sudo dpkg -i [each .deb]
 ```
+
 (tested on release 2+dev20110905.svn3272-1~lucid1.deb)
 
 
