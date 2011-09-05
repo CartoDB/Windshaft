@@ -4,7 +4,7 @@
 var Windshaft = require('../lib/windshaft');
 var config = {
         base_url: '/database/:dbname/table/:table',
-        req2params: function(req, callback){callback(null,req)},
+        req2params: function(req, callback){req.params.interactivity = 'name_4'; callback(null,req)},
         grainstore: {datasource: {user:'postgres', host: '127.0.0.1', port: 5432}}, //see grainstore npm for other options
         redis: {host: '127.0.0.1', port: 6379}
     };
