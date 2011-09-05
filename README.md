@@ -69,8 +69,8 @@ console.log("map tiles are now being served out of: http://localhost:4000" + con
 See examples directory for running server and maptile viewer
 
 
-Notes on installing Mapnik 2.0
-------------------------------
+Installing Mapnik 2.0
+----------------------
 
 **Ubuntu**
 
