@@ -12,6 +12,12 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 * No multi layer or composite support yet
 
 
+Limitations
+-----------
+* supports single layer render only.
+* for speed, expects geometry projected to webmercator (EPSG:3857) in a column called the_geom_webmercator.
+
+
 Dependencies
 ------------
 * Node 0.4.x & npm
@@ -116,15 +122,6 @@ Concurrency
 ------------
 Windshaft uses node.js and tilelive-mapnik's built in evented request handling, queuing and pooling to provide excellent scalability under concurrent requests.
 Should render load get too high, you may like split load over loadbalancers.
-
-
-Limitations
------------
-* supports single layer render only.
-* for speed, expects geometry projected to webmercator (EPSG:3857) in a column called the_geom_webmercator.
-* limited to localhost based postgis installations.
-
-These will be configurable in future versions.
 
 
 Credits
