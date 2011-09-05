@@ -134,9 +134,6 @@ Credits
 
 TODO
 -----
-* remove all cartoDB references and split into separate lib
-* release npm
-* Make simple interface to test map and generate URL to use for your map.
 * HOW-TO for a caching HTTP-proxy layer in front of Windshaft
 * limit total number of renderers that can be made (LRU?)
 * make test fixtures
