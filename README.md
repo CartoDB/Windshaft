@@ -83,7 +83,7 @@ Installing Mapnik 2.0
 Easy way
 
 ```bash
-sudo apt-get install build-essential curl wget
+sudo apt-get install build-essential curl wget python-software-properties
 sudo add-apt-repository ppa:mapnik/nightly-trunk
 sudo apt-get update
 sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
@@ -115,7 +115,7 @@ Windshaft serves tiles from a single use metatile cache (from mapnik/tilelive-ma
 addition to keeping the served maps fresh should the underlying data change or be updated. It is not, however, a full caching solution.
 
 Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish infront of the
-tile url or your own custom cache implementation. Also, see notes below on caching
+tile url or your own custom cache implementation. Also, see notes on caching.
 
 
 Concurrency
