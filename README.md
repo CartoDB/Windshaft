@@ -11,6 +11,8 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 * limited caching, focus on handling concurrent renders
 * No multi layer or composite support yet
 
+Windshaft is a library used by cartodb.com, an Open Source Geospatial Database on the Cloud which will be released in the following days.
+
 
 Limitations
 -----------
