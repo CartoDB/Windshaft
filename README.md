@@ -6,10 +6,14 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 * Pluggable routing to provide customisable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
 * Generates image and UTFGrid tiles
-* Accepts, stores, serves, and applys map styles written in the Carto markup language (same markup as Mapbox Tilemill)
+* Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)
 * Accepts, stores and serves Infowindow information per map layer
 * limited caching, focus on handling concurrent renders
 * No multi layer or composite support yet
+
+Being a dynamic map renderer, windshaft commits some map server 'sins' in it's raw form. The idea is that you the developer will want to graft your own auth/metrics/caching/scaling on top of decent core components. Same old story: high cohesion, low coupling makes us happy.
+
+Windshaft is a library used by cartodb.com, an Open Source Geospatial Database on the Cloud which will be released in the following days.
 
 
 Limitations
