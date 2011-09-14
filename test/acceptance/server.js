@@ -175,7 +175,7 @@ tests["get'ing a json with default style should return an grid"] = function(){
 
 
 tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
-    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"})
+    var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE name_2 = 'Murcia'"})
     assert.response(server, {
         headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
@@ -189,7 +189,7 @@ tests["get'ing a json with default style and sql should return a constrained gri
 
 
 tests["get'ing a tile with default style and sql should return a constrained image"] = function(){
-    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia') as foo"});
+    var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE name_2 = 'Murcia'"});
     assert.response(server, {
         headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/gadm4/6/31/24.png?' + sql,
@@ -202,7 +202,7 @@ tests["get'ing a tile with default style and sql should return a constrained ima
 
 
 tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
-    var sql = querystring.stringify({sql: "(SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950) as foo"})
+    var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950"})
     assert.response(server, {
         headers: {host: 'vizzuality.localhost.lan'},
         url: '/tiles/gadm4/6/31/24.png?' + sql,
