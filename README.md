@@ -3,7 +3,7 @@ Windshaft map tiler
 
 A Node.js based webmercator map tile server for PostGIS with Carto map styling API.
 
-* Pluggable routing to provide customisable tile API URL endpoints
+* Pluggable routing to provide customizable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
 * Generates image and UTFGrid tiles
 * Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)
@@ -118,7 +118,7 @@ Tile Caching
 Windshaft serves tiles from a single use metatile cache (from mapnik/tilelive-mapnik). This provides good speed in
 addition to keeping the served maps fresh should the underlying data change or be updated. It is not, however, a full caching solution.
 
-Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish infront of the
+Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish in front of the
 tile url or your own custom cache implementation. Also, see notes on caching.
 
 
