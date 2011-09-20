@@ -17,7 +17,7 @@
     "dependencies": {
         "underscore"  : "1.1.x",
         "step": "0.0.x",
-        "grainstore": "0.0.8",
+        "grainstore": "0.0.9",
         "express": "2.4.3",
         "tilelive": "4.0.4",
         "tilelive-mapnik": "0.2.1"
