@@ -3,7 +3,7 @@ Windshaft map tiler
 
 A Node.js based webmercator map tile server for PostGIS with Carto map styling API.
 
-* Pluggable routing to provide customisable tile API URL endpoints
+* Pluggable routing to provide customizable tile API URL endpoints
 * Can render all table data, or data restricted by SQL query
 * Generates image and UTFGrid tiles
 * Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)
@@ -85,7 +85,7 @@ Installing Mapnik 2.0
 
 **Ubuntu**
 
-Easy way
+Easy way (note, this is currently failing on Mapnik-2.0 head)
 
 ```bash
 sudo apt-get install build-essential curl wget python-software-properties
@@ -97,14 +97,18 @@ sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
 Fiddly but stable way
 
 ```bash
+
+# make sure you chose the deb to match your machines architecture (amd64 or i386)
+
 sudo apt-get install build-essential curl wget
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2-dev_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb (or i386)
+wget http://launchpadlibrarian.net/35991565/libicu42_4.2.1-3_amd64.deb
+wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2-dev_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/mapnik2-doc_2%2Bdev20110905.svn3272-1~lucid1_all.deb
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/mapnik2-utils_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
 wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/python-mapnik2_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
 
-sudo dpkg -i [each .deb]
+sudo dpkg -i *.deb
 ```
 
 (tested on release 2+dev20110905.svn3272-1~lucid1.deb)
@@ -119,7 +123,7 @@ Tile Caching
 Windshaft serves tiles from a single use metatile cache (from mapnik/tilelive-mapnik). This provides good speed in
 addition to keeping the served maps fresh should the underlying data change or be updated. It is not, however, a full caching solution.
 
-Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish infront of the
+Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish in front of the
 tile url or your own custom cache implementation. Also, see notes on caching.
 
 
