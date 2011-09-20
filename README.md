@@ -8,6 +8,7 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 * Generates image and UTFGrid tiles
 * Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)
 * Accepts, stores and serves Infowindow information per map layer
+* Allows setting of CORS headers to allow access to tile data from Javascript
 * limited caching, focus on handling concurrent renders
 * No multi layer or composite support yet
 

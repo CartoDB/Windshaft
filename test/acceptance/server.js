@@ -212,3 +212,14 @@ tests["get'ing a tile with default style and complex sql should return a constra
         headers: { 'Content-Type': 'image/png' }
     });
 };
+
+tests["get'ing a tile with CORS enabled should return CORS headers"] = function(){
+    assert.response(server, {
+        headers: {host: 'vizzuality.localhost.lan'},
+        url: '/tiles/gadm4/6/31/24.png',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: {'Access-Control-Allow-Headers': 'X-Requested-With', 'Access-Control-Allow-Origin': '*'}
+    });
+};

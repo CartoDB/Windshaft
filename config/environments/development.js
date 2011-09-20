@@ -5,3 +5,4 @@ module.exports.redis            = {host: '127.0.0.1',
                                    idleTimeoutMillis: 1,
                                    reapIntervalMillis: 1};
 module.exports.windshaft_port   = 8080;
+module.exports.enable_cors      = true;

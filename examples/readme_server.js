@@ -4,9 +4,10 @@
 var Windshaft = require('../lib/windshaft');
 var config = {
         base_url: '/database/:dbname/table/:table',
-        req2params: function(req, callback){req.params.interactivity = 'id'; callback(null,req)},
+        req2params: function(req, callback){req.params.interactivity = null; callback(null,req)},
         grainstore: {datasource: {user:'postgres', host: '127.0.0.1', port: 5432}}, //see grainstore npm for other options
-        redis: {host: '127.0.0.1', port: 6379}
+        redis: {host: '127.0.0.1', port: 6379},
+        enable_cors: true
     };
 
 // Initialize tile server on port 4000
