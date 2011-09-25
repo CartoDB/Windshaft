@@ -3,18 +3,30 @@ Windshaft map tiler
 
 A Node.js based webmercator map tile server for PostGIS with Carto map styling API.
 
-* Pluggable routing to provide customizable tile API URL endpoints
-* Can render all table data, or data restricted by SQL query
-* Generates image and UTFGrid tiles
-* Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)
-* Accepts, stores and serves Infowindow information per map layer
-* Allows setting of CORS headers to allow access to tile data from Javascript
-* limited caching, focus on handling concurrent renders
-* No multi layer or composite support yet
+<table>
+<tr>
+<td>
+<ul>
+<li>Pluggable routing to provide customizable tile API URL endpoints</li>
+<li>Can render all table data, or data restricted by SQL query</li>
+<li>Generates image and UTFGrid interactivity tiles</li>
+<li>Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)</li>
+<li>Stores and serves Infowindow information per map layer</li>
+<li>Allows setting of CORS headers to allow access to tile data from Javascript</li>
+<li>limited caching, focus on handling concurrent renders</li>
+<li>No multi layer or composite support yet</li>
+</td>
+<td>
+<span style="float:right;width:300px;">
+<img src="https://a248.e.akamai.net/assets.github.com/img/2614897f9faca1f2596020938424169bd2e6195e/687474703a2f2f692e696d6775722e636f6d2f397359526f2e706e67" width="300"/>
+<h5 style="color#666; margin-top:0;">Puma Concolor by @eightysteele</h5>
+</span>
+</td>
+</table>
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in it's raw form. The idea is that you the developer will want to graft your own auth/metrics/caching/scaling on top of decent core components. Same old story: high cohesion, low coupling makes us happy.
 
-Windshaft is a library used by cartodb.com, an Open Source Geospatial Database on the Cloud which will be released in the following days.
+Windshaft is a library used by cartodb.com, an Open Source Geospatial Database on the Cloud.
 
 
 Limitations
