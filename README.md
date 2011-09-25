@@ -25,7 +25,7 @@ Limitations
 
 Dependencies
 ------------
-* Node 0.4.x & npm
+* Node 0.4.11+ & npm
 * Mapnik 2.0 or trunk > r3126
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
