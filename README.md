@@ -18,7 +18,7 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 </td>
 <td>
 <span style="float:right;width:300px;">
-<img src="https://a248.e.akamai.net/assets.github.com/img/2614897f9faca1f2596020938424169bd2e6195e/687474703a2f2f692e696d6775722e636f6d2f397359526f2e706e67" width="300"/>
+<img src="https://github.com/Vizzuality/Windshaft/raw/master/examples/puma_concolor.png" width="300"/>
 <h5 style="color#666; margin-top:0;">Puma Concolor by @eightysteele</h5>
 </span>
 <br>
