@@ -134,13 +134,13 @@ tests["get'ing a json with default style should return an grid"] = function(){
 tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
     var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
     assert.response(server, {
-        url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
         method: 'GET'
     },{
         status: 200,
         headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
     }, function(res){
-        var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088.grid.json','utf8'));
+        var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088_limit_2.grid.json','utf8'));
         assert.deepEqual(JSON.parse(res.body), expected_json);
     });
 };
