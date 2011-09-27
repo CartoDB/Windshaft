@@ -130,19 +130,11 @@ sudo dpkg -i *.deb
 http://trac.mapnik.org/wiki/MacInstallation/Homebrew
 
 
-Tile Caching
-------------
-Windshaft serves tiles from a single use metatile cache (from mapnik/tilelive-mapnik). This provides good speed in
-addition to keeping the served maps fresh should the underlying data change or be updated. It is not, however, a full caching solution.
+Tests
+-----
 
-Should your data be less dynamic, you may want to consider improving performance by adding a simple HTTP cache such as Varnish in front of the
-tile url or your own custom cache implementation. Also, see notes on caching.
+Windshaft has a unit and acceptance test suite. To run them, please read ./test/README.md
 
-
-Concurrency
-------------
-Windshaft uses node.js and tilelive-mapnik's built in evented request handling, queuing and pooling to provide excellent scalability under concurrent requests.
-Should render load get too high, you may like split load over loadbalancers.
 
 
 --
