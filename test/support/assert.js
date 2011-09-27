@@ -13,7 +13,7 @@ assert.imageEqualsFile = function(buffer, file_b, callback) {
     var file_a = '/tmp/' + (Math.random() * 1e16);
     var err = fs.writeFileSync(file_a, buffer, 'binary');
     if (err) throw err;
-    
+
     exec('compare -metric PSNR "' + file_a + '" "' +
             file_b + '" /dev/null', function(err, stdout, stderr) {
         if (err) {

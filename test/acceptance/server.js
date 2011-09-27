@@ -99,7 +99,6 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
     });
 };
 
-
 tests["get'ing a tile with default style should return an expected tile"] = function(){
     assert.response(server, {
         url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
@@ -116,6 +115,22 @@ tests["get'ing a tile with default style should return an expected tile"] = func
     });
 };
 
+tests["get'ing a tile with default style and sql should return a constrained tile"] = function(){
+    var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
+        method: 'GET',
+        encoding: 'binary'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    }, function(res){
+        assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  function(err, similarity) {
+            if (err) throw err;
+            assert.deepEqual(res.headers['content-type'], "image/png");
+        });
+    });
+};
 
 tests["get'ing a json with default style should return an grid"] = function(){
     assert.response(server, {
@@ -129,7 +144,6 @@ tests["get'ing a json with default style should return an grid"] = function(){
         assert.deepEqual(JSON.parse(res.body), expected_json);
     });
 };
-
 
 tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
     var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
@@ -145,35 +159,6 @@ tests["get'ing a json with default style and sql should return a constrained gri
     });
 };
 
-
-//
-//
-//
-//tests["get'ing a tile with default style and sql should return a constrained image"] = function(){
-//    var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE name_2 = 'Murcia'"});
-//    assert.response(server, {
-//        headers: {host: 'vizzuality.localhost.lan'},
-//        url: '/tiles/gadm4/6/31/24.png?' + sql,
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'image/png' }
-//    });
-//};
-//
-//
-//tests["get'ing a tile with default style and complex sql should return a constrained image"] = function(){
-//    var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE name_2 = 'Murcia' AND id_1 > 950"})
-//    assert.response(server, {
-//        headers: {host: 'vizzuality.localhost.lan'},
-//        url: '/tiles/gadm4/6/31/24.png?' + sql,
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'image/png' }
-//    });
-//};
-//
 tests["get'ing a tile with CORS enabled should return CORS headers"] = function(){
     assert.response(server, {
         url: '/database/windshaft_test/table/test_table/6/31/24.png',
