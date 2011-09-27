@@ -30,6 +30,7 @@
                 var table = $('#table').val();
 
                 var url = _.template(baseURL, {dbname: dbname, table: table});
+
                 tilejson.tiles = [url + '.png'];
                 tilejson.grids = [url + '.grid.json'];
 
@@ -50,8 +51,8 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
 </head>
 <body>
-<input type="text" value="database name" id="dbname">
-<input type="text" value="table name" id="table">
+<input type="text" value="windshaft_test" id="dbname">
+<input type="text" value="test_table" id="table">
 <input type="button" id="update_map" value="Go">
 <div id="map" style="width: 1500px; height: 900px"></div>
 </body>
