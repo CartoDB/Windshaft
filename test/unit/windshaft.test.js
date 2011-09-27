@@ -1,15 +1,13 @@
 var   _         = require('underscore')
-    , th        = require('../../test_helper')
+    , th        = require('../test_helper.js')
     , assert    = require('assert')
-    , Windshaft = require('../../../lib/windshaft')
-    , tests     = module.exports = {};
-
-var serverOptions = require(__dirname + '/../../../lib/cartodb/server_options');
+    , Windshaft = require('../../lib/windshaft')
+    , tests     = module.exports = {}
+    , serverOptions = require('../server_options');
 
 tests['true'] = function() {
     assert.eql(global.environment.name, 'test');
 };
-
 
 tests['can instantiate a Windshaft object (configured express instance)'] = function(){
     var ws = new Windshaft.Server(serverOptions);
@@ -33,5 +31,5 @@ tests['throws exception if incorrect options passed in'] = function(){
 tests['options are set on main windshaft object'] = function(){
     var ws = new Windshaft.Server(serverOptions);
     assert.ok(_.isFunction(ws.req2params));
-    assert.eql(ws.base_url, '/tiles/:table');
+    assert.eql(ws.base_url, '/database/:dbname/table/:table');
 };
