@@ -4,6 +4,7 @@ var   assert      = require('../support/assert')
     , tests       = module.exports = {}
     , _           = require('underscore')
     , querystring = require('querystring')
+    , fs          = require('fs')
     , th          = require(__dirname + '/../test_helper')
     , Windshaft = require(__dirname + '/../../lib/windshaft')
     , serverOptions = require('../server_options')
@@ -116,15 +117,18 @@ tests["get'ing a tile with default style should return an expected tile"] = func
 };
 
 
-//tests["get'ing a json with default style should return an grid"] = function(){
-//    assert.response(server, {
-//        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
-//        method: 'GET'
-//    },{
-//        status: 200,
-//        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-//    });
-//};
+tests["get'ing a json with default style should return an grid"] = function(){
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    }, function(res){
+        var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088.grid.json','utf8'));
+        assert.deepEqual(JSON.parse(res.body), expected_json);
+    });
+};
 
 
 //tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
