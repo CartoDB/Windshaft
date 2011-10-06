@@ -168,3 +168,23 @@ tests["get'ing a tile with CORS enabled should return CORS headers"] = function(
         headers: {'Access-Control-Allow-Headers': 'X-Requested-With', 'Access-Control-Allow-Origin': '*'}
     });
 };
+
+tests["beforeTileRender is called when the client request a tile"] = function() {
+     assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/6/31/24.png',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: {'X-BeforeTileRender': 'called'}
+    });
+}
+
+tests["afterTileRender is called when the client request a tile"] = function() {
+     assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/6/31/24.png',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
+    });
+}

@@ -73,11 +73,21 @@ var Windshaft = require('windshaft');
 // GET  base_url + '/style' (returns a map style)
 // POST base_url + '/style' (allows specifying of a style in Carto markup in the 'style' form variable).
 //
+// beforeTileRender and afterTileRender could be defined if you want yo implement your own tile cache policy. See
+// an example below
+
 var config = {
         base_url: '/database/:dbname/table/:table',
         req2params: function(req, callback){callback(null,req)},
         grainstore: {datasource: {user:'postgres', host: '127.0.0.1', port: 5432}}, //see grainstore npm for other options
-        redis: {host: '127.0.0.1', port: 6379}
+        redis: {host: '127.0.0.1', port: 6379},
+        // this two filters are optional
+        beforeTileRender: function(req, res, callback) {
+            callback(null);
+        },
+        afterTileRender: function(req, res, tile, headers, callback) {
+            callback(null, tile, headers);
+        }
     };
 
 // Initialize tile server on port 4000
