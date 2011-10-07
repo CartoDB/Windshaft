@@ -107,7 +107,7 @@ Installing Mapnik 2.0
 
 **Ubuntu**
 
-Easy way (note, this is currently failing on Mapnik-2.0 head)
+beware, these are nightlies and may break
 
 ```bash
 sudo apt-get install build-essential curl wget python-software-properties
@@ -115,25 +115,6 @@ sudo add-apt-repository ppa:mapnik/nightly-trunk
 sudo apt-get update
 sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
 ```
-
-Fiddly but stable way
-
-```bash
-
-# make sure you chose the deb to match your machines architecture (amd64 or i386)
-
-sudo apt-get install build-essential curl wget
-wget http://launchpadlibrarian.net/35991565/libicu42_4.2.1-3_amd64.deb
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2-dev_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/libmapnik2_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/mapnik2-doc_2%2Bdev20110905.svn3272-1~lucid1_all.deb
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/mapnik2-utils_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
-wget https://launchpad.net/~mapnik/+archive/nightly-trunk/+files/python-mapnik2_2%2Bdev20110905.svn3272-1~lucid1_amd64.deb
-
-sudo dpkg -i *.deb
-```
-
-(tested on release 2+dev20110905.svn3272-1~lucid1.deb)
 
 **OSX**
 
