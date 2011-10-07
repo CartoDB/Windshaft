@@ -16,5 +16,14 @@ module.exports = {
 
         // send the finished req object on
         callback(null,req);
+    },
+    beforeTileRender: function(req, res, callback) {
+        res.header('X-BeforeTileRender', 'called');
+        callback(null);
+    },
+    afterTileRender: function(req, res, tile, headers, callback) {
+        res.header('X-AfterTileRender','called');
+        headers['X-AfterTileRender2'] = 'called';
+        callback(null, tile, headers);
     }
 };
