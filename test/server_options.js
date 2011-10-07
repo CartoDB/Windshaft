@@ -1,8 +1,7 @@
 var _ = require('underscore');
-var Cache = require(__dirname + "/../lib/windshaft/tile_cache");
 
 module.exports = function(opts) {
-    var opts = opts || {};
+    
     var config = {
         base_url: '/database/:dbname/table/:table',
         grainstore: {datasource: global.environment.postgres},
@@ -32,13 +31,7 @@ module.exports = function(opts) {
 
     }
 
-    if(opts.lru_cache) {
-        var lru_cache = Cache.LRUcache(opts.lru_cache_size || 10);
-        _.extend(config, {
-            beforeTileRender: lru_cache.beforeTileRender,
-            afterTileRender: lru_cache.afterTileRender,
-            cacheStats: lru_cache.getStats
-        })
-    }
+    _.extend(config,  opts || {});
+ 
     return config;
 };
