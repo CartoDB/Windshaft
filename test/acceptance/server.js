@@ -7,8 +7,11 @@ var   assert      = require('../support/assert')
     , fs          = require('fs')
     , th          = require(__dirname + '/../test_helper')
     , Windshaft = require(__dirname + '/../../lib/windshaft')
-    , serverOptions = require('../server_options')
-    , server = new Windshaft.Server(serverOptions);
+    , ServerOptions = require('../server_options')
+    , http          = require('http');
+
+
+var server = new Windshaft.Server(ServerOptions());
 
 tests['true'] = function() {
     assert.ok(true);
@@ -188,3 +191,4 @@ tests["afterTileRender is called when the client request a tile"] = function() {
         headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
     });
 }
+
