@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "url": "https://github.com/Vizzuality/Windshaft",
@@ -20,7 +20,7 @@
         "grainstore": "0.0.10",
         "express": "2.4.3",
         "tilelive": "4.0.4",
-        "tilelive-mapnik-cartodb": "0.2.1"
+        "tilelive-mapnik": "0.2.1"
     },
     "devDependencies": {
         "expresso": "0.8.x"
