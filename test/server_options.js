@@ -29,13 +29,15 @@ module.exports = function(opts) {
             headers['X-AfterTileRender2'] = 'called';
             callback(null, tile, headers);
         }
+
     }
 
     if(opts.lru_cache) {
         var lru_cache = Cache.LRUcache(opts.lru_cache_size || 10);
         _.extend(config, {
             beforeTileRender: lru_cache.beforeTileRender,
-            afterTileRender: lru_cache.afterTileRender
+            afterTileRender: lru_cache.afterTileRender,
+            cacheStats: lru_cache.getStats
         })
     }
     return config;
