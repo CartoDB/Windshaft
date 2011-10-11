@@ -18,9 +18,12 @@
         "underscore"  : "1.1.x",
         "step": "0.0.x",
         "grainstore": "0.0.9",
+  	"generic-pool": "1.0.x",
         "express": "2.4.3",
         "tilelive": "4.0.4",
         "tilelive-mapnik": "0.2.1"
+        "redis": "0.6.7",
+        "hiredis": "0.1.12",
     },
     "devDependencies": {
         "expresso": "0.8.x"
