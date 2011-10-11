@@ -8,7 +8,8 @@ var   assert      = require('../support/assert')
     , Windshaft = require(__dirname + '/../../lib/windshaft')
     , ServerOptions = require('../server_options')
     , http          = require('http')
-    , Step          = require('step');
+    , Step          = require('step')
+    , CacheValidator = require(__dirname + '/../../lib/windshaft/cache_validator')
 
 
 var cached_server = new Windshaft.Server(ServerOptions({lru_cache: true, lru_cache_size: 3}));
@@ -27,10 +28,9 @@ tests["first time a tile is request should not be cached"] = function() {
 
 }
 
-
 tests["second time a tile is request should be cached"] = function() {
 
-   var url = '/database/windshaft_test/table/test_table/6/31/24.png';
+   var url = '/database/windshaft_test/table/test_table/7/31/8.png';
    assert.response(cached_server, {
             url: url,
             method: 'GET'
@@ -99,4 +99,26 @@ tests["LRU tile should be removed"] = function() {
     )
 
 }
-    
+tests["cache should be invalidated"] = function() {
+
+   var url = '/database/windshaft_test/table/test_table/6/31/24.png';
+   var cache = CacheValidator(global.environment.redis);
+   assert.response(cached_server, {
+            url: url,
+            method: 'GET'
+    },{
+        status: 200
+    }, function(res) {
+        cache.setTimestamp('windshaft_test', 'test_table', new Date().getTime() + 100, function() {
+            assert.response(cached_server, {
+                url: url,
+                method: 'GET'
+            },{
+                status: 200
+            }, function(res) {
+                assert.ok(res.header('X-Cache-hit') === undefined);
+            });
+        });
+    });
+
+}
