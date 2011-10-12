@@ -3,9 +3,9 @@
 var http = require('http')
 
 var options = {
-  host: '10.0.0.11',
-  port: 9090,
-  path: '/database/windshaft_test/table/uasm_all_export/{z}/{x}/{y}.png'
+  host: 'vizzuality.localhost.lan',
+  port: 80,
+  path: '/tiles/datos_agroguia_2/{z}/{x}/{y}.png?cache_buster=0&map_key=a9edf3d0d2edbcf55ad38ee5b23af1507b774a5b'
 };
 
 function randInt(min, max) {
@@ -31,8 +31,8 @@ for(var i = 0; i < N; ++i) {
         port: options.port,
         path: new String(options.path)
     };
-    opt.path = opt.path.replace('{z}', 4).replace('{x}', randInt(0, 15)).replace('{y}', randInt(0, 15));
-    //console.log(opt.path)
+    opt.path = opt.path.replace('{z}', 2).replace('{x}', randInt(0, 3)).replace('{y}', randInt(0, 3));
+    console.log(opt.path)
     http.get(opt, function(res) {
         //console.log(ok + error);
         ok++;
