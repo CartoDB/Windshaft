@@ -10,7 +10,7 @@
         "url": "git://github.com/Vizzuality/Windshaft.git"
     }],
     "author": {
-      "name": "Simon Tokumine, Vizzuality",
+      "name": "Simon Tokumine, Javier Santana, Vizzuality",
       "url": "http://vizzuality.com",
       "email": "simon@vizzuality.com"
     },
@@ -21,9 +21,9 @@
   		  "generic-pool": "1.0.x",
         "express": "2.4.3",
         "tilelive": "4.0.4",
-        "tilelive-mapnik": "0.2.1"
+        "tilelive-mapnik": "0.2.1",
         "redis": "0.6.7",
-        "hiredis": "0.1.12",
+        "hiredis": "0.1.12"
     },
     "devDependencies": {
         "expresso": "0.8.x"
