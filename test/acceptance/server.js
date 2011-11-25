@@ -53,7 +53,7 @@ tests["post'ing bad style returns 400 with error"] = function(){
         headers: {'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
     },{
-        status: 400,
+        status: 500,
         body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color"])
     });
 };
@@ -65,7 +65,7 @@ tests["post'ing multiple bad styles returns 400 with error array"] = function(){
         headers: {'Content-Type': 'application/x-www-form-urlencoded' },
         data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
     },{
-        status: 400,
+        status: 500,
         body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color","style.mss:1:41 Unrecognized rule: foo"])
     });
 };
@@ -101,6 +101,35 @@ tests["post'ing good style returns 200 then getting returns original style"] = f
         body: JSON.stringify({style: style})
     });
 };
+
+tests["deleting a style returns 200 and returns default therafter"] = function(){
+    var style = '#test_table_3{background-color:#fff;}';
+    var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table_3/style',
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+        data: querystring.stringify({style: style})
+    },{
+        status: 200
+    });
+
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table_3/style',
+        method: 'DELETE'
+    },{
+        status: 200
+    });
+
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table_3/style',
+        method: 'GET'
+    },{
+        status: 200,
+        body: JSON.stringify({style: default_style})
+    });
+};
+
 
 tests["get'ing a tile with default style should return an expected tile"] = function(){
     assert.response(server, {
@@ -173,7 +202,7 @@ tests["get'ing a tile with CORS enabled should return CORS headers"] = function(
 };
 
 tests["beforeTileRender is called when the client request a tile"] = function() {
-     assert.response(server, {
+    assert.response(server, {
         url: '/database/windshaft_test/table/test_table/6/31/24.png',
         method: 'GET'
     },{
@@ -183,7 +212,7 @@ tests["beforeTileRender is called when the client request a tile"] = function() 
 }
 
 tests["afterTileRender is called when the client request a tile"] = function() {
-     assert.response(server, {
+    assert.response(server, {
         url: '/database/windshaft_test/table/test_table/6/31/24.png',
         method: 'GET'
     },{
