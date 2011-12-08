@@ -181,6 +181,72 @@ tests["get'ing a tile with url specified style should return an expected tile"] 
     });
 };
 
+tests["get'ing a tile with url specified style should return an expected tile twice"] = function(){
+    var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+        method: 'GET',
+        encoding: 'binary'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    }, function(res){
+        assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+            if (err) throw err;
+            assert.deepEqual(res.headers['content-type'], "image/png");
+        });
+    });
+};
+
+
+tests["dynamically set styles in same session and then back to default"] = function(){
+    var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+        method: 'GET',
+        encoding: 'binary'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    }, function(res){
+        assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+            if (err) throw err;
+            assert.deepEqual(res.headers['content-type'], "image/png");
+
+            // second style
+            var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
+            assert.response(server, {
+                url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+                method: 'GET',
+                encoding: 'binary'
+            },{
+                status: 200,
+                headers: { 'Content-Type': 'image/png' }
+            }, function(res){
+                assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+                    if (err) throw err;
+                    assert.deepEqual(res.headers['content-type'], "image/png");
+
+                    //back to default
+                    assert.response(server, {
+                        url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
+                        method: 'GET',
+                        encoding: 'binary'
+                    },{
+                        status: 200,
+                        headers: { 'Content-Type': 'image/png' }
+                    }, function(res){
+                        assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  function(err, similarity) {
+                            if (err) throw err;
+                            assert.deepEqual(res.headers['content-type'], "image/png");
+                        });
+                    });
+                });
+            });
+        });
+    });
+};
+
 tests["get'ing a json with default style should return an grid"] = function(){
     assert.response(server, {
         url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',

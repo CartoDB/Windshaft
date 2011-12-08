@@ -17,7 +17,7 @@
     "dependencies": {
         "underscore"  : "1.1.x",
         "step": "0.0.x",
-        "grainstore": "0.0.12",
+        "grainstore": "0.2.0",
   		"generic-pool": "1.0.x",
         "express": "2.4.3",
         "tilelive": "4.0.4",
