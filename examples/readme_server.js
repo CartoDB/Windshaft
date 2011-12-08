@@ -7,7 +7,10 @@ var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 var config = {
     base_url: '/database/:dbname/table/:table',
-    grainstore: {datasource: {user:'postgres', host: '127.0.0.1', port: 5432}}, //see grainstore npm for other options
+    grainstore: {
+                 datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
+//               , styles: {point: "#test_table{marker-fill: blue;marker-line-color: black;}"}
+    }, //see grainstore npm for other options
     redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
     req2params: function(req, callback){

@@ -164,6 +164,23 @@ tests["get'ing a tile with default style and sql should return a constrained til
     });
 };
 
+tests["get'ing a tile with url specified style should return an expected tile"] = function(){
+    var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+        method: 'GET',
+        encoding: 'binary'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'image/png' }
+    }, function(res){
+        assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  function(err, similarity) {
+            if (err) throw err;
+            assert.deepEqual(res.headers['content-type'], "image/png");
+        });
+    });
+};
+
 tests["get'ing a json with default style should return an grid"] = function(){
     assert.response(server, {
         url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
