@@ -12,6 +12,7 @@ A Node.js based webmercator map tile server for PostGIS with Carto map styling A
 <li>Can render all table data, or data restricted by SQL query</li>
 <li>Generates image and UTFGrid interactivity tiles</li>
 <li>Accepts, stores, serves, and applies map styles written in the Carto markup language (same markup as Mapbox Tilemill)</li>
+<li>Accepts custom map styles on a per tile basis in the tile request</li>
 <li>Allows setting of CORS headers to allow access to tile data from Javascript</li>
 <li>No multi layer or composite support yet</li>
 </td>
@@ -33,12 +34,13 @@ Limitations
 -----------
 * supports single layer render only.
 * for speed, expects geometry projected to webmercator (EPSG:3857) in a column called the_geom_webmercator.
+* Mapnik is a fast moving target. This currently is pinned to the Mapnik 2.0 release.
 
 
 Dependencies
 ------------
-* Node 0.4.11+ & npm
-* Mapnik 2.0 or trunk > r3126
+* Node 0.4.x & npm
+* Mapnik 2.0
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
 
@@ -68,8 +70,9 @@ var Windshaft = require('windshaft');
 // * geom_type - specify the geom type (point|polygon) to get more appropriate default styles
 // * cache_buster - forces the creation of a new render object, nullifying existing metatile caches
 // * interactivity - specify the column to use in the UTFGrid interactivity layer (defaults to null)
+// * style - specify map style in the Carto map language on a per tile basis
 //
-// the base url is also used for getting and setting styles via the urls:
+// the base url is also used for persisiting and retrieving map styles via:
 //
 // GET  base_url + '/style' (returns a map style)
 // POST base_url + '/style' (allows specifying of a style in Carto markup in the 'style' form variable).
@@ -105,21 +108,16 @@ See examples directory for running server and maptile viewer
 Installing Mapnik 2.0
 ----------------------
 
-**Ubuntu**
-
-beware, these are nightlies and may break
-
-```bash
-sudo apt-get install build-essential curl wget python-software-properties
-sudo add-apt-repository ppa:mapnik/nightly-trunk
-sudo apt-get update
-sudo apt-get install libmapnik2 libmapnik2-dev mapnik2-utils
-```
+**Source**
+http://prdownload.berlios.de/mapnik/mapnik-2.0.0.tar.bz2
 
 **OSX**
 
 http://trac.mapnik.org/wiki/MacInstallation/Homebrew
 
+**Linux**
+
+There may be ubuntu ppa's out there with stable 2.0 packages right now - but beware, windshaft requires the official 2.0 release, not a nightly or head version.
 
 Tests
 -----
