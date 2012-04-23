@@ -260,6 +260,60 @@ tests["get'ing a json with default style should return an grid"] = function(){
     });
 };
 
+
+tests["get'ing a json with default style and single interactivity should return a grid"] = function(){
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    }, function(res){
+        var expected_json = {
+                             "1":{"name":"Hawai"},
+                             "2":{"name":"El Estocolmo"},
+                             "3":{"name":"El Rey del Tallarín"},
+                             "4":{"name":"El Lacón"},
+                             "5":{"name":"El Pico"}
+                            };
+        assert.deepEqual(JSON.parse(res.body).data, expected_json);
+    });
+};
+
+tests["get'ing a json with default style and multiple interactivity should return a grid"] = function(){
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    }, function(res){
+        var expected_json = {
+                                "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
+                                "2":{"address":"Calle de la Palma 72, Madrid, Spain","name":"El Estocolmo"},
+                                "3":{"address":"Plaza Conde de Toreno 2, Madrid, Spain","name":"El Rey del Tallarín"},
+                                "4":{"address":"Manuel Fernández y González 8, Madrid, Spain","name":"El Lacón"},
+                                "5":{"address":"Calle Divino Pastor 12, Madrid, Spain","name":"El Pico"}
+                            };
+        assert.deepEqual(JSON.parse(res.body).data, expected_json);
+    });
+};
+
+tests["get'ing a json with default style and nointeractivity should return a grid"] = function(){
+    assert.response(server, {
+        url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+        method: 'GET'
+    },{
+        status: 200,
+        headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+    }, function(res){
+        var expected_json = {};
+        assert.deepEqual(JSON.parse(res.body).data, expected_json);
+    });
+};
+
+
+
 tests["get'ing a json with default style and sql should return a constrained grid"] = function(){
     var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
     assert.response(server, {
