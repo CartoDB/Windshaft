@@ -49,7 +49,7 @@ Dependencies
 Install
 -------
 ```
-npm install windshaft
+npm install
 ```
 
 
