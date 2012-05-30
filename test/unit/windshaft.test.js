@@ -1,9 +1,9 @@
-var   _         = require('underscore')
-    , th        = require('../test_helper.js')
-    , assert    = require('assert')
-    , Windshaft = require('../../lib/windshaft')
-    , tests     = module.exports = {}
-    , serverOptions = require('../server_options')();
+var   _             = require('underscore')
+    , th            = require('../support/test_helper.js')
+    , assert        = require('assert')
+    , Windshaft     = require('../../lib/windshaft')
+    , serverOptions = require('../support/server_options')
+    , tests         = module.exports = {};
 
 tests['true'] = function() {
     assert.eql(global.environment.name, 'test');

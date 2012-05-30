@@ -1,11 +1,11 @@
-var   _         = require('underscore')
-    , sys       = require('sys')
-    , th        = require('../test_helper.js')
-    , assert    = require('assert')
-    , grainstore= require('grainstore')
-    , RenderCache = require('../../lib/windshaft/render_cache.js')
-    , tests       = module.exports = {}
-    , serverOptions = require('../server_options')();
+var   _             = require('underscore')
+    , sys           = require('sys')
+    , th            = require('../support/test_helper.js')
+    , assert        = require('assert')
+    , grainstore    = require('grainstore')
+    , RenderCache   = require('../../lib/windshaft/render_cache.js')
+    , serverOptions = require('../support/server_options')
+    , tests         = module.exports = {};
 
 // initialize core mml_store
 var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);

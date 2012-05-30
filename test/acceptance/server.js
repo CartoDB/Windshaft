@@ -1,17 +1,17 @@
 // FLUSHALL Redis before starting
 
-var   assert      = require('../support/assert')
-    , tests       = module.exports = {}
-    , _           = require('underscore')
-    , querystring = require('querystring')
-    , fs          = require('fs')
-    , th          = require(__dirname + '/../test_helper')
-    , Windshaft = require(__dirname + '/../../lib/windshaft')
-    , ServerOptions = require('../server_options')
+var   assert        = require('../support/assert')
+    , tests         = module.exports = {}
+    , _             = require('underscore')
+    , querystring   = require('querystring')
+    , fs            = require('fs')
+    , th            = require('../support/test_helper')
+    , Windshaft     = require('../../lib/windshaft')
+    , ServerOptions = require('../support/server_options')
     , http          = require('http');
 
 
-var server = new Windshaft.Server(ServerOptions());
+var server = new Windshaft.Server(ServerOptions);
 
 tests['true'] = function() {
     assert.ok(true);
