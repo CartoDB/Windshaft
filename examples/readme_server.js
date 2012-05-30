@@ -9,7 +9,6 @@ var config = {
     base_url: '/database/:dbname/table/:table',
     grainstore: {
                  datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
-//               , styles: {point: "#test_table{marker-fill: black;marker-line-color: black;}"}
     }, //see grainstore npm for other options
     redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
