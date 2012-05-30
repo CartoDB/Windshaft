@@ -24,7 +24,7 @@ tests['can spawn a new server on the global listen port'] = function(){
 tests['throws exception if incorrect options passed in'] = function(){
     assert.throws(
         function(){
-            var ws = new Windshaft.Server();
+            var ws = new Windshaft.Server({unbuffered_logging:true});
         }, /Must initialise Windshaft with a base URL and req2params function/
     );
 };
