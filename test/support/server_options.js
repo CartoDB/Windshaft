@@ -7,6 +7,7 @@ module.exports = function(opts) {
         grainstore: {datasource: global.environment.postgres},
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
+        unbuffered_logging: true, // for smoother teardown from tests
         req2params: function(req, callback){
 
             // no default interactivity. to enable specify the database column you'd like to interact with
