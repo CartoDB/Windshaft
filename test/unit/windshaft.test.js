@@ -18,6 +18,7 @@ tests['can spawn a new server on the global listen port'] = function(){
     var ws = new Windshaft.Server(serverOptions);
     ws.listen(global.environment.windshaft_port);
     assert.ok(ws);
+    ws.close(); /* allow proper tear down */
 };
 
 tests['throws exception if incorrect options passed in'] = function(){
