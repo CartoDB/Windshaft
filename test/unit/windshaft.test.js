@@ -3,7 +3,7 @@ var   _         = require('underscore')
     , assert    = require('assert')
     , Windshaft = require('../../lib/windshaft')
     , tests     = module.exports = {}
-    , serverOptions = require('../server_options');
+    , serverOptions = require('../server_options')();
 
 tests['true'] = function() {
     assert.eql(global.environment.name, 'test');
