@@ -1,12 +1,33 @@
 Windshaft tests
---
+===============
+
+Requirements
+------------
+
+ * Expresso - http://visionmedia.github.com/expresso/
+   Used to drive the test runs
+   You can install locally using ```npm install expresso```
+ * Redis - http://redis.io/
+   Used to cache styles 
+ * ImageMagick - http://www.imagemagick.org
+   Compare tool is used to perform image comparison
+
+Preparation
+-----------
+
 * Tests require you create a test database using the instructions in
   windshaft.test.sql
-* As styles are cached in redis, flushing your redis database may be
-  needed if you are developing.
-* ImageMagick need to be installed, compare tool is used to perform
-  image comparison
+* Redis needs to be running and listening on port 6379 (the default).
+  Flushing your redis database may be needed if you are developing.
+
+Execution
+---------
 
 once database is configured, run the tests with expresso:
 
-> expresso test/acceptance/server.js (etc)
+```
+expresso acceptance/server.js (etc)
+```
+
+Note that expresso might be installed in ../node_modules/expresso/bin
+
