@@ -17,7 +17,7 @@ styling API.
 * No multi layer or composite support yet
 
 ![Puma Concolor by @eightysteele] (
-examples/puma_concolor.png
+http://github.com/Vizzuality/Windshaft/raw/master/examples/puma_concolor.png
 )
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
