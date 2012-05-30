@@ -15,8 +15,13 @@ Requirements
 Preparation
 -----------
 
-* Tests require you create a test database using the instructions in
-  windshaft.test.sql
+```
+cd test
+./prepare_test
+```
+
+* If prepare_test fails, refer to instructions in
+  test/fixtures/windshaft.test.sql
 * Redis needs to be running and listening on port 6379 (the default).
   Flushing your redis database may be needed if you are developing.
 
@@ -33,6 +38,7 @@ once database is configured, run the tests with expresso:
 
 Notes
 -----
-* tests do not cause an exit of the main node event loop, and so need to be exited using ctrl-c.
+* tests do not cause an exit of the main node event loop, and so
+  need to be exited using ctrl-c.
 * expresso might be installed in ../node_modules/expresso/bin
-
+* performance tests are currently broken. Need removal or fixing.

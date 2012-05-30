@@ -1,0 +1,10 @@
+echo "...Configuring Windshaft test database"
+
+echo "...Recreating windshaft_test database"
+dropdb -Upostgres -hlocalhost windshaft_test | 2>&1
+createdb -Upostgres -hlocalhost -Ttemplate_postgis -Opostgres -EUTF8 windshaft_test | 2>&1
+
+echo "...Populating windshaft_test database with test data"
+psql -Upostgres -hlocalhost windshaft_test < ./fixtures/windshaft.test.sql | 2>&1
+
+echo "...Test database configuration complete"
