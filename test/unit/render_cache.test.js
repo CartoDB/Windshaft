@@ -36,6 +36,7 @@ tests['render_cache can generate a tilelive object'] = function(){
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         assert.eql(renderer._uri.query.base.split(':')[0], 'windshaft_test');
     });
 };
@@ -46,6 +47,7 @@ tests['render_cache can generate > 1 tilelive object'] = function(){
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         req = {params: {dbname: "windshaft_test", table: 'test_table_2', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer2){
             assert.eql(_.keys(render_cache.renderers).length, 2);
@@ -59,6 +61,7 @@ tests['render_cache can reuse tilelive object'] = function(){
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         render_cache.getRenderer(req, function(err, renderer){
             assert.eql(_.keys(render_cache.renderers).length, 1);
         });
@@ -70,6 +73,7 @@ tests['render_cache can delete all tilelive objects when reset'] = function(){
 
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
             sql: "(SELECT * FROM test_table LIMIT 50) as q" }};
@@ -89,6 +93,7 @@ tests['render_cache can delete only related tilelive objects when reset'] = func
 
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
 
         render_cache.getRenderer(req, function(err, renderer){
@@ -114,6 +119,7 @@ tests['render_cache can purge all tilelive objects'] = function(){
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
 
         render_cache.getRenderer(req, function(err, renderer){
@@ -137,6 +143,7 @@ tests['render_cache automatically deletes tilelive only after timeout'] = functi
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
+        assert.ok(renderer, err);
         assert.eql(_.keys(render_cache.renderers).length, 1);
         setTimeout(function(){assert.eql(_.keys(render_cache.renderers).length, 0);},10);
     });
