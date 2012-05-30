@@ -31,5 +31,8 @@ once database is configured, run the tests with expresso:
 > expresso unit/render_cache.test.js
 ```
 
-Note that expresso might be installed in ../node_modules/expresso/bin
+Notes
+-----
+* tests do not cause an exit of the main node event loop, and so need to be exited using ctrl-c.
+* expresso might be installed in ../node_modules/expresso/bin
 
