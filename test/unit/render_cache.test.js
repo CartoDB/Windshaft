@@ -5,7 +5,7 @@ var   _         = require('underscore')
     , grainstore= require('grainstore')
     , RenderCache = require('../../lib/windshaft/render_cache.js')
     , tests       = module.exports = {}
-    , serverOptions = require('../server_options');
+    , serverOptions = require('../server_options')();
 
 // initialize core mml_store
 var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
@@ -27,16 +27,16 @@ tests['render_cache can create a unique key from request, stripping xyz/callback
 };
 
 /**
- * THE FOLLOWING TESTS NEED SOME DB SETUP
- * They need a database setup as below with the table test_table defined
- */
+* THE FOLLOWING TESTS NEED SOME DB SETUP
+* They need a database setup as below with the table test_table defined
+*/
 
 tests['render_cache can generate a tilelive object'] = function(){
     var render_cache = new RenderCache(100, mml_store);
     var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
     render_cache.getRenderer(req, function(err, renderer){
-        assert.eql(renderer._uri.query.base, 'windshaft_test:test_table:png:polygon:::');
+        assert.eql(renderer._uri.query.base.split(':')[0], 'windshaft_test');
     });
 };
 
