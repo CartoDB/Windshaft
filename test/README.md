@@ -26,7 +26,9 @@ Execution
 once database is configured, run the tests with expresso:
 
 ```
-expresso acceptance/server.js (etc)
+> expresso acceptance/server.js
+> expresso unit/windshaft.test.js
+> expresso unit/render_cache.test.js
 ```
 
 Note that expresso might be installed in ../node_modules/expresso/bin
