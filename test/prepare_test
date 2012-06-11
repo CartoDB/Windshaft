@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "...Configuring Windshaft test database"
 
 echo "...Recreating windshaft_test database"
