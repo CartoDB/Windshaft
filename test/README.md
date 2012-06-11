@@ -22,8 +22,8 @@ maybe redis slots.
 Redis needs to be running and listening on port 6379 (the default) or
 whatever you specified in the environment setting.
 
-PostgreSQL 9.1+ needs to be running and be accessible as specified in
-the environment configuration.
+PostgreSQL 9.1+ needs to be running, listening on a TCP port and be
+accessible as specified in the environment configuration.
 
 Create a spatial database called "windshaft_test" and load the script
 fixtures/windshaft.test.sql to initialize it. 
