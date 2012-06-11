@@ -15,14 +15,23 @@ Requirements
 Preparation
 -----------
 
-```
-./prepare_test
-```
+Edit configuration settings in the test environment configuration
+../config/environments/test.js --  specifically the postgresql and
+maybe redis slots.
 
- * If prepare_test fails, refer to instructions in
-   fixtures/windshaft.test.sql
- * Redis needs to be running and listening on port 6379 (the default).
-   Flushing your redis database may be needed if you are developing.
+Redis needs to be running and listening on port 6379 (the default) or
+whatever you specified in the environment setting.
+
+PostgreSQL 9.1+ needs to be running and be accessible as specified in
+the environment configuration.
+
+Create a spatial database called "windshaft_test" and load the script
+fixtures/windshaft.test.sql to initialize it. 
+The script ```./prepare_test``` attempts to do all of it for you,
+but might need to be edited to fix access parameters.
+
+Flushing your redis database may be needed if you are developing or after
+changes to the environment configuration: ```redis-cli flushall```.
 
 Execution
 ---------
