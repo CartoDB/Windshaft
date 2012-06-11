@@ -16,12 +16,11 @@ Preparation
 -----------
 
 ```
-cd test
 ./prepare_test
 ```
 
 * If prepare_test fails, refer to instructions in
-  test/fixtures/windshaft.test.sql
+  fixtures/windshaft.test.sql
 * Redis needs to be running and listening on port 6379 (the default).
   Flushing your redis database may be needed if you are developing.
 
