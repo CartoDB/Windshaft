@@ -1,12 +1,17 @@
 #!/bin/sh
 
+
+# NOTE: assumes existance of a "template_postgis"
+# NOTE2: use PG* environment variables to control who and where
+
+
 echo "...Configuring Windshaft test database"
 
 echo "...Recreating windshaft_test database"
-dropdb -Upostgres -hlocalhost windshaft_test | 2>&1
-createdb -Upostgres -hlocalhost -Ttemplate_postgis -Opostgres -EUTF8 windshaft_test | 2>&1
+dropdb windshaft_test | 2>&1
+createdb -Ttemplate_postgis -EUTF8 windshaft_test | 2>&1
 
 echo "...Populating windshaft_test database with test data"
-psql -Upostgres -hlocalhost windshaft_test < ./fixtures/windshaft.test.sql
+psql windshaft_test < ./fixtures/windshaft.test.sql
 
 echo "...Test database configuration complete"
