@@ -1,0 +1,2 @@
+check:
+	npm test

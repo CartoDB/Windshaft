@@ -29,6 +29,6 @@
         "expresso": "0.8.x"
     },
     "scripts": {
-        "test": "which expresso | sh"
+        "test": "sh ./run_tests.sh"
     }
 }

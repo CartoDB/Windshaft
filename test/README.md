@@ -19,7 +19,7 @@ Edit configuration settings in the test environment configuration
 ../config/environments/test.js --  specifically the postgresql and
 maybe redis slots.
 
-Redis needs to be running and listening on port 6379 (the default) or
+Redis needs to be running and listening on port 6333 or
 whatever you specified in the environment setting.
 
 PostgreSQL 9.1+ needs to be running, listening on a TCP port and be
