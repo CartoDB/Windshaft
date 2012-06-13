@@ -39,9 +39,10 @@ Execution
 once database is configured, run the tests with expresso:
 
 ```
-expresso acceptance/server.js
-expresso unit/windshaft.test.js
-expresso unit/render_cache.test.js
+cd ..
+expresso test/unit/windshaft.test.js
+expresso test/unit/render_cache.test.js
+expresso test/acceptance/server.js
 ```
 
 Notes
