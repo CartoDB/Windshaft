@@ -30,10 +30,11 @@ echo "Preparing the database"
 cd test; sh prepare_test >> test.log || die "database preparation failure (see test.log)"; cd -;
 
 echo "Running unit tests"
-expresso test/unit/windshaft.test.js \
-         test/unit/render_cache.test.js
+mocha -u tdd \
+  test/unit/render_cache.test.js \
+  test/unit/windshaft.test.js
 
-# This one doesn't work for me (yet) --strk
-#expresso test/acceptance/server.js
+# This one still fails, but in a different way
+#mocha -u tdd test/acceptance/server.js
 
 cleanup

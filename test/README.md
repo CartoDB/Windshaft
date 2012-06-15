@@ -4,9 +4,9 @@ Windshaft tests
 Requirements
 ------------
 
- * Expresso - http://visionmedia.github.com/expresso/
+ * Mocha - http://visionmedia.github.com/mocha/
    Used to drive the test runs
-   You can install locally using ```npm install expresso```
+   You can install globally using ```npm install -g mocha```
  * Redis - http://redis.io/
    Used to cache styles 
  * ImageMagick - http://www.imagemagick.org
@@ -31,7 +31,7 @@ The script ```./prepare_test``` attempts to do all of it for you,
 but might need to be edited to fix access parameters.
 
 Flushing your redis database may be needed if you are developing or after
-changes to the environment configuration: ```redis-cli flushall```.
+changes to the environment configuration: ```redis-cli -p 6333 flushall```.
 
 Execution
 ---------
@@ -40,14 +40,12 @@ once database is configured, run the tests with expresso:
 
 ```
 cd ..
-expresso test/unit/windshaft.test.js
-expresso test/unit/render_cache.test.js
-expresso test/acceptance/server.js
+mocha -u tdd test/unit/windshaft.test.js
+mocha -u tdd test/unit/render_cache.test.js
+mocha -u tdd test/acceptance/server.js
 ```
 
 Notes
 -----
- * tests do not cause an exit of the main node event loop, and so
-   need to be exited using ctrl-c.
- * expresso might be installed in ../node_modules/expresso/bin
+ * mocha might be installed in ../node_modules/mocha/bin
  * performance tests are currently broken. Need removal or fixing.
