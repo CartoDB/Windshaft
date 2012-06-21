@@ -34,7 +34,7 @@ mocha --ignore-leaks -u tdd \
   test/acceptance/server.js
 
 echo "Running unit tests"
-mocha --ignore-leaks -u tdd \
+mocha -u tdd \
   test/unit/windshaft.test.js \
   test/unit/render_cache.test.js 
 
