@@ -180,7 +180,7 @@ suite('server', function() {
         }, function(res){
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  function(err, similarity) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['contenT-type'], "image/png");
+                assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
             });
         });
