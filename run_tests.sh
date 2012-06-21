@@ -29,13 +29,14 @@ PID_REDIS=$!
 echo "Preparing the database"
 cd test; sh prepare_test >> test.log || die "database preparation failure (see test.log)"; cd -;
 
+echo "Running acceptance tests"
+mocha --ignore-leaks -u tdd \
+  test/acceptance/server.js
+
 echo "Running unit tests"
 mocha --ignore-leaks -u tdd \
-  test/unit/render_cache.test.js \
-  test/unit/windshaft.test.js
+  test/unit/windshaft.test.js \
+  test/unit/render_cache.test.js 
 
-#echo "Running acceptance tests"
-# This one still fails, but in a different way
-#mocha --ignore-leaks -u tdd test/acceptance/server.js
 
 cleanup
