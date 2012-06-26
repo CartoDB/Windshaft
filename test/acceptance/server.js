@@ -83,9 +83,10 @@ suite('server', function() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#test_table_3{background-color:#fff;}'})
-        },{
-            status: 200
-        }, function() { done(); } );
+        }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              done();
+        } );
     });
 
     test("post'ing good style returns 200 then getting returns original style",  function(done){
@@ -98,9 +99,9 @@ suite('server', function() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style})
-        },{
-            status: 200
-        }, function() {
+        },{}, function(res) {
+
+            assert.equal(res.statusCode, 200, res.body);
 
             assert.response(server, {
                 url: '/database/windshaft_test/table/test_table_3/style',
@@ -125,9 +126,9 @@ suite('server', function() {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style})
-        },{
-            status: 200
-        }, function() {
+        },{}, function(res) {
+
+            assert.equal(res.statusCode, 200, res.body);
 
             assert.response(server, {
                 url: '/database/windshaft_test/table/test_table_3/style',
