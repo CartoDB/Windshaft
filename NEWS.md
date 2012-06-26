@@ -1,5 +1,5 @@
 Version 0.4.7
-2012-06-??
+2012-06-26
 
  - Testsuite enhancements
    - Run on "make check"
