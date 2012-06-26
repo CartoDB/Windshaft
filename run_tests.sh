@@ -30,9 +30,7 @@ echo "Preparing the database"
 cd test; sh prepare_test >> test.log || die "database preparation failure (see test.log)"; cd -;
 
 echo "Running acceptance tests"
-# TODO: drop --ignore-leaks once grainstore leaks are gone, see
-#       https://github.com/Vizzuality/Windshaft/issues/23
-mocha --ignore-leaks -u tdd \
+mocha -u tdd \
   test/acceptance/server.js
 
 echo "Running unit tests"
