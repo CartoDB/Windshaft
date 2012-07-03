@@ -1,6 +1,7 @@
 Version 0.4.8
 2012-MM-DD
 
+ - Require grainstore 0.2.3 
  - Require zlib module as a workaround to "express"
    requiring a version of "connect" which doesn't do so
    while it should (https://github.com/senchalabs/connect/issues/613)
