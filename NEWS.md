@@ -1,6 +1,9 @@
 Version 0.4.8
 2012-MM-DD
 
+ - Require zlib module as a workaround to "express"
+   requiring a version of "connect" which doesn't do so
+   while it should (https://github.com/senchalabs/connect/issues/613)
  - Testsuite enhancements
    - Read connection params from environment also at preparation time
    - Better handling of database preparation failures
