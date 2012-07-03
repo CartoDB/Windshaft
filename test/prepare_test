@@ -4,12 +4,17 @@
 # NOTE: assumes existance of a "template_postgis"
 # NOTE2: use PG* environment variables to control who and where
 
+die() {
+        msg=$1
+        echo "${msg}" >&2
+        exit 1
+}
 
 echo "...Configuring Windshaft test database"
 
 echo "...Recreating windshaft_test database"
 dropdb windshaft_test | 2>&1
-createdb -Ttemplate_postgis -EUTF8 windshaft_test | 2>&1
+createdb -Ttemplate_postgis -EUTF8 windshaft_test || die "Could not create test database" 
 
 echo "...Populating windshaft_test database with test data"
 psql windshaft_test < ./fixtures/windshaft.test.sql

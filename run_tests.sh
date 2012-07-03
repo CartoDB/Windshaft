@@ -27,7 +27,7 @@ echo "port ${REDIS_PORT}" | redis-server - > test.log &
 PID_REDIS=$!
 
 echo "Preparing the database"
-cd test; sh prepare_test >> test.log || die "database preparation failure (see test.log)"; cd -;
+cd test; sh prepare_test || die "database preparation failure"; cd -;
 
 echo "Running acceptance tests"
 mocha -u tdd \
