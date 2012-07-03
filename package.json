@@ -26,7 +26,7 @@
         "hiredis": "0.1.12"
     },
     "devDependencies": {
-        "mocha": "*"
+        "mocha": "1.2.1"
     },
     "scripts": {
         "test": "sh ./run_tests.sh"
