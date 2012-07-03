@@ -2,6 +2,7 @@ Version 0.4.8
 2012-MM-DD
 
  - Testsuite enhancements
+   - Read connection params from environment also at preparation time
    - Better handling of database preparation failures
    - Require mocha 1.2.1 as 1.2.2 doesn't work with node-0.4
      See https://github.com/visionmedia/mocha/issues/489 
