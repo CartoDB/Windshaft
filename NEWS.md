@@ -1,6 +1,7 @@
 Version 0.4.8
 2012-MM-DD
 
+ - Add support for express-3.0 (not dropping support for express-2.x)
  - Redis dependency raised from 0.6.7 to 0.7.2 (supports node-0.8)
  - Require grainstore 0.2.3  (supports node-0.8)
  - Require zlib module as a workaround to "express"
