@@ -1,6 +1,7 @@
 Version 0.4.8
 2012-MM-DD
 
+ - Encode dependency on node-0.4
  - Raise express dependency to 2.5.11 (supports node-0.6)
  - Prepare code to support express-3.0 
  - Redis dependency raised from 0.6.7 to 0.7.2 (supports node-0.8)
