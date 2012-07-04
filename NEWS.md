@@ -1,5 +1,5 @@
 Version 0.4.8
-2012-MM-DD
+2012-07-04
 
  - Encode dependency on node-0.4
  - Raise express dependency to 2.5.11 (supports node-0.6)
