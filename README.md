@@ -35,13 +35,13 @@ Limitations
 * for speed, expects geometry projected to webmercator (EPSG:3857)
   in a column called the_geom_webmercator.
 * Mapnik is a fast moving target.
-  This currently is pinned to the Mapnik 2.0.0 release.
+  This currently is pinned to the Mapnik 2.1.x series.
 
 
 Dependencies
 ------------
-* Node 0.4.x & npm
-* Mapnik 2.0.0
+* Node 0.6.x & npm
+* Mapnik 2.1.x
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
 
@@ -120,28 +120,17 @@ console.log("map tiles are now being served out of: http://localhost:4000"
 See examples directory for running server and maptile viewer
 
 
-Installing Mapnik 2.0.0
+Installing Mapnik 2.1.x
 -----------------------
 
-**Source**
-http://prdownload.berlios.de/mapnik/mapnik-2.0.0.tar.bz2
-
-**OSX**
-
-http://trac.mapnik.org/wiki/MacInstallation/Homebrew
-
-**Linux**
-
-There may be ubuntu ppa's out there with stable 2.0.0 packages right now -
-but beware, windshaft requires the official 2.0.0 release, not a nightly
-or head version.
+There's no official release of 2.1 yet, so you'll have to build
+from sources. See http://mapnik.org/download/
 
 Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
 To run them, please read ./test/README.md
-
 
 --
 Thanks to the Mapnik and Mapbox team for making such flexible tools

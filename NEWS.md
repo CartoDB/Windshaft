@@ -1,3 +1,11 @@
+Version 0.?.?
+YYYY-MM-DD
+
+ - Node-0.6 support
+ - Mapnik support switched from 2.0 to 2.1
+ - tilelive dependency raised to 4.3.0
+ - drop tilelive-mapnik-cartodb 0.2.4 in favor of tilelive-mapnik 0.3.2
+
 Version 0.4.8
 2012-MM-DD
 
