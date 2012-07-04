@@ -1,5 +1,5 @@
 var   _             = require('underscore')
-    , sys           = require('sys')
+    , sys           = require('util')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
