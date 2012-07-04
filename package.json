@@ -31,5 +31,6 @@
     },
     "scripts": {
         "test": "sh ./run_tests.sh"
-    }
+    },
+    "engine": { "node": "~0.6" }
 }
