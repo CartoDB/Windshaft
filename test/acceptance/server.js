@@ -280,6 +280,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function(res){
+            //fs.writeFileSync('/tmp/grid.json', res.body, 'binary'); // <-- to debug/update
             var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088.grid.json','utf8'));
             assert.deepEqual(JSON.parse(res.body), expected_json);
             done();
@@ -353,6 +354,7 @@ suite('server', function() {
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function(res){
             var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088_limit_2.grid.json','utf8'));
+            //fs.writeFileSync('/tmp/grid.json', res.body, 'binary'); // <-- to debug/update
             assert.deepEqual(JSON.parse(res.body), expected_json);
             done();
         });

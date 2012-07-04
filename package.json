@@ -21,8 +21,8 @@
         "generic-pool": "1.0.x",
         "express": "2.5.11",
         "zlib": "1.0.5",
-        "tilelive": "4.0.4",
-        "tilelive-mapnik-cartodb": "0.2.4",
+        "tilelive": "4.3.0",
+        "tilelive-mapnik": "0.3.2",
         "redis": "0.7.2",
         "hiredis": "0.1.12"
     },
