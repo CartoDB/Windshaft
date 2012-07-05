@@ -4,7 +4,10 @@
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "url": "https://github.com/Vizzuality/Windshaft",
-    "licenses": [{ "type": "MIT" }],
+    "licenses": [{
+        "type": "BSD",
+        "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENCE"
+    }],
     "repositories": [{
         "type": "git",
         "url": "git://github.com/Vizzuality/Windshaft.git"
