@@ -1,0 +1,131 @@
+{
+  "name": "windshaft",
+  "version": "0.4.7",
+  "dependencies": {
+    "underscore": {
+      "version": "1.1.7"
+    },
+    "step": {
+      "version": "0.0.5"
+    },
+    "grainstore": {
+      "version": "0.2.3",
+      "dependencies": {
+        "carto": {
+          "version": "0.7.1",
+          "dependencies": {
+            "underscore": {
+              "version": "1.3.3"
+            },
+            "mapnik-reference": {
+              "version": "2.2.2"
+            },
+            "xml2js": {
+              "version": "0.1.14",
+              "dependencies": {
+                "sax": {
+                  "version": "0.4.0"
+                }
+              }
+            }
+          }
+        },
+        "srs": {
+          "version": "0.2.14"
+        }
+      }
+    },
+    "generic-pool": {
+      "version": "1.0.12"
+    },
+    "express": {
+      "version": "2.5.11",
+      "dependencies": {
+        "connect": {
+          "version": "1.9.1",
+          "dependencies": {
+            "formidable": {
+              "version": "1.0.11"
+            }
+          }
+        },
+        "mime": {
+          "version": "1.2.4"
+        },
+        "qs": {
+          "version": "0.4.2"
+        },
+        "mkdirp": {
+          "version": "0.3.0"
+        }
+      }
+    },
+    "tilelive": {
+      "version": "4.3.0",
+      "dependencies": {
+        "optimist": {
+          "version": "0.3.4",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2"
+            }
+          }
+        },
+        "sphericalmercator": {
+          "version": "1.0.1"
+        },
+        "underscore": {
+          "version": "1.3.3"
+        }
+      }
+    },
+    "tilelive-mapnik": {
+      "version": "0.3.2",
+      "dependencies": {
+        "underscore": {
+          "version": "1.3.3"
+        },
+        "mapnik": {
+          "version": "0.7.4"
+        },
+        "eio": {
+          "version": "0.1.0"
+        },
+        "sphericalmercator": {
+          "version": "1.0.1"
+        }
+      }
+    },
+    "redis": {
+      "version": "0.7.2"
+    },
+    "hiredis": {
+      "version": "0.1.12"
+    },
+    "mocha": {
+      "version": "1.2.1",
+      "dependencies": {
+        "commander": {
+          "version": "0.6.1"
+        },
+        "growl": {
+          "version": "1.5.1"
+        },
+        "jade": {
+          "version": "0.26.3",
+          "dependencies": {
+            "mkdirp": {
+              "version": "0.3.0"
+            }
+          }
+        },
+        "diff": {
+          "version": "1.0.2"
+        },
+        "debug": {
+          "version": "0.7.0"
+        }
+      }
+    }
+  }
+}

@@ -35,12 +35,13 @@ Limitations
 * for speed, expects geometry projected to webmercator (EPSG:3857)
   in a column called the_geom_webmercator.
 * Mapnik is a fast moving target.
-  This currently is pinned to the Mapnik 2.0.0 release.
+  This currently is pinned to the Mapnik 2.0.0 release 
+  (will also work with 2.1 but we expect 2.0 semantic)
 
 
 Dependencies
 ------------
-* Node 0.4.x & npm
+* Node 0.6.x & npm 1.1.2+ (for shrinkwrap support)
 * Mapnik 2.0.0
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x

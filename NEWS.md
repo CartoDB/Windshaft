@@ -1,12 +1,19 @@
-Version 0.4.9
-2012-MM-DD
+Version 0.5.0
+2012-07-05
+
+ NOTE: this release drops support for node-0.4.x
+
+ - Requires node-0.6 (#10) 
+ - Add npm-shrinkwrap.json file to lock dependencies versions
+ - Add support for mapnik 2.1.x (#14)
+ - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik (#26)
 
 Version 0.4.8
 2012-07-04
 
  - Encode dependency on node-0.4
  - Raise express dependency to 2.5.11 (supports node-0.6)
- - Prepare code to support express-3.0 
+ - Prepare code to support express-3.0
  - Redis dependency raised from 0.6.7 to 0.7.2 (supports node-0.8)
  - Require grainstore 0.2.3  (supports node-0.8)
  - Require zlib module as a workaround to "express"
@@ -16,7 +23,7 @@ Version 0.4.8
    - Read connection params from environment also at preparation time
    - Better handling of database preparation failures
    - Require mocha 1.2.1 as 1.2.2 doesn't work with node-0.4
-     See https://github.com/visionmedia/mocha/issues/489 
+     See https://github.com/visionmedia/mocha/issues/489
 
 Version 0.4.7
 2012-06-26
