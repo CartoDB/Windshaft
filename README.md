@@ -41,7 +41,7 @@ Limitations
 
 Dependencies
 ------------
-* Node 0.6.x & npm
+* Node 0.6.x & npm 1.1.2+ (for shrinkwrap support)
 * Mapnik 2.0.0
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
