@@ -4,7 +4,7 @@ Version 0.5.0
  - Requires node-0.6 (#10) 
  - Add npm-shrinkwrap.json file to lock dependencies versions
  - Add support for mapnik 2.1.x (#14)
- - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik
+ - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik (#26)
 
 Version 0.4.8
 2012-07-04
