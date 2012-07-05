@@ -1,5 +1,7 @@
 Version 0.5.0
-2012-07-DD
+2012-07-05
+
+ NOTE: this release drops support for node-0.4.x
 
  - Requires node-0.6 (#10) 
  - Add npm-shrinkwrap.json file to lock dependencies versions
