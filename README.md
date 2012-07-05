@@ -141,7 +141,7 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To run them, please read ./test/README.md
+To execute them, run ```make check```.
 
 
 --

@@ -1,6 +1,9 @@
 Windshaft tests
 ===============
 
+NOTE: everything written in here should be taken care of by
+      running "make check" from top-level dir
+
 Requirements
 ------------
 
@@ -38,7 +41,7 @@ changes to the environment configuration: ```redis-cli -p 6333 flushall```.
 Execution
 ---------
 
-once database is configured, run the tests with expresso:
+once database is configured, run the tests with mocha:
 
 ```
 cd ..
