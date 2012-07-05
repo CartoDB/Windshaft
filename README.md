@@ -36,13 +36,13 @@ Limitations
   in a column called the_geom_webmercator.
 * Mapnik is a fast moving target.
   This currently is pinned to the Mapnik 2.0.0 release 
-  (will also work with 2.1 but we expect 2.0 semantic)
+  (will also work with 2.1 but we expect 2.0 behavior)
 
 
 Dependencies
 ------------
 * Node 0.6.x & npm 1.1.2+ (for shrinkwrap support)
-* Mapnik 2.0.0
+* Mapnik 2.0 or 2.1 (but tests are written to expect 2.0 behavior)
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
 
