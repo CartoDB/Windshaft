@@ -33,18 +33,19 @@ suite('render_cache', function() {
      * They need a database setup as below with the table test_table defined
      */
 
-    test('render_cache can generate a tilelive object', function(){
+    test('render_cache can generate a tilelive object', function(done){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(renderer._uri.query.base.split(':')[0], 'windshaft_test');
+            done();
         });
     });
 
 
-    test('render_cache can generate > 1 tilelive object', function(){
+    test('render_cache can generate > 1 tilelive object', function(done){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -53,12 +54,13 @@ suite('render_cache', function() {
             req = {params: {dbname: "windshaft_test", table: 'test_table_2', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
             render_cache.getRenderer(req, function(err, renderer2){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
+                done();
             });
         });
     });
 
 
-    test('render_cache can reuse tilelive object', function(){
+    test('render_cache can reuse tilelive object', function(done){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -66,11 +68,12 @@ suite('render_cache', function() {
             assert.ok(renderer, err);
             render_cache.getRenderer(req, function(err, renderer){
                 assert.equal(_.keys(render_cache.renderers).length, 1);
+                done();
             });
         });
     });
 
-    test('render_cache can delete all tilelive objects when reset', function(){
+    test('render_cache can delete all tilelive objects when reset', function(done){
         var render_cache = new RenderCache(100, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -81,16 +84,15 @@ suite('render_cache', function() {
                 sql: "(SELECT * FROM test_table LIMIT 50) as q" }};
             render_cache.getRenderer(req, function(err, renderer){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
-
                 render_cache.reset(req);
-
                 assert.equal(_.keys(render_cache.renderers).length, 0);
+                done();
             });
         });
     });
 
 
-    test('render_cache can delete only related tilelive objects when reset', function(){
+    test('render_cache can delete only related tilelive objects when reset', function(done){
         var render_cache = new RenderCache(100, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -109,13 +111,15 @@ suite('render_cache', function() {
                     render_cache.reset(req);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1);
+
+                    done();
                 });
             });
         });
     });
 
 
-    test('render_cache can purge all tilelive objects', function(){
+    test('render_cache can purge all tilelive objects', function(done){
         var render_cache = new RenderCache(100, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -135,19 +139,21 @@ suite('render_cache', function() {
                     render_cache.purge();
 
                     assert.equal(_.keys(render_cache.renderers).length, 0);
+
+                    done();
                 });
             });
         });
     });
 
-    test('render_cache automatically deletes tilelive only after timeout', function(){
+    test('render_cache automatically deletes tilelive only after timeout', function(done){
         var render_cache = new RenderCache(5, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
-            setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0);},10);
+            setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0); done();},10);
         });
     });
 
