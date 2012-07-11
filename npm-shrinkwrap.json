@@ -27,9 +27,6 @@
             }
           }
         },
-        "hiredis": {
-          "version": "0.1.14"
-        },
         "srs": {
           "version": "0.2.14"
         }
@@ -94,7 +91,7 @@
       "version": "0.7.2"
     },
     "hiredis": {
-      "version": "0.1.12"
+      "version": "0.1.14"
     },
     "mocha": {
       "version": "1.2.1",

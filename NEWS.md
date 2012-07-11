@@ -3,6 +3,7 @@ Version 0.5.1
 
  - Raise underscore dependency to ~1.3 
  - Loosen grainstore dependency to ~0.2
+ - Loosen hiredis dependency to ~0.1.12
  - Add npm-shrinkwrap.json file to lock dependencies versions
  - Add support for mapnik 2.1.x (#14)
  - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik (#26)
