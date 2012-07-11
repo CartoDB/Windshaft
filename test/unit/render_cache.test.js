@@ -7,10 +7,10 @@ var   _             = require('underscore')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
-// initialize core mml_store
-var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
-
 suite('render_cache', function() {
+ 
+    // initialize core mml_store
+    var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
 
     test('true', function() {
         assert.equal(global.environment.name, 'test');
@@ -149,6 +149,11 @@ suite('render_cache', function() {
             assert.equal(_.keys(render_cache.renderers).length, 1);
             setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0);},10);
         });
+    });
+
+    suiteTeardown(function() {
+        // TODO: clear all caches (for proper redis flush)
+        // See https://github.com/Vizzuality/Windshaft/issues/24
     });
 
 });
