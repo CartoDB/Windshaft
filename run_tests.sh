@@ -29,12 +29,9 @@ PID_REDIS=$!
 echo "Preparing the database"
 cd test; sh prepare_test || die "database preparation failure"; cd -;
 
-echo "Running acceptance tests"
+echo "Running tests"
 mocha -u tdd \
-  test/acceptance/server.js
-
-echo "Running unit tests"
-mocha -u tdd \
+  test/acceptance/server.js \
   test/unit/windshaft.test.js \
   test/unit/render_cache.test.js 
 
