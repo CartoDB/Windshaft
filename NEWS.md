@@ -1,6 +1,10 @@
 Version 0.4.9
 2012-MM-DD
 
+ - Allow using with grainstore 0.3.0 to support overriding
+   database access credentials
+   
+
 Version 0.4.8
 2012-07-04
 
