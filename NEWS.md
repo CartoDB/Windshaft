@@ -2,7 +2,7 @@ Version 0.5.1
 2012-MM-DD
 
  - Raise underscore dependency to ~1.3 
- - Loosen grainstore dependency to ~0.2
+ - Loosen grainstore dependency to >= 0.2.3 < 0.4
  - Loosen hiredis dependency to ~0.1.12
 
 Version 0.5.0
