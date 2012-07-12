@@ -1,5 +1,5 @@
 Version 0.5.1
-2012-MM-DD
+2012-07-12
 
  - Raise underscore dependency to ~1.3 
  - Loosen grainstore dependency to >= 0.2.3 < 0.4
