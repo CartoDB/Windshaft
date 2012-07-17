@@ -23,8 +23,8 @@
         "grainstore": ">= 0.2.3 < 0.4",
         "generic-pool": "1.0.x",
         "express": "2.5.11",
-        "tilelive": "4.3.0",
-        "tilelive-mapnik": "0.3.2",
+        "tilelive": "~4.3.1",
+        "tilelive-mapnik": "0.4.2",
         "redis": "0.7.2",
         "hiredis": "~0.1.12"
     },

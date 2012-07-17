@@ -1,3 +1,13 @@
+Version 0.6.0
+2012-MM-DD
+
+ NOTE: this release drops support for mapnik 2.0.x
+
+ - Node 0.8 support
+   - Raise tilelive dependency to ~4.3.1
+   - Raise tilelive-mapnik dependency to 0.4.2
+
+
 Version 0.5.1
 2012-07-12
 
