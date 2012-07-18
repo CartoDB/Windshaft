@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.5.1",
+    "version": "0.5.2-dev",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "url": "https://github.com/Vizzuality/Windshaft",

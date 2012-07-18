@@ -1,3 +1,8 @@
+Version 0.5.2-dev
+2012-MM-DD
+
+ - Send PostgreSQL errors in the response body (#30)
+
 Version 0.5.1
 2012-07-12
 
