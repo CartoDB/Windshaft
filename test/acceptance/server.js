@@ -390,5 +390,21 @@ suite('server', function() {
         }, function() { done(); });
     });
 
+    // See https://github.com/Vizzuality/Windshaft/issues/31
+    test("PostgreSQL errors are sent in response body",  function(done) {
+        var sql = querystring.stringify({sql: "BROKEN QUERY"})
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+            status: 500
+        }, function(res) {
+          // TODO: actual error may depend on backend language localization
+          assert.ok(res.body.match(new RegExp(/syntax error/)),
+              'Body does not contain the "syntax error" message: ' + res.body);
+          done();
+        });
+    });
+
 });
 
