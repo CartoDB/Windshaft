@@ -1,8 +1,9 @@
 Version 0.4.9
-2012-MM-DD
+2012-07-18
 
  - Allow using with grainstore 0.3.0 to support overriding
    database access credentials
+ - Add "clean" and "all" rules
    
 
 Version 0.4.8
