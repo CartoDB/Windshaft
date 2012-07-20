@@ -1,8 +1,8 @@
-Version 0.5.2-dev
-2012-07-DD
+Version 0.5.2
+2012-07-20
 
  - Node 0.8 support
-   - Raise tilelive dependency to ~4.3.1
+ - Raise tilelive dependency to ~4.3.1
 
 Version 0.5.1
 2012-07-12
