@@ -11,7 +11,7 @@ var assert = module.exports = exports = require('assert');
 assert.imageEqualsFile = function(buffer, file_b, callback) {
     if (!callback) callback = function(err) { if (err) throw err; };
     file_b = path.resolve(file_b);
-    var file_a = '/tmp/' + (Math.random() * 1e16);
+    var file_a = '/tmp/windshaft-test-image-' + (Math.random() * 1e16); // TODO: make predictable 
     var err = fs.writeFileSync(file_a, buffer, 'binary');
     if (err) throw err;
 
