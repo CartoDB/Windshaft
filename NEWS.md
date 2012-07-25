@@ -1,3 +1,6 @@
+Version 0.5.4-dev
+2012-MM-DD
+
 Version 0.5.3
 2012-07-25
 
