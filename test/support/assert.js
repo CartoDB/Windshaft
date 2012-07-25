@@ -199,14 +199,59 @@ assert.response = function(server, req, res, msg){
       }
 };
 
-assert.utfgridEqualsFile = function(buffer, file_b, callback) {
+// @param tolerance number of tolerated grid cell differences
+assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
     //fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
 
     var err = null;
 
+    var Celldiff = function(x, y, ev, ov) {
+      this.x = x;
+      this.y = y;
+      this.ev = ev;
+      this.ov = ov;
+    };
+
+    Celldiff.prototype.toString = function() {
+      return '(' + this.x + ',' + this.y + ')["' + this.ev + '" != "' + this.ov + '"]';
+    };
+
     try {
-      assert.deepEqual(JSON.parse(buffer), expected_json);
+      var obtained_json = JSON.parse(buffer);
+
+      // compare grid
+      var obtained_grid = obtained_json.grid;
+      var expected_grid = expected_json.grid;
+      var nrows = obtained_grid.length
+      if (nrows != expected_grid.length) {
+        throw new Error( "Obtained grid rows (" + nrows +
+                    ") != expected grid rows (" + expected_grid.length + ")" );
+      }
+      var celldiff = [];
+      for (var i=0; i<nrows; ++i) {
+        var ocols = obtained_grid[i];
+        var ecols = expected_grid[i];
+        var ncols = ocols.length;
+        if ( ncols != ecols.length ) {
+          throw new Error( "Obtained grid cols (" + ncols +
+                   ") != expected grid cols (" + ecols.length +
+                   ") on row " + i ); 
+        }
+        for (var j=0; j<ncols; ++j) {
+          var ocell = ocols[j];
+          var ecell = ecols[j];
+          if ( ocell !== ecell ) {
+            celldiff.push(new Celldiff(i, j, ecell, ocell));
+          }
+        }
+      }
+
+      if ( celldiff.length > tolerance ) {
+        throw new Error( celldiff.length + " cell differences: " + celldiff );
+      }
+
+      assert.deepEqual(obtained_json.keys, expected_json.keys);
     } catch (e) { err = e; }
 
     callback(err);

@@ -280,7 +280,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function(res){
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', done);
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
     });
 
@@ -350,7 +350,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function(res){
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', done);
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
         });
     });
 
