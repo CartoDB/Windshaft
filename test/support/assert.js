@@ -198,3 +198,17 @@ assert.response = function(server, req, res, msg){
       }
 };
 
+assert.utfgridEqualsFile = function(buffer, file_b, callback) {
+    //fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
+    var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
+
+    var err = null;
+
+    try {
+      assert.deepEqual(JSON.parse(buffer), expected_json);
+    } catch (e) { err = e; }
+
+    callback(err);
+};
+
+
