@@ -1,5 +1,5 @@
 module.exports.name             = 'development';
-module.exports.postgres         = {user: 'postgres', host: '127.0.0.1', port: 5432};
+module.exports.postgres         = {user: 'postgres', host: '127.0.0.1', port: 5432, geometry_field: 'the_geom', srid: 4326 };
 module.exports.redis            = {host: '127.0.0.1', 
                                    port: 6379, 
                                    idleTimeoutMillis: 1,

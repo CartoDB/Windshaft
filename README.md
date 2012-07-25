@@ -32,8 +32,6 @@ an Open Source Geospatial Database on the Cloud.
 Limitations
 -----------
 * supports single layer render only.
-* for speed, expects geometry projected to webmercator (EPSG:3857)
-  in a column called the_geom_webmercator.
 * Mapnik is a fast moving target.
   This currently is pinned to the Mapnik 2.0.0 release 
   (will also work with 2.1 but we expect 2.0 behavior)

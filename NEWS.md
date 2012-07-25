@@ -1,3 +1,15 @@
+Version 0.5.3
+2012-07-25
+
+This release drops the requirement of a field already in epsg:3857
+(aka "the_geom_webmercator");
+
+ - Raise grainstore dependency to ~0.3.1 to allow for safe 
+   wgs84 to webmercator reprojection in mapnik.
+ - Update tests to use mapnik reprojection.
+ - Improve testing tool to accept tolerances
+ - Shrinkwrap carto 0.8.1 and mapnik-reference 3.1.0 
+
 Version 0.5.2
 2012-07-20
 
