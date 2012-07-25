@@ -8,15 +8,19 @@ var exec = require('child_process').exec;
 
 var assert = module.exports = exports = require('assert');
 
-assert.imageEqualsFile = function(buffer, file_b, callback) {
+//
+// @param tol tolerated color distance as a percent over max channel value
+//            by default this is zero. For meaningful values, see
+//            http://www.imagemagick.org/script/command-line-options.php#metric
+//
+assert.imageEqualsFile = function(buffer, file_b, tol, callback) {
     if (!callback) callback = function(err) { if (err) throw err; };
     file_b = path.resolve(file_b);
     var file_a = '/tmp/windshaft-test-image-' + (Math.random() * 1e16); // TODO: make predictable 
     var err = fs.writeFileSync(file_a, buffer, 'binary');
     if (err) throw err;
 
-    // See http://www.imagemagick.org/script/command-line-options.php#metric
-    var fuzz = '2%';
+    var fuzz = tol + '%';
     exec('compare -fuzz ' + fuzz + ' -metric AE "' + file_a + '" "' +
             file_b + '" /dev/null', function(err, stdout, stderr) {
         if (err) {

@@ -161,7 +161,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  2, function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
@@ -179,7 +179,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  2, function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
@@ -197,7 +197,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  2, function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
@@ -215,7 +215,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2, function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
@@ -233,7 +233,7 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', 2, function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
 
@@ -247,7 +247,7 @@ suite('server', function() {
                     status: 200,
                     headers: { 'Content-Type': 'image/png' }
                 }, function(res){
-                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', 2, function(err, similarity) {
                         if (err) throw err;
                         assert.deepEqual(res.headers['content-type'], "image/png");
 
@@ -260,7 +260,7 @@ suite('server', function() {
                             status: 200,
                             headers: { 'Content-Type': 'image/png' }
                         }, function(res){
-                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  function(err, similarity) {
+                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', 2, function(err, similarity) {
                                 if (err) throw err;
                                 assert.deepEqual(res.headers['content-type'], "image/png");
                                 done();
