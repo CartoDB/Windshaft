@@ -16,7 +16,7 @@ var baseurl_comps = baseurl.match(/(https?:\/\/)?([^:\/]*)(:([^\/]*))?(\/.*).*/)
 var options = {
   host: baseurl_comps[2],
   port: baseurl_comps[4] ? baseurl_comps[4] : 8181,
-  path: baseurl_comps[5] + '/{z}/{x}/{y}.png?cache_buster=0'
+  path: baseurl_comps[5] + '/{z}/{x}/{y}.png?cache_buster={cb}'
 };
 
 if ( process.argv.length > 3 ) {
@@ -60,7 +60,16 @@ for(var i = 0; i < N; ++i) {
         port: options.port,
         path: new String(options.path)
     };
-    opt.path = opt.path.replace('{z}', 2).replace('{x}', randInt(0, 3)).replace('{y}', randInt(0, 3));
+
+    var z = 2;
+    var x = randInt(0, 3);
+    var y = randInt(0, 3);
+    // update cache buster every 16 requests (TODO: use command line switch)
+    var cb = Math.floor(i/16);
+
+    opt.path = opt.path.replace('{z}', z).replace('{x}', x).replace('{y}', y).replace('{cb}', cb);
+    //console.log(' http://' + opt.host + ':' + opt.port + opt.path);
+
     //console.log(opt.path)
     http.get(opt, function(res) {
       res.body = '';
