@@ -10,6 +10,7 @@ function usage(exit_code) {
   console.log("Options:");
   console.log(" -v                verbose operations (off)");
   console.log(" --key <string>    map authentication key (none)");
+  console.log(" --requests <num>  number of requests to send (1000)");
   console.log(" --cached <num>    number of requests sharing same cache id (16)");
   process.exit(exit_code);
 }
@@ -21,6 +22,7 @@ var verbose = 0;
 var baseurl;
 var map_key;
 var cached_requests = 16;
+var N = 1000;
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -32,6 +34,9 @@ while ( arg = process.argv.shift() ) {
   }
   else if ( arg == '--cached' ) {
     cached_requests=process.argv.shift();
+  }
+  else if ( arg == '--requests' ) {
+    N=process.argv.shift();
   }
   else if ( ! baseurl ) {
     baseurl = arg;
@@ -73,7 +78,6 @@ function end() {
     console.log("req/s: ", ok/t);
 }
 
-var N = 1000;
 var ok = 0;
 var error = 0;
 
