@@ -3,13 +3,48 @@
 // small benchmark to execute with nodejs
 
 var http = require('http')
+var me = process.argv[1];
 
-if ( process.argv.length < 3 ) {
-  console.error("Usage: " + process.argv[1] + " <baseurl> [<map_key>]");
-  process.exit(1);
+function usage(exit_code) {
+  console.log("Usage: " + me + " [OPTIONS] <baseurl>");
+  console.log("Options:");
+  console.log(" -v                verbose operations (off)");
+  console.log(" --key <string>    map authentication key (none)");
+  console.log(" --cached <num>    number of requests sharing same cache id (16)");
+  process.exit(exit_code);
 }
 
-var baseurl = process.argv[2];
+process.argv.shift(); // this will be "node" (argv[0])
+process.argv.shift(); // this will be "benchmark.js" (argv[1])
+
+var verbose = 0;
+var baseurl;
+var map_key;
+var cached_requests = 16;
+
+var arg;
+while ( arg = process.argv.shift() ) {
+  if ( arg == '-v' ) {
+    ++verbose;
+  }
+  else if ( arg == '--key' ) {
+    map_key=process.argv.shift();
+  }
+  else if ( arg == '--cached' ) {
+    cached_requests=process.argv.shift();
+  }
+  else if ( ! baseurl ) {
+    baseurl = arg;
+  }
+  else {
+    usage(1);
+  }
+}
+
+if ( ! baseurl ) {
+  usage(1);
+}
+
 console.log("Baseurl is " + baseurl);
 var baseurl_comps = baseurl.match(/(https?:\/\/)?([^:\/]*)(:([^\/]*))?(\/.*).*/);
 
@@ -19,11 +54,10 @@ var options = {
   path: baseurl_comps[5] + '/{z}/{x}/{y}.png?cache_buster={cb}'
 };
 
-if ( process.argv.length > 3 ) {
-  options.path += '&map_key=' + process.argv[3]; 
-}
+if ( map_key ) options.path += '&map_key=' + map_key;
 
 console.dir(options);
+console.log("Requests per cache: " + cached_requests);
 
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max- min +1));
@@ -65,10 +99,10 @@ for(var i = 0; i < N; ++i) {
     var x = randInt(0, 3);
     var y = randInt(0, 3);
     // update cache buster every 16 requests (TODO: use command line switch)
-    var cb = Math.floor(i/16);
+    var cb = Math.floor(i/cached_requests);
 
     opt.path = opt.path.replace('{z}', z).replace('{x}', x).replace('{y}', y).replace('{cb}', cb);
-    //console.log(' http://' + opt.host + ':' + opt.port + opt.path);
+    if ( verbose ) console.log(' http://' + opt.host + ':' + opt.port + opt.path);
 
     //console.log(opt.path)
     http.get(opt, function(res) {
