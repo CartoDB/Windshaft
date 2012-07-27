@@ -73,7 +73,7 @@ function end() {
     console.log("req/s: ", ok/t);
 }
 
-var N = 1000
+var N = 1000;
 var ok = 0;
 var error = 0;
 
@@ -115,6 +115,7 @@ for(var i = 0; i < N; ++i) {
         if ( res.statusCode == 200 ) pass();
         else {
           fail(res.statusCode + ' http://' + opt.host + ':' + opt.port + opt.path + ' ' + res.body);
+          process.exit(1);
         }
       });
     }).on('error', function(e) {
