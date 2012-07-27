@@ -76,6 +76,7 @@ function end() {
     console.log("error: ", error)
     console.log("time: ", t);
     console.log("req/s: ", ok/t);
+    process.exit(0);
 }
 
 var ok = 0;
@@ -127,3 +128,8 @@ for(var i = 0; i < N; ++i) {
     });
 }
 
+var timeout = N * 1000;
+setTimeout(function() { 
+  console.log("Not finished after " + (timeout/1000) + " seconds, giving up");
+  process.exit(1);
+}, timeout);
