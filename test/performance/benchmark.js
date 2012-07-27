@@ -36,7 +36,7 @@ while ( arg = process.argv.shift() ) {
     cached_requests=process.argv.shift();
   }
   else if ( arg == '--requests' ) {
-    N=process.argv.shift();
+    N = parseInt(process.argv.shift());
   }
   else if ( ! baseurl ) {
     baseurl = arg;
