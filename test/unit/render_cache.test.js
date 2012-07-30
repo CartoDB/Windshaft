@@ -74,11 +74,12 @@ suite('render_cache', function() {
     });
 
     test('render_cache can delete all tilelive objects when reset', function(done){
-        var render_cache = new RenderCache(100, mml_store);
+        var render_cache = new RenderCache(10000, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
+            assert.equal(_.keys(render_cache.renderers).length, 1);
 
             var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
                 sql: "(SELECT * FROM test_table LIMIT 50) as q" }};
