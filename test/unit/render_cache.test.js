@@ -121,7 +121,7 @@ suite('render_cache', function() {
 
 
     test('render_cache can purge all tilelive objects', function(done){
-        var render_cache = new RenderCache(100, mml_store);
+        var render_cache = new RenderCache(2000, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -148,13 +148,13 @@ suite('render_cache', function() {
     });
 
     test('render_cache automatically deletes tilelive only after timeout', function(done){
-        var render_cache = new RenderCache(5, mml_store);
+        var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
-            setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0); done();},10);
+            setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0); done();},200);
         });
     });
 
