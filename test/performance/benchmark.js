@@ -116,9 +116,10 @@ for(var i = 0; i < N; ++i) {
         path: new String(options.path)
     };
 
-    var z = 2;
-    var x = randInt(0, 3);
-    var y = randInt(0, 3);
+    var z = 3;
+    var x = i%5; // TODO: make this configurable (5 horizontal tiles)
+    var y = i%4; // TODO: make this configurable (4 vertical tiles)
+
     // update cache buster every "cached_requests" requests 
     var cb = Math.floor(i/cached_requests);
 
