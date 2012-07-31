@@ -119,7 +119,7 @@ for(var i = 0; i < N; ++i) {
     var z = 2;
     var x = randInt(0, 3);
     var y = randInt(0, 3);
-    // update cache buster every 16 requests (TODO: use command line switch)
+    // update cache buster every "cached_requests" requests 
     var cb = Math.floor(i/cached_requests);
 
     opt.path = opt.path.replace('{z}', z).replace('{x}', x).replace('{y}', y).replace('{cb}', cb);
@@ -128,10 +128,12 @@ for(var i = 0; i < N; ++i) {
     //console.log(opt.path)
     http.get(opt, function(res) {
       res.body = '';
-      res.on('data', function(chunk) {
-        // Save only first chunk, to reduce cost of the operation
-        if ( res.body.length == 0 ) res.body += chunk;
-      });
+      if ( res.statusCode != 200 ) {
+        res.on('data', function(chunk) {
+          // Save only first chunk, to reduce cost of the operation
+          if ( res.body.length == 0 ) res.body += chunk;
+        });
+      }
       res.on('end', function() {
         if ( res.statusCode == 200 ) pass();
         else {
