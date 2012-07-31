@@ -12,8 +12,8 @@ function usage(exit_code) {
   console.log(" --help                  print this help");
   console.log(" --key <string>          map authentication key (none)");
   console.log(" -n, --requests <num>    number of requests to send (1000)");
-  console.log(" -C, --cached <num>      number of requests sharing same cache id (16)");
-  console.log(" -c, --concurrent <num>  number of concurrent requests (5)");
+  console.log(" -C, --cached <num>      number of requests sharing same cache id (20)");
+  console.log(" -c, --concurrent <num>  number of concurrent requests (20)");
   process.exit(exit_code);
 }
 
@@ -23,9 +23,9 @@ process.argv.shift(); // this will be "benchmark.js" (argv[1])
 var verbose = 0;
 var baseurl;
 var map_key;
-var cached_requests = 16;
-var N = 1000; // number of requests
-var concurrency = 5; // number of concurrent requests
+var cached_requests = 20;
+var N = cached_requests*50; // number of requests (50 full viewports)
+var concurrency = cached_requests; // number of concurrent requests
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -70,21 +70,27 @@ var options = {
 
 if ( map_key ) options.path += '&map_key=' + map_key;
 
-console.dir(options);
-console.log("Requests per cache: " + cached_requests);
-
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max- min +1));
 }
 
-var start_time = new Date().getTime();
+var start_time = Date.now();
 function end() {
-    var end_time = new Date().getTime();
+    var end_time = Date.now();
     var t = (end_time - start_time)/1000;
-    console.log("ok: ", ok)
-    console.log("error: ", error)
-    console.log("time: ", t);
-    console.log("req/s: ", ok/t);
+    console.log("");
+    console.log("Server Hostname:      ", options.host);
+    console.log("Server Port:          ", options.port);
+    console.log("");
+    console.log("Requests per cache:   ", cached_requests);
+    console.log("Base Path:            ", options.path);
+    console.log("");
+    console.log("Complete requests:    ", ok)
+    console.log("Failed requests:      ", error)
+    console.log("Concurrency Level:    ", concurrency);
+    console.log("Time taken for tests: ", t, " seconds");
+    console.log("Requests per second:: ", (Math.round(((ok+error)/t)*100)/100), '[#/sec] (mean)');
+    console.log("");
     process.exit(0);
 }
 
