@@ -9,6 +9,7 @@ function usage(exit_code) {
   console.log("Usage: " + me + " [OPTIONS] <baseurl>");
   console.log("Options:");
   console.log(" -v                verbose operations (off)");
+  console.log(" --help            print this help");
   console.log(" --key <string>    map authentication key (none)");
   console.log(" --requests <num>  number of requests to send (1000)");
   console.log(" --cached <num>    number of requests sharing same cache id (16)");
@@ -37,6 +38,9 @@ while ( arg = process.argv.shift() ) {
   }
   else if ( arg == '--requests' ) {
     N = parseInt(process.argv.shift());
+  }
+  else if ( arg == '--help' ) {
+    usage(0);
   }
   else if ( ! baseurl ) {
     baseurl = arg;
