@@ -8,11 +8,12 @@ var me = process.argv[1];
 function usage(exit_code) {
   console.log("Usage: " + me + " [OPTIONS] <baseurl>");
   console.log("Options:");
-  console.log(" -v                verbose operations (off)");
-  console.log(" --help            print this help");
-  console.log(" --key <string>    map authentication key (none)");
-  console.log(" --requests <num>  number of requests to send (1000)");
-  console.log(" --cached <num>    number of requests sharing same cache id (16)");
+  console.log(" -v                      verbose operations (off)");
+  console.log(" --help                  print this help");
+  console.log(" --key <string>          map authentication key (none)");
+  console.log(" -n, --requests <num>    number of requests to send (1000)");
+  console.log(" -C, --cached <num>      number of requests sharing same cache id (16)");
+  console.log(" -c, --concurrent <num>  number of concurrent requests (5)");
   process.exit(exit_code);
 }
 
@@ -23,7 +24,8 @@ var verbose = 0;
 var baseurl;
 var map_key;
 var cached_requests = 16;
-var N = 1000;
+var N = 1000; // number of requests
+var concurrency = 5; // number of concurrent requests
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -33,14 +35,17 @@ while ( arg = process.argv.shift() ) {
   else if ( arg == '--key' ) {
     map_key=process.argv.shift();
   }
-  else if ( arg == '--cached' ) {
+  else if ( arg == '--cached' || arg == '-C' ) {
     cached_requests=process.argv.shift();
   }
-  else if ( arg == '--requests' ) {
+  else if ( arg == '--requests' || arg == '-n' ) {
     N = parseInt(process.argv.shift());
   }
   else if ( arg == '--help' ) {
     usage(0);
+  }
+  else if ( arg == '-c' || arg == '--concurrency' ) {
+    concurrency = parseInt(process.argv.shift());
   }
   else if ( ! baseurl ) {
     baseurl = arg;
@@ -97,6 +102,7 @@ function pass() {
   if ( error + ok === N ) end();
 }
 
+http.globalAgent.maxSockets = concurrency;
 for(var i = 0; i < N; ++i) {
     var opt = {
         host: options.host,
