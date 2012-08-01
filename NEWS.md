@@ -1,5 +1,5 @@
-Version 0.5.4-dev
-2012-MM-DD
+Version 0.5.4
+2012-08-01
 
  - Enable metatiling (4x4) speeding up 5x4 viewport fillups by ~2.5 (#12)
  - Shrinkwrap node-mapnik 0.7.9, fixing the garbage collection issue (#32)
