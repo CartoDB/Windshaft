@@ -8,6 +8,7 @@ module.exports = function(opts) {
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
+        log_format: null, // do not log anything
         req2params: function(req, callback){
 
             // no default interactivity. to enable specify the database column you'd like to interact with
