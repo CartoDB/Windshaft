@@ -74,7 +74,7 @@
       "version": "0.3.2",
       "dependencies": {
         "mapnik": {
-          "version": "0.7.8"
+          "version": "0.7.9"
         },
         "eio": {
           "version": "0.1.0"
