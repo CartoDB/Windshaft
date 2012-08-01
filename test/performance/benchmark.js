@@ -108,7 +108,11 @@ function pass() {
   if ( error + ok === N ) end();
 }
 
-http.globalAgent.maxSockets = concurrency;
+if ( http.hasOwnProperty('globalAgent') ) {
+  http.globalAgent.maxSockets = concurrency;
+} else {
+  console.log("WARNING: could not set concurrency level, please run with node-0.6+");
+}
 for(var i = 0; i < N; ++i) {
     var opt = {
         host: options.host,
