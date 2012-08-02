@@ -2,8 +2,7 @@ In order to run the performance test you need:
 
  1. A running redis (or Windshaft server will choke and abort)
     The redis server must be listening on the port written
-    in the environment file you specify on command line
-    (see ../../config/environment)
+    in the ../../config/environment/test.js file 
 
  2. A database listening on the port written in the same
     environment file, with some spatial table in it (the geometry
@@ -12,7 +11,7 @@ In order to run the performance test you need:
 How to run the test:
  
  1. Run the server, and put in the background:
-    ./benchmark_server.js ENV &
+    ./benchmark_server.js &
     Will tell you something like: "Windshaft tileserver started on port 8080"
     Take note of the port number. Optionally redirect output to a log file
     to avoid console cluttering (but make sure to take note of port number).
