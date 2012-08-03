@@ -2,7 +2,8 @@ In order to run the performance test you need:
 
  1. A running redis (or Windshaft server will choke and abort)
     The redis server must be listening on the port written
-    in the ../../config/environment/test.js file 
+    in the ../../config/environment/test.js file, for example:
+    $ echo "port 6333" | redis-server - > /tmp/redis-test.log &
 
  2. A database listening on the port written in the same
     environment file, with some spatial table in it (the geometry
