@@ -1,3 +1,8 @@
+Version 0.5.5-dev
+2012-??-??
+
+ - Use custom tilelive-mapnik to workaround ever-growing memory use 
+
 Version 0.5.4
 2012-08-01
 
