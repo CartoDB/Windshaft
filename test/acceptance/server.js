@@ -77,13 +77,14 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
-    test("post'ing good style returns 200",  function(done){
+    test("post'ing good style returns 200 and afterStyleChange is called",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/style',
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: 'Map{background-color:#fff;}'})
         }, {}, function(res) {
+              assert.equal(server.afterStyleChangeCalls, 1);
               assert.equal(res.statusCode, 200, res.body);
               done();
         } );
@@ -115,7 +116,7 @@ suite('server', function() {
 
     });
 
-    test("deleting a style returns 200 and returns default therafter",  function(done){
+    test("deleting a style returns 200, calls afterStyleDelete and returns default therafter",  function(done){
         var style = 'Map {background-color:#fff;}';
         var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
 
@@ -129,13 +130,16 @@ suite('server', function() {
         },{}, function(res) {
 
             assert.equal(res.statusCode, 200, res.body);
+            assert.equal(server.afterStyleDeleteCalls, undefined);
 
             assert.response(server, {
                 url: '/database/windshaft_test/table/test_table_3/style',
                 method: 'DELETE'
             },{
-                status: 200
             }, function() {
+
+                assert.equal(res.statusCode, 200, res.body);
+                assert.equal(server.afterStyleDeleteCalls, 1);
 
                 assert.response(server, {
                     url: '/database/windshaft_test/table/test_table_3/style',

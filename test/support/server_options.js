@@ -29,6 +29,14 @@ module.exports = function(opts) {
             res.header('X-AfterTileRender','called');
             headers['X-AfterTileRender2'] = 'called';
             callback(null, tile, headers);
+        },
+        afterStyleChange: function(req, data, callback) {
+            this.afterStyleChangeCalls = this.afterStyleChangeCalls ? this.afterStyleChangeCalls + 1 : 1;
+            callback(null, data);
+        },
+        afterStyleDelete: function(req, data, callback) {
+            this.afterStyleDeleteCalls = this.afterStyleDeleteCalls ? this.afterStyleDeleteCalls + 1 : 1;
+            callback(null, data);
         }
 
     }
