@@ -1,5 +1,5 @@
-Version 0.4.10-dev
-2012-MM-DD
+Version 0.4.10
+2012-08-07
 
  - Expose setStyle and delStyle methods
  - Add afterStyleChange and afterStyleDelete callbacks
