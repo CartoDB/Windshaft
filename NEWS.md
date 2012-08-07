@@ -1,5 +1,5 @@
-Version 0.5.5-dev
-2012-??-??
+Version 0.5.5
+2012-08-07
 
  - Use custom tilelive-mapnik to workaround ever-growing memory use 
  - Expose setStyle and delStyle methods
