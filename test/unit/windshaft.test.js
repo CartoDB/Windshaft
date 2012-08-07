@@ -16,11 +16,12 @@ suite('windshaft', function() {
         assert.ok(ws);
     });
 
-    test('can spawn a new server on the global listen port',  function(){
+    test('can spawn a new server on the global listen port',  function(done){
         var ws = new Windshaft.Server(serverOptions);
-        ws.listen(global.environment.windshaft_port);
-        assert.ok(ws);
-        ws.close(); /* allow proper tear down */
+        ws.listen(global.environment.windshaft_port, function() {
+          assert.ok(ws);
+          ws.close(done); /* allow proper tear down */
+        });
     });
 
     test('throws exception if incorrect options passed in',  function(){
