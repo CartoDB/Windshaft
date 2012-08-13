@@ -1,6 +1,8 @@
 Version 0.4.11-dev
 2012-MM-DD
 
+ - Properly encode errors in DELETE responses
+
 Version 0.4.10
 2012-08-07
 
