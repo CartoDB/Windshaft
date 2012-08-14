@@ -25,7 +25,7 @@ suite('render_cache', function() {
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
 
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table:png:point:select *::');
+        assert.equal(render_cache.createKey(req.params), 'windshaft_test::test_table:png:point:select *::');
     });
 
     /**
