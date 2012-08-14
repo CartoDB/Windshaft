@@ -29,6 +29,10 @@ module.exports = function(opts) {
             headers['X-AfterTileRender2'] = 'called';
             callback(null, tile, headers);
         },
+        beforeStateChange: function(req, callback) {
+            this.beforeStateChangeCalls = this.beforeStateChangeCalls ? this.beforeStateChangeCalls + 1 : 1;
+            callback(null, req);
+        },
         afterStyleChange: function(req, data, callback) {
             this.afterStyleChangeCalls = this.afterStyleChangeCalls ? this.afterStyleChangeCalls + 1 : 1;
             callback(null, data);

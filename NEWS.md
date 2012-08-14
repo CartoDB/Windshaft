@@ -3,6 +3,7 @@ Version 0.4.11-dev
 
  - Properly encode errors in DELETE responses
  - Send CORS headers with all responses, add doCORS() function
+ - Add beforeStateChange called on POST and DELETE style request
 
 Version 0.4.10
 2012-08-07
