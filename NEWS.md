@@ -1,6 +1,8 @@
 Version 0.5.7-dev
 2012-MM-DD
 
+ - Include database username in renderer cache key (#42).
+
 Version 0.5.6
 2012-08-07
 
