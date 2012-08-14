@@ -1,5 +1,5 @@
-Version 0.5.6-dev
-2012-??-??
+Version 0.5.6
+2012-08-07
 
  - Add beforeStateChange called on POST and DELETE style request
 
