@@ -1,5 +1,5 @@
-Version 0.4.11-dev
-2012-MM-DD
+Version 0.4.11
+2012-08-14
 
  - Properly encode errors in DELETE responses
  - Send CORS headers with all responses, add doCORS() function
