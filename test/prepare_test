@@ -13,7 +13,7 @@ PGUSER=`node -e "console.log(require('${TESTENV}').postgres.user)"`
 echo "PGUSER: [$PGUSER]"
 PGHOST=`node -e "console.log(require('${TESTENV}').postgres.host)"`
 echo "PGHOST: [$PGHOST]"
-PGPORT=`node -e "console.log(require('{TESTENV}').postgres.port)"`
+PGPORT=`node -e "console.log(require('${TESTENV}').postgres.port)"`
 echo "PGPORT: [$PGPORT]"
 
 export PGUSER PGHOST PGPORT
