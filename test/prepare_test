@@ -1,21 +1,19 @@
 #!/bin/sh
 
 # This is where postgresql connection parameters are read from
-TESTENV=../config/environments/test.js
+TESTENV=../config/environments/test
 
 # NOTE: assumes existance of a "template_postgis" loaded with
 #       compatible version of postgis (legacy.sql included)
 
 
 # Extract postgres configuration
-PGSQL_CONF=`cat ${TESTENV} | sed -n '1h;1!H;${g;s/.*postgres *= *{\([^}]*\)}.*/\1/;p}'`
-#echo $PGSQL_CONF
 
-PGUSER=`echo $PGSQL_CONF | sed "s/.*user: '\([^']*\)'.*/\1/"`
+PGUSER=`node -e "console.log(require('${TESTENV}').postgres.user)"`
 echo "PGUSER: [$PGUSER]"
-PGHOST=`echo $PGSQL_CONF | sed "s/.*host: '\([^']*\)'.*/\1/"`
+PGHOST=`node -e "console.log(require('${TESTENV}').postgres.host)"`
 echo "PGHOST: [$PGHOST]"
-PGPORT=`echo $PGSQL_CONF | sed "s/.*port: \([^,$]*\).*/\1/"`
+PGPORT=`node -e "console.log(require('{TESTENV}').postgres.port)"`
 echo "PGPORT: [$PGPORT]"
 
 export PGUSER PGHOST PGPORT
