@@ -3,6 +3,7 @@ Version 0.4.13-dev
 
  - Less verbose error messages
  - Send 401 on authentication failure and 404 on table not found (#30)
+ - Loosen hiredis dependency to ~0.1.12
 
 Version 0.4.12
 2012-09-03
