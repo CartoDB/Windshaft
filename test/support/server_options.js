@@ -18,6 +18,14 @@ module.exports = function(opts) {
             req.params =  _.extend({}, req.params);
             _.extend(req.params, req.query);
 
+            req.params.processXML = function(req, xml, callback) {
+                var params = req.params;
+                if ( params.overrideDBUser ) {
+                  xml = xml.replace(/(<Parameter name="user"><!\[CDATA\[)[^\]]*(]]><\/Parameter>)/, "$1" + params.overrideDBUser + "$2");
+                }
+                callback(null, xml);
+            },
+
             // send the finished req object on
             callback(null,req);
         },
