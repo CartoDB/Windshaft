@@ -9,7 +9,7 @@
       "version": "0.0.5"
     },
     "grainstore": {
-      "version": "0.3.1",
+      "version": "0.5.0",
       "dependencies": {
         "carto": {
           "version": "0.8.1",
