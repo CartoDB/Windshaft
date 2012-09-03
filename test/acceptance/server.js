@@ -415,7 +415,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 404, res.body);
           done();
         });
     });
