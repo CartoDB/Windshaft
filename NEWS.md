@@ -1,6 +1,8 @@
 Version 0.4.13-dev
 2012-??-??
 
+ - Less verbose error messages
+
 Version 0.4.12
 2012-09-03
 
