@@ -2,6 +2,7 @@ Version 0.4.12-dev
 2012-??-??
 
  - Include database username in renderer cache key (#43)
+ - Allow req2param to install an XML processor in the parameters
 
 Version 0.4.11
 2012-08-14

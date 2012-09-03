@@ -397,5 +397,16 @@ suite('server', function() {
         }, function() { done(); });
     });
 
+    test("processXML can edit generated XML",  function(done) {
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/6/31/24.png?cache_buster=666&overrideDBUser=fake',
+            method: 'GET'
+        },{
+        }, function(res) {
+          assert.equal(res.statusCode, 500, res.body);
+          done();
+        });
+    });
+
 });
 
