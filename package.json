@@ -24,7 +24,7 @@
         "tilelive": "4.0.4",
         "tilelive-mapnik-cartodb": "0.2.4",
         "redis": "0.7.2",
-        "hiredis": "0.1.12"
+        "hiredis": "~0.1.12"
     },
     "devDependencies": {
         "mocha": "1.2.1"
