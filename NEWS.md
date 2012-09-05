@@ -1,6 +1,8 @@
 Version 0.5.8-dev
 2012-??-??
 
+ - Send 400 response status on GET tile errors
+
 Version 0.5.7
 2012-09-03
 
