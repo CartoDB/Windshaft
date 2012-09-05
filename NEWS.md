@@ -1,5 +1,5 @@
-Version 0.4.13-dev
-2012-??-??
+Version 0.4.13
+2012-09-05
 
  - Less verbose error messages
  - Send 400 response status on GET tile errors
