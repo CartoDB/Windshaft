@@ -2,6 +2,7 @@ Version 0.4.13-dev
 2012-??-??
 
  - Less verbose error messages
+ - Send 400 response status on GET tile errors
  - Send 401 on authentication failure and 404 on table not found (#30)
  - Loosen hiredis dependency to ~0.1.12
 

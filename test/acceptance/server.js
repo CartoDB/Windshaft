@@ -196,6 +196,18 @@ suite('server', function() {
         });
     });
 
+    test("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
+        var sql = querystring.stringify({sql: "BOGUS FROM test_table"});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res) {
+            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+            done();
+        });
+    });
+
     test("get'ing a tile with url specified style should return an expected tile",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
         assert.response(server, {
@@ -229,6 +241,18 @@ suite('server', function() {
                 assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
             });
+        });
+    });
+
+    test("get'ing a tile with url specified bogus style should return 400 status",  function(done){
+        var style = querystring.stringify({style: "#test_table{xxxxx;}"});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res) {
+            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+            done();
         });
     });
 
