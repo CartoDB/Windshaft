@@ -424,8 +424,8 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
             method: 'GET'
         },{
-            status: 500
         }, function(res) {
+            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           // TODO: actual error may depend on backend language localization
           assert.ok(res.body.match(new RegExp(/syntax error/)),
               'Body does not contain the "syntax error" message: ' + res.body);
