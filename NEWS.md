@@ -1,7 +1,8 @@
-Version 0.4.14-dev
-2012-??-??
+Version 0.4.14
+2012-09-19
 
  - Automated localization of external resources referenced in carto
+ - Raise grainstore dependency to ~0.6.2
 
 Version 0.4.13
 2012-09-05
