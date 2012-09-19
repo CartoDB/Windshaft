@@ -1,6 +1,8 @@
 Version 0.4.14-dev
 2012-??-??
 
+ - Automated localization of external resources referenced in carto
+
 Version 0.4.13
 2012-09-05
 

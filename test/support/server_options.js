@@ -4,7 +4,10 @@ module.exports = function(opts) {
     
     var config = {
         base_url: '/database/:dbname/table/:table',
-        grainstore: {datasource: global.environment.postgres},
+        grainstore: {
+          datasource: global.environment.postgres,
+          cachedir: global.environment.millstone.cache_basedir
+        },
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests

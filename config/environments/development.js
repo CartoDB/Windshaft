@@ -1,4 +1,5 @@
 module.exports.name             = 'development';
+module.exports.millstone        = {cache_basedir: '/tmp/windshaft-dev/millstone'};
 module.exports.postgres         = {user: 'postgres', host: '127.0.0.1', port: 5432};
 module.exports.redis            = {host: '127.0.0.1', 
                                    port: 6379, 
