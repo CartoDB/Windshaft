@@ -3,6 +3,8 @@ Version 0.5.8-dev
 
  - Automated localization of external resources referenced in carto
  - Send 400 response status on GET tile errors
+ - Added support for OPTIONS method in tile_style to be able to
+   change styles from a javascript client
 
 Version 0.5.7
 2012-09-03
