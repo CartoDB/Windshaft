@@ -1,6 +1,13 @@
 Version 0.4.15-dev
 2012-??-??
 
+Version 0.4.15
+2012-09-20
+
+ - Added support for OPTIONS method in tile_style to be able to 
+   change styles from a javascript client
+ - Added some more allowed headers for CORS
+
 Version 0.4.14
 2012-09-19
 
