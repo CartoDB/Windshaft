@@ -29,12 +29,14 @@ PID_REDIS=$!
 echo "Preparing the database"
 cd test; sh prepare_test || die "database preparation failure"; cd -;
 
+PATH=./node_modules/mocha/bin:$PATH
+
 echo "Running acceptance tests"
-./node_modules/mocha/bin/mocha -u tdd \
+mocha -u tdd \
   test/acceptance/server.js
 
 echo "Running unit tests"
-./node_modules/mocha/bin/mocha -u tdd \
+mocha -u tdd \
   test/unit/windshaft.test.js \
   test/unit/render_cache.test.js 
 
