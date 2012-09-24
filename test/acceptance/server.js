@@ -74,7 +74,7 @@ suite('server', function() {
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
         },{
             status: 500,
-            body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color"])
+            body: /Unrecognized rule: backgxxxxxround-color/ 
         }, function() { done(); } );
     });
 
@@ -86,7 +86,7 @@ suite('server', function() {
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
         },{
             status: 500,
-            body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color","style.mss:1:41 Unrecognized rule: foo"])
+            body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/ 
         }, function() { done(); } );
     });
 
@@ -106,7 +106,7 @@ suite('server', function() {
     });
 
     test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = 'Map {background-color:#fff;}';
+        var style = "version: '2.0.2'; Map {background-color:#fff;}";
 
         // TODO: use Step ?
 
