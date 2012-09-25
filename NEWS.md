@@ -1,5 +1,5 @@
-Version 0.4.16-dev
-2012-??-??
+Version 0.4.16
+2012-09-25
 
  - Less verbose error message on GET /style failure
 
