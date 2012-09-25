@@ -1,6 +1,8 @@
 Version 0.4.16-dev
 2012-??-??
 
+ - Less verbose error message on GET /style failure
+
 Version 0.4.15
 2012-09-20
 
