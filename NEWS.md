@@ -1,5 +1,5 @@
-Version 0.5.8-dev
-2012-??-??
+Version 0.5.8
+2012-09-28
 
  - Automated localization of external resources referenced in carto
  - Send 400 response status on GET tile errors

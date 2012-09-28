@@ -1,6 +1,6 @@
 {
   "name": "windshaft",
-  "version": "0.5.5",
+  "version": "0.5.8",
   "dependencies": {
     "underscore": {
       "version": "1.3.3"
@@ -9,21 +9,67 @@
       "version": "0.0.5"
     },
     "grainstore": {
-      "version": "0.6.2",
+      "version": "0.6.4",
       "dependencies": {
         "carto": {
-          "version": "0.8.1",
+          "version": "0.8.2-cdb-dev-3",
+          "from": "git://github.com/CartoDB/carto.git#cdb-0.8",
           "dependencies": {
             "mapnik-reference": {
-              "version": "3.1.0"
+              "version": "4.0.5"
             },
             "xml2js": {
               "version": "0.1.14",
               "dependencies": {
                 "sax": {
-                  "version": "0.4.1"
+                  "version": "0.4.2"
                 }
               }
+            }
+          }
+        },
+        "millstone": {
+          "version": "0.5.10-cdb-01",
+          "from": "git://github.com/CartoDB/millstone.git#cdb-node04-devel",
+          "dependencies": {
+            "request": {
+              "version": "2.11.4",
+              "dependencies": {
+                "form-data": {
+                  "version": "0.0.3",
+                  "dependencies": {
+                    "combined-stream": {
+                      "version": "0.0.3",
+                      "dependencies": {
+                        "delayed-stream": {
+                          "version": "0.0.5"
+                        }
+                      }
+                    },
+                    "async": {
+                      "version": "0.1.9"
+                    }
+                  }
+                },
+                "mime": {
+                  "version": "1.2.7"
+                }
+              }
+            },
+            "srs": {
+              "version": "0.2.16"
+            },
+            "zipfile": {
+              "version": "0.3.2"
+            },
+            "sqlite3": {
+              "version": "2.1.5"
+            },
+            "mime": {
+              "version": "1.2.7"
+            },
+            "mkdirp": {
+              "version": "0.3.4"
             }
           }
         }
@@ -66,21 +112,22 @@
           }
         },
         "sphericalmercator": {
-          "version": "1.0.1"
+          "version": "1.0.2"
         }
       }
     },
     "tilelive-mapnik": {
-      "version": "git://github.com/Vizzuality/tilelive-mapnik.git#7df70554",
+      "version": "0.3.3-dev",
+      "from": "git://github.com/Vizzuality/tilelive-mapnik.git#7df70554",
       "dependencies": {
         "mapnik": {
-          "version": "0.7.9"
+          "version": "0.7.14"
         },
         "eio": {
           "version": "0.1.0"
         },
         "sphericalmercator": {
-          "version": "1.0.1"
+          "version": "1.0.2"
         }
       }
     },
