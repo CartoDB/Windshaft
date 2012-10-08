@@ -24,15 +24,6 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
-    test("get call to server returns 200",  function(done){
-        assert.response(server, {
-            url: '/',
-            method: 'GET'
-        },{
-            status: 200
-        }, function() { done(); } );
-    });
-
     test("get'ing blank style returns default style",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/style',
