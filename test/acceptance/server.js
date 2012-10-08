@@ -7,6 +7,7 @@ var   assert        = require('../support/assert')
     , fs            = require('fs')
     , th            = require('../support/test_helper')
     , Step          = require('step')
+    , mapnik        = require('mapnik')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
     , http          = require('http');
@@ -399,6 +400,33 @@ suite('server', function() {
             assert.equal(parsed.style, style);
             // specified is retained 
             assert.equal(parsed.version, '2.0.2');
+            next(null);
+          });
+        },
+        function postIt2() {
+          var next = this;
+          var from_mapnik_version = ( mapnik.versions.mapnik == '2.0.2' ? '2.0.0' : '2.0.2' );
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: style, version: from_mapnik_version, convert: true})
+          }, {}, function(res) { next(null, res); });
+        },
+        function getIt2(err, res) {
+          if ( err ) { done(err); return; }
+          var next = this;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'GET'
+          },{
+              status: 200,
+          }, function(res) {
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.style, style);
+            // specified is retained 
+            assert.equal(parsed.version, mapnik.versions.mapnik); 
             done();
           });
         }

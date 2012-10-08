@@ -1,10 +1,10 @@
 Version 0.6.0-dev
 2012-10-??
 
- - Add /version entry point
  - CartoCSS version control
   - Include version in GET /style response
-  - Support version in POST /style request
+  - Support version and convert parameters in POST /style request
+  - Add /version entry point
   - Autodetect target mapnik version and let config override it
 
 Version 0.5.8
