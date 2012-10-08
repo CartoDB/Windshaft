@@ -1,6 +1,10 @@
 Version 0.5.9-dev
 2012-??-??
 
+ - CartoCSS version control
+  - Include version in GET /style response
+  - Support version in POST /style request
+
 Version 0.5.8
 2012-09-28
 

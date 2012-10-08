@@ -323,7 +323,7 @@ suite('server', function() {
     test("post'ing good style returns 200 then getting returns it",  function(done){
       var style = "Map {background-color:#fff;}";
       Step(
-        function postIt() {
+        function postIt0() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
@@ -332,16 +332,48 @@ suite('server', function() {
               data: querystring.stringify({style: style})
           }, {}, function(res) { next(null, res); });
         },
-        function getIt(err, res) {
+        function getIt0(err, res) {
           if ( err ) { done(err); return; }
+          var next = this;
           assert.equal(res.statusCode, 200, res.body);
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
               method: 'GET'
           },{
               status: 200,
-              body: JSON.stringify({style: style})
-          }, function() { done(); } );
+          }, function(res) {
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.style, style);
+            // unspecified resolves to 2.0.0
+            assert.equal(parsed.version, '2.0.0');
+            next(null);
+          });
+        },
+        function postIt1() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: style, version: '2.0.2'})
+          }, {}, function(res) { next(null, res); });
+        },
+        function getIt1(err, res) {
+          if ( err ) { done(err); return; }
+          var next = this;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'GET'
+          },{
+              status: 200,
+          }, function(res) {
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.style, style);
+            // specified is retained 
+            assert.equal(parsed.version, '2.0.2');
+            done();
+          });
         }
       );
     });
