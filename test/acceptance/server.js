@@ -27,6 +27,33 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
+    // GET VERSION
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get /version returns versions",  function(done){
+        assert.response(server, {
+            url: '/version',
+            method: 'GET'
+        },{
+            status: 200
+        }, function(res) {
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('windshaft'), "No 'windshaft' version in " + parsed);
+          console.log("Windshaft: " + parsed.windshaft);
+          assert.ok(parsed.hasOwnProperty('grainstore'), "No 'grainstore' version in " + parsed);
+          console.log("Grainstore: " + parsed.grainstore);
+          assert.ok(parsed.hasOwnProperty('node_mapnik'), "No 'node_mapnik' version in " + parsed);
+          console.log("Node-mapnik: " + parsed.node_mapnik);
+          assert.ok(parsed.hasOwnProperty('mapnik'), "No 'mapnik' version in " + parsed);
+          console.log("Mapnik: " + parsed.mapnik);
+          // TODO: check actual versions ?
+          done();
+        });
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    //
     // GET TILE
     //
     ////////////////////////////////////////////////////////////////////
