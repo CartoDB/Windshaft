@@ -320,7 +320,7 @@ suite('server', function() {
     });
 
     test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = "version: '2.0.2'; Map {background-color:#fff;}";
+        var style = "Map {background-color:#fff;}";
 
         // TODO: use Step ?
 
