@@ -6,6 +6,7 @@ var   assert        = require('../support/assert')
     , querystring   = require('querystring')
     , fs            = require('fs')
     , th            = require('../support/test_helper')
+    , Step          = require('step')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
     , http          = require('http');
@@ -319,30 +320,30 @@ suite('server', function() {
         } );
     });
 
-    test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = "Map {background-color:#fff;}";
-
-        // TODO: use Step ?
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{}, function(res) {
-
-            assert.equal(res.statusCode, 200, res.body);
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'GET'
-            },{
-                status: 200,
-                body: JSON.stringify({style: style})
-            }, function() { done(); } );
-
-        });
-
+    test("post'ing good style returns 200 then getting returns it",  function(done){
+      var style = "Map {background-color:#fff;}";
+      Step(
+        function postIt() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: style})
+          }, {}, function(res) { next(null, res); });
+        },
+        function getIt(err, res) {
+          if ( err ) { done(err); return; }
+          assert.equal(res.statusCode, 200, res.body);
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'GET'
+          },{
+              status: 200,
+              body: JSON.stringify({style: style})
+          }, function() { done(); } );
+        }
+      );
     });
 
     ////////////////////////////////////////////////////////////////////
