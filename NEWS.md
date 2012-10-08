@@ -1,4 +1,4 @@
-Version 0.5.9-dev
+Version 0.6.0-dev
 2012-10-??
 
  - CartoCSS version control
