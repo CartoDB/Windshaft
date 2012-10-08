@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var mapnik = require('mapnik');
 
 module.exports = function(opts) {
     
@@ -6,7 +7,8 @@ module.exports = function(opts) {
         base_url: '/database/:dbname/table/:table',
         grainstore: {
           datasource: global.environment.postgres,
-          cachedir: global.environment.millstone.cache_basedir
+          cachedir: global.environment.millstone.cache_basedir,
+          mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik
         },
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
