@@ -24,6 +24,12 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // GET TILE
+    //
+    ////////////////////////////////////////////////////////////////////
+
     test("get'ing blank style returns default style",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/style',
@@ -32,137 +38,6 @@ suite('server', function() {
             status: 200,
             body: '{"style":"#test_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
         }, function() { done(); } );
-    });
-
-    test("get'ing options on style should return CORS headers",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/style',
-            method: 'OPTIONS'
-        },{
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
-              'Access-Control-Allow-Origin': '*'
-            }
-        }, function() { done(); });
-    });
-
-    test("post'ing no style returns 400 with errors",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/style',
-            method: 'POST'
-        },{
-            status: 400,
-            body: '{"error":"must send style information"}'
-        }, function() { done(); } );
-    });
-
-    test("post'ing bad style returns 400 with error",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_2/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
-        },{
-            status: 500,
-            body: /Unrecognized rule: backgxxxxxround-color/ 
-        }, function() { done(); } );
-    });
-
-    test("post'ing multiple bad styles returns 400 with error array",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_2/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
-        },{
-            status: 500,
-            body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/ 
-        }, function() { done(); } );
-    });
-
-    test("post'ing good style returns 200 and both beforeStateChange and afterStyleChange are called", function(done){
-        server.beforeStateChangeCalls = 0;
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: 'Map{background-color:#fff;}'})
-        }, {}, function(res) {
-              assert.equal(server.beforeStateChangeCalls, 1);
-              assert.equal(server.afterStyleChangeCalls, 1);
-              assert.equal(res.statusCode, 200, res.body);
-              done();
-        } );
-    });
-
-    test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = "version: '2.0.2'; Map {background-color:#fff;}";
-
-        // TODO: use Step ?
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{}, function(res) {
-
-            assert.equal(res.statusCode, 200, res.body);
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'GET'
-            },{
-                status: 200,
-                body: JSON.stringify({style: style})
-            }, function() { done(); } );
-
-        });
-
-    });
-
-    test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
-        var style = 'Map {background-color:#fff;}';
-        var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
-
-        // TODO: use Step ?
-        server.beforeStateChangeCalls = 0;
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{}, function(res) {
-
-            assert.equal(res.statusCode, 200, res.body);
-            assert.equal(server.afterStyleDeleteCalls, undefined);
-            assert.equal(server.beforeStateChangeCalls, 1);
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'DELETE'
-            },{
-            }, function() {
-
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(server.afterStyleDeleteCalls, 1);
-                assert.equal(server.beforeStateChangeCalls, 2);
-
-                assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table_3/style',
-                    method: 'GET'
-                },{
-                    status: 200,
-                    body: JSON.stringify({style: default_style})
-                }, function() { done(); } );
-
-            });
-
-        });
-
-
     });
 
     test("get'ing a tile with default style should return an expected tile",  function(done){
@@ -309,88 +184,6 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style should return an grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
-        });
-    });
-
-
-    test("get'ing a json with default style and single interactivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            var expected_json = {
-                "1":{"name":"Hawai"},
-                "2":{"name":"El Estocolmo"},
-                "3":{"name":"El Rey del Tallarín"},
-                "4":{"name":"El Lacón"},
-                "5":{"name":"El Pico"}
-            };
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
-            done();
-        });
-    });
-
-    test("get'ing a json with default style and multiple interactivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            var expected_json = {
-                "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
-                "2":{"address":"Calle de la Palma 72, Madrid, Spain","name":"El Estocolmo"},
-                "3":{"address":"Plaza Conde de Toreno 2, Madrid, Spain","name":"El Rey del Tallarín"},
-                "4":{"address":"Manuel Fernández y González 8, Madrid, Spain","name":"El Lacón"},
-                "5":{"address":"Calle Divino Pastor 12, Madrid, Spain","name":"El Pico"}
-            };
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
-            done();
-        });
-    });
-
-    test("get'ing a json with default style and nointeractivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            var expected_json = {};
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
-            done();
-        });
-    });
-
-
-
-    test("get'ing a json with default style and sql should return a constrained grid",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
-        });
-    });
-
     test("get'ing a tile with CORS enabled should return CORS headers",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/6/31/24.png',
@@ -449,6 +242,238 @@ suite('server', function() {
         }, function(res) {
           assert.equal(res.statusCode, 404, res.body);
           done();
+        });
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // OPTIONS STYLE
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get'ing options on style should return CORS headers",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/style',
+            method: 'OPTIONS'
+        },{
+            status: 200,
+            headers: {
+              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
+              'Access-Control-Allow-Origin': '*'
+            }
+        }, function() { done(); });
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // POST STYLE
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("post'ing no style returns 400 with errors",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/style',
+            method: 'POST'
+        },{
+            status: 400,
+            body: '{"error":"must send style information"}'
+        }, function() { done(); } );
+    });
+
+    test("post'ing bad style returns 400 with error",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_2/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
+        },{
+            status: 500,
+            body: /Unrecognized rule: backgxxxxxround-color/ 
+        }, function() { done(); } );
+    });
+
+    test("post'ing multiple bad styles returns 400 with error array",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_2/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
+        },{
+            status: 500,
+            body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/ 
+        }, function() { done(); } );
+    });
+
+    test("post'ing good style returns 200 and both beforeStateChange and afterStyleChange are called", function(done){
+        server.beforeStateChangeCalls = 0;
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: 'Map{background-color:#fff;}'})
+        }, {}, function(res) {
+              assert.equal(server.beforeStateChangeCalls, 1);
+              assert.equal(server.afterStyleChangeCalls, 1);
+              assert.equal(res.statusCode, 200, res.body);
+              done();
+        } );
+    });
+
+    test("post'ing good style returns 200 then getting returns original style",  function(done){
+        var style = "version: '2.0.2'; Map {background-color:#fff;}";
+
+        // TODO: use Step ?
+
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: style})
+        },{}, function(res) {
+
+            assert.equal(res.statusCode, 200, res.body);
+
+            assert.response(server, {
+                url: '/database/windshaft_test/table/test_table_3/style',
+                method: 'GET'
+            },{
+                status: 200,
+                body: JSON.stringify({style: style})
+            }, function() { done(); } );
+
+        });
+
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // DELETE STYLE
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
+        var style = 'Map {background-color:#fff;}';
+        var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
+
+        // TODO: use Step ?
+        server.beforeStateChangeCalls = 0;
+
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: style})
+        },{}, function(res) {
+
+            assert.equal(res.statusCode, 200, res.body);
+            assert.equal(server.afterStyleDeleteCalls, undefined);
+            assert.equal(server.beforeStateChangeCalls, 1);
+
+            assert.response(server, {
+                url: '/database/windshaft_test/table/test_table_3/style',
+                method: 'DELETE'
+            },{
+            }, function() {
+
+                assert.equal(res.statusCode, 200, res.body);
+                assert.equal(server.afterStyleDeleteCalls, 1);
+                assert.equal(server.beforeStateChangeCalls, 2);
+
+                assert.response(server, {
+                    url: '/database/windshaft_test/table/test_table_3/style',
+                    method: 'GET'
+                },{
+                    status: 200,
+                    body: JSON.stringify({style: default_style})
+                }, function() { done(); } );
+
+            });
+
+        });
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // GET GRID 
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get'ing a json with default style should return an grid",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
+        });
+    });
+
+    test("get'ing a json with default style and single interactivity should return a grid",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            var expected_json = {
+                "1":{"name":"Hawai"},
+                "2":{"name":"El Estocolmo"},
+                "3":{"name":"El Rey del Tallarín"},
+                "4":{"name":"El Lacón"},
+                "5":{"name":"El Pico"}
+            };
+            assert.deepEqual(JSON.parse(res.body).data, expected_json);
+            done();
+        });
+    });
+
+    test("get'ing a json with default style and multiple interactivity should return a grid",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            var expected_json = {
+                "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
+                "2":{"address":"Calle de la Palma 72, Madrid, Spain","name":"El Estocolmo"},
+                "3":{"address":"Plaza Conde de Toreno 2, Madrid, Spain","name":"El Rey del Tallarín"},
+                "4":{"address":"Manuel Fernández y González 8, Madrid, Spain","name":"El Lacón"},
+                "5":{"address":"Calle Divino Pastor 12, Madrid, Spain","name":"El Pico"}
+            };
+            assert.deepEqual(JSON.parse(res.body).data, expected_json);
+            done();
+        });
+    });
+
+    test("get'ing a json with default style and nointeractivity should return a grid",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            var expected_json = {};
+            assert.deepEqual(JSON.parse(res.body).data, expected_json);
+            done();
+        });
+    });
+
+    test("get'ing a json with default style and sql should return a constrained grid",  function(done){
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
         });
     });
 
