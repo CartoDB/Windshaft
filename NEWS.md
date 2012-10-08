@@ -1,5 +1,5 @@
-Version 0.6.0-dev
-2012-10-??
+Version 0.6.0
+2012-10-08
 
  - CartoCSS version control
   - Include version in GET /style response
