@@ -9,14 +9,13 @@
       "version": "0.0.5"
     },
     "grainstore": {
-      "version": "0.6.4",
+      "version": "0.8.0",
       "dependencies": {
         "carto": {
-          "version": "0.8.2-cdb-dev-3",
-          "from": "git://github.com/CartoDB/carto.git#cdb-0.8",
+          "version": "0.9.2",
           "dependencies": {
             "mapnik-reference": {
-              "version": "4.0.5"
+              "version": "5.0.0"
             },
             "xml2js": {
               "version": "0.1.14",
@@ -29,8 +28,7 @@
           }
         },
         "millstone": {
-          "version": "0.5.10-cdb-01",
-          "from": "git://github.com/CartoDB/millstone.git#cdb-node04-devel",
+          "version": "0.5.10",
           "dependencies": {
             "request": {
               "version": "2.11.4",
