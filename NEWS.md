@@ -1,3 +1,8 @@
+Version 0.6.1-dev
+2012-10-??
+
+ - Fix getVersion reporting of grainstore version
+
 Version 0.6.0
 2012-10-08
 
