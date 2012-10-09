@@ -1,5 +1,5 @@
-Version 0.6.1-dev
-2012-10-??
+Version 0.6.1
+2012-10-09
 
  - Fix getVersion reporting of grainstore version
 
