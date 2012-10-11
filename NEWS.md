@@ -1,3 +1,6 @@
+Version 0.6.3-dev
+2012-MM-DD
+
 Version 0.6.2
 2012-10-11
 
