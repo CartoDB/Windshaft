@@ -1,5 +1,5 @@
-Version 0.6.2-dev
-2012-??-??
+Version 0.6.2
+2012-10-11
 
  - Log all error responses to console
  - Provide a sendError method to subclasses
