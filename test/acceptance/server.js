@@ -322,14 +322,83 @@ suite('server', function() {
 
     test("processXML can edit generated XML",  function(done) {
         assert.response(server, {
+            // NOTE: overrideDBUser is hanlded by the req2params installed by ../support/server_options.js
+            //       and forces change of authentication in the XML
             url: '/database/windshaft_test/table/test_table/6/31/24.png?cache_buster=666&overrideDBUser=fake',
             method: 'GET'
         },{
         }, function(res) {
           assert.equal(res.statusCode, 404, res.body);
+          // TODO: also test that a new request with no overrideDBUser gets permission to access the tile ?
           done();
         });
     });
+
+    test("get'ing a tile after post'ing a style should return an expected tile",  function(done){
+      var style = "#test_table_3{marker-fill: blue;marker-line-color: black;}";
+      Step(
+        // Make sure we don't get the style we want, at first
+        function getTile0() {
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2,
+              function(err, similarity) {
+                  err = err ? null : new Error("Tile starts with unexpected style!");
+                  next(err);
+              });
+          });
+        },
+        // Set the style we want
+        function postStyle(err) {
+          if ( err ) throw err;
+          var next = this;
+          //next(null, {statusCode: 200}); return;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: style})
+          }, {}, function(res) { next(null, res); });
+        },
+        // Check style setting succeeded
+        function checkPost(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          //assert.equal(res.body, "ok");
+          return null;
+        },
+        // Now check we get the tile styled as we specified
+        function getTile(err, data) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2, function(err, similarity) {
+                  if (err) { next(err); return; }
+                  assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
+                  next(null);
+              });
+          });
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -392,6 +461,7 @@ suite('server', function() {
 
     test("post'ing good style returns 200 and both beforeStateChange and afterStyleChange are called", function(done){
         server.beforeStateChangeCalls = 0;
+        server.afterStyleChangeCalls = 0;
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/style',
             method: 'POST',
@@ -486,71 +556,6 @@ suite('server', function() {
             assert.equal(parsed.version, mapnik.versions.mapnik); 
             done();
           });
-        }
-      );
-    });
-
-    test("get'ing a tile after post'ing a style should return an expected tile",  function(done){
-      var style = "#test_table_3{marker-fill: blue;marker-line-color: black;}";
-      Step(
-        // Make sure we don't get the style we want, at first
-        function getTile0() {
-          var next = this;
-          assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2,
-              function(err, similarity) {
-                  err = err ? null : new Error("Tile starts with unexpected style!");
-                  next(err);
-              });
-          });
-        },
-        // Set the style we want
-        function postStyle(err) {
-          if ( err ) throw err;
-          var next = this;
-          //next(null, {statusCode: 200}); return;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table_3/style',
-              method: 'POST',
-              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({style: style})
-          }, {}, function(res) { next(null, res); });
-        },
-        // Check style setting succeeded
-        function checkPost(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 200, res.body);
-          //assert.equal(res.body, "ok");
-          return null;
-        },
-        // Now check we get the tile styled as we specified
-        function getTile(err, data) {
-          if ( err ) throw err;
-          var next = this;
-          assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2, function(err, similarity) {
-                  if (err) { next(err); return; }
-                  assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
-                  next(null);
-              });
-          });
-        },
-        function finish(err) {
-          done(err);
         }
       );
     });
