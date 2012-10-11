@@ -17,6 +17,8 @@ suite('server', function() {
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
 
+    var default_style = '{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
+
     test("get call to server returns 200",  function(done){
         assert.response(server, {
             url: '/',
@@ -55,7 +57,7 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
-    // GET TILE
+    // GET STYLE
     //
     ////////////////////////////////////////////////////////////////////
 
@@ -65,9 +67,20 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            body: '{"style":"#test_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
-        }, function() { done(); } );
+        }, function(res) {
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.style, '#test_table ' + default_style);
+          // NOTE: we used to check that "style" was the only element of
+          //       the response, but I don't think it makes sense.
+          done();
+        } );
     });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // GET TILE
+    //
+    ////////////////////////////////////////////////////////////////////
 
     test("get'ing a tile with default style should return an expected tile",  function(done){
         assert.response(server, {
@@ -441,7 +454,7 @@ suite('server', function() {
 
     test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
         var style = 'Map {background-color:#fff;}';
-        var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
+        var def_style = "#test_table_3 " + default_style;
 
         // TODO: use Step ?
         server.beforeStateChangeCalls = 0;
@@ -472,7 +485,7 @@ suite('server', function() {
                     method: 'GET'
                 },{
                     status: 200,
-                    body: JSON.stringify({style: default_style})
+                    body: JSON.stringify({style: def_style})
                 }, function() { done(); } );
 
             });
