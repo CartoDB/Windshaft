@@ -4,16 +4,23 @@ var   _             = require('underscore')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
     , RenderCache   = require('../../lib/windshaft/render_cache.js')
+    , redis         = require('redis')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
 suite('render_cache', function() {
  
+    var redis_client = redis.createClient(serverOptions.redis.port);
+
     // initialize core mml_store
     var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
 
-    test('true', function() {
-        assert.equal(global.environment.name, 'test');
+    suiteSetup(function(done) {
+      // Check that we start with an empty redis db 
+      redis_client.keys("*", function(err, matches) {
+          assert.equal(matches.length, 0);
+          done();
+      });
     });
 
     test('render_cache has a cached of render objects', function(){
@@ -151,7 +158,6 @@ suite('render_cache', function() {
     test('render_cache automatically deletes tilelive only after timeout', function(done){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
-
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
@@ -159,9 +165,10 @@ suite('render_cache', function() {
         });
     });
 
-    suiteTeardown(function() {
-        // TODO: clear all caches (for proper redis flush)
-        // See https://github.com/Vizzuality/Windshaft/issues/24
+    suiteTeardown(function(done) {
+      // Flush redis cache
+      // See https://github.com/Vizzuality/Windshaft/issues/24
+      redis_client.flushall(done);
     });
 
 });

@@ -33,7 +33,7 @@ suite('server', function() {
 
       // Check that we start with an empty redis db 
       redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0);
+          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
       });
 
       // Start a server to test external resources
@@ -869,7 +869,7 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    suiteTeardown(function() {
+    suiteTeardown(function(done) {
 
       // Close the resources server
       res_serv.close();
@@ -877,9 +877,9 @@ suite('server', function() {
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
           assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+          redis_client.flushall(done);
       });
 
-      redis_client.flushall();
     });
 });
 

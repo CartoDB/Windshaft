@@ -33,9 +33,9 @@ PATH=./node_modules/mocha/bin:$PATH
 
 echo "Running tests"
 mocha -u tdd \
-  test/acceptance/server.js \
+  test/unit/render_cache.test.js \
   test/unit/windshaft.test.js \
-  test/unit/render_cache.test.js 
+  test/acceptance/server.js 
 
 
 cleanup
