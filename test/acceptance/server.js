@@ -38,7 +38,7 @@ suite('server', function() {
 
       // Start a server to test external resources
       res_serv = http.createServer( function(request, response) {
-          var filename = '../../node_modules/grainstore/test/support/resources' + request.url; 
+          var filename = __dirname + '/../fixtures/markers' + request.url; 
           fs.readFile(filename, "binary", function(err, file) {
             if ( err ) {
               response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -183,9 +183,9 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  2, function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  2,
+              function(err, similarity) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
             });
         });
@@ -201,9 +201,9 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2, function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
+              function(err, similarity) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
             });
         });
@@ -386,15 +386,121 @@ suite('server', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2, function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2,
+                function(err, similarity) {
                   if (err) { next(err); return; }
-                  assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                   next(null);
               });
           });
         },
         function finish(err) {
-          done(err);
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'DELETE' },{}, function(res) { done(err); });
+        }
+      );
+    });
+
+    test("base and custom style tile referencing external resources do not affect each other", 
+        function(done){
+      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/circle.svg'); marker-transform:'scale(0.2)'; }";
+      var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
+      var stylequery = querystring.stringify({style: style});
+      Step(
+        function getCustumTile0() {
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?' + stylequery,
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
+              function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        // Set another style as default for table
+        function postStyle(err) {
+          if ( err ) throw err;
+          var next = this;
+          //next(null, {statusCode: 200}); return;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: style2})
+          }, {}, function(res) { next(null, res); });
+        },
+        // Check style setting succeeded
+        function checkPost(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          //assert.equal(res.body, "ok");
+          return null;
+        },
+        // Now check we get the tile styled as we specified
+        function getBaseTile0(err, data) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
+                function(err, similarity) {
+                  if (err) { next(err); return; }
+                  next(null);
+              });
+          });
+        },
+        // Now fetch the custom style tile again
+        function getCustumTile1() {
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2&' + stylequery,
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
+              function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        // Now fetch the base style tile again 
+        function getBaseTile1(err, data) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=3',
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
+                function(err, similarity) {
+                  if (err) { next(err); return; }
+                  next(null);
+              });
+          });
+        },
+        function finish(err) {
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'DELETE' },{}, function(res) { done(err); });
         }
       );
     });
@@ -657,6 +763,7 @@ suite('server', function() {
 
         // TODO: use Step ?
         server.beforeStateChangeCalls = 0;
+        server.afterStyleDeleteCalls = 0;
 
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/style',
@@ -666,7 +773,7 @@ suite('server', function() {
         },{}, function(res) {
 
             assert.equal(res.statusCode, 200, res.body);
-            assert.equal(server.afterStyleDeleteCalls, undefined);
+            assert.equal(server.afterStyleDeleteCalls, 0);
             assert.equal(server.beforeStateChangeCalls, 1);
 
             assert.response(server, {
