@@ -1,6 +1,8 @@
 Version 0.6.2-dev
 2012-??-??
 
+ - Log GET /style errors to console too
+
 Version 0.6.1
 2012-10-09
 
