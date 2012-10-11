@@ -1,7 +1,8 @@
 Version 0.6.2-dev
 2012-??-??
 
- - Log GET /style errors to console too
+ - Log all error responses to console
+ - Provide a sendError method to subclasses
 
 Version 0.6.1
 2012-10-09
