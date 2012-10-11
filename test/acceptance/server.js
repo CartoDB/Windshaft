@@ -791,8 +791,11 @@ suite('server', function() {
                     method: 'GET'
                 },{
                     status: 200,
-                    body: JSON.stringify({style: def_style})
-                }, function() { done(); } );
+                }, function(res) {
+                  var parsed = JSON.parse(res.body);
+                  assert.equal(parsed.style, def_style);
+                  done();
+                } );
 
             });
 
