@@ -5,6 +5,7 @@ var   assert        = require('../support/assert')
     , _             = require('underscore')
     , querystring   = require('querystring')
     , fs            = require('fs')
+    , redis         = require('redis')
     , th            = require('../support/test_helper')
     , Step          = require('step')
     , mapnik        = require('mapnik')
@@ -14,16 +15,59 @@ var   assert        = require('../support/assert')
 
 suite('server', function() {
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // SETUP
+    //
+    ////////////////////////////////////////////////////////////////////
+
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
+    var redis_client = redis.createClient(ServerOptions.redis.port);
+    var res_serv; // resources server
+    var res_serv_port = 8033; // FIXME: make configurable ?
 
     var default_style = '{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
+
+    suiteSetup(function(done) {
+
+      // Check that we start with an empty redis db 
+      redis_client.keys("*", function(err, matches) {
+          assert.equal(matches.length, 0);
+      });
+
+      // Start a server to test external resources
+      res_serv = http.createServer( function(request, response) {
+          var filename = '../../node_modules/grainstore/test/support/resources' + request.url; 
+          fs.readFile(filename, "binary", function(err, file) {
+            if ( err ) {
+              response.writeHead(404, {'Content-Type': 'text/plain'});
+              console.log("File '" + filename + "' not found");
+              response.write("404 Not Found\n");
+            } else {
+              response.writeHead(200);
+              response.write(file, "binary");
+            }
+            response.end();
+          });
+      });
+      res_serv.listen(res_serv_port, done);
+
+    });
+
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // GET INVALID
+    //
+    ////////////////////////////////////////////////////////////////////
 
     test("get call to server returns 200",  function(done){
         assert.response(server, {
             url: '/',
             method: 'GET'
         },{
+            // FIXME: shouldn't this be a 404 ?
             status: 200
         }, function() { done(); } );
     });
@@ -513,53 +557,6 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
-    // DELETE STYLE
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
-        var style = 'Map {background-color:#fff;}';
-        var def_style = "#test_table_3 " + default_style;
-
-        // TODO: use Step ?
-        server.beforeStateChangeCalls = 0;
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{}, function(res) {
-
-            assert.equal(res.statusCode, 200, res.body);
-            assert.equal(server.afterStyleDeleteCalls, undefined);
-            assert.equal(server.beforeStateChangeCalls, 1);
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'DELETE'
-            },{
-            }, function() {
-
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(server.afterStyleDeleteCalls, 1);
-                assert.equal(server.beforeStateChangeCalls, 2);
-
-                assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table_3/style',
-                    method: 'GET'
-                },{
-                    status: 200,
-                    body: JSON.stringify({style: def_style})
-                }, function() { done(); } );
-
-            });
-
-        });
-    });
-
-    ////////////////////////////////////////////////////////////////////
-    //
     // GET GRID 
     //
     ////////////////////////////////////////////////////////////////////
@@ -643,5 +640,134 @@ suite('server', function() {
         });
     });
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // DELETE STYLE
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
+        var style = 'Map {background-color:#fff;}';
+        var def_style = "#test_table_3 " + default_style;
+
+        // TODO: use Step ?
+        server.beforeStateChangeCalls = 0;
+
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: style})
+        },{}, function(res) {
+
+            assert.equal(res.statusCode, 200, res.body);
+            assert.equal(server.afterStyleDeleteCalls, undefined);
+            assert.equal(server.beforeStateChangeCalls, 1);
+
+            assert.response(server, {
+                url: '/database/windshaft_test/table/test_table_3/style',
+                method: 'DELETE'
+            },{
+            }, function() {
+
+                assert.equal(res.statusCode, 200, res.body);
+                assert.equal(server.afterStyleDeleteCalls, 1);
+                assert.equal(server.beforeStateChangeCalls, 2);
+
+                assert.response(server, {
+                    url: '/database/windshaft_test/table/test_table_3/style',
+                    method: 'GET'
+                },{
+                    status: 200,
+                    body: JSON.stringify({style: def_style})
+                }, function() { done(); } );
+
+            });
+
+        });
+    });
+
+    test("deleting all styles leaves redis clean", function(done) {
+
+      Step(
+
+        function del_test_table() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/style',
+              method: 'DELETE'
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.body);
+              next();
+            } catch (err) {
+              done(err);
+            }
+          });
+        },
+        function del_test_table_2(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_2/style',
+              method: 'DELETE'
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.body);
+              next();
+            } catch (err) {
+              done(err);
+            }
+          });
+        },
+        function del_test_table_3(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'DELETE'
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.body);
+              next();
+            } catch (err) {
+              done(err);
+            }
+          });
+        },
+        function checkRedis(err) {
+          if ( err ) throw err;
+          var next = this;
+          // Check that we left the redis db empty
+          redis_client.keys("map_style|*", function(err, matches) {
+            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+            next();
+          });
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // TEARDOWN
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    suiteTeardown(function() {
+
+      // Close the resources server
+      res_serv.close();
+
+      // Check that we left the redis db empty
+      redis_client.keys("*", function(err, matches) {
+          assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+      });
+
+      redis_client.flushall();
+    });
 });
 
