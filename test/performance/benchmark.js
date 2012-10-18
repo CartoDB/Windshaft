@@ -80,6 +80,8 @@ if ( map_key ) {
   urlparsed.query['map_key'] = map_key;
 }
 
+urltemplate = url.format(urlparsed);
+
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max- min +1));
 }
@@ -89,11 +91,10 @@ function end() {
     var end_time = Date.now();
     var t = (end_time - start_time)/1000;
     console.log("");
-    console.log("Server Hostname:      ", urlparsed.hostname);
-    console.log("Server Port:          ", urlparsed.port);
+    console.log("Server Host:          ", urlparsed.host);
     console.log("");
     console.log("Requests per cache:   ", cached_requests);
-    console.log("Base Path:            ", urlparsed.pathname);
+    console.log("Template URL:         ", urltemplate);
     console.log("");
     console.log("Complete requests:    ", ok)
     console.log("Failed requests:      ", error)
@@ -128,7 +129,7 @@ for(var i = 0; i < N; ++i) {
     // update cache buster every "cached_requests" requests 
     var cb = Math.floor(i/cached_requests);
 
-    var nurlobj = url.parse(url.format(urlparsed)); 
+    var nurlobj = url.parse(urltemplate);
     nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
     nurlobj.query = nurlobj.query || {};
     nurlobj.query['cache_buster'] = cb;
