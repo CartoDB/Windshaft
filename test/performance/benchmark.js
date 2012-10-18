@@ -94,29 +94,36 @@ function end() {
     console.log("Server Host:          ", urlparsed.host);
     console.log("");
     console.log("Requests per cache:   ", cached_requests);
-    console.log("Template URL:         ", urltemplate);
+    console.log("Template URL (path):  ", urlparsed.pathname);
     console.log("");
-    console.log("Complete requests:    ", ok)
-    console.log("Failed requests:      ", error)
+    console.log("Complete requests:    ", ok);
+    console.log("X-Cache hits:         ", xchits, " (" + Math.round((xchits/ok)*100) + "% of complete requests)" );
+    console.log("Failed requests:      ", error);
     console.log("Concurrency Level:    ", concurrency);
     console.log("Time taken for tests: ", t, " seconds");
-    console.log("Requests per second:: ", (Math.round(((ok+error)/t)*100)/100), '[#/sec] (mean)');
+    console.log("Requests per second:  ", (Math.round(((ok+error)/t)*100)/100), '[#/sec] (mean)');
     console.log("");
     process.exit(0);
 }
 
 var ok = 0;
+var xchits = 0; // X-Cache hits
+var varnish_cache_hits = 0;
 var error = 0;
+
+function check_end() {
+  if ( error + ok === N ) end();
+}
 
 function fail(msg) {
   console.log(msg);
   ++ error;
-  if ( error + ok === N ) end();
+  check_end();
 }
 
 function pass() {
   ++ ok;
-  if ( error + ok === N ) end();
+  check_end();
 }
 
 http.globalAgent.maxSockets = concurrency;
@@ -148,7 +155,11 @@ for(var i = 0; i < N; ++i) {
         });
       }
       res.on('end', function() {
-        if ( res.statusCode == 200 ) pass();
+        if ( res.statusCode == 200 ) {
+          if ( res.headers['x-cache'].match(/hit/i) ) ++xchits;
+          // TODO: count varnish hits (check x-varnish "age")
+          pass();
+        }
         else {
           fail(res.statusCode + ' ' + nurl + ' ' + res.body);
           process.exit(1);
