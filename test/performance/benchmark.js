@@ -129,9 +129,12 @@ function pass() {
 http.globalAgent.maxSockets = concurrency;
 for(var i = 0; i < N; ++i) {
 
-    var z = 3;
-    var x = i%5; // TODO: make this configurable (5 horizontal tiles)
-    var y = i%4; // TODO: make this configurable (4 vertical tiles)
+    var cols = 5;  // TODO: make this configurable (5 horizontal tiles)
+    var lines = 4; // TODO: make this configurable (4 vertical tiles)
+
+    var z = 3; // must allow for cols X lines tiles
+    var x = i%5;
+    var y = Math.floor(i/cols)%lines;
 
     // update cache buster every "cached_requests" requests 
     var cb = Math.floor(i/cached_requests);
