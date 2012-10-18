@@ -3,10 +3,12 @@
 // small benchmark to execute with nodejs
 
 var http = require('http')
+var url = require('url');
+var fs = require('fs');
 var me = process.argv[1];
 
 function usage(exit_code) {
-  console.log("Usage: " + me + " [OPTIONS] <baseurl>");
+  console.log("Usage: " + me + " [OPTIONS] <example_tile_url>");
   console.log("Options:");
   console.log(" -v                      verbose operations (off)");
   console.log(" --help                  print this help");
@@ -21,7 +23,7 @@ process.argv.shift(); // this will be "node" (argv[0])
 process.argv.shift(); // this will be the script name  (argv[1])
 
 var verbose = 0;
-var baseurl;
+var urltemplate;
 var map_key;
 var cached_requests = 20;
 var N = cached_requests*50; // number of requests (50 full viewports)
@@ -47,28 +49,36 @@ while ( arg = process.argv.shift() ) {
   else if ( arg == '-c' || arg == '--concurrent' ) {
     concurrency = parseInt(process.argv.shift());
   }
-  else if ( ! baseurl ) {
-    baseurl = arg;
+  else if ( ! urltemplate ) {
+    urltemplate = arg;
   }
   else {
     usage(1);
   }
 }
 
-if ( ! baseurl ) {
+if ( ! urltemplate ) {
   usage(1);
 }
 
-console.log("Baseurl is " + baseurl);
-var baseurl_comps = baseurl.match(/(https?:\/\/)?([^:\/]*)(:([^\/]*))?(\/.*).*/);
+var urlparsed = url.parse(urltemplate, true);
+urlparsed.query = urlparsed.query || {};
+delete urlparsed.search; // or url.format will not use urlparsed.query
+var pathname_match = urlparsed.pathname.match(RegExp('(.*)/[0-9]+/[0-9]+/[0-9]+.png$', "i"));
+if ( ! pathname_match ) {
+  // For backward compatibility, add ZXY portion to url, if not found
+  urlparsed.pathname += '/{z}/{x}/{y}.png';
+} else {
+  // Otherwise take the whole thing as a sample and convert ZXY
+  // with the templated version
+  //urlparsed.pathname += '/{z}/{x}/{y}.png';
+  urlparsed.pathname = pathname_match[1];
+  urlparsed.pathname += '/{z}/{x}/{y}.png';
+}
 
-var options = {
-  host: baseurl_comps[2],
-  port: baseurl_comps[4] ? baseurl_comps[4] : 8181,
-  path: baseurl_comps[5] + '/{z}/{x}/{y}.png?cache_buster={cb}'
-};
-
-if ( map_key ) options.path += '&map_key=' + map_key;
+if ( map_key ) {
+  urlparsed.query['map_key'] = map_key;
+}
 
 function randInt(min, max) {
     return min + Math.floor(Math.random()*(max- min +1));
@@ -79,11 +89,11 @@ function end() {
     var end_time = Date.now();
     var t = (end_time - start_time)/1000;
     console.log("");
-    console.log("Server Hostname:      ", options.host);
-    console.log("Server Port:          ", options.port);
+    console.log("Server Hostname:      ", urlparsed.hostname);
+    console.log("Server Port:          ", urlparsed.port);
     console.log("");
     console.log("Requests per cache:   ", cached_requests);
-    console.log("Base Path:            ", options.path);
+    console.log("Base Path:            ", urlparsed.pathname);
     console.log("");
     console.log("Complete requests:    ", ok)
     console.log("Failed requests:      ", error)
@@ -110,11 +120,6 @@ function pass() {
 
 http.globalAgent.maxSockets = concurrency;
 for(var i = 0; i < N; ++i) {
-    var opt = {
-        host: options.host,
-        port: options.port,
-        path: new String(options.path)
-    };
 
     var z = 3;
     var x = i%5; // TODO: make this configurable (5 horizontal tiles)
@@ -123,11 +128,17 @@ for(var i = 0; i < N; ++i) {
     // update cache buster every "cached_requests" requests 
     var cb = Math.floor(i/cached_requests);
 
-    opt.path = opt.path.replace('{z}', z).replace('{x}', x).replace('{y}', y).replace('{cb}', cb);
-    if ( verbose ) console.log(' http://' + opt.host + ':' + opt.port + opt.path);
+    var nurlobj = url.parse(url.format(urlparsed)); 
+    nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
+    nurlobj.query = nurlobj.query || {};
+    nurlobj.query['cache_buster'] = cb;
+
+    var nurl = url.format(nurlobj);
+
+    if ( verbose ) console.log("|+++|---> " + nurl);
 
     //console.log(opt.path)
-    http.get(opt, function(res) {
+    http.get(nurl, function(res) {
       res.body = '';
       if ( res.statusCode != 200 ) {
         res.on('data', function(chunk) {
@@ -138,7 +149,7 @@ for(var i = 0; i < N; ++i) {
       res.on('end', function() {
         if ( res.statusCode == 200 ) pass();
         else {
-          fail(res.statusCode + ' http://' + opt.host + ':' + opt.port + opt.path + ' ' + res.body);
+          fail(res.statusCode + ' ' + nurl + ' ' + res.body);
           process.exit(1);
         }
       });
