@@ -18,7 +18,7 @@ function usage(exit_code) {
 }
 
 process.argv.shift(); // this will be "node" (argv[0])
-process.argv.shift(); // this will be "benchmark.js" (argv[1])
+process.argv.shift(); // this will be the script name  (argv[1])
 
 var verbose = 0;
 var baseurl;
@@ -44,7 +44,7 @@ while ( arg = process.argv.shift() ) {
   else if ( arg == '--help' ) {
     usage(0);
   }
-  else if ( arg == '-c' || arg == '--concurrency' ) {
+  else if ( arg == '-c' || arg == '--concurrent' ) {
     concurrency = parseInt(process.argv.shift());
   }
   else if ( ! baseurl ) {
