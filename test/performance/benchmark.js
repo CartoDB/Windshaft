@@ -109,8 +109,11 @@ function end() {
     console.log("");
     console.log("Requests per cache:   ", cached_requests);
     console.log("Complete requests:    ", ok);
+    console.log("");
     console.log("X-Cache hits:         ", xchits, " (" + Math.round((xchits/ok)*100) + "% of complete requests)" );
     console.log("X-Varnish hits:       ", xvhits, " (" + Math.round((xvhits/ok)*100) + "% of complete requests)" );
+    console.log("Application hits:     ", ok-xchits-xvhits);
+    console.log("Hits summary:         ", xchits, "-", xvhits, "-", (ok-xchits-xvhits));
     console.log("");
     console.log("Failed requests:      ", error);
     console.log("Concurrency Level:    ", concurrency);
