@@ -16,6 +16,8 @@ function usage(exit_code) {
   console.log(" -n, --requests <num>    number of requests to send (1000)");
   console.log(" -C, --cached <num>      number of requests sharing same cache id (20)");
   console.log(" -c, --concurrent <num>  number of concurrent requests (20)");
+  console.log(" --vp-size <num>x<num>   tiles per col, line in viewport (5x4)");
+  console.log(" --zoom-levels <num>     number of zoom levels to span");
   process.exit(exit_code);
 }
 
@@ -28,6 +30,9 @@ var map_key;
 var cached_requests = 20;
 var N = cached_requests*50; // number of requests (50 full viewports)
 var concurrency = cached_requests; // number of concurrent requests
+var cols = 5;  
+var lines = 4;
+var zlevs = 2; 
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -42,6 +47,15 @@ while ( arg = process.argv.shift() ) {
   }
   else if ( arg == '--requests' || arg == '-n' ) {
     N = parseInt(process.argv.shift());
+  }
+  else if ( arg == '--vp-size' ) {
+    arg = process.argv.shift();
+    var parsed = arg.match(/([0-9]*)x([0-9]*)/);
+    cols = parseInt(parsed[1]);
+    lines = parseInt(parsed[2]);
+  }
+  else if ( arg == '--zoom-levels' ) {
+    zlevs = parseInt(process.argv.shift());
   }
   else if ( arg == '--help' ) {
     usage(0);
@@ -82,22 +96,22 @@ if ( map_key ) {
 
 urltemplate = url.format(urlparsed);
 
-function randInt(min, max) {
-    return min + Math.floor(Math.random()*(max- min +1));
-}
-
 var start_time = Date.now();
 function end() {
     var end_time = Date.now();
     var t = (end_time - start_time)/1000;
     console.log("");
     console.log("Server Host:          ", urlparsed.host);
-    console.log("");
-    console.log("Requests per cache:   ", cached_requests);
     console.log("Template URL (path):  ", urlparsed.pathname);
     console.log("");
+    console.log("Viewport size:        " + cols + "x" + lines);
+    console.log("Zoom levels:          " + zlevs);
+    console.log("");
+    console.log("Requests per cache:   ", cached_requests);
     console.log("Complete requests:    ", ok);
     console.log("X-Cache hits:         ", xchits, " (" + Math.round((xchits/ok)*100) + "% of complete requests)" );
+    console.log("X-Varnish hits:       ", xvhits, " (" + Math.round((xvhits/ok)*100) + "% of complete requests)" );
+    console.log("");
     console.log("Failed requests:      ", error);
     console.log("Concurrency Level:    ", concurrency);
     console.log("Time taken for tests: ", t, " seconds");
@@ -108,7 +122,7 @@ function end() {
 
 var ok = 0;
 var xchits = 0; // X-Cache hits
-var varnish_cache_hits = 0;
+var xvhits = 0; // X-Varnish hits
 var error = 0;
 
 function check_end() {
@@ -130,10 +144,6 @@ http.globalAgent.maxSockets = concurrency;
 var now = Date.now();
 var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
 for(var i = 0; i < N; ++i) {
-
-    var zlevs = 2; // TODO: make this configurable (2 zoom levels)
-    var cols = 5;  // TODO: make this configurable (5 horizontal tiles)
-    var lines = 4; // TODO: make this configurable (4 vertical tiles)
 
     // we start at zoom level 3 (TODO: make configurable)
     var z = 3 + Math.floor( (i/(cols*lines))%zlevs ); 
@@ -166,7 +176,15 @@ for(var i = 0; i < N; ++i) {
       res.on('end', function() {
         if ( res.statusCode == 200 ) {
           var xcache = res.headers['x-cache'];
+          var xvarnish = res.headers['x-varnish'];
           if ( xcache && xcache.match(/hit/i) ) ++xchits;
+          else {
+            if ( xvarnish && xvarnish.match(/ /) ) ++xvhits;
+          }
+          if ( verbose ) {
+            console.log("X-Cache: " + xcache);
+            console.log("X-Varnish: " + xvarnish);
+          }
           pass();
         }
         else {
