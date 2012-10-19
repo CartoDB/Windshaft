@@ -127,7 +127,8 @@ function pass() {
 }
 
 http.globalAgent.maxSockets = concurrency;
-var cb = Date.now();
+var now = Date.now();
+var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
 for(var i = 0; i < N; ++i) {
 
     var zlevs = 2; // TODO: make this configurable (2 zoom levels)
@@ -139,10 +140,12 @@ for(var i = 0; i < N; ++i) {
     var x = i%cols;
     var y = Math.floor(i/cols)%lines;
 
-    // update cache buster every "cached_requests" requests 
-    cb += (i/cached_requests);
+    // update cache_buster every "cached_requests" requests 
+    now += Math.floor(i/cached_requests);
+    var cb = cbprefix + now;
 
-    var nurlobj = url.parse(urltemplate);
+    var nurlobj = url.parse(urltemplate, true);
+    delete nurlobj.search; // or url.format will not use urlparsed.query
     nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
     nurlobj.query = nurlobj.query || {};
     nurlobj.query['cache_buster'] = cb;
