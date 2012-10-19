@@ -129,11 +129,13 @@ function pass() {
 http.globalAgent.maxSockets = concurrency;
 for(var i = 0; i < N; ++i) {
 
+    var zlevs = 2; // TODO: make this configurable (2 zoom levels)
     var cols = 5;  // TODO: make this configurable (5 horizontal tiles)
     var lines = 4; // TODO: make this configurable (4 vertical tiles)
 
-    var z = 3; // must allow for cols X lines tiles
-    var x = i%5;
+    // we start at zoom level 3 (TODO: make configurable)
+    var z = 3 + Math.floor( (i/(cols*lines))%zlevs ); 
+    var x = i%cols;
     var y = Math.floor(i/cols)%lines;
 
     // update cache buster every "cached_requests" requests 
@@ -159,8 +161,8 @@ for(var i = 0; i < N; ++i) {
       }
       res.on('end', function() {
         if ( res.statusCode == 200 ) {
-          if ( res.headers['x-cache'].match(/hit/i) ) ++xchits;
-          // TODO: count varnish hits (check x-varnish "age")
+          var xcache = res.headers['x-cache'];
+          if ( xcache && xcache.match(/hit/i) ) ++xchits;
           pass();
         }
         else {
