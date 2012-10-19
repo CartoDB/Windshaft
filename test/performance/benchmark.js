@@ -127,6 +127,7 @@ function pass() {
 }
 
 http.globalAgent.maxSockets = concurrency;
+var cb = Date.now();
 for(var i = 0; i < N; ++i) {
 
     var zlevs = 2; // TODO: make this configurable (2 zoom levels)
@@ -139,7 +140,7 @@ for(var i = 0; i < N; ++i) {
     var y = Math.floor(i/cols)%lines;
 
     // update cache buster every "cached_requests" requests 
-    var cb = Math.floor(i/cached_requests);
+    cb += (i/cached_requests);
 
     var nurlobj = url.parse(urltemplate);
     nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
