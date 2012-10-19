@@ -1,6 +1,7 @@
-Version 0.6.3-dev
-2012-MM-DD
+Version 0.7.0
+2012-10-19
 
+ - API: add "style_" prefix to "version" and "convert" parameters
  - Enhancements to the benchmark.js script
 
 Version 0.6.2
