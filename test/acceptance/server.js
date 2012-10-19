@@ -191,8 +191,48 @@ suite('server', function() {
         });
     });
 
+    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:5}";
+    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
+
+
     test("get'ing a tile with url specified style should return an expected tile twice",  function(done){
-        var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
+        var style = querystring.stringify({style: test_style_black_200});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            method: 'GET',
+            encoding: 'binary'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(res){
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
+              function(err, similarity) {
+                if (err) throw err;
+                done();
+            });
+        });
+    });
+
+    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            method: 'GET',
+            encoding: 'binary'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(res){
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
+              function(err, similarity) {
+                if (err) throw err;
+                done();
+            });
+        });
+    });
+
+    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
@@ -606,7 +646,7 @@ suite('server', function() {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
             // unspecified resolves to 2.0.0
-            assert.equal(parsed.version, '2.0.0');
+            assert.equal(parsed.style_version, '2.0.0');
             next(null);
           });
         },
@@ -616,7 +656,7 @@ suite('server', function() {
               url: '/database/windshaft_test/table/test_table_3/style',
               method: 'POST',
               headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({style: style, version: '2.0.2'})
+              data: querystring.stringify({style: style, style_version: '2.0.2'})
           }, {}, function(res) { next(null, res); });
         },
         function getIt1(err, res) {
@@ -632,7 +672,7 @@ suite('server', function() {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
             // specified is retained 
-            assert.equal(parsed.version, '2.0.2');
+            assert.equal(parsed.style_version, '2.0.2');
             next(null);
           });
         },
@@ -643,7 +683,7 @@ suite('server', function() {
               url: '/database/windshaft_test/table/test_table_3/style',
               method: 'POST',
               headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({style: style, version: from_mapnik_version, convert: true})
+              data: querystring.stringify({style: style, style_version: from_mapnik_version, style_convert: true})
           }, {}, function(res) { next(null, res); });
         },
         function getIt2(err, res) {
@@ -659,7 +699,7 @@ suite('server', function() {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
             // specified is retained 
-            assert.equal(parsed.version, mapnik.versions.mapnik); 
+            assert.equal(parsed.style_version, mapnik.versions.mapnik); 
             done();
           });
         }
