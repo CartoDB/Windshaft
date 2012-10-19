@@ -18,6 +18,7 @@ function usage(exit_code) {
   console.log(" -c, --concurrent <num>  number of concurrent requests (20)");
   console.log(" --vp-size <num>x<num>   tiles per col, line in viewport (5x4)");
   console.log(" --zoom-levels <num>     number of zoom levels to span");
+  console.log(" --grid                  also fetch an utf8grid for each tile");
   process.exit(exit_code);
 }
 
@@ -33,6 +34,7 @@ var concurrency = cached_requests; // number of concurrent requests
 var cols = 5;  
 var lines = 4;
 var zlevs = 2; 
+var fetch_grid = false;
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -44,6 +46,9 @@ while ( arg = process.argv.shift() ) {
   }
   else if ( arg == '--cached' || arg == '-C' ) {
     cached_requests=process.argv.shift();
+  }
+  else if ( arg == '--grid' ) {
+    fetch_grid=true;
   }
   else if ( arg == '--requests' || arg == '-n' ) {
     N = parseInt(process.argv.shift());
@@ -160,6 +165,9 @@ for(var i = 0; i < N; ++i) {
     var nurlobj = url.parse(urltemplate, true);
     delete nurlobj.search; // or url.format will not use urlparsed.query
     nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
+    if ( fetch_grid && i%2 ) {
+      nurlobj.pathname = nurlobj.pathname.replace('.png', '.grid.json');
+    }
     nurlobj.query = nurlobj.query || {};
     nurlobj.query['cache_buster'] = cb;
 
