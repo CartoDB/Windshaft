@@ -545,6 +545,25 @@ suite('server', function() {
       );
     });
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // OPTIONS TILE
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get'ing options on tile should return CORS headers",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
+            method: 'OPTIONS'
+        },{
+            status: 200,
+            headers: {
+              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
+              'Access-Control-Allow-Origin': '*'
+            }
+        }, function() { done(); });
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     //

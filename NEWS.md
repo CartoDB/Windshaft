@@ -1,6 +1,10 @@
 Version 0.7.1-dev
 2012-MM-DD
 
+Version 0.7.1-dev
+2012-10-22
+ - Added CORS headers to OPTIONS method
+
 Version 0.7.0
 2012-10-19
 
