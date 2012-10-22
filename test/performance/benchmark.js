@@ -22,6 +22,7 @@ function usage(exit_code) {
   console.log(" -t, --timelimit <num>   Maximum number of seconds to spend for benchmarking (0)");
   console.log(" --vp-size <num>x<num>   tiles per col, line in user viewport (5x4)");
   console.log(" --zoom-levels <num>     number of zoom levels to span for each user");
+  console.log(" --users <num>           Number of simulated users");
   console.log(" --grid                  also fetch an utf8grid for each tile");
   process.exit(exit_code);
 }
