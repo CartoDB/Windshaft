@@ -43,6 +43,9 @@ var fetch_grid = false;
 var idletime = 0; // in seconds (TODO: parametrize)
 var timelimit = 0;
 var users = 1;
+var zstart = 3; // can be changed by template_url
+var xstart = 0; // can be changed by template_url
+var ystart = 0; // can be changed by template_url
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -99,7 +102,7 @@ if ( ! urltemplate ) {
 var urlparsed = url.parse(urltemplate, true);
 urlparsed.query = urlparsed.query || {};
 delete urlparsed.search; // or url.format will not use urlparsed.query
-var pathname_match = urlparsed.pathname.match(RegExp('(.*)/[0-9]+/[0-9]+/[0-9]+.png$', "i"));
+var pathname_match = urlparsed.pathname.match(RegExp('(.*)/([0-9]+)/([0-9]+)/([0-9]+).png$', "i"));
 if ( ! pathname_match ) {
   // For backward compatibility, add ZXY portion to url, if not found
   urlparsed.pathname += '/{z}/{x}/{y}.png';
@@ -109,6 +112,9 @@ if ( ! pathname_match ) {
   //urlparsed.pathname += '/{z}/{x}/{y}.png';
   urlparsed.pathname = pathname_match[1];
   urlparsed.pathname += '/{z}/{x}/{y}.png';
+  zstart = parseInt(pathname_match[2]);
+  xstart = parseInt(pathname_match[3]);
+  ystart = parseInt(pathname_match[4]);
 }
 
 if ( map_key ) {
@@ -129,6 +135,7 @@ function end() {
     console.log("");
     console.log("Viewport size:        ", cols + "x" + lines);
     console.log("Zoom levels:          ", zlevs);
+    console.log("Start tile:           ", zstart + "/" + xstart + "/" + ystart);
     console.log("Viewports per cache:  ", cached_requests);
   if ( cache_buster_url ) 
     console.log("Cache buster url:     ", cache_buster_url);
@@ -207,10 +214,12 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
   var im = fetch_grid ? 2 : 1;
   var waiting = requests_per_viewport;
 
+  var ntiles = Math.pow(2, z);
+
   for (var xs=0; xs<cols; ++xs) {
-    var x = x0+xs;
+    var x = (x0+xs)%ntiles;
     for (var ys=0; ys<lines; ++ys) {
-      var y = y0+ys;
+      var y = (y0+ys)%ntiles;
       for (var i=0; i<im; ++i) {
 
         //console.log("Fetching " + z + "/" + x + "/" + y);
@@ -222,6 +231,10 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
         }
         nurlobj.query = nurlobj.query || {};
         nurlobj.query['cache_buster'] = cache_buster;
+
+        if ( verbose > 1 ) {
+          console.log("Fetching " + nurlobj.pathname);
+        }
 
         var nurl = url.format(nurlobj);
 
@@ -235,7 +248,6 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 
 var now = Date.now();
 var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
-var zstart = 3; // FIXME: make configurable
 var vpcount = 0;
 
 function fetchCacheBusterValue(callback)
@@ -269,7 +281,13 @@ function fetchNextViewport() {
     // TODO: use timeout as another exit point ?
 
     // update zoom level 
-    var z = zstart + vpcount % zlevs;
+    var zdist = ( vpcount % zlevs );
+    var z = zstart + zdist;
+    var zdist_tiles = (1<<zdist);
+    var x = xstart * zdist_tiles; // (1<<zdist);
+    var y = ystart * zdist_tiles; // (1<<zdist);
+
+
 
     // update cache_buster 
     fetchCacheBusterValue(function(err, cb) {
@@ -287,10 +305,12 @@ function fetchNextViewport() {
       for (var u=0; u<users; ++u) {
 
         if ( verbose ) {
-          console.log("User " + u + " fetching viewport " + vpcount + " at zoom level " + z + " with cache_buster " + cb);
+          console.log("User " + u + " fetching viewport " + vpcount
+            + " starting from " + z + "/" + x + "/" + y
+            + " with cache_buster " + cb);
         }
 
-        fetchViewport(0, 0, z, cb, function() {
+        fetchViewport(x, y, z, cb, function() {
           // fetch next viewport in idletime seconds
           if ( ! --users_left ) setTimeout(fetchNextViewport, idletime*1000);
         });
