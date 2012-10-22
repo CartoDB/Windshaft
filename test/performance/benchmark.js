@@ -35,7 +35,6 @@ var map_key;
 var cached_requests = 20;
 var cache_buster_url;
 var N = cached_requests*50; // number of requests (50 full viewports)
-var total_response_time = 0; // total time spent in requests, in milliseconds
 var concurrency = cached_requests; // number of concurrent requests
 var cols = 5;  
 var lines = 4;
@@ -118,9 +117,10 @@ if ( map_key ) {
 
 urltemplate = url.format(urlparsed);
 
-// FIXME: time should be associated to each request, not to whole run
 var start_time = Date.now();
 function end() {
+    var final_time = Date.now();
+    var total_response_time = final_time - start_time;
     var nreqs = ok+error;
     var rps = nreqs * 1000 / total_response_time;
     console.log("");
@@ -166,7 +166,6 @@ if ( timelimit ) {
 
 function fetchTileOrGrid(url, callback)
 {
-  var started = Date.now(); // Should this be moved within the http.get response ?
   http.get(url, function(res) {
     res.body = '';
     if ( res.statusCode != 200 ) {
@@ -176,13 +175,6 @@ function fetchTileOrGrid(url, callback)
       });
     }
     res.on('end', function() {
-      var now = Date.now();
-      var elapsed = now - started;
-      if ( verbose > 1 ) {
-        console.log("|+++|---> " + url);
-        console.log("  Started " + started + " now is " + now + ", took " + elapsed + " ms");
-      }
-      total_response_time += elapsed;
       if ( res.statusCode == 200 ) {
         var xcache = res.headers['x-cache'];
         var xvarnish = res.headers['x-varnish'];
