@@ -43,6 +43,7 @@ var zlevs = 2;
 var fetch_grid = false;
 var idletime = 0; // in seconds (TODO: parametrize)
 var timelimit = 0;
+var users = 1;
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -59,6 +60,9 @@ while ( arg = process.argv.shift() ) {
   }
   else if ( arg == '--timelimit' || arg == '-t' ) {
     timelimit = parseInt(process.argv.shift());
+  }
+  else if ( arg == '--users' ) {
+    users = parseInt(process.argv.shift());
   }
   else if ( arg == '--grid' ) {
     fetch_grid=true;
@@ -128,6 +132,7 @@ function end() {
     console.log("Viewports per cache:  ", cached_requests);
   if ( cache_buster_url ) 
     console.log("Cache buster url:     ", cache_buster_url);
+    console.log("Simulated users:      ", users);
     console.log("Concurrency Level:    ", concurrency);
     console.log("");
     console.log("Complete requests:    ", ok);
@@ -240,7 +245,6 @@ var now = Date.now();
 var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
 var zstart = 3; // FIXME: make configurable
 var vpcount = 0;
-var users = 1;
 
 function fetchCacheBusterValue(callback)
 {
@@ -286,14 +290,20 @@ function fetchNextViewport() {
       // update vpcount
       ++vpcount;
 
-      if ( verbose ) {
-        console.log("Fetching viewport " + vpcount + " at zoom level " + z + " with cache_buster " + cb);
-      }
+      var users_left = users;
 
-      fetchViewport(0, 0, z, cb, function() {
-        // fetch next viewport in idletime seconds
-        setTimeout(fetchNextViewport, idletime*1000);
-      });
+      for (var u=0; u<users; ++u) {
+
+        if ( verbose ) {
+          console.log("User " + u + " fetching viewport " + vpcount + " at zoom level " + z + " with cache_buster " + cb);
+        }
+
+        fetchViewport(0, 0, z, cb, function() {
+          // fetch next viewport in idletime seconds
+          if ( ! --users_left ) setTimeout(fetchNextViewport, idletime*1000);
+        });
+
+      }
 
     });
 }
