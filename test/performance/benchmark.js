@@ -245,10 +245,6 @@ var users = 1;
 function fetchCacheBusterValue(callback)
 {
     if ( ! cache_buster_url ) {
-console.log("vpcount: " + vpcount);
-console.log("cached_requests: " + cached_requests);
-console.log("now: " + now);
-
       var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
       callback(null, cb);
       return;
@@ -304,3 +300,5 @@ function fetchNextViewport() {
 
 
 fetchNextViewport();
+
+process.on('SIGINT', end);
