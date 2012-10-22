@@ -14,7 +14,10 @@ function usage(exit_code) {
   console.log(" --help                  print this help");
   console.log(" --key <string>          map authentication key (none)");
   console.log(" -n, --requests <num>    Maximum number of requests to send (1000)");
-  console.log(" -C, --cached <num>      Viewport requests sharing same cache id (20)");
+  console.log(" -C, --cached <num>[@url]");
+  console.log("                         Viewport requests using same cache_buster value (20)");
+  console.log("                         If an url is given it will be used to fetch");
+  console.log("                         the cache_buster value.");
   console.log(" -c, --concurrent <num>  number of concurrent requests (20)");
   console.log(" -t, --timelimit <num>   Maximum number of seconds to spend for benchmarking (0)");
   console.log(" --vp-size <num>x<num>   tiles per col, line in user viewport (5x4)");
@@ -30,6 +33,7 @@ var verbose = 0;
 var urltemplate;
 var map_key;
 var cached_requests = 20;
+var cache_buster_url;
 var N = cached_requests*50; // number of requests (50 full viewports)
 var concurrency = cached_requests; // number of concurrent requests
 var cols = 5;  
@@ -48,7 +52,9 @@ while ( arg = process.argv.shift() ) {
     map_key=process.argv.shift();
   }
   else if ( arg == '--cached' || arg == '-C' ) {
-    cached_requests=process.argv.shift();
+    arg = process.argv.shift().split('@');
+    cached_requests = parseInt(arg[0]);
+    if ( arg[1] ) cache_buster_url = arg[1];
   }
   else if ( arg == '--timelimit' || arg == '-t' ) {
     timelimit = parseInt(process.argv.shift());
@@ -107,6 +113,7 @@ if ( map_key ) {
 
 urltemplate = url.format(urlparsed);
 
+// FIXME: time should be associated to each request, not to whole run
 var start_time = Date.now();
 function end() {
     var end_time = Date.now();
@@ -118,6 +125,8 @@ function end() {
     console.log("Viewport size:        ", cols + "x" + lines);
     console.log("Zoom levels:          ", zlevs);
     console.log("Viewports per cache:  ", cached_requests);
+  if ( cache_buster_url ) 
+    console.log("Cache buster url:     ", cache_buster_url);
     console.log("Concurrency Level:    ", concurrency);
     console.log("");
     console.log("Complete requests:    ", ok);
@@ -219,27 +228,64 @@ var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_";
 var zstart = 3; // FIXME: make configurable
 var vpcount = 0;
 var users = 1;
+
+function fetchCacheBusterValue(callback)
+{
+    if ( ! cache_buster_url ) {
+console.log("vpcount: " + vpcount);
+console.log("cached_requests: " + cached_requests);
+console.log("now: " + now);
+
+      var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
+      callback(null, cb);
+      return;
+    } 
+
+    http.get(cache_buster_url, function(res) {
+      res.body = '';
+      res.on('data', function(chunk) { res.body += chunk; });
+      res.on('end', function() {
+        if ( res.statusCode == 200 ) {
+          callback(null, res.body);
+        }
+        else {
+          callback(new Error(res.body));
+        }
+      });
+    }).on('error', function(e) {
+      callback(e);
+    });
+
+}
+
 function fetchNextViewport() {
 
     if ( vpcount * requests_per_viewport * users >= N ) end();
     // TODO: use timeout as another exit point ?
 
-    // update cache_buster 
-    var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
-
     // update zoom level 
     var z = zstart + vpcount % zlevs;
 
-    // update vpcount
-    ++vpcount;
+    // update cache_buster 
+    fetchCacheBusterValue(function(err, cb) {
 
-    if ( verbose ) {
-      console.log("Fetching viewport " + vpcount + " at zoom level " + z + " with cache_buster " + cb);
-    }
+      if ( err ) {
+        console.log("Error fetching cache_buster value: " + err);
+        cb = 0; // arbitrary value
+      }
 
-    fetchViewport(0, 0, z, cb, function() {
-      // fetch next viewport in idletime seconds
-      setTimeout(fetchNextViewport, idletime*1000);
+      // update vpcount
+      ++vpcount;
+
+      if ( verbose ) {
+        console.log("Fetching viewport " + vpcount + " at zoom level " + z + " with cache_buster " + cb);
+      }
+
+      fetchViewport(0, 0, z, cb, function() {
+        // fetch next viewport in idletime seconds
+        setTimeout(fetchNextViewport, idletime*1000);
+      });
+
     });
 }
 
