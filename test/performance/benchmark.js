@@ -35,6 +35,7 @@ var map_key;
 var cached_requests = 20;
 var cache_buster_url;
 var N = cached_requests*50; // number of requests (50 full viewports)
+var total_response_time = 0; // total time spent in requests, in milliseconds
 var concurrency = cached_requests; // number of concurrent requests
 var cols = 5;  
 var lines = 4;
@@ -116,8 +117,8 @@ urltemplate = url.format(urlparsed);
 // FIXME: time should be associated to each request, not to whole run
 var start_time = Date.now();
 function end() {
-    var end_time = Date.now();
-    var t = (end_time - start_time)/1000;
+    var nreqs = ok+error;
+    var rps = nreqs * 1000 / total_response_time;
     console.log("");
     console.log("Server Host:          ", urlparsed.host);
     console.log("Template URL (path):  ", urlparsed.pathname);
@@ -136,8 +137,8 @@ function end() {
     console.log("Hits summary:         ", xchits, "-", xvhits, "-", (ok-xchits-xvhits));
     console.log("");
     console.log("Failed requests:      ", error);
-    console.log("Time taken for tests: ", t, " seconds");
-    console.log("Requests per second:  ", (Math.round(((ok+error)/t)*100)/100), '[#/sec] (mean)');
+    console.log("");
+    console.log("Requests per second:  ", Math.round(rps*100)/100, '[#/sec] (mean)');
     console.log("");
     process.exit(0);
 }
@@ -146,6 +147,8 @@ var ok = 0;
 var xchits = 0; // X-Cache hits
 var xvhits = 0; // X-Varnish hits
 var error = 0;
+
+var requests_per_viewport = cols * lines * ( fetch_grid ? 2 : 1 );
 
 http.globalAgent.maxSockets = concurrency;
 
@@ -156,7 +159,51 @@ if ( timelimit ) {
   }, timelimit*1000);
 }
 
-var requests_per_viewport = cols * lines * ( fetch_grid ? 2 : 1 );
+function fetchTileOrGrid(url, callback)
+{
+  var started = Date.now(); // Should this be moved within the http.get response ?
+  http.get(url, function(res) {
+    res.body = '';
+    if ( res.statusCode != 200 ) {
+      res.on('data', function(chunk) {
+        // Save only first chunk, to reduce cost of the operation
+        if ( res.body.length == 0 ) res.body += chunk;
+      });
+    }
+    res.on('end', function() {
+      var now = Date.now();
+      var elapsed = now - started;
+      if ( verbose > 1 ) {
+        console.log("|+++|---> " + url);
+        console.log("  Started " + started + " now is " + now + ", took " + elapsed + " ms");
+      }
+      total_response_time += elapsed;
+      if ( res.statusCode == 200 ) {
+        var xcache = res.headers['x-cache'];
+        var xvarnish = res.headers['x-varnish'];
+        if ( xcache && xcache.match(/hit/i) ) ++xchits;
+        else {
+          if ( xvarnish && xvarnish.match(/ /) ) ++xvhits;
+        }
+        if ( verbose > 2 ) {
+          console.log("X-Cache: " + xcache);
+          console.log("X-Varnish: " + xvarnish);
+        }
+        ++ ok;
+        callback(0);
+      }
+      else {
+        console.log(res.statusCode + ' ' + url + ' ' + res.body);
+        ++ error;
+        callback();
+      }
+    });
+  }).on('error', function(e) {
+      console.log('unknown (http) error');
+      ++ error;
+      callback();
+  });
+}
 
 function fetchViewport(x0, y0, z, cache_buster, callback)
 {
@@ -181,42 +228,8 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 
         var nurl = url.format(nurlobj);
 
-        if ( verbose > 1 ) console.log("|+++|---> " + nurl);
-
-        //console.log(opt.path)
-        http.get(nurl, function(res) {
-          res.body = '';
-          if ( res.statusCode != 200 ) {
-            res.on('data', function(chunk) {
-              // Save only first chunk, to reduce cost of the operation
-              if ( res.body.length == 0 ) res.body += chunk;
-            });
-          }
-          res.on('end', function() {
-            if ( res.statusCode == 200 ) {
-              var xcache = res.headers['x-cache'];
-              var xvarnish = res.headers['x-varnish'];
-              if ( xcache && xcache.match(/hit/i) ) ++xchits;
-              else {
-                if ( xvarnish && xvarnish.match(/ /) ) ++xvhits;
-              }
-              if ( verbose > 2 ) {
-                console.log("X-Cache: " + xcache);
-                console.log("X-Varnish: " + xvarnish);
-              }
-              ++ ok;
-              if ( ! --waiting ) callback();
-            }
-            else {
-              console.log(res.statusCode + ' ' + nurl + ' ' + res.body);
-              ++ error;
-              if ( ! --waiting ) callback();
-            }
-          });
-        }).on('error', function(e) {
-            console.log('unknown (http) error');
-            ++ error;
-            if ( ! --waiting ) callback();
+        fetchTileOrGrid(nurl, function() {
+          if ( ! --waiting ) callback();
         });
       }
     }
