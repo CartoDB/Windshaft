@@ -215,7 +215,7 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
   var im = fetch_grid ? 2 : 1;
   var waiting = requests_per_viewport;
 
-  var ntiles = Math.pow(2, z);
+  var ntiles = (1<<z);
 
   for (var xs=0; xs<cols; ++xs) {
     var x = (x0+xs)%ntiles;
