@@ -250,21 +250,37 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 var now = Date.now();
 var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
 var vpcount = 0;
+var last_cbserial;
+var last_cb;
 
 function fetchCacheBusterValue(callback)
 {
+    var cbserial = Math.floor(vpcount/cached_requests);
+    if ( cbserial == last_cbserial ) {
+      callback(null, last_cb);
+      return;
+    }
+
+    last_cbserial = cbserial;
+
     if ( ! cache_buster_url ) {
       var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
-      callback(null, cb);
+      last_cb = cb;
+      callback(null, last_cb);
       return;
     } 
+
+    if ( verbose ) {
+      console.log("Cache-buster fetching " + cbserial);
+    }
 
     http.get(cache_buster_url, function(res) {
       res.body = '';
       res.on('data', function(chunk) { res.body += chunk; });
       res.on('end', function() {
         if ( res.statusCode == 200 ) {
-          callback(null, res.body);
+          last_cb = res.body;
+          callback(null, last_cb);
         }
         else {
           callback(new Error(res.body));
