@@ -1,6 +1,7 @@
 Version 0.7.1-dev
 2012-MM-DD
 
+ - Allow sql queries to end with a semicolon
  - Added CORS headers to OPTIONS method
  - More enhancements to the benchmark.js script
 

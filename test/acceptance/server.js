@@ -161,6 +161,45 @@ suite('server', function() {
         });
     });
 
+    test("should not choke when queries end with a semicolon",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
+              + querystring.stringify({sql: "SELECT * FROM test_table limit 2;"}),
+            method: 'GET',
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(res){
+            done();
+        });
+    });
+
+    test("should not choke when sql ends with a semicolon and some blanks",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
+              + querystring.stringify({sql: "SELECT * FROM test_table limit 2; \t\n"}),
+            method: 'GET',
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(res){
+            done();
+        });
+    });
+
+    test("should not strip quoted semicolons within an sql query",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
+              + querystring.stringify({sql: "SELECT * FROM test_table where name != ';\n'"}),
+            method: 'GET',
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(res){
+            done();
+        });
+    });
+
     test("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
         var sql = querystring.stringify({sql: "BOGUS FROM test_table"});
         assert.response(server, {
