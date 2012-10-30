@@ -1,5 +1,5 @@
-Version 0.7.1-dev
-2012-MM-DD
+Version 0.7.1
+2012-10-30
 
  - Allow sql queries to end with a semicolon
  - Added CORS headers to OPTIONS method
