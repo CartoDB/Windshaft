@@ -853,7 +853,7 @@ suite('server', function() {
     });
 
     test("get'ing a json with default style and sql should return a constrained grid",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
             method: 'GET'
@@ -864,6 +864,39 @@ suite('server', function() {
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
         });
     });
+
+    // See http://github.com/Vizzuality/Windshaft/issues/50
+    test("get'ing a json with no data should return an empty grid",  function(done){
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 0"});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
+        });
+    });
+
+    // Another test for http://github.com/Vizzuality/Windshaft/issues/50
+    // this time with interactivity and cache_buster
+    test("get'ing a json with no data but interactivity should return an empty grid",  function(done){
+        var sql = querystring.stringify({
+          sql: "SELECT * FROM test_table limit 0",
+          interactivity: 'cartodb_id',
+          cache_buster: 4});
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+        }, function(res){
+            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
+        });
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     //
