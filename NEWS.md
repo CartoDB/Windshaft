@@ -4,6 +4,7 @@ Version 0.7.1-dev
  - Allow sql queries to end with a semicolon
  - Added CORS headers to OPTIONS method
  - More enhancements to the benchmark.js script
+ - Properly handle async nature of mml_builder construction (#51)
 
 Version 0.7.0
 2012-10-19
