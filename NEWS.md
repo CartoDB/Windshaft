@@ -1,6 +1,8 @@
 Version 0.7.2-dev
 2012-MM-DD
 
+ - Support geometry-type based rendering (#11)
+
 Version 0.7.1
 2012-10-30
 
