@@ -30,7 +30,8 @@
         "hiredis": "~0.1.12"
     },
     "devDependencies": {
-        "mocha": "1.2.1"
+        "mocha": "1.2.1",
+        "semver": "~1.1.0"
     },
     "scripts": {
         "test": "sh ./run_tests.sh"

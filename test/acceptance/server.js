@@ -11,6 +11,7 @@ var   assert        = require('../support/assert')
     , mapnik        = require('mapnik')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
+    , semver        = require('semver')
     , http          = require('http');
 
 suite('server', function() {
@@ -27,7 +28,13 @@ suite('server', function() {
     var res_serv; // resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
-    var default_style = '{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
+    var default_style = semver.satisfies(mapnik.versions.mapnik, '<2.1.0')
+    ?
+      // 2.0.0 default
+      '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}'
+    :
+      // 2.1.0 default
+      '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
 
     suiteSetup(function(done) {
 
@@ -113,7 +120,7 @@ suite('server', function() {
             status: 200,
         }, function(res) {
           var parsed = JSON.parse(res.body);
-          assert.equal(parsed.style, '#test_table ' + default_style);
+          assert.equal(parsed.style, _.template(default_style, {table: 'test_table'}));
           // NOTE: we used to check that "style" was the only element of
           //       the response, but I don't think it makes sense.
           done();
@@ -906,7 +913,7 @@ suite('server', function() {
 
     test("deleting a style returns 200, calls beforeStateChange, calls afterStyleDelete and returns default therafter",  function(done){
         var style = 'Map {background-color:#fff;}';
-        var def_style = "#test_table_3 " + default_style;
+        var def_style = _.template(default_style, {table: 'test_table_3'});
 
         // TODO: use Step ?
         server.beforeStateChangeCalls = 0;
