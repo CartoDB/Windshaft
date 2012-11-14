@@ -752,13 +752,28 @@ suite('server', function() {
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
               method: 'GET'
-          },{
-              status: 200,
-          }, function(res) {
+          },{}, function(res) {
+            assert.equal(res.statusCode, 200, res.body);
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
             // specified is retained 
             assert.equal(parsed.style_version, '2.0.2');
+            next(null);
+          });
+        },
+        // Now get with style_convert
+        function getIt1(err) {
+          if ( err ) { done(err); return; }
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style?style_convert=true',
+              method: 'GET'
+          },{}, function(res) {
+            assert.equal(res.statusCode, 200, res.body);
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.style, style);
+            // specified is retained 
+            assert.equal(parsed.style_version, mapnik.versions.mapnik);
             next(null);
           });
         },

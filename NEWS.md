@@ -1,6 +1,7 @@
-Version 0.7.2-dev
+Version 0.8.0-dev
 2012-MM-DD
 
+ - API: add "style_convert" parameter to GET /style
  - Support geometry-type based rendering (#11)
 
 Version 0.7.1
