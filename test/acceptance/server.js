@@ -705,6 +705,7 @@ suite('server', function() {
     test("post'ing good style returns 200 then getting returns it",  function(done){
       var style = "Map {background-color:#fff;}";
       Step(
+        // Post with no style_version
         function postIt0() {
           var next = this;
           assert.response(server, {
@@ -714,6 +715,7 @@ suite('server', function() {
               data: querystring.stringify({style: style})
           }, {}, function(res) { next(null, res); });
         },
+        // Get with no style_convert
         function getIt0(err, res) {
           if ( err ) { done(err); return; }
           var next = this;
@@ -731,7 +733,9 @@ suite('server', function() {
             next(null);
           });
         },
-        function postIt1() {
+        // Now post with a style_version
+        function postIt1(err) {
+          if ( err ) { done(err); return; }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
@@ -740,6 +744,7 @@ suite('server', function() {
               data: querystring.stringify({style: style, style_version: '2.0.2'})
           }, {}, function(res) { next(null, res); });
         },
+        // Get again with no style_convert
         function getIt1(err, res) {
           if ( err ) { done(err); return; }
           var next = this;
@@ -757,7 +762,9 @@ suite('server', function() {
             next(null);
           });
         },
-        function postIt2() {
+        // Now post with a style_version AND style_convert
+        function postIt2(err) {
+          if ( err ) { done(err); return; }
           var next = this;
           var from_mapnik_version = ( mapnik.versions.mapnik == '2.0.2' ? '2.0.0' : '2.0.2' );
           assert.response(server, {
@@ -767,6 +774,7 @@ suite('server', function() {
               data: querystring.stringify({style: style, style_version: from_mapnik_version, style_convert: true})
           }, {}, function(res) { next(null, res); });
         },
+        // Get with no style_convert
         function getIt2(err, res) {
           if ( err ) { done(err); return; }
           var next = this;
@@ -778,8 +786,9 @@ suite('server', function() {
               status: 200,
           }, function(res) {
             var parsed = JSON.parse(res.body);
+            // NOTE: no conversion expected for the specific style (may change)
             assert.equal(parsed.style, style);
-            // specified is retained 
+            // Style converted to target
             assert.equal(parsed.style_version, mapnik.versions.mapnik); 
             done();
           });
