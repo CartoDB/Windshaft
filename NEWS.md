@@ -1,3 +1,6 @@
+Version 0.8.1-dev
+2012-MM-DD
+
 Version 0.8.0
 2012-11-14
 
