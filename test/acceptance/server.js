@@ -703,7 +703,7 @@ suite('server', function() {
     });
 
     test("post'ing good style returns 200 then getting returns it",  function(done){
-      var style = "Map {background-color:#fff;}";
+      var style = "Map { background-color:#fff; }";
       Step(
         // Post with no style_version
         function postIt0() {
