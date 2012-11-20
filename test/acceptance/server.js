@@ -263,10 +263,9 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
             encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.equal(res.headers['content-type'], "image/png");
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
               function(err, similarity) {
                 if (err) throw err;
@@ -281,10 +280,9 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
             encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.equal(res.headers['content-type'], "image/png");
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
               function(err, similarity) {
                 if (err) throw err;
