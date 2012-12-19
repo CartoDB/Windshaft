@@ -1,7 +1,9 @@
-Version 0.8.1-dev
-2012-MM-DD
+Version 0.8.1
+2012-12-19
 
  - Add X-Windshaft-Cache header
+ - Require grainstore ~0.10.5 for better 2.0.0 -> 2.1.0 transforms
+
 
 Version 0.8.0
 2012-11-14
