@@ -146,8 +146,11 @@ function end() {
     console.log("Complete requests:    ", ok);
     console.log("X-Cache hits:         ", xchits, " (" + Math.round((xchits/ok)*100) + "%)" );
     console.log("X-Varnish hits:       ", xvhits, " (" + Math.round((xvhits/ok)*100) + "%)" );
-    console.log("Application hits:     ", ok-xchits-xvhits, " (" + Math.round(((ok-xchits-xvhits)/ok)*100) + "%)" );
-    console.log("Hits summary:         ", xchits, "-", xvhits, "-", (ok-xchits-xvhits));
+    console.log("X-Windshaft hits:     ", xwhits, " (" + Math.round((xwhits/ok)*100) + "%)" );
+    var cache_hits = xchits + xvhits + xwhits;
+    var cache_miss = ok - cache_hits;
+    console.log("Application hits:     ", cache_miss, " (" + Math.round((cache_miss/ok)*100) + "%)" );
+    console.log("Hits summary:         ", xchits, "-", xvhits, "-", xwhits, "-", cache_miss);
     console.log("");
     console.log("Failed requests:      ", error);
     console.log("");
@@ -159,6 +162,7 @@ function end() {
 var ok = 0;
 var xchits = 0; // X-Cache hits
 var xvhits = 0; // X-Varnish hits
+var xwhits = 0; // X-Windshaft-Cache hits
 var error = 0;
 
 var requests_per_viewport = cols * lines * ( fetch_grid ? 2 : 1 );
@@ -186,13 +190,14 @@ function fetchTileOrGrid(url, callback)
       if ( res.statusCode == 200 ) {
         var xcache = res.headers['x-cache'];
         var xvarnish = res.headers['x-varnish'];
+        var xwindshaft = res.headers['x-windshaft-cache'];
         if ( xcache && xcache.match(/hit/i) ) ++xchits;
-        else {
-          if ( xvarnish && xvarnish.match(/ /) ) ++xvhits;
-        }
+        else if ( xvarnish && xvarnish.match(/ /) ) ++xvhits;
+        else if ( xwindshaft ) ++xwhits;
         if ( verbose > 2 ) {
           console.log("X-Cache: " + xcache);
           console.log("X-Varnish: " + xvarnish);
+          console.log("X-Windshaft-Cache: " + xwindshaft);
         }
         ++ ok;
         callback(0);
