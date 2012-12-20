@@ -953,6 +953,34 @@ suite('server', function() {
         });
     });
 
+    // See https://github.com/Vizzuality/Windshaft-cartodb/issues/67
+    test("get'ing a solid grid while changing interactivity fields",  function(done){
+        var baseurl = '/database/windshaft_test/table/test_big_poly/3/2/2.grid.json?'
+        var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
+        baseurl += querystring.stringify({
+          style: style211,
+          style_version: '2.1.1'}
+        );
+        baseurl += '&';
+        assert.response(server, {
+            url: baseurl + 'interactivity=name',
+            method: 'GET'
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.body);
+            var expected_data = { "1":{"name":"west"} };
+            assert.deepEqual(JSON.parse(res.body).data, expected_data);
+            assert.response(server, {
+                url: baseurl + 'interactivity=cartodb_id',
+                method: 'GET'
+            },{}, function(res){
+                assert.equal(res.statusCode, 200, res.body);
+                var expected_data = { "1":{"cartodb_id":"1"} };
+                assert.deepEqual(JSON.parse(res.body).data, expected_data);
+                done();
+            });
+        });
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -1043,6 +1071,21 @@ suite('server', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'DELETE'
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.body);
+              next();
+            } catch (err) {
+              done(err);
+            }
+          });
+        },
+        function del_test_big_poly(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_big_poly/style',
               method: 'DELETE'
           },{}, function(res) {
             try {
