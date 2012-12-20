@@ -1,5 +1,5 @@
-Version 0.8.2-dev
-2012-MM-DD
+Version 0.8.2
+2012-12-20
 
  - Require tilelive-mapnik 0.3.3-cdb2 to fix bug with utf grid cache
    http://github.com/Vizzuality/Windshaft-cartodb/issues/67
