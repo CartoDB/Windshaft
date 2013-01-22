@@ -1111,6 +1111,64 @@ suite('server', function() {
       );
     });
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // POST LAYERGROUP
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("post layergroup with 2 layers, each with its style", function(done) {
+
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select * from test_table limit 2',
+               cartocss: '#layer { marker-fill:blue; }', 
+               cartocss_version: '2.0.2' 
+             } },
+           { options: {
+               sql: 'select * from test_table limit 2 offset 2',
+               cartocss: '#layer { marker-fill:red; }', 
+               cartocss_version: '2.0.1' 
+             } }
+        ]
+      };
+
+      var expected_token = "d3ee38d12a9671acb668b14df69c3ade";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({ config: JSON.stringify(layergroup) })
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              assert.deepEqual(parsedBody, {token: expected_token});
+              next(null, res);
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
+    // TODO: check lifetime of layergroup!
 
     ////////////////////////////////////////////////////////////////////
     //
