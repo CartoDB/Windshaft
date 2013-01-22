@@ -1,6 +1,7 @@
 Version 0.8.3-dev
 YYYY-MM-DD
 
+ - Enhance run_tests.sh to allow running single tests and skipping preparation
  - Return status code 400 on POST STYLE and GET STYLE errors
 
 Version 0.8.2

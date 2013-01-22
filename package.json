@@ -34,7 +34,7 @@
         "semver": "~1.1.0"
     },
     "scripts": {
-        "test": "sh ./run_tests.sh"
+        "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/acceptance/*.js"
     },
     "engine": { "node": ">= 0.6 < 0.9" }
 }
