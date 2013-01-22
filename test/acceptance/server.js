@@ -694,7 +694,7 @@ suite('server', function() {
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
         },{
-            status: 500,
+            status: 400,
             body: /Unrecognized rule: backgxxxxxround-color/ 
         }, function() { done(); } );
     });
@@ -706,7 +706,7 @@ suite('server', function() {
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
         },{
-            status: 500,
+            status: 400,
             body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/ 
         }, function() { done(); } );
     });

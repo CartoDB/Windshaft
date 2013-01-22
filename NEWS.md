@@ -1,6 +1,8 @@
 Version 0.8.3-dev
 YYYY-MM-DD
 
+ - Return status code 400 on POST STYLE and GET STYLE errors
+
 Version 0.8.2
 2012-12-20
 
