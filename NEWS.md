@@ -1,8 +1,9 @@
-Version 0.8.3-dev
-YYYY-MM-DD
+Version 0.8.3
+2013-01-28
 
  - Enhance run_tests.sh to allow running single tests and skipping preparation
  - Return status code 400 on POST STYLE and GET STYLE errors
+ - Require grainstore ~0.10.10
 
 Version 0.8.2
 2012-12-20
