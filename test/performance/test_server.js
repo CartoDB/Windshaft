@@ -13,6 +13,11 @@ global.environment  = require('../../config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
 var ServerOptions = require('../support/server_options.js');
+
+// drop redis connections after 1 second of idle time
+ServerOptions.redis.idleTimeoutMillis = 1000;
+ServerOptions.redis.reapIntervalMillis = ServerOptions.redis.idleTimeoutMillis;
+
 var server = new Windshaft.Server(ServerOptions);
 
 // it takes up to 15 file descriptors to support 1 connection 
