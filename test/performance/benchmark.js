@@ -209,7 +209,7 @@ function fetchTileOrGrid(url, callback)
       }
     });
   }).on('error', function(e) {
-      console.log('unknown (http) error');
+      console.log('HTTP get: ' + e);
       ++ error;
       callback();
   });
