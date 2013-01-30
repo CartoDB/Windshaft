@@ -1,3 +1,9 @@
+Version 0.8.4-dev
+2013-01-DD
+
+ - Add dumpCacheStats method of Windshaft server
+ - Log cache cleanup activity outcome
+
 Version 0.8.3
 2013-01-28
 

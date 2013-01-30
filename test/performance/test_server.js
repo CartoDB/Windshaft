@@ -28,3 +28,8 @@ var server = new Windshaft.Server(ServerOptions);
 server.maxConnections = 68;
 server.listen(global.environment.windshaft_port);
 console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
+
+// kill -USR1 <test_server_pid> to dump cache stats
+process.on('SIGUSR1', function() {
+  server.dumpCacheStats();
+});
