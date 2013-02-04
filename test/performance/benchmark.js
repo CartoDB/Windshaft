@@ -159,6 +159,7 @@ function end() {
     process.exit(0);
 }
 
+var requests_sent = 0;
 var ok = 0;
 var xchits = 0; // X-Cache hits
 var xvhits = 0; // X-Varnish hits
@@ -178,6 +179,10 @@ if ( timelimit ) {
 
 function fetchTileOrGrid(url, callback)
 {
+  // Do not send more than the max requests
+  if ( requests_sent >= N ) { callback(); return; } 
+  ++requests_sent;
+
   http.get(url, function(res) {
     res.body = '';
     if ( res.statusCode != 200 ) {
@@ -228,7 +233,8 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
       var y = (y0+ys)%ntiles;
       for (var i=0; i<im; ++i) {
 
-        //console.log("Fetching " + z + "/" + x + "/" + y);
+        if ( requests_sent >= N ) break;
+
         var nurlobj = url.parse(urltemplate, true);
         delete nurlobj.search; // or url.format will not use urlparsed.query
         nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
