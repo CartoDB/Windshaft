@@ -223,7 +223,7 @@ function fetchTileOrGrid(url, callback)
 function fetchViewport(x0, y0, z, cache_buster, callback)
 {
   var im = fetch_grid ? 2 : 1;
-  var waiting = requests_per_viewport;
+  var waiting = 0;
 
   var ntiles = (1<<z);
 
@@ -250,6 +250,7 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 
         var nurl = url.format(nurlobj);
 
+        ++waiting;
         fetchTileOrGrid(nurl, function() {
           if ( ! --waiting ) callback();
         });
@@ -333,7 +334,7 @@ function fetchNextViewport() {
       for (var u=0; u<users; ++u) {
 
         if ( verbose ) {
-          console.log("User " + u + " fetching viewport " + vpcount
+          console.log("User " + (u+1) + " fetching viewport " + vpcount
             + " starting from " + z + "/" + x + "/" + y
             + " with cache_buster " + cb);
         }
