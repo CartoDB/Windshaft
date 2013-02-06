@@ -40,7 +40,7 @@ var concurrency = cached_requests; // number of concurrent requests
 var cols = 5;  
 var lines = 4;
 var zlevs = 2; 
-var fetch_grid = false;
+var fetch_grid = 0;
 var idletime = 0; // in seconds (TODO: parametrize)
 var timelimit = 0;
 var users = 1;
@@ -68,7 +68,10 @@ while ( arg = process.argv.shift() ) {
     users = parseInt(process.argv.shift());
   }
   else if ( arg == '--grid' ) {
-    fetch_grid=true;
+    fetch_grid=1;
+  }
+  else if ( arg == '--grid-only' ) {
+    fetch_grid=2;
   }
   else if ( arg == '--requests' || arg == '-n' ) {
     N = parseInt(process.argv.shift());
@@ -238,7 +241,7 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
         var nurlobj = url.parse(urltemplate, true);
         delete nurlobj.search; // or url.format will not use urlparsed.query
         nurlobj.pathname = nurlobj.pathname.replace('{z}', z).replace('{x}', x).replace('{y}', y);
-        if ( fetch_grid && i%2 ) {
+        if ( fetch_grid > 1 || (fetch_grid && i%2) ) {
           nurlobj.pathname = nurlobj.pathname.replace('.png', '.grid.json');
         }
         nurlobj.query = nurlobj.query || {};
