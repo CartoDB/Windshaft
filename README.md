@@ -86,24 +86,25 @@ var Windshaft = require('windshaft');
 
 var config = {
         base_url: '/database/:dbname/table/:table',
-        req2params: function(req, callback){callback(null,req)},
+        req2params: function(req, callback){
+          callback(null,req)
+        },
         grainstore: {
-		datasource: {
-			user:'postgres', host: '127.0.0.1',
+          datasource: {
+            user:'postgres', host: '127.0.0.1',
         		port: 5432
-		}}, //see grainstore npm for other options
+          }
+        }, //see grainstore npm for other options
         mapnik: {
           metatile: 4,
           bufferSize:64
         },
         redis: {host: '127.0.0.1', port: 6379},
         // this two filters are optional
-        beforeTileRender: function(req, res, callback)
-	{
+        beforeTileRender: function(req, res, callback) {
             callback(null);
         },
-        afterTileRender: function(req, res, tile, headers, callback)
-	{
+        afterTileRender: function(req, res, tile, headers, callback) {
             callback(null, tile, headers);
         }
     };
