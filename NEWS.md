@@ -5,6 +5,7 @@ Version 0.8.5-dev
  - Clear both aut and non-auth render cache on style change (#59)
  - Require an 'interactivity' param when fetching grids (#55)
  - Allow configuring 'metatile' and 'buffer size' of renderer
+ - Allow configuring renderer cache time to live (#35)
 
 Version 0.8.4
 2013-01-30

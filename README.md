@@ -95,6 +95,9 @@ var config = {
         		port: 5432
           }
         }, //see grainstore npm for other options
+        renderCache: {
+          ttl: 60000, // seconds
+        },
         mapnik: {
           metatile: 4,
           bufferSize:64
