@@ -859,7 +859,7 @@ suite('server', function() {
 
     test("get'ing a json with default style should return an grid",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
             method: 'GET'
         },{
             status: 200,
@@ -909,16 +909,14 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and nointeractivity should return a grid",  function(done){
+    test("get'ing a json with default style and no interactivity should return an error",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
         },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function(res){
-            var expected_json = {};
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
+            assert.equal(res.statusCode, 400);
+            assert.deepEqual(JSON.parse(res.body), {error: 'Missing interactivity parameter'});
             done();
         });
     });
@@ -926,7 +924,7 @@ suite('server', function() {
     test("get'ing a json with default style and sql should return a constrained grid",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=cartodb_id&' + sql,
             method: 'GET'
         },{
             status: 200,
@@ -940,7 +938,7 @@ suite('server', function() {
     test("get'ing a json with no data should return an empty grid",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 0"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
             method: 'GET'
         },{
             status: 200,

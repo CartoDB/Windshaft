@@ -3,6 +3,7 @@ Version 0.8.5-dev
 
  - Do not assume any thrown exception is an Error (#65)
  - Clear both aut and non-auth render cache on style change (#59)
+ - Require an 'interactivity' param when fetching grids (#55)
 
 Version 0.8.4
 2013-01-30
