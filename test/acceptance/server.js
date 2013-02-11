@@ -632,6 +632,21 @@ suite('server', function() {
       );
     });
 
+    // Test for https://github.com/Vizzuality/Windshaft/issues/65
+    test("catching non-Error exception doesn't kill the backend", function(done) {
+
+      assert.response(server, {
+          url: '/database/windshaft_test/table/test_table/0/0/0.png?testUnexpectedError=1',
+          method: 'GET'
+      },{}, function(res) {
+        assert.equal(res.statusCode, 400); // , res.body);
+        assert.deepEqual(JSON.parse(res.body),  {"error":"test unexpected error"});
+        done();
+      });
+
+    });
+
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS TILE
@@ -1110,7 +1125,6 @@ suite('server', function() {
         }
       );
     });
-
 
     ////////////////////////////////////////////////////////////////////
     //

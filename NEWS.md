@@ -1,3 +1,8 @@
+Version 0.8.5-dev
+2012-02-??
+
+ - Do not assume any thrown exception is an Error (#65)
+
 Version 0.8.4
 2013-01-30
 

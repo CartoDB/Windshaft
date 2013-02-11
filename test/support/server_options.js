@@ -16,6 +16,11 @@ module.exports = function(opts) {
         log_format: null, // do not log anything
         req2params: function(req, callback){
 
+            if ( req.query.testUnexpectedError ) {
+              callback('test unexpected error');
+              return;
+            }
+
             // no default interactivity. to enable specify the database column you'd like to interact with
             req.params.interactivity = null;
 
