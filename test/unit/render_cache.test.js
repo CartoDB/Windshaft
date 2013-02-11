@@ -32,21 +32,21 @@ suite('render_cache', function() {
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
 
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test::test_table:png:point:select *:::');
+        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point:select *:::');
     });
 
     test('cache key includes style', function(){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png' }};
 
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test::test_table:png:point:::#test_table{}:');
+        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point:::#test_table{}:');
     });
 
     test('cache key includes style_version', function(){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
 
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test::test_table:png:point:::#test_table{}:2.1.0');
+        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point:::#test_table{}:2.1.0');
     });
 
     /**
@@ -134,6 +134,33 @@ suite('render_cache', function() {
                     render_cache.reset(req);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1);
+
+                    done();
+                });
+            });
+        });
+    });
+
+    // See https://github.com/Vizzuality/Windshaft/issues/59
+    test('clears both auth and non-auth renderer caches on reset', function(done){
+        var render_cache = new RenderCache(100, mml_store);
+
+        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        render_cache.getRenderer(req, function(err, renderer){
+            assert.ok(renderer, err);
+            req.params.dbuser = "root";
+
+            render_cache.getRenderer(req, function(err, renderer){
+                delete req.params.sql;
+                req.params.table = 'test_table_2';
+
+                render_cache.getRenderer(req, function(err, renderer){
+                    assert.equal(_.keys(render_cache.renderers).length, 3);
+
+                    req.params.table = 'test_table';
+                    render_cache.reset(req);
+
+                    assert.equal(_.keys(render_cache.renderers).length, 1, _.keys(render_cache.renderers).join('\n'));
 
                     done();
                 });
