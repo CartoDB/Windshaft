@@ -145,6 +145,16 @@ Tests
 Windshaft has a unit and acceptance test suite.
 To execute them, run ```make check```.
 
+Troubleshooting
+---------------
+
+### Postgres errors persist after configuration change
+
+If you're seeing Postgres errors that you can't dispel through changes in your
+Windshaft config (e.g. `ERROR: column "the_geom_webmercator" does not exist`),
+try `redis-cli flushall`. Windshaft caches MML files in Redis than can contain SQL
+and may not expire them when you change your Windshaft config, but manually flushing 
+redis should do the trick.
 
 --
 Thanks to the Mapnik and Mapbox team for making such flexible tools
