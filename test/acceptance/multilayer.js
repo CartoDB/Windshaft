@@ -61,6 +61,32 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
+    test("post layergroup with wrong Content-Type", function(done) {
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' }
+        }, {}, function(res) {
+            assert.equal(res.statusCode, 400, res.body);
+            var parsedBody = JSON.parse(res.body);
+            assert.deepEqual(parsedBody, {"errors":["layergroup POST data must be of type application/json"]});
+            done();
+        });
+    });
+
+    test("post layergroup with no layers", function(done) {
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' }
+        }, {}, function(res) {
+            assert.equal(res.statusCode, 400, res.body);
+            var parsedBody = JSON.parse(res.body);
+            assert.deepEqual(parsedBody, {"errors":["Missing layers array from layergroup config"]});
+            done();
+        });
+    });
+
     test("post layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
@@ -87,8 +113,8 @@ suite('server', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({ config: JSON.stringify(layergroup) })
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
