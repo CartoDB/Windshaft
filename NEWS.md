@@ -1,3 +1,8 @@
+Version 0.9.0-dev
+2012-MM-DD
+
+ - New multilayer API (#61)
+
 Version 0.8.5
 2012-02-11
 
