@@ -105,7 +105,7 @@ suite('server', function() {
         ]
       };
 
-      var expected_token = ''; // "b039cb78b5730e07b9d16b42b25954f2";
+      var expected_token = "58ca17b66a4d557867c1654310663b0b";
       Step(
         function do_post()
         {
@@ -118,7 +118,7 @@ suite('server', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) assert.deepEqual(parsedBody, {token: expected_token});
+              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token});
               else expected_token = parsedBody.token;
               next(null, res);
           });
