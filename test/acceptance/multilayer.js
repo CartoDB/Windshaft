@@ -67,19 +67,19 @@ suite('server', function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 6, 0) as the_geom from test_table limit 2',
+               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
                cartocss_version: '2.0.1' 
              } },
            { options: {
-               sql: 'select * from test_table limit 2',
+               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
                cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
                cartocss_version: '2.0.2' 
              } }
         ]
       };
 
-      var expected_token = "b039cb78b5730e07b9d16b42b25954f2";
+      var expected_token = ''; // "b039cb78b5730e07b9d16b42b25954f2";
       Step(
         function do_post()
         {
@@ -109,6 +109,40 @@ suite('server', function() {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function do_get_grid_layer0(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function do_get_grid_layer1(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
               });
