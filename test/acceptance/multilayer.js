@@ -67,19 +67,19 @@ suite('server', function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select * from test_table limit 2',
-               cartocss: '#layer { marker-fill:blue; }', 
-               cartocss_version: '2.0.2' 
+               sql: 'select cartodb_id, ST_Translate(the_geom, 6, 0) as the_geom from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1' 
              } },
            { options: {
-               sql: 'select * from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:red; }', 
-               cartocss_version: '2.0.1' 
+               sql: 'select * from test_table limit 2',
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.2' 
              } }
         ]
       };
 
-      var expected_token = "d3ee38d12a9671acb668b14df69c3ade";
+      var expected_token = "b039cb78b5730e07b9d16b42b25954f2";
       Step(
         function do_post()
         {
@@ -92,8 +92,26 @@ suite('server', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              assert.deepEqual(parsedBody, {token: expected_token});
+              if ( expected_token ) assert.deepEqual(parsedBody, {token: expected_token});
+              else expected_token = parsedBody.token;
               next(null, res);
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
           });
         },
         function finish(err) {
@@ -127,8 +145,15 @@ suite('server', function() {
 
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          redis_client.flushall(done);
+          try {
+            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+          } catch (err2) {
+            if ( err ) err.message += '\n' + err2.message;
+            else err = err2;
+          }
+          redis_client.flushall(function() {
+            done(err);
+          });
       });
 
     });
