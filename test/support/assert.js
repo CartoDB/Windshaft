@@ -205,7 +205,7 @@ assert.response = function(server, req, res, msg){
 
 // @param tolerance number of tolerated grid cell differences
 assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
-    //fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
+    fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
 
     var err = null;
