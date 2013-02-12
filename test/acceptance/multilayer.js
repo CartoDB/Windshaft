@@ -118,7 +118,7 @@ suite('server', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token});
+              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
               else expected_token = parsedBody.token;
               next(null, res);
           });
