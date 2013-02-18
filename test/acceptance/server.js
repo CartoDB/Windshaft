@@ -632,6 +632,26 @@ suite('server', function() {
       );
     });
 
+    test("referencing unexistant external resources returns an error", 
+        function(done){
+      var url = "http://localhost:" + res_serv_port + "/notfound";
+      var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
+      var stylequery = querystring.stringify({style: style});
+      assert.response(server, {
+        url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?' + stylequery,
+        method: 'GET',
+        encoding: 'binary'
+      },{}, function(res){
+        assert.equal(res.statusCode, 400, res.body);
+        assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+        // FIXME: the error message is currently different when the style is seen
+        //        for the first time or not.
+        //assert.deepEqual(JSON.parse(res.body), {"error":"Unable to download '" + url + "' for 'stype.mss' (server returned 404)"})
+        //assert.deepEqual(JSON.parse(res.body), {"error":"point-file could not be found: '/home/src/node/modules/http://localhost:8033/notfound' in style 'test_table_3' in MarkersSymbolizer at line 9"});
+        done();
+      });
+    });
+
     // Test for https://github.com/Vizzuality/Windshaft/issues/65
     test("catching non-Error exception doesn't kill the backend", function(done) {
 
