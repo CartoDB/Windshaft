@@ -7,14 +7,13 @@ styling API.
 * Pluggable routing to provide customizable tile API URL endpoints
 * Before and after filters to allow custom access control and caching
   strategies
-* Can render all table data, or data restricted by SQL query
+* Can render arbitrary SQL queries 
 * Generates image and UTFGrid interactivity tiles
 * Accepts, stores, serves, and applies map styles written in the Carto
   markup language (same markup as Mapbox Tilemill)
 * Accepts custom map styles on a per tile basis in the tile request
 * Allows setting of CORS headers to allow access to tile data from
   Javascript
-* No multi layer or composite support yet
 
 ![Puma Concolor by @eightysteele] (
 http://github.com/Vizzuality/Windshaft/raw/master/examples/puma_concolor.png
@@ -28,15 +27,9 @@ old story: high cohesion, low coupling makes us happy.
 Windshaft is a library used by cartodb.com,
 an Open Source Geospatial Database on the Cloud.
 
-
-Limitations
------------
-* supports single layer render only.
-
-
 Dependencies
 ------------
-* Node 0.6.x & npm 1.1.2+ (for shrinkwrap support)
+* Node 0.6+ & npm 1.1.2+ (for shrinkwrap support)
 * Mapnik 2.0.1, 2.0.2 or 2.1.0 (http://github.com/mapnik/mapnik-reference)
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
