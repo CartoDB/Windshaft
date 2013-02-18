@@ -40,25 +40,29 @@ suite('server', function() {
 
       // Check that we start with an empty redis db 
       redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-      });
 
-      // Start a server to test external resources
-      res_serv = http.createServer( function(request, response) {
-          var filename = __dirname + '/../fixtures/markers' + request.url; 
-          fs.readFile(filename, "binary", function(err, file) {
-            if ( err ) {
-              response.writeHead(404, {'Content-Type': 'text/plain'});
-              console.log("File '" + filename + "' not found");
-              response.write("404 Not Found\n");
-            } else {
-              response.writeHead(200);
-              response.write(file, "binary");
-            }
-            response.end();
-          });
+        if ( err ) { done(err); return; }
+
+        assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
+
+        // Start a server to test external resources
+        res_serv = http.createServer( function(request, response) {
+            var filename = __dirname + '/../fixtures/markers' + request.url; 
+            fs.readFile(filename, "binary", function(err, file) {
+              if ( err ) {
+                response.writeHead(404, {'Content-Type': 'text/plain'});
+                console.log("File '" + filename + "' not found");
+                response.write("404 Not Found\n");
+              } else {
+                response.writeHead(200);
+                response.write(file, "binary");
+              }
+              response.end();
+            });
+        });
+        res_serv.listen(res_serv_port, done);
+
       });
-      res_serv.listen(res_serv_port, done);
 
     });
 
