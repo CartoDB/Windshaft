@@ -47,6 +47,9 @@ var users = 1;
 var zstart = 3; // can be changed by template_url
 var xstart = 0; // can be changed by template_url
 var ystart = 0; // can be changed by template_url
+var max_response_time = 0;
+var min_response_time = 999999999;
+var tot_response_time = 0;
 
 var arg;
 while ( arg = process.argv.shift() ) {
@@ -130,9 +133,10 @@ urltemplate = url.format(urlparsed);
 var start_time = Date.now();
 function end() {
     var final_time = Date.now();
-    var total_response_time = final_time - start_time;
+    var total_elapsed_time = final_time - start_time;
     var nreqs = ok+error;
-    var rps = nreqs * 1000 / total_response_time;
+    var rps = nreqs * 1000 / total_elapsed_time;
+    var avg_response_time = Math.round(tot_response_time / nreqs);
     console.log("");
     console.log("Server Host:          ", urlparsed.host);
     console.log("Template URL (path):  ", urlparsed.pathname);
@@ -158,6 +162,9 @@ function end() {
     console.log("Failed requests:      ", error);
     console.log("");
     console.log("Requests per second:  ", Math.round(rps*100)/100, '[#/sec] (mean)');
+    console.log("Response time (ms):   ",
+                 min_response_time + '/' + avg_response_time + '/' + max_response_time,
+                "(min/avg/max)");
     console.log("");
     process.exit(0);
 }
@@ -184,7 +191,12 @@ function fetchTileOrGrid(url, callback)
   if ( requests_sent >= N ) { callback(); return; } 
   ++requests_sent;
 
+  var t = Date.now();
   http.get(url, function(res) {
+    var e = Date.now() - t;
+    if ( e > max_response_time ) max_response_time = e;
+    if ( e < min_response_time ) min_response_time = e;
+    tot_response_time += e;
     res.body = '';
     if ( res.statusCode != 200 ) {
       res.on('data', function(chunk) {
@@ -273,7 +285,7 @@ var last_cb;
 
 function fetchCacheBusterValue(callback)
 {
-    var cbserial = cached_requests ? Math.floor(vpcount/cached_requests) : 0;
+    var cbserial = Math.floor(vpcount/cached_requests);
     if ( cbserial == last_cbserial ) {
       callback(null, last_cb);
       return;
@@ -282,7 +294,7 @@ function fetchCacheBusterValue(callback)
     last_cbserial = cbserial;
 
     if ( ! cache_buster_url ) {
-      var cb = cbprefix + ( now + cbserial );
+      var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
       last_cb = cb;
       callback(null, last_cb);
       return;
