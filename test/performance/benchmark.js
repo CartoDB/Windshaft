@@ -273,7 +273,7 @@ var last_cb;
 
 function fetchCacheBusterValue(callback)
 {
-    var cbserial = Math.floor(vpcount/cached_requests);
+    var cbserial = cached_requests ? Math.floor(vpcount/cached_requests) : 0;
     if ( cbserial == last_cbserial ) {
       callback(null, last_cb);
       return;
@@ -282,7 +282,7 @@ function fetchCacheBusterValue(callback)
     last_cbserial = cbserial;
 
     if ( ! cache_buster_url ) {
-      var cb = cbprefix + ( now + Math.floor(vpcount/cached_requests) );
+      var cb = cbprefix + ( now + cbserial );
       last_cb = cb;
       callback(null, last_cb);
       return;
