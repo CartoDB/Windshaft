@@ -169,8 +169,6 @@ var xvhits = 0; // X-Varnish hits
 var xwhits = 0; // X-Windshaft-Cache hits
 var error = 0;
 
-var requests_per_viewport = cols * lines * ( fetch_grid ? 2 : 1 );
-
 http.globalAgent.maxSockets = concurrency;
 
 if ( timelimit ) {
@@ -230,9 +228,14 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 
   var ntiles = (1<<z);
 
-  for (var xs=0; xs<cols; ++xs) {
+  //if ( verbose ) console.log("Number of tiles in zoom level " + z + ": " + ntiles);
+
+  var nx = cols < ntiles ? cols : ntiles;
+  var ny = lines < ntiles ? lines : ntiles;
+
+  for (var xs=0; xs<nx; ++xs) {
     var x = (x0+xs)%ntiles;
-    for (var ys=0; ys<lines; ++ys) {
+    for (var ys=0; ys<ny; ++ys) {
       var y = (y0+ys)%ntiles;
       for (var i=0; i<im; ++i) {
 
@@ -309,8 +312,7 @@ function fetchCacheBusterValue(callback)
 
 function fetchNextViewport() {
 
-    if ( vpcount * requests_per_viewport * users >= N ) end();
-    // TODO: use timeout as another exit point ?
+    if ( requests_sent >= N ) end();
 
     // update zoom level 
     var zdist = ( vpcount % zlevs );
