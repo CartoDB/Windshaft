@@ -14,7 +14,7 @@ var   assert        = require('../support/assert')
     , semver        = require('semver')
     , http          = require('http');
 
-suite('server', function() {
+suite('multilayer', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
