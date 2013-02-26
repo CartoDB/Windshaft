@@ -2,6 +2,7 @@ Version 0.9.1-dev
 2012-MM-DD
 
  - Implement OPTIONS for multilayer endpoint
+ - Add "test" make target (alias to "check")
 
 Version 0.9.0
 2012-02-25
