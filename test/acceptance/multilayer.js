@@ -358,5 +358,24 @@ suite('multilayer', function() {
       });
 
     });
+
+    ////////////////////////////////////////////////////////////////////
+    //
+    // OPTIONS LAYERGROUP
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get'ing options on layergroup should return CORS headers",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'OPTIONS'
+        },{
+            status: 200,
+            headers: {
+              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
+              'Access-Control-Allow-Origin': '*'
+            }
+        }, function() { done(); });
+    });
 });
 
