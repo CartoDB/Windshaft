@@ -15,3 +15,4 @@ check-submodules:
 check-full: check-local check-submodules
 
 check: check-local
+test: check-local
