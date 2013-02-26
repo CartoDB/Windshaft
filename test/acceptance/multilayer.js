@@ -184,6 +184,53 @@ suite('multilayer', function() {
       );
     });
 
+    test("layergroup with no cartocss_version", function(done) {
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 400, res.body);
+          var parsedBody = JSON.parse(res.body);
+          assert.deepEqual(parsedBody, {errors:["Missing cartocss_version for layer 0 options"]});
+          done();
+      });
+    });
+
+    test("layergroup with global_cartocss_version", function(done) {
+      var layergroup =  {
+        version: '1.0.0',
+        global_cartocss_version: '2.0.1',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 200, res.body);
+          var parsedBody = JSON.parse(res.body);
+          assert.deepEqual(parsedBody, {layergroupid:"7eb0c08cd6b07d7df671932855c5e80e","layercount":1});
+          done();
+      });
+    });
+
     test("check that distinct maps result in distinct tiles", function(done) {
 
       var layergroup1 =  {
