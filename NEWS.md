@@ -4,6 +4,8 @@ Version 0.9.1-dev
  - Implement OPTIONS for multilayer endpoint
  - Add "test" make target (alias to "check")
  - Add support for global_cartocss_version in multilayer config
+ - Allow req2param to install a RendererCache processor in the parameters
+   (params.processRendererCache)
 
 Version 0.9.0
 2012-02-25

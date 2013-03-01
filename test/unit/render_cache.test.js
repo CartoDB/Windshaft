@@ -49,6 +49,27 @@ suite('render_cache', function() {
         assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point::::#test_table{}:2.1.0');
     });
 
+    test('cache creation invokes renderer cache processor', function(done){
+        var render_cache = new RenderCache(10000, mml_store);
+        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { c.was_here = 1; cb(); } }};
+
+        render_cache.getRenderer(req, function(err, item) {
+          if ( err ) { done(err); return; }
+          assert.equal(item.was_here, 1);
+          done();
+        });
+    });
+
+    test('cache renderer creation hook can error out', function(done){
+        var render_cache = new RenderCache(10000, mml_store);
+        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { cb(new Error('no dice')); }}};
+
+        render_cache.getRenderer(req, function(err, item) {
+          assert.equal(err.message, "no dice");
+          done();
+        });
+    });
+
     /**
      * THE FOLLOWING TESTS NEED SOME DB SETUP
      * They need a database setup as below with the table test_table defined
