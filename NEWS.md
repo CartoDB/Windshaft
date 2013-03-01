@@ -6,6 +6,7 @@ Version 0.9.1-dev
  - Add support for global_cartocss_version in multilayer config
  - Allow req2param to install a RendererCache processor in the parameters
    (params.processRendererCache)
+ - Per-map cache_buster encoding (#58)
 
 Version 0.9.0
 2012-02-25

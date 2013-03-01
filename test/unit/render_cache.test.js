@@ -103,6 +103,16 @@ suite('render_cache', function() {
         );
     });
 
+    test('cache renderer item contains cache_buster', function(done){
+        var render_cache = new RenderCache(10000, mml_store);
+        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', cache_buster:6 }};
+
+        render_cache.getRenderer(req, function(err, item) {
+          assert.equal(item.cache_buster, 6);
+          done();
+        });
+    });
+
     /**
      * THE FOLLOWING TESTS NEED SOME DB SETUP
      * They need a database setup as below with the table test_table defined
