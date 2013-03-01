@@ -5,6 +5,7 @@ var   _             = require('underscore')
     , grainstore    = require('grainstore')
     , RenderCache   = require('../../lib/windshaft/render_cache.js')
     , redis         = require('redis')
+    , Step          = require('step')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
@@ -68,6 +69,38 @@ suite('render_cache', function() {
           assert.equal(err.message, "no dice");
           done();
         });
+    });
+
+    test('cache renderer hook is only called when a _new_ cache is created', function(done){
+        var render_cache = new RenderCache(10000, mml_store);
+        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
+        req.params.processRendererCache = function(c, r, cb) {
+          c.was_here = 2;
+          cb();
+        };
+
+        Step(
+          function makeRenderer() {
+            render_cache.getRenderer(req, this);
+          },
+          function getCached(err, item) {
+            if ( err ) throw err;
+            assert.equal(item.was_here, 2);
+            req.params.processRendererCache = function(c, r, cb) {
+              c.was_here = 3;
+              cb(new Error('cache hook called again'));
+            };
+            render_cache.getRenderer(req, this);
+          },
+          function checkNoHook(err, item) {
+            if (err) throw err;
+            assert.equal(item.was_here, 2);
+            return null;
+          },
+          function finish(err) {
+            done(err);
+          }
+        );
     });
 
     /**
