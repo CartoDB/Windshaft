@@ -1,5 +1,8 @@
+Version 0.9.2-dev
+2013-03-DD
+
 Version 0.9.1
-2012-03-01
+2013-03-01
 
  - Implement OPTIONS for multilayer endpoint
  - Add "test" make target (alias to "check")
@@ -9,12 +12,12 @@ Version 0.9.1
  - Per-map cache_buster encoding (#58)
 
 Version 0.9.0
-2012-02-25
+2013-02-25
 
  - New multilayer API (#61)
 
 Version 0.8.5
-2012-02-11
+2013-02-11
 
  - Do not assume any thrown exception is an Error (#65)
  - Clear both aut and non-auth render cache on style change (#59)
