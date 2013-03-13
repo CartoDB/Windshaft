@@ -1,5 +1,5 @@
 node_modules*
-test/performance/stresstest.sh
+test/performance/stresstest*
 .idea
 redis.pid
 test.log
