@@ -1,6 +1,9 @@
 Version 0.9.2-dev
 2013-03-DD
 
+ - Change afterLayergroupCreate hook signature to take a full http
+   request as first parameter
+
 Version 0.9.1
 2013-03-01
 

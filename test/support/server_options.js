@@ -62,7 +62,8 @@ module.exports = function(opts) {
             this.afterStyleDeleteCalls = this.afterStyleDeleteCalls ? this.afterStyleDeleteCalls + 1 : 1;
             callback(null, data);
         },
-        afterLayergroupCreate: function(cfg, res, callback) {
+        afterLayergroupCreate: function(req, res, callback) {
+            var cfg = req.body;
             res.layercount = cfg.layers.length;
             callback(null);
         },
