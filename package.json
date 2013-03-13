@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.9.2-dev",
+    "version": "0.9.2",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "url": "https://github.com/Vizzuality/Windshaft",
@@ -13,9 +13,9 @@
         "url": "git://github.com/Vizzuality/Windshaft.git"
     }],
     "author": {
-      "name": "Simon Tokumine, Javier Santana, Vizzuality",
+      "name": "Simon Tokumine, Javier Santana, Sandro Santilli, Vizzuality",
       "url": "http://vizzuality.com",
-      "email": "simon@vizzuality.com"
+      "email": "simon@vizzuality.com, strk@vizzuality.com"
     },
     "dependencies": {
         "underscore"  : "~1.3",
