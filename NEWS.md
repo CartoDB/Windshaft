@@ -1,5 +1,10 @@
-Version 0.9.3-dev
+Version 0.10.0-dev
 2013-MM-DD
+
+ - Multilayer API changes
+   - Fully configure interactivity at layergroup (token) creation
+   - Drop /layergroup/:token/:layer/:z/:x/:y.grid.json route
+   - Add  /layergroup/:token/:z/:x/:y.grid.json route
 
 Version 0.9.2
 2013-03-13

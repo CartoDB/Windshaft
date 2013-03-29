@@ -11,7 +11,6 @@ var   assert        = require('../support/assert')
     , mapnik        = require('mapnik')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
-    , semver        = require('semver')
     , http          = require('http');
 
 suite('multilayer', function() {
@@ -81,15 +80,16 @@ suite('multilayer', function() {
         });
     });
 
-    test("layergroup with 2 layers, each with its style", function(done) {
+    test("layergroup with 2 layers, each with its style, grid on first", function(done) {
 
       var layergroup =  {
-        version: '1.0.0',
+        version: '1.0.1',
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.1' 
+               cartocss_version: '2.0.1' ,
+               interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
@@ -99,7 +99,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "58ca17b66a4d557867c1654310663b0b";
+      var expected_token = "db314389e84f8f48b2ed153b63ec5bb4";
       Step(
         function do_post()
         {
@@ -134,13 +134,13 @@ suite('multilayer', function() {
               });
           });
         },
-        function do_get_grid_layer0(err)
+        function do_get_grid(err)
         {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0.grid.json',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -151,13 +151,83 @@ suite('multilayer', function() {
               });
           });
         },
-        function do_get_grid_layer1(err)
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
+    test("layergroup with 2 layers, each with its style, grid on second, version 1.0.0", function(done) {
+
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1' 
+             } },
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.2',
+               interactivity: 'cartodb_id'
+             } }
+        ]
+      };
+
+      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+              else expected_token = parsedBody.layergroupid;
+              next(null, res);
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function do_get_grid(err)
         {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0.grid.json',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -226,8 +296,11 @@ suite('multilayer', function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.deepEqual(parsedBody, {layergroupid:"7eb0c08cd6b07d7df671932855c5e80e","layercount":1});
-          done();
+          var expected_token = "13d070ff630cbb2a3702a2b18af08efa";
+          assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
+          redis_client.del("map_style|windshaft_test|~" + expected_token, function(err) {
+            done();
+          });
       });
     });
 
@@ -239,7 +312,8 @@ suite('multilayer', function() {
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.1' 
+               cartocss_version: '2.0.1',
+               interactivity: 'cartodb_id'
              } }
         ]
       };
@@ -250,7 +324,8 @@ suite('multilayer', function() {
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
                cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.2' 
+               cartocss_version: '2.0.2',
+               interactivity: 'cartodb_id'
              } }
         ]
       };
@@ -306,13 +381,13 @@ suite('multilayer', function() {
               });
           });
         },
-        function do_get_grid_layer1(err)
+        function do_get_grid1(err)
         {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token1
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0.grid.json',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -346,7 +421,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token2
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0.grid.json',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -378,6 +453,25 @@ suite('multilayer', function() {
       );
     });
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // OPTIONS LAYERGROUP
+    //
+    ////////////////////////////////////////////////////////////////////
+
+    test("get'ing options on layergroup should return CORS headers",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'OPTIONS'
+        },{
+            status: 200,
+            headers: {
+              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
+              'Access-Control-Allow-Origin': '*'
+            }
+        }, function() { done(); });
+    });
+
     // TODO: check lifetime of layergroup!
 
     ////////////////////////////////////////////////////////////////////
@@ -406,23 +500,5 @@ suite('multilayer', function() {
 
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // OPTIONS LAYERGROUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    test("get'ing options on layergroup should return CORS headers",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'OPTIONS'
-        },{
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
-              'Access-Control-Allow-Origin': '*'
-            }
-        }, function() { done(); });
-    });
 });
 

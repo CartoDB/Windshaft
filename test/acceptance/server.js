@@ -763,6 +763,7 @@ suite('server', function() {
         } );
     });
 
+
     test("post'ing good style returns 200 then getting returns it",  function(done){
       var style = "Map { background-color:#fff; }";
       Step(
@@ -882,10 +883,9 @@ suite('server', function() {
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
             method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.body);
+            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8; charset=utf-8');
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
     });
