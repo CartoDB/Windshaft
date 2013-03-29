@@ -1,5 +1,5 @@
-Version 0.10.0-dev
-2013-MM-DD
+Version 0.10.0
+2013-03-29
 
  - Multilayer API changes
    - Fully configure interactivity at layergroup (token) creation
