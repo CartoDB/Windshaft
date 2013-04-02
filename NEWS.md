@@ -1,5 +1,10 @@
-Version 0.10.1-dev
-2012-MM-DD
+Version 0.11.0-dev
+2012-04-DD
+
+ - Multilayer API changes (revert to 0.9.x behavior)
+   - Configure interactivity at grid fetch time
+   - Drop  /layergroup/:token/:z/:x/:y.grid.json route
+   - Add /layergroup/:token/:layer/:z/:x/:y.grid.json route
 
 Version 0.10.0
 2013-03-29
