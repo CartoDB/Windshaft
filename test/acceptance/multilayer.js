@@ -100,7 +100,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "db314389e84f8f48b2ed153b63ec5bb4";
+      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
       Step(
         function do_post()
         {
