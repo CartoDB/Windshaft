@@ -5,6 +5,8 @@ Version 0.11.0-dev
    - Configure interactivity at grid fetch time
    - Drop  /layergroup/:token/:z/:x/:y.grid.json route
    - Add /layergroup/:token/:layer/:z/:x/:y.grid.json route
+   - Add /layergroup route to create maps via GET (#69)
+   - Add map config to afterLayergroupCreate hook signature 
 
 Version 0.10.0
 2013-03-29
