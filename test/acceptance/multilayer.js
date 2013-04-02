@@ -292,6 +292,112 @@ suite('multilayer', function() {
       );
     });
 
+    test("layergroup with 2 layers, GET method, JSONP", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1',
+               interactivity: [ 'cartodb_id' ]
+             } },
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.2',
+               interactivity: [ 'cartodb_id' ]
+             } }
+        ]
+      };
+
+      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
+      Step(
+        function do_get()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup?'
+                + querystring.stringify({
+                    'config': JSON.stringify(layergroup),
+                    'callback': 'jsonp_test'
+                  }),
+              method: 'GET',
+              headers: {'Content-Type': 'application/json' }
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.body, 'jsonp_test(' + JSON.stringify({layergroupid: expected_token, layercount: 2}) + ');');
+              next(null, res);
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function do_get_grid0(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function do_get_grid1(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     test("layergroup with no cartocss_version", function(done) {
       var layergroup =  {
         version: '1.0.0',
