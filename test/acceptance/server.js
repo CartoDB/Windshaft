@@ -890,6 +890,20 @@ suite('server', function() {
         });
     });
 
+    test("grid jsonp",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&callback=test',
+            method: 'GET'
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.body);
+            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8; charset=utf-8');
+            var regexp = '^test\\((.*)\\);$';
+            var matches = res.body.match(regexp);
+            assert.equal(matches.length, 2, 'Unexpected JSONP response:'  + res.body);
+            assert.utfgridEqualsFile(matches[1], './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
+        });
+    });
+
     test("get'ing a json with default style and single interactivity should return a grid",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
