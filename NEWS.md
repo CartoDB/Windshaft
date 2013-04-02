@@ -1,5 +1,5 @@
-Version 0.11.0-dev
-2012-04-DD
+Version 0.11.0
+2012-04-02
 
  - Multilayer API changes (revert to 0.9.x behavior)
    - Configure interactivity at grid fetch time
