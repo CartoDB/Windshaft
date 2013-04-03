@@ -53,7 +53,6 @@ suite('multilayer', function() {
 
     });
 
-
     test("post layergroup with wrong Content-Type", function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
@@ -100,7 +99,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
+      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
       Step(
         function do_post()
         {
@@ -141,7 +140,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -158,7 +157,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/1/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -185,6 +184,8 @@ suite('multilayer', function() {
       );
     });
 
+if (1) { // DROPME
+
     test("layergroup with 2 layers, each with its style, GET method", function(done) {
 
       var layergroup =  {
@@ -205,7 +206,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
+      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
       Step(
         function do_get()
         {
@@ -248,7 +249,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -265,7 +266,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/1/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -312,7 +313,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "a7556dc21542ae8bcf16906e73ad5029";
+      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
       Step(
         function do_get()
         {
@@ -354,7 +355,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -371,7 +372,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/1/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -440,7 +441,7 @@ suite('multilayer', function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
-          var expected_token = "13d070ff630cbb2a3702a2b18af08efa";
+          var expected_token = "7eb0c08cd6b07d7df671932855c5e80e";
           assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
           redis_client.del("map_style|windshaft_test|~" + expected_token, function(err) {
             done();
@@ -531,7 +532,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token1
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -565,7 +566,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token2
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -617,6 +618,8 @@ suite('multilayer', function() {
     });
 
     // TODO: check lifetime of layergroup!
+
+} // DROPME
 
     ////////////////////////////////////////////////////////////////////
     //
