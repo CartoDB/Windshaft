@@ -1,3 +1,8 @@
+Version 0.11.2-dev
+2012-MM-DD
+
+ - Drop an annoying debugging line
+
 Version 0.11.1
 2012-04-03
 
