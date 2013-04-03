@@ -1,5 +1,5 @@
-Version 0.11.1-dev
-2012-04-DD
+Version 0.11.1
+2012-04-03
 
  - Drop tilelive-mapnik internal cache
 
