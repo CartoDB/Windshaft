@@ -1,9 +1,9 @@
-Version 0.12.0-dev
-2012-04-DD
+Version 0.12.0
+2012-04-04
 
  - Multilayer API changes
    - Interactivity layers are referenced by index (0-based)
-   - Interactivity fields are fully specified at layergroup creation time
+   - Interactivity fields are only specified at layergroup creation time
  - Upgrade tilelive to ~4.4.2
  - Upgrade generic-pool to ~2.0.3
 
