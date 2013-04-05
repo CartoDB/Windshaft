@@ -1,3 +1,8 @@
+Version 0.12.2-dev
+2012-MM-DD
+
+ - Add possibility to specify a literal cache_buster value in benchmark.js
+
 Version 0.12.0
 2012-04-04
 

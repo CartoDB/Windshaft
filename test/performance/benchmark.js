@@ -14,12 +14,14 @@ function usage(exit_code) {
   console.log(" --help                  print this help");
   console.log(" --key <string>          map authentication key (none)");
   console.log(" -n, --requests <num>    Maximum number of requests to send (1000)");
-  console.log(" -C, --cached <num>[@url]");
+  console.log(" -C, --cached { <num>[@<url>] | all }");
   console.log("                         Viewport requests using same cache_buster value (20)");
   console.log("                         If an url is given it will be used to fetch");
-  console.log("                         the cache_buster value.");
+  console.log("                         the cache_buster value. If 'all' is given");
+  console.log("                         the cache_buster will be extracted from the");
+  console.log("                         the example url");
   console.log(" -c, --concurrent <num>  number of concurrent requests (20)");
-  console.log(" -t, --timelimit <num>   Maximum number of seconds to spend for benchmarking (0)");
+  console.log(" -t, --timelimit <num>   Max number of seconds to spend for benchmarking (0)");
   console.log(" --vp-size <num>x<num>   tiles per col, line in user viewport (5x4)");
   console.log(" --zoom-levels <num>     number of zoom levels to span for each user");
   console.log(" --users <num>           Number of simulated users");
@@ -260,7 +262,7 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
           nurlobj.pathname = nurlobj.pathname.replace('.png', '.grid.json');
         }
         nurlobj.query = nurlobj.query || {};
-        nurlobj.query['cache_buster'] = cache_buster;
+        if ( cache_buster ) nurlobj.query['cache_buster'] = cache_buster;
 
         if ( verbose > 1 ) {
           console.log("Fetching " + nurlobj.pathname);
@@ -285,6 +287,11 @@ var last_cb;
 
 function fetchCacheBusterValue(callback)
 {
+    if ( isNaN(cached_requests) ) {
+      callback(null, urlparsed.query['cache_buster']);
+      return;
+    }
+
     var cbserial = Math.floor(vpcount/cached_requests);
     if ( cbserial == last_cbserial ) {
       callback(null, last_cb);
