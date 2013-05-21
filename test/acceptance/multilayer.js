@@ -79,6 +79,51 @@ suite('multilayer', function() {
         });
     });
 
+    // See https://github.com/Vizzuality/Windshaft/issues/70
+    test("post layergroup with encoding in content-type", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select the_geom from test_table limit 1',
+               cartocss: '#layer { marker-fill:red }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json; charset=utf-8' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              expected_token = parsedBody.layergroupid;
+              next();
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     test("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
