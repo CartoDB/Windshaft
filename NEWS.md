@@ -1,5 +1,5 @@
-Version 0.12.2-dev
-2012-MM-DD
+Version 0.12.1
+2012-05-21
 
  - Add possibility to specify a literal cache_buster value in benchmark.js
  - Allow Content-Type with encoding on /layergroup POST (#70)
