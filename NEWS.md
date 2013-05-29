@@ -1,5 +1,7 @@
-Version 0.12.3-dev
+Version 0.12.3
 2013-05-29
+
+ - Do not confuse colors with layer names (#72)
 
 Version 0.12.2
 2013-05-29
