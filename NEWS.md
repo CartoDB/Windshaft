@@ -1,16 +1,19 @@
+Version 0.12.3-dev
+2013-05-29
+
 Version 0.12.2
-2012-05-29
+2013-05-29
 
  - Fix handling of layer name placeholder in multi-section CSS (#71)
 
 Version 0.12.1
-2012-05-21
+2013-05-21
 
  - Add possibility to specify a literal cache_buster value in benchmark.js
  - Allow Content-Type with encoding on /layergroup POST (#70)
 
 Version 0.12.0
-2012-04-04
+2013-04-04
 
  - Multilayer API changes
    - Interactivity layers are referenced by index (0-based)
@@ -19,12 +22,12 @@ Version 0.12.0
  - Upgrade generic-pool to ~2.0.3
 
 Version 0.11.1
-2012-04-03
+2013-04-03
 
  - Drop tilelive-mapnik internal cache
 
 Version 0.11.0
-2012-04-02
+2013-04-02
 
  - Multilayer API changes (revert to 0.9.x behavior)
    - Configure interactivity at grid fetch time
