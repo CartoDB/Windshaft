@@ -1,6 +1,8 @@
 Version 0.12.2-dev
 2012-MM-DD
 
+ - Fix handling of layer name placeholder in multi-section CSS (#71)
+
 Version 0.12.1
 2012-05-21
 

@@ -124,6 +124,68 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/Vizzuality/Windshaft/issues/71
+    test("single layer with multiple css sections", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select st_makepoint(0, 0) as the_geom',
+               cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var expected_token; 
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              expected_token = parsedBody.layergroupid;
+              next();
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     test("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
