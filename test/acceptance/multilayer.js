@@ -703,6 +703,78 @@ suite('multilayer', function() {
       );
     });
 
+    test("layers are rendered in definition order", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        global_cartocss_version: '2.0.2',
+        layers: [
+           { options: {
+               sql: "select 'LINESTRING(-60 -60,-60 60)'::geometry as the_geom",
+               cartocss: '#layer { line-width:16; line-color:#ff0000; }'
+             } },
+           { options: {
+               sql: "select 'LINESTRING(-100 0,100 0)'::geometry as the_geom",
+               cartocss: '#layer { line-width:16; line-color:#00ff00; }'
+             } },
+           { options: {
+               sql: "select 'LINESTRING(60 -60,60 60)'::geometry as the_geom",
+               cartocss: '#layer { line-width:16; line-color:#0000ff; }'
+             } }
+        ]
+      };
+
+      var expected_token = "20bd648a7bf8d511f73c5f58ae7cec42";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 3});
+              else expected_token = parsedBody.layergroupid;
+              next(null, res);
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer4.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP
