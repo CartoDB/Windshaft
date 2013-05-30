@@ -291,8 +291,6 @@ suite('multilayer', function() {
       );
     });
 
-if (1) { // DROPME
-
     test("layergroup with 2 layers, each with its style, GET method", function(done) {
 
       var layergroup =  {
@@ -725,8 +723,6 @@ if (1) { // DROPME
     });
 
     // TODO: check lifetime of layergroup!
-
-} // DROPME
 
     ////////////////////////////////////////////////////////////////////
     //
