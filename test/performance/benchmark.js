@@ -146,7 +146,7 @@ function end() {
     console.log("Viewport size:        ", cols + "x" + lines);
     console.log("Zoom levels:          ", zlevs);
     console.log("Start tile:           ", zstart + "/" + xstart + "/" + ystart);
-    console.log("Viewports per cache:  ", isNaN(cached_requests) ? 'all' : cache_requests);
+    console.log("Viewports per cache:  ", isNaN(cached_requests) ? 'all' : cached_requests);
   if ( cache_buster_url ) 
     console.log("Cache buster url:     ", cache_buster_url);
     console.log("Simulated users:      ", users);
