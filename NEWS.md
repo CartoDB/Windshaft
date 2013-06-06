@@ -1,5 +1,5 @@
-Version 0.12.4-dev
-2013-MM-DD
+Version 0.12.4
+2013-06-06
 
  - Grainstore dependency raised to ~0.13.3
 
