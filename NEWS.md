@@ -1,5 +1,5 @@
-Version 0.12.5-dev
-2013-MM-DD
+Version 0.12.5
+2013-06-12
 
  - Redis moved to a devDependency, and upgraded to ~0.8.3
  - Grainstore dependency raised to ~0.13.4, fixing possible deadlocks
