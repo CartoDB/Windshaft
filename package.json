@@ -25,13 +25,12 @@
         "express": "~2.5.11",
         "tilelive": "~4.4.2",
         "tilelive-mapnik": "git://github.com/Vizzuality/tilelive-mapnik.git#6a360ee50",
-        "mapnik": "~0.7.17",
-        "redis": "~0.7.2",
-        "hiredis": "~0.1.12"
+        "mapnik": "~0.7.17"
     },
     "devDependencies": {
         "mocha": "~1.2.1",
-        "semver": "~1.1.0"
+        "semver": "~1.1.0",
+        "redis": "~0.8.3"
     },
     "scripts": {
         "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/acceptance/*.js"

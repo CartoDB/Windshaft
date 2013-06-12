@@ -1,6 +1,8 @@
 Version 0.12.5-dev
 2013-MM-DD
 
+ - Redis moved to a devDependency, and upgraded to ~0.8.3
+
 Version 0.12.4
 2013-06-06
 
