@@ -24,8 +24,6 @@ suite('render_cache', function() {
       });
     });
 
-if (0) { // DROPME
-
     test('has a cache of render objects', function(){
         var render_cache = new RenderCache(10000, mml_store);
         assert.ok(_.isObject(render_cache.renderers));
@@ -73,8 +71,6 @@ if (0) { // DROPME
         });
     });
 
-} // DROPME
-
     test('cache renderer hook is only called when a _new_ cache is created', function(done){
         var render_cache = new RenderCache(10000, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
@@ -106,8 +102,6 @@ if (0) { // DROPME
           }
         );
     });
-
-if (0) { // DROPME
 
     test('cache renderer item contains cache_buster', function(done){
         var render_cache = new RenderCache(10000, mml_store);
@@ -275,8 +269,6 @@ if (0) { // DROPME
             setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0); done();},200);
         });
     });
-
-} // DROPME
 
     suiteTeardown(function(done) {
       // Flush redis cache
