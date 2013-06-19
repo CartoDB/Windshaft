@@ -1,6 +1,8 @@
 Version 0.12.6-dev
 2013-MM-DD
 
+ - Try fetching tile and grids on layergroup creation, early reporting errors
+
 Version 0.12.5
 2013-06-12
 

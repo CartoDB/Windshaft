@@ -735,11 +735,13 @@ suite('multilayer', function() {
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
+            try {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
               if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 3});
               else expected_token = parsedBody.layergroupid;
               next(null, res);
+            } catch (err) { next(err); }
           });
         },
         function do_get_tile(err)
@@ -773,6 +775,72 @@ suite('multilayer', function() {
           });
         }
       );
+    });
+
+    test("sql/cartocss combination errors", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        global_cartocss_version: '2.0.2',
+        layers: [{ options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#layer [missing=1] { line-width:16; }'
+        }}]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+        try {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed);
+          var errors = parsed.errors.join('\n');
+          assert.ok(errors.match(/column "missing" does not exist/m), errors);
+          // TODO: check which layer introduced the problem ?
+          done();
+        } catch (err) { done(err); }
+      });
+    });
+
+    test("sql/interactivity combination error", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        global_cartocss_version: '2.0.2',
+        layers: [
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#layer { line-width:16; }',
+           interactivity: 'i'
+          }},
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#layer { line-width:16; }'
+          }},
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#layer { line-width:16; }',
+           interactivity: 'missing'
+          }}
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+        try {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed);
+          var errors = parsed.errors.join('\n');
+          assert.ok(errors.match(/column "missing" does not exist/m), errors);
+          // TODO: check which layer introduced the problem ?
+          done();
+        } catch (err) { done(err); }
+      });
     });
 
     ////////////////////////////////////////////////////////////////////
