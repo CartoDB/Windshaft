@@ -1,6 +1,8 @@
 Version 0.12.7-dev
 2013-MM-DD
 
+ - Do not confuse single layergroup creation errors with multiple errors
+
 Version 0.12.6
 2013-06-21
 

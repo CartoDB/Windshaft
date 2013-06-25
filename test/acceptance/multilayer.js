@@ -796,8 +796,9 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
-          var errors = parsed.errors.join('\n');
-          assert.ok(errors.match(/column "missing" does not exist/m), errors);
+          assert.equal(parsed.errors.length, 1);
+          var error = parsed.errors[0];
+          assert.ok(error.match(/column "missing" does not exist/m), error);
           // TODO: check which layer introduced the problem ?
           done();
         } catch (err) { done(err); }
@@ -835,8 +836,9 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
-          var errors = parsed.errors.join('\n');
-          assert.ok(errors.match(/column "missing" does not exist/m), errors);
+          assert.equal(parsed.errors.length, 1);
+          var error = parsed.errors[0]; 
+          assert.ok(error.match(/column "missing" does not exist/m), error);
           // TODO: check which layer introduced the problem ?
           done();
         } catch (err) { done(err); }
