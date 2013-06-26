@@ -1,6 +1,9 @@
 Version 0.12.8-dev
 2013-MM-DD
 
+ - Allow setting layergroup token ttl via config variable
+   grainstore.default_layergroup_ttl 
+
 Version 0.12.7
 2013-06-26
 
