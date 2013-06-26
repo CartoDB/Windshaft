@@ -1,5 +1,5 @@
-Version 0.12.7-dev
-2013-MM-DD
+Version 0.12.7
+2013-06-26
 
  - Do not confuse single layergroup creation errors with multiple errors
 
