@@ -1,3 +1,6 @@
+Version 0.12.8-dev
+2013-MM-DD
+
 Version 0.12.7
 2013-06-26
 
