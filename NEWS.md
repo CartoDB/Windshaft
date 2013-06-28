@@ -4,6 +4,7 @@ Version 0.12.8-dev
  - Allow setting layergroup token ttl via config variable
    grainstore.default_layergroup_ttl 
  - Only check layergroup configuration when first seen (#77)
+ - Use tile 30/0/0 for testing layergroups, override with maxzoom (#78)
 
 Version 0.12.7
 2013-06-26
