@@ -25,7 +25,8 @@
         "express": "~2.5.11",
         "tilelive": "~4.4.2",
         "tilelive-mapnik": "git://github.com/Vizzuality/tilelive-mapnik.git#6a360ee50",
-        "mapnik": "~0.7.17"
+        "mapnik": "~0.7.17",
+        "lru-cache": "~2.3.0"
     },
     "devDependencies": {
         "mocha": "~1.2.1",
