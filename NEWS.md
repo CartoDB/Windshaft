@@ -1,5 +1,5 @@
-Version 0.12.9-dev
-2013-MM-DD
+Version 0.12.9
+2013-07-04
 
  - Do not assume already-tested layergroup config was good (#79)
 
