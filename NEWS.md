@@ -1,6 +1,8 @@
 Version 0.12.9-dev
 2013-MM-DD
 
+ - Do not assume already-tested layergroup config was good (#79)
+
 Version 0.12.8
 2013-06-28
 
