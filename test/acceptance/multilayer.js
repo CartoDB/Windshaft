@@ -845,6 +845,42 @@ suite('multilayer', function() {
       });
     });
 
+    test("blank CartoCSS error", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        global_cartocss_version: '2.0.2',
+        layers: [
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#style { line-width:16 }',
+           interactivity: 'i'
+          }},
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '',
+           interactivity: 'i'
+          }}
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+        try {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed);
+          assert.equal(parsed.errors.length, 1);
+          var error = parsed.errors[0]; 
+          assert.ok(error.match(/layer1: CartoCSS is empty/), error);
+          // TODO: check which layer introduced the problem ?
+          done();
+        } catch (err) { done(err); }
+      });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP
