@@ -1,8 +1,12 @@
 Version 0.13.0
 2013-07-16
 
- - Improve error message on blank CartoCSS in multilayer config
  - Add support for profiling requests
+
+Version 0.12.10
+2013-07-16
+
+ - Improve error message on blank CartoCSS in multilayer config
 
 Version 0.12.9
 2013-07-04
