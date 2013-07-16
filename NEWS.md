@@ -1,4 +1,4 @@
-Version 0.13.0-dev
+Version 0.13.0
 2013-07-16
 
  - Improve error message on blank CartoCSS in multilayer config
