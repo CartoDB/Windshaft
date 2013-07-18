@@ -3,6 +3,7 @@ Version 0.13.1-dev
 
  - Do not print profile to stdout, include renderer build time to profile
  - Do not re-check layergroup configs with no interaction
+ - Print full layergroup config with resulting token on creation (#80)
 
 Version 0.13.0
 2013-07-16
