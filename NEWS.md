@@ -1,3 +1,8 @@
+Version 0.13.1-dev
+2013-07-DD
+
+ - Do not print profile to stdout, include renderer build time to profile
+
 Version 0.13.0
 2013-07-16
 
