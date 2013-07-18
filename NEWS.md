@@ -1,5 +1,5 @@
-Version 0.13.1-dev
-2013-07-DD
+Version 0.13.1
+2013-07-18
 
  - Do not print profile to stdout (use log_format for that)
  - Include renderer build time to profile
