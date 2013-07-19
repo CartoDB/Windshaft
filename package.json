@@ -8,10 +8,10 @@
         "type": "BSD",
         "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENCE"
     }],
-    "repositories": [{
+    "repository": {
         "type": "git",
         "url": "git://github.com/Vizzuality/Windshaft.git"
-    }],
+    },
     "author": {
       "name": "Simon Tokumine, Javier Santana, Sandro Santilli, Vizzuality",
       "url": "http://vizzuality.com",
