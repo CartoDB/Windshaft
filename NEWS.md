@@ -1,6 +1,8 @@
 Version 0.13.2-dev
 2013-MM-DD
 
+ - Rewrite mapnik XML parsing error to start with style name (#73)
+
 Version 0.13.1
 2013-07-18
 

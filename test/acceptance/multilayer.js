@@ -799,6 +799,9 @@ suite('multilayer', function() {
           assert.equal(parsed.errors.length, 1);
           var error = parsed.errors[0];
           assert.ok(error.match(/column "missing" does not exist/m), error);
+          // cannot check for error starting with style0 until a new enough mapnik
+          // is used: https://github.com/mapnik/mapnik/issues/1924
+          //assert.ok(error.match(/^style0/), "Error doesn't start with style0: " + error);
           // TODO: check which layer introduced the problem ?
           done();
         } catch (err) { done(err); }
@@ -874,7 +877,40 @@ suite('multilayer', function() {
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
           var error = parsed.errors[0]; 
-          assert.ok(error.match(/layer1: CartoCSS is empty/), error);
+          assert.ok(error.match(/^layer1: CartoCSS is empty/), error);
+          done();
+        } catch (err) { done(err); }
+      });
+    });
+
+    test("Invalid mapnik-geometry-type CartoCSS error", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        global_cartocss_version: '2.0.2',
+        layers: [
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#style [mapnik-geometry-type=bogus] { line-width:16 }'
+          }},
+          { options: {
+           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss: '#style [mapnik-geometry-type=bogus] { line-width:16 }'
+          }}
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+        try {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed);
+          assert.equal(parsed.errors.length, 1);
+          var error = parsed.errors[0]; 
+          assert.ok(error.match(/^style0: Failed to parse expression/), error);
           // TODO: check which layer introduced the problem ?
           done();
         } catch (err) { done(err); }
