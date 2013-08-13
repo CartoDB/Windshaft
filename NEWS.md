@@ -1,7 +1,8 @@
-Version 0.13.2-dev
-2013-MM-DD
+Version 0.13.2
+2013-08-13
 
  - Rewrite mapnik XML parsing error to start with style name (#73)
+ - Fix error on empty CartoCSS 
 
 Version 0.13.1
 2013-07-18
