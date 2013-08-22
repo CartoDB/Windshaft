@@ -877,7 +877,7 @@ suite('multilayer', function() {
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
           var error = parsed.errors[0]; 
-          assert.ok(error.match(/^layer1: CartoCSS is empty/), error);
+          assert.ok(error.match(/^style1: CartoCSS is empty/), error);
           done();
         } catch (err) { done(err); }
       });
