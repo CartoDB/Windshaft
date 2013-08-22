@@ -9,7 +9,7 @@ check-local:
 
 check-submodules:
 	for sub in grainstore; do \
-		test -e node_modules/$${sub} && make -C node_modules/$${sub} check; \
+		test -e node_modules/$${sub} && make -C node_modules/$${sub} check || exit 1; \
 	done
 
 check-full: check-local check-submodules
