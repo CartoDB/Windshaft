@@ -1,6 +1,8 @@
 Windshaft map tiler
 ===================
 
+[![Build Status](https://travis-ci.org/CartoDB/Windshaft.png)](http://travis-ci.org/CartoDB/Windshaft)
+
 A Node.js based webmercator map tile server for PostGIS with Carto map
 styling API.
 
