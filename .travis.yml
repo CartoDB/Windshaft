@@ -1,6 +1,7 @@
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libmapnik-dev postgresql-9.1-postgis libsigc++-dev
+  - sudo apt-add-repository --yes ppa:mapnik/v2.1.0
+  - sudo apt-get update -q
+  - sudo apt-get install -q libmapnik libmapnik-dev postgresql-9.1-postgis libsigc++-dev
 
 language: node_js
 node_js:
