@@ -138,7 +138,10 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run ```make check```.
+To execute them, run ```make check``` (or ```npm test```).
+It is also possible for tests to recurse into some of
+the submodules, that's done with ```make check-submodules```
+(or ```make check-full``` to run both)
 
 Troubleshooting
 ---------------
