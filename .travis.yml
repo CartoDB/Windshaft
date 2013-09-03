@@ -6,6 +6,8 @@ before_install:
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
   - find . -name eio.node
+  - ( cd node_modules/tilelive-mapnik/node_modules/eio && ./configure && make )
+  - find . -name eio.node
 
 env:
   - NPROCS=1 JOBS=1
