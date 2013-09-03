@@ -1007,7 +1007,7 @@ suite('server', function() {
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
         baseurl += querystring.stringify({
           style: style211,
-          style_version: '2.1.1'}
+          style_version: '2.1.0'}
         );
         baseurl += '&';
         assert.response(server, {
