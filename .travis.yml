@@ -2,6 +2,8 @@ before_install:
   - sudo apt-add-repository --yes ppa:mapnik/v2.1.0
   - sudo apt-get update -q
   - sudo apt-get install -q libmapnik libmapnik-dev postgresql-9.1-postgis libsigc++-dev
+  - createdb template_postgis
+  - psql -c "CREATE EXTENSION postgis" template_postgis
 
 env:
   - NPROCS=1 JOBS=1
