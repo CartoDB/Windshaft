@@ -1,5 +1,8 @@
-Version 0.13.3-dev
-2013-MM-DD
+Version 0.13.3
+2013-09-03
+
+ - Upgrade tilelive-mapnik to use eio-2.1.0
+ - Enable travis-ci
 
 Version 0.13.2
 2013-08-13
