@@ -4,7 +4,7 @@ before_install:
   - sudo apt-get install -q libmapnik libmapnik-dev postgresql-9.1-postgis libsigc++-dev
 
 env:
-	- NPROCS=1
+  - NPROCS=1
 
 language: node_js
 node_js:
