@@ -5,10 +5,11 @@ before_install:
   - sudo apt-get install -q libmapnik libmapnik-dev postgresql-9.1-postgis libsigc++-dev
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
+  - find . -name eio.node
 
 env:
   - NPROCS=1 JOBS=1
 
 language: node_js
 node_js:
-  - 0.8
+  - "0.8"
