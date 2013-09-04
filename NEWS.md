@@ -1,5 +1,5 @@
-Version 0.13.4-dev
-2013-MM-DD
+Version 0.13.4
+2013-09-04
 
  - Fix race condition with external resources (#82)
 
