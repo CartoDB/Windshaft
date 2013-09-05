@@ -1,6 +1,8 @@
 Version 0.13.5-dev
 2013-MM-DD
 
+ - Always use http status 200 for jsonp requests (#84)
+
 Version 0.13.4
 2013-09-04
 

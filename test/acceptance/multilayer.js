@@ -79,6 +79,18 @@ suite('multilayer', function() {
         });
     });
 
+    test("post layergroup jsonp errors are returned with 200 status", function(done) {
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup?callback=test',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' }
+        }, {}, function(res) {
+            assert.equal(res.statusCode, 200);
+            assert.equal(res.body, 'test({"errors":["Missing layers array from layergroup config"]});');
+            done();
+        });
+    });
+
     // See https://github.com/Vizzuality/Windshaft/issues/70
     test("post layergroup with encoding in content-type", function(done) {
       var layergroup =  {

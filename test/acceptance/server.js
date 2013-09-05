@@ -225,6 +225,18 @@ suite('server', function() {
         });
     });
 
+    test("get tile jsonp error is returned with 200 status",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?sql=bogus&callback=test',
+            method: 'GET'
+        },{}, function(res){
+            assert.equal(res.statusCode, 200);
+            assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
+            done();
+        });
+    });
+
+
     test("get'ing a tile from a query with no geometry field returns 404 status",  function(done){
         var sql = querystring.stringify({sql: "SELECT 1"});
         assert.response(server, {
@@ -723,6 +735,16 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
+    test("post style jsonp error is returned with 200 status",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/style?callback=test',
+            method: 'POST'
+        },{
+            status: 200,
+            body: 'test({"error":"must send style information"});'
+        }, function() { done(); } );
+    });
+
     test("post'ing bad style returns 400 with error",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table_2/style',
@@ -952,6 +974,17 @@ suite('server', function() {
         }, function(res){
             assert.equal(res.statusCode, 400);
             assert.deepEqual(JSON.parse(res.body), {error: 'Missing interactivity parameter'});
+            done();
+        });
+    });
+
+    test("get grid jsonp error is returned with 200 status",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?callback=test',
+            method: 'GET'
+        },{}, function(res){
+            assert.equal(res.statusCode, 200);
+            assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
             done();
         });
     });
