@@ -1,5 +1,5 @@
-Version 0.13.5-dev
-2013-MM-DD
+Version 0.13.5
+2013-09-09
 
  - Always use http status 200 for jsonp requests (#84)
  - Upgrade grainstore to 0.13.9, fixing " zoom" error
