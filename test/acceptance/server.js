@@ -769,6 +769,23 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/85
+    test("post'ing invalid text-name returns proper error",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_2/style',
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: '#test_table_2{ text-name: cartodb_id; text-face-name: "Dejagnu"; }'})
+        },{}, function(res) {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var re = new RegExp(/Invalid value for text-name/);
+          var error = res.body;
+          assert.ok(error.match(re), 'No match for ' + re + ' in "' + error + '"');
+          done();
+        } );
+    });
+
+
     test("post'ing good style returns 200 and both beforeStateChange and afterStyleChange are called", function(done){
         server.beforeStateChangeCalls = 0;
         server.afterStyleChangeCalls = 0;

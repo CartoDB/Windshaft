@@ -1,6 +1,9 @@
 Version 0.13.6-dev
 2013-MM-DD
 
+ - Require grainstore 0.13.10, fixing error message for
+   some invalid cartocss (#85)
+
 Version 0.13.5
 2013-09-09
 
