@@ -1,5 +1,5 @@
-Version 0.13.7-dev
-2013-MM-DD
+Version 0.13.7
+2013-10-03
 
  - Require grainstore 0.13.11, fixing support for apostrophes
    in CartoCSS (#87)
