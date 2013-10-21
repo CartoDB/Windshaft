@@ -3,9 +3,9 @@
 -- 
 -- To use:
 -- 
--- > dropdb -Upostgres -hlocalhost windshaft_test
--- > createdb -Upostgres -hlocalhost -Ttemplate_postgis -Opostgres -EUTF8 windshaft_test
--- > psql -Upostgres -hlocalhost windshaft_test < windshaft.test.sql
+-- > dropdb windshaft_test
+-- > createdb -Ttemplate_postgis -EUTF8 windshaft_test
+-- > psql windshaft_test < windshaft.test.sql
 --
 -- NOTE: requires a postgis template called template_postgis
 --
@@ -63,7 +63,7 @@ ALTER TABLE ONLY test_table ADD CONSTRAINT test_table_pkey PRIMARY KEY (cartodb_
 CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
 CREATE INDEX test_table_the_geom_webmercator_idx ON test_table USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table TO postgres;
+--GRANT ALL ON TABLE test_table TO postgres;
 
 -- second table
 CREATE TABLE test_table_2 (
@@ -106,7 +106,7 @@ ALTER TABLE ONLY test_table_2 ADD CONSTRAINT test_table_2_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_2_the_geom_idx ON test_table_2 USING gist (the_geom);
 CREATE INDEX test_table_2_the_geom_webmercator_idx ON test_table_2 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_2 TO postgres;
+--GRANT ALL ON TABLE test_table_2 TO postgres;
 
 -- third table
 CREATE TABLE test_table_3 (
@@ -162,4 +162,4 @@ UPDATE test_big_poly SET the_geom_webmercator = ST_Transform(the_geom, 3857);
 CREATE INDEX test_big_poly_the_geom_idx ON test_big_poly USING gist (the_geom);
 CREATE INDEX test_big_poly_the_geom_webmercator_idx ON test_big_poly USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_3 TO postgres;
+--GRANT ALL ON TABLE test_table_3 TO postgres;
