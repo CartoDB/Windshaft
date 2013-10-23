@@ -9,8 +9,7 @@ var exec = require('child_process').exec;
 var assert = module.exports = exports = require('assert');
 
 //
-// @param tol tolerated color distance as a percent over max channel value
-//            by default this is zero. For meaningful values, see
+// @param tol tolerated mean color distance, as a percent. See FUZZY in
 //            http://www.imagemagick.org/script/command-line-options.php#metric
 //
 assert.imageEqualsFile = function(buffer, file_b, tol, callback) {
@@ -21,15 +20,20 @@ assert.imageEqualsFile = function(buffer, file_b, tol, callback) {
     if (err) throw err;
 
     var fuzz = tol + '%';
-    exec('compare -fuzz ' + fuzz + ' -metric AE "' + file_a + '" "' +
+    exec('compare -metric fuzz "' + file_a + '" "' +
             file_b + '" /dev/null', function(err, stdout, stderr) {
         if (err) {
             fs.unlinkSync(file_a);
             callback(err);
         } else {
             stderr = stderr.trim();
-            var similarity = parseFloat(stderr);
-            if ( similarity > 0 ) {
+            var metrics = stderr.match(/([0-9]*) \((.*)\)/);
+            if ( ! metrics ) {
+              callback(new Error("No match for " + stderr));
+              return;
+            }
+            var similarity = parseFloat(metrics[2]);
+            if ( similarity > (tol/100) ) {
               var err = new Error('Images not equal(' + similarity + '): ' +
                       file_a  + '    ' + file_b);
               err.similarity = similarity;
