@@ -28,13 +28,21 @@ suite('server', function() {
     var res_serv; // resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
-    var default_style = semver.satisfies(mapnik.versions.mapnik, '<2.1.0')
-    ?
+    var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
+
+    var default_style;
+    if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
       // 2.0.0 default
-      '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}'
-    :
+      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
+    }
+    else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
       // 2.1.0 default
-      '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+    }
+    else {
+      // 2.2.0+ default
+      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+    }
 
     suiteSetup(function(done) {
 
@@ -874,7 +882,7 @@ suite('server', function() {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
             // specified is retained 
-            assert.equal(parsed.style_version, mapnik.versions.mapnik);
+            assert.equal(parsed.style_version, mapnik_version);
             next(null);
           });
         },
@@ -882,7 +890,7 @@ suite('server', function() {
         function postIt2(err) {
           if ( err ) { done(err); return; }
           var next = this;
-          var from_mapnik_version = ( mapnik.versions.mapnik == '2.0.2' ? '2.0.0' : '2.0.2' );
+          var from_mapnik_version = ( mapnik_version == '2.0.2' ? '2.0.0' : '2.0.2' );
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
               method: 'POST',
@@ -905,7 +913,7 @@ suite('server', function() {
             // NOTE: no conversion expected for the specific style (may change)
             assert.equal(parsed.style, style);
             // Style converted to target
-            assert.equal(parsed.style_version, mapnik.versions.mapnik); 
+            assert.equal(parsed.style_version, mapnik_version); 
             done();
           });
         }
