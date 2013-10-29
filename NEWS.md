@@ -1,5 +1,7 @@
-Version 0.13.8-dev
+Version 0.14.0-dev
 2013-MM-DD
+
+ - Support for Mapnik 2.2.0 (#89)
 
 Version 0.13.7
 2013-10-03
