@@ -922,7 +922,9 @@ suite('multilayer', function() {
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
           var error = parsed.errors[0]; 
-          assert.ok(error.match(/^style0: Failed to parse expression/), error);
+          // carto-0.9.3 used to say "Failed to parse expression",
+          // carto-0.9.5 says "not a valid keyword"
+          assert.ok(error.match(/^style0:.*(Failed|not a valid)/), error);
           // TODO: check which layer introduced the problem ?
           done();
         } catch (err) { done(err); }
