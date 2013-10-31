@@ -33,7 +33,13 @@ module.exports = function(opts) {
             req.params.processXML = function(req, xml, callback) {
                 var params = req.params;
                 if ( params.overrideDBUser ) {
-                  xml = xml.replace(/(<Parameter name="user"><!\[CDATA\[)[^\]]*(]]><\/Parameter>)/, "$1" + params.overrideDBUser + "$2");
+                  var re = RegExp("(</Datasource>)");
+                  if ( ! xml.match(re) ) {
+                    callback(new Error("Cannot find a match for '" + re + "' in " + xml));
+                    return;
+                  }
+                  xml = xml.replace(re, '<Parameter name="user"><![CDATA[' +
+                              params.overrideDBUser + ']]></Parameter>$1');
                 }
                 callback(null, xml);
             },

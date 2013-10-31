@@ -9,14 +9,23 @@ TESTENV=../config/environments/test
 
 # Extract postgres configuration
 
-PGUSER=`node -e "console.log(require('${TESTENV}').postgres.user)"`
-echo "PGUSER: [$PGUSER]"
-PGHOST=`node -e "console.log(require('${TESTENV}').postgres.host)"`
-echo "PGHOST: [$PGHOST]"
-PGPORT=`node -e "console.log(require('${TESTENV}').postgres.port)"`
-echo "PGPORT: [$PGPORT]"
+pgUSER=`node -e "console.log(require('${TESTENV}').postgres.user || '')"`
+if [ -n "${pgUSER}" ]; then
+  export PGUSER=${pguser}
+  echo "PGUSER: [$PGUSER]"
+fi
 
-export PGUSER PGHOST PGPORT
+pgHOST=`node -e "console.log(require('${TESTENV}').postgres.host || '')"`
+if [ -n "${pgHOST}" ]; then
+  export PGHOST=${pguser}
+  echo "PGHOST: [$PGHOST]"
+fi
+
+pgPORT=`node -e "console.log(require('${TESTENV}').postgres.port || '')"`
+if [ -n "${pgPORT}" ]; then
+  export PGPORT=${pguser}
+  echo "PGPORT: [$PGPORT]"
+fi
 
 die() {
         msg=$1
