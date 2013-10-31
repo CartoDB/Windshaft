@@ -1,5 +1,5 @@
-Version 0.14.1-dev
-2013-11-DD
+Version 0.14.1
+2013-10-31
 
  - Update grainstore dep to ~0.14.1
  - Fix test preparation when postgresql params are set
