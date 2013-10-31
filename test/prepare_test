@@ -11,19 +11,19 @@ TESTENV=../config/environments/test
 
 pgUSER=`node -e "console.log(require('${TESTENV}').postgres.user || '')"`
 if [ -n "${pgUSER}" ]; then
-  export PGUSER=${pguser}
+  export PGUSER=${pgUSER}
   echo "PGUSER: [$PGUSER]"
 fi
 
 pgHOST=`node -e "console.log(require('${TESTENV}').postgres.host || '')"`
 if [ -n "${pgHOST}" ]; then
-  export PGHOST=${pguser}
+  export PGHOST=${pgHOST}
   echo "PGHOST: [$PGHOST]"
 fi
 
 pgPORT=`node -e "console.log(require('${TESTENV}').postgres.port || '')"`
 if [ -n "${pgPORT}" ]; then
-  export PGPORT=${pguser}
+  export PGPORT=${pgPORT}
   echo "PGPORT: [$PGPORT]"
 fi
 
