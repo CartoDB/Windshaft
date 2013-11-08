@@ -1,5 +1,7 @@
-Version 0.14.2-dev
-2013-11-DD
+Version 0.14.2
+2013-11-08
+
+ - Fix parsing of CartoCSS filter values using exponential notation (#90)
 
 Version 0.14.1
 2013-10-31

@@ -968,6 +968,38 @@ suite('multilayer', function() {
       });
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/90
+    test("exponential notation in CartoCSS filter", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: "select 1.0 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
+               cartocss: '#s [n=1e-4 ] { marker-fill:red; }',
+               cartocss_version: '2.1.0',
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          var expected_token = parsed.layergroupid;
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+            if ( ! err ) {
+              redis_client.del(matches, function(err) {
+                done();
+              });
+            }
+          });
+      });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP
