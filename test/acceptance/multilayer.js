@@ -27,6 +27,15 @@ suite('multilayer', function() {
     var res_serv; // resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
+    checkCORSHeaders = function(res) {
+      var h = res.headers['access-control-allow-headers'];
+      assert.ok(h);
+      assert.equal(h, 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
+      var h = res.headers['access-control-allow-origin'];
+      assert.ok(h);
+      assert.equal(h, '*');
+    };
+
     suiteSetup(function(done) {
 
       // Check that we start with an empty redis db 
@@ -176,6 +185,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
+              checkCORSHeaders(res);
               assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', 2,
                 function(err, similarity) {
                   next(err);
@@ -230,6 +240,9 @@ suite('multilayer', function() {
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
+              // CORS headers should be sent with response
+              // from layergroup creation via POST
+              checkCORSHeaders(res);
               var parsedBody = JSON.parse(res.body);
               if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
               else expected_token = parsedBody.layergroupid;
@@ -337,6 +350,10 @@ suite('multilayer', function() {
               headers: {'Content-Type': 'application/json' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
+              // CORS headers should be sent with response
+              // from layergroup creation via GET
+              // see https://github.com/CartoDB/Windshaft/issues/92
+              checkCORSHeaders(res);
               var parsedBody = JSON.parse(res.body);
               if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
               else expected_token = parsedBody.layergroupid;
@@ -1012,6 +1029,7 @@ suite('multilayer', function() {
             method: 'OPTIONS'
         },{
             status: 200,
+            // TODO: use checkCORSHeaders() function
             headers: {
               'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
               'Access-Control-Allow-Origin': '*'

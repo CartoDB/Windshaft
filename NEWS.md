@@ -1,6 +1,8 @@
 Version 0.14.3-dev
 2013-MM-DD
 
+ - Return CORS headers when creating layergroups via GET (#92)
+
 Version 0.14.2
 2013-11-08
 
