@@ -2,7 +2,7 @@ before_install:
   - sudo apt-add-repository --yes ppa:mapnik/v2.2.0
   - sudo apt-add-repository --yes ppa:ubuntugis/ppa
   - sudo apt-get update -q
-  - sudo apt-get install -q libmapnik libmapnik-dev libprotobuf-dev postgresql-9.1-postgis libsigc++-dev
+  - sudo apt-get install -q libmapnik-dev=2.2.0* libprotobuf-dev postgresql-9.1-postgis libsigc++-dev
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
@@ -12,3 +12,9 @@ env:
 language: node_js
 node_js:
   - "0.8"
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#cartodb"
+    use_notice: true
