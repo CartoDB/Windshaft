@@ -1017,6 +1017,32 @@ suite('multilayer', function() {
       });
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/94
+    test("unknown text-face-name", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: "select 1.0 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
+               cartocss: '#s { text-name: [n]; text-face-name: "bogus"; }',
+               cartocss_version: '2.1.0',
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/database/windshaft_test/layergroup',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          assert.deepEqual(parsedBody, {"errors":["style0: Failed to find font face 'bogus'"]});
+          done();
+      });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP

@@ -3,6 +3,7 @@ Version 0.14.3-dev
 
  - Return CORS headers when creating layergroups via GET (#92)
  - Fix http status on database authentication error (#94)
+ - Ensure bogus text-face-name error raises at layergroup creation (#93)
 
 Version 0.14.2
 2013-11-08
