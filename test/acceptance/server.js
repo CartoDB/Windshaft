@@ -479,7 +479,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          assert.equal(res.statusCode, 404, res.statusCode + res.statusCode != 200 ? ( ": " + res.body ) : '' );
+          assert.equal(res.statusCode, 404, res.statusCode + ( res.statusCode != 200 ? ( ": " + res.body ) : '' ));
           // TODO: also test that a new request with no overrideDBUser gets permission to access the tile ?
           done();
         });
