@@ -1,5 +1,5 @@
-Version 0.14.3-dev
-2013-MM-DD
+Version 0.14.3
+2013-11-13
 
  - Return CORS headers when creating layergroups via GET (#92)
  - Fix http status on database authentication error (#94)
