@@ -1,6 +1,8 @@
 Version 0.14.4-dev
 2013-MM-DD
 
+ - Update tilelive-mapnik to upsteam version 0.6.4 (#86)
+
 Version 0.14.3
 2013-11-13
 
