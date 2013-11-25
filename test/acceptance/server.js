@@ -51,7 +51,9 @@ suite('server', function() {
 
         if ( err ) { done(err); return; }
 
-        assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
+        assert.equal(matches.length, 0,
+          "redis keys present at setup time on port " +
+          ServerOptions.redis.port + ":\n" + matches.join("\n"));
 
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
