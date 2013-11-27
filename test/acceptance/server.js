@@ -1230,10 +1230,20 @@ suite('server', function() {
       // Close the resources server
       res_serv.close();
 
+      var errors = [];
+
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          redis_client.flushall(done);
+          if ( err ) errors.push(err);
+          try { 
+            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+          } catch (err) {
+            errors.push(err);
+          }
+              
+          redis_client.flushall(function() {
+            done(errors.length ? new Error(errors) : null);
+          });
       });
 
     });
