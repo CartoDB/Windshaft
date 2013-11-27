@@ -1,8 +1,11 @@
 #!/bin/sh
 
+cd $(dirname $0)
+BASEDIR=$(pwd)
+cd -
+
 # Must match module.exports.redis.port in config/environments/test.js
-# TODO: read from there
-REDIS_PORT=6333
+REDIS_PORT=`node -e "console.log(require('${BASEDIR}/config/environments/test.js').redis.port)"`
 
 OPT_CREATE=yes # create the test environment
 OPT_DROP=yes   # drop the test environment
