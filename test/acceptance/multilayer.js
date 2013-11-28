@@ -26,6 +26,8 @@ suite('multilayer', function() {
     var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
+    mapnik.register_system_fonts();
+    var available_system_fonts = _.keys(mapnik.fontFiles());
 
     checkCORSHeaders = function(res) {
       var h = res.headers['access-control-allow-headers'];
@@ -1025,22 +1027,59 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: "select 1.0 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
-               cartocss: '#s { text-name: [n]; text-face-name: "bogus"; }',
+               cartocss: '#s { text-name: [n]; text-face-name: "<%= font %>"; }',
                cartocss_version: '2.1.0',
              } }
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {host: 'localhost', 'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
+
+      var tpl = JSON.stringify(layergroup);
+
+      Step(
+        function doBadPost() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: _.template(tpl, {font:'bogus'})
+            }, function(res) { next(null, res); });
+        },
+        function checkBadFont(err, res) {
+          if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.deepEqual(parsedBody, {"errors":["style0: Failed to find font face 'bogus'"]});
-          done();
-      });
+          assert.equal(parsedBody.errors.length, 1);
+          var errmsg = parsedBody.errors[0];
+          assert.ok(errmsg.match(/text-face-name.*bogus/), parsedBody.errors.toString());
+          //, {"errors":["style0: Failed to find font face 'bogus'"]});
+          return null;
+        },
+        function doGoodPost(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: _.template(tpl, {font:available_system_fonts[0]})
+            }, function(res) { next(null, res); });
+        },
+        function checkGoodFont(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var next = this;
+          var parsed = JSON.parse(res.body);
+          var expected_token = parsed.layergroupid;
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+            redis_client.del(matches, next);
+          });
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+
     });
 
     ////////////////////////////////////////////////////////////////////
