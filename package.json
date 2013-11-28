@@ -3,6 +3,9 @@
     "version": "0.14.4-dev",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
+    "keywords": [
+      "cartodb"
+    ],
     "url": "https://github.com/Vizzuality/Windshaft",
     "licenses": [{
         "type": "BSD",
