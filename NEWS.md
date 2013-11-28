@@ -1,5 +1,5 @@
-Version 0.14.4-dev
-2013-MM-DD
+Version 0.14.4
+2013-11-28
 
  - Update tilelive-mapnik to upsteam version 0.6.4 (#86)
  - Survive presence of malformed CartoCSS in redis (#97)
