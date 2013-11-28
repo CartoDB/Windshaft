@@ -479,6 +479,27 @@ suite('server', function() {
         }, function() { done(); });
     });
 
+    // See http://github.com/CartoDB/Windshaft/issues/99
+    test("unused directives are tolerated",  function(done){
+        var style = querystring.stringify({
+          style: "#test_table{point-transform: 'scale(100)';}",
+          sql: "SELECT 1 as cartodb_id, 'SRID=3857;POINT(0 0)'::geometry as the_geom"
+        });
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?' + style,
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.equal(res.headers['content-type'], "image/png");
+            assert.imageEqualsFile(res.body, './test/fixtures/test_default_mapnik_point.png',  2,
+              function(err, similarity) {
+                if (err) throw err;
+                done();
+            });
+        });
+    });
+
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
