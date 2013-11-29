@@ -118,7 +118,7 @@ suite('render_cache', function() {
      * They need a database setup as below with the table test_table defined
      */
 
-    test('render_cache can generate a tilelive object', function(done){
+    test('can generate a tilelive object', function(done){
         var render_cache = new RenderCache(10000, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -131,7 +131,7 @@ suite('render_cache', function() {
     });
 
 
-    test('render_cache can generate > 1 tilelive object', function(done){
+    test('can generate > 1 tilelive object', function(done){
         var render_cache = new RenderCache(10000, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -146,7 +146,7 @@ suite('render_cache', function() {
     });
 
 
-    test('render_cache can reuse tilelive object', function(done){
+    test('can reuse tilelive object', function(done){
         var render_cache = new RenderCache(10000, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -159,7 +159,7 @@ suite('render_cache', function() {
         });
     });
 
-    test('render_cache can delete all tilelive objects when reset', function(done){
+    test('can delete all tilelive objects when reset', function(done){
         var render_cache = new RenderCache(10000, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -179,7 +179,7 @@ suite('render_cache', function() {
     });
 
 
-    test('render_cache can delete only related tilelive objects when reset', function(done){
+    test('can delete only related tilelive objects when reset', function(done){
         var render_cache = new RenderCache(10000, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -233,7 +233,7 @@ suite('render_cache', function() {
     });
 
 
-    test('render_cache can purge all tilelive objects', function(done){
+    test('can purge all tilelive objects', function(done){
         var render_cache = new RenderCache(10000, mml_store);
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
@@ -260,7 +260,7 @@ suite('render_cache', function() {
         });
     });
 
-    test('render_cache automatically deletes tilelive only after timeout', function(done){
+    test('automatically deletes tilelive only after timeout', function(done){
         var render_cache = new RenderCache(100, mml_store);
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
