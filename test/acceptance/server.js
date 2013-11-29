@@ -500,6 +500,21 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/CartoDB/Windshaft/issues/100
+    test("unused directives are not tolerated if strict",  function(done){
+        var style = querystring.stringify({
+          style: "#test_table{point-transform: 'scale(100)';}",
+          sql: "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom"
+        });
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?strict=1&' + style,
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+            assert.equal(res.statusCode, 400);
+            done();
+        });
+    });
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
