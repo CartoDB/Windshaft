@@ -1,5 +1,5 @@
-Version 0.14.5-dev
-2013-MM-DD
+Version 0.14.5
+2013-12-05
 
  - Fix use of layergroups on mapnik upgrade (#101)
 
