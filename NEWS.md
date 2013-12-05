@@ -2,6 +2,7 @@ Version 0.15.0-dev
 2013-MM-DD
 
  - Make strict XML parsing configurable via params (#100)
+ - Fix use of layergroups on mapnik upgrade (#101)
 
 Version 0.14.4
 2013-11-28
