@@ -81,6 +81,7 @@ var Windshaft = require('windshaft');
 
 var config = {
         base_url: '/database/:dbname/table/:table',
+        base_url_notable: '/database/:dbname',
         req2params: function(req, callback){
           callback(null,req)
         },
