@@ -7,7 +7,7 @@ var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 var config = {
     base_url: '/database/:dbname/table/:table',
-	base_url_notable: '/database/:dbname',
+    base_url_notable: '/database/:dbname',
     grainstore: {
                  datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
     }, //see grainstore npm for other options
