@@ -1102,6 +1102,84 @@ suite('multilayer', function() {
         }, function() { done(); });
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/103
+    test.skip("layergroup with datetime interactivity", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
+               cartocss: '#layer { marker-fill:red; }',
+               cartocss_version: '2.1.1',
+               interactivity: [ 'i', 't', 'n' ]
+             } }
+        ]
+      };
+
+      var expected_token;
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 3});
+              else expected_token = parsedBody.layergroupid;
+              next(null, res);
+            } catch (err) { next(err); }
+          });
+        },
+        function do_get_grid0(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/0/0/0/0.grid.json',
+              method: 'GET'
+          }, {}, function(res) {
+              next(null, res);
+          })
+        },
+        function do_check_grid(err, res)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+          var grid = JSON.parse(res.body);
+          assert.ok(grid);
+          assert.ok(grid.hasOwnProperty('data'));
+          assert.ok(grid.data.hasOwnProperty('1'));
+          var data = grid.data[1];
+          assert.ok(data.hasOwnProperty('n'), "Missing 'n' from grid data keys: " + _.keys(data));
+          assert.ok(data.hasOwnProperty('i'), "Missing 'i' from grid data keys: " + _.keys(data));
+          assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + _.keys(data));
+          next();
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err.message);
+          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     // TODO: check lifetime of layergroup!
 
     ////////////////////////////////////////////////////////////////////
