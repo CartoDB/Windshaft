@@ -14,6 +14,19 @@ var   assert        = require('../support/assert')
     , semver        = require('semver')
     , http          = require('http');
 
+function rmdir_recursive_sync(dirname) {
+  var files = fs.readdirSync(dirname);
+  for (var i=0; i<files.length; ++i) {
+    var f = dirname + "/" + files[i];
+    var s = fs.lstatSync(f);
+    if ( s.isFile() ) {
+      console.log("Unlinking " + f);
+      fs.unlinkSync(f)
+    }
+    else rmdir_recursive_sync(f);
+  }
+}
+
 suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
@@ -639,7 +652,7 @@ suite('server', function() {
       var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
       Step(
-        function getCustumTile0() {
+        function getCustomTile0() {
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?' + stylequery,
@@ -682,10 +695,9 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
             method: 'GET',
             encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
+          },{}, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
                 function(err, similarity) {
                   if (err) { next(err); return; }
@@ -694,16 +706,16 @@ suite('server', function() {
           });
         },
         // Now fetch the custom style tile again
-        function getCustumTile1() {
+        function getCustomTile1(err) {
+          if ( err ) throw err;
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2&' + stylequery,
             method: 'GET',
             encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
+          },{ }, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
               function(err, similarity) {
                   next(err);
@@ -718,10 +730,54 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=3',
             method: 'GET',
             encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
+          },{ }, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
+                function(err, similarity) {
+                  if (err) { next(err); return; }
+                  next(null);
+              });
+          });
+        },
+        // See http://github.com/CartoDB/Windshaft/issues/107
+        function dropLocalizedResources(err) {
+          if ( err ) throw err;
+          var cachedir = global.environment.millstone.cache_basedir;
+          rmdir_recursive_sync(cachedir);
+          // Reset server to ensure all renderer caches are flushed
+          server = new Windshaft.Server(ServerOptions);
+          server.setMaxListeners(0);
+          return null;
+        },
+        // Now fetch the custom style tile again
+        function getCustomTile2(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2&' + stylequery,
+            method: 'GET',
+            encoding: 'binary'
+          },{}, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
+              function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        // Now fetch the base style tile again 
+        function getBaseTile2(err, data) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=3',
+            method: 'GET',
+            encoding: 'binary'
+          },{}, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
                 function(err, similarity) {
                   if (err) { next(err); return; }

@@ -2,7 +2,12 @@ Version 0.15.0-dev
 2013-MM-DD
 
  New features:
+
  - Make strict XML parsing configurable via params (#100)
+
+ Bug fixes:
+
+ - Fix restore of localized resources on renderer creation (#107)
 
 Version 0.14.5
 2013-12-05
