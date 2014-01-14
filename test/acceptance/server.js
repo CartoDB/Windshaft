@@ -740,7 +740,36 @@ suite('server', function() {
               });
           });
         },
-        // See http://github.com/CartoDB/Windshaft/issues/107
+        function finish(err) {
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table_3/style',
+              method: 'DELETE' },{}, function(res) { done(err); });
+        }
+      );
+    });
+
+    // See http://github.com/CartoDB/Windshaft/issues/107
+    test("external resources get localized on renderer creation", 
+        function(done){
+      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
+      var stylequery = querystring.stringify({style: style});
+      Step(
+        function getCustomTile0() {
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2.1&' + stylequery,
+            method: 'GET',
+            encoding: 'binary'
+          },{
+              status: 200,
+              headers: { 'Content-Type': 'image/png' }
+          }, function(res){
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
+              function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
         function dropLocalizedResources(err) {
           if ( err ) throw err;
           var cachedir = global.environment.millstone.cache_basedir;
@@ -751,37 +780,19 @@ suite('server', function() {
           return null;
         },
         // Now fetch the custom style tile again
-        function getCustomTile2(err) {
+        function getCustomTile1(err) {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2&' + stylequery,
-            method: 'GET',
-            encoding: 'binary'
-          },{}, function(res){
-              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-              assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
-              function(err, similarity) {
-                  next(err);
-              });
-          });
-        },
-        // Now fetch the base style tile again 
-        function getBaseTile2(err, data) {
-          if ( err ) throw err;
-          var next = this;
-          assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=3',
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2.2&' + stylequery,
             method: 'GET',
             encoding: 'binary'
           },{}, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-                function(err, similarity) {
-                  if (err) { next(err); return; }
-                  next(null);
+              function(err, similarity) {
+                  next(err);
               });
           });
         },
