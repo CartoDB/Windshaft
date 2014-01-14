@@ -1,5 +1,5 @@
-Version 0.15.0-dev
-2013-MM-DD
+Version 0.15.0
+2014-01-14
 
  New features:
 
