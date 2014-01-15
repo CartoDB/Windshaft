@@ -39,6 +39,7 @@ suite('server', function() {
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
+    var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
     var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
@@ -70,6 +71,7 @@ suite('server', function() {
 
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
+            ++res_serv_status.numrequests;
             var filename = __dirname + '/../fixtures/markers' + request.url; 
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
@@ -753,6 +755,7 @@ suite('server', function() {
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
+      var numrequests;
       Step(
         function getCustomTile0() {
           var next = this;
@@ -764,6 +767,7 @@ suite('server', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
+              numrequests = res_serv_status.numrequests;
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
               function(err, similarity) {
                   next(err);
@@ -789,6 +793,27 @@ suite('server', function() {
             encoding: 'binary'
           },{}, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              assert.equal(res_serv_status.numrequests, numrequests+1);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
+              function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        // Now fetch the custom style tile again with an higher cache_buster,
+        // checking that the external resource is NOT downloaded again
+        function getCustomTile2(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2.3&' + stylequery,
+            method: 'GET',
+            encoding: 'binary'
+          },{}, function(res){
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              // millstone should not make another request
+              assert.equal(res_serv_status.numrequests, numrequests+1);
               assert.equal(res.headers['content-type'], "image/png");
               assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
               function(err, similarity) {
@@ -1386,6 +1411,10 @@ suite('server', function() {
           } catch (err) {
             errors.push(err);
           }
+
+          var cachedir = global.environment.millstone.cache_basedir;
+          console.log("Dropping cache dir " + cachedir);
+          rmdir_recursive_sync(cachedir);
               
           redis_client.flushall(function() {
             done(errors.length ? new Error(errors) : null);
