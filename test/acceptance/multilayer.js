@@ -153,7 +153,7 @@ suite('multilayer', function() {
         version: '1.0.1',
         layers: [
            { options: {
-               sql: 'select st_makepoint(0, 0) as the_geom',
+               sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom',
                cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }', 
                cartocss_version: '2.0.1'
              } }
@@ -845,16 +845,16 @@ suite('multilayer', function() {
         global_cartocss_version: '2.0.2',
         layers: [
           { options: {
-           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
            cartocss: '#layer { line-width:16; }',
            interactivity: 'i'
           }},
           { options: {
-           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
            cartocss: '#layer { line-width:16; }'
           }},
           { options: {
-           sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
            cartocss: '#layer { line-width:16; }',
            interactivity: 'missing'
           }}
@@ -956,12 +956,12 @@ suite('multilayer', function() {
         version: '1.0.1',
         layers: [
            { options: {
-               sql: "select 'single''quote' as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
+               sql: "select 'single''quote' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s [n="single\'quote" ] { marker-fill:red; }',
                cartocss_version: '2.1.0',
              } },
            { options: {
-               sql: "select 'double\"quote' as n, 'SRID=3857;POINT(2 0)'::geometry as the_geom",
+               sql: "select 'double\"quote' as n, 'SRID=4326;POINT(2 0)'::geometry as the_geom",
                cartocss: '#s [n="double\\"quote" ] { marker-fill:red; }',
                cartocss_version: '2.1.0',
              } }
@@ -994,7 +994,7 @@ suite('multilayer', function() {
         version: '1.0.1',
         layers: [
            { options: {
-               sql: "select 1.0 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
+               sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s [n=1e-4 ] { marker-fill:red; }',
                cartocss_version: '2.1.0',
              } }
@@ -1026,7 +1026,7 @@ suite('multilayer', function() {
         version: '1.0.1',
         layers: [
            { options: {
-               sql: "select 1.0 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom",
+               sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s { text-name: [n]; text-face-name: "<%= font %>"; }',
                cartocss_version: '2.1.0',
              } }

@@ -496,7 +496,7 @@ suite('server', function() {
     test("unused directives are tolerated",  function(done){
         var style = querystring.stringify({
           style: "#test_table{point-transform: 'scale(100)';}",
-          sql: "SELECT 1 as cartodb_id, 'SRID=3857;POINT(0 0)'::geometry as the_geom"
+          sql: "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom"
         });
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/0/0/0.png?' + style,
