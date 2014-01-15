@@ -741,15 +741,15 @@ suite('multilayer', function() {
         global_cartocss_version: '2.0.2',
         layers: [
            { options: {
-               sql: "select 'LINESTRING(-60 -60,-60 60)'::geometry as the_geom",
+               sql: "select st_setsrid('LINESTRING(-60 -60,-60 60)'::geometry, 4326) as the_geom",
                cartocss: '#layer { line-width:16; line-color:#ff0000; }'
              } },
            { options: {
-               sql: "select 'LINESTRING(-100 0,100 0)'::geometry as the_geom",
+               sql: "select st_setsrid('LINESTRING(-100 0,100 0)'::geometry, 4326) as the_geom",
                cartocss: '#layer { line-width:16; line-color:#00ff00; }'
              } },
            { options: {
-               sql: "select 'LINESTRING(60 -60,60 60)'::geometry as the_geom",
+               sql: "select st_setsrid('LINESTRING(60 -60,60 60)'::geometry, 4326) as the_geom",
                cartocss: '#layer { line-width:16; line-color:#0000ff; }'
              } }
         ]
