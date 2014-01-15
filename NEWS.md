@@ -1,6 +1,10 @@
 Version 0.15.1-dev
 2014-MM-DD
 
+ Bug fixes:
+
+ - Fix testsuite run against PostGIS-1.5 (#108, #109)
+
 Version 0.15.0
 2014-01-14
 
