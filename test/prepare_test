@@ -40,6 +40,6 @@ dropdb windshaft_test | 2>&1
 createdb -Ttemplate_postgis -EUTF8 windshaft_test || die "Could not create test database" 
 
 echo "...Populating windshaft_test database with test data"
-psql windshaft_test < ./fixtures/windshaft.test.sql
+psql --set ON_ERROR_STOP= -d windshaft_test -f ./fixtures/windshaft.test.sql || die "Could not populate test tables"
 
 echo "...Test database configuration complete"
