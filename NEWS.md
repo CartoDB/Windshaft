@@ -4,6 +4,7 @@ Version 0.15.1-dev
  Bug fixes:
 
  - Fix testsuite run against PostGIS-1.5 (#108, #109)
+ - Fix core dependency list to include 'semver' (#112)
 
 Version 0.15.0
 2014-01-14

@@ -30,11 +30,11 @@
         "tilelive": "~4.4.2",
         "tilelive-mapnik": "~0.6.5",
         "mapnik": "~0.7.17",
+        "semver": "~1.1.0",
         "lru-cache": "~2.3.0"
     },
     "devDependencies": {
         "mocha": "~1.14.0",
-        "semver": "~1.1.0",
         "redis": "~0.8.3"
     },
     "scripts": {
