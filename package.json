@@ -31,6 +31,7 @@
         "tilelive-mapnik": "~0.6.5",
         "mapnik": "~0.7.17",
         "semver": "~1.1.0",
+        "redis-mpool": "~0.0.2",
         "lru-cache": "~2.3.0"
     },
     "devDependencies": {

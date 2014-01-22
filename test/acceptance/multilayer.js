@@ -114,7 +114,7 @@ suite('multilayer', function() {
              } }
         ]
       };
-      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token;
       Step(
         function do_post()
         {
@@ -134,10 +134,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists("map|config", expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel("map|config", expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -197,10 +197,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists("map|config", expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel("map|config", expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -230,7 +230,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token; // = "5c6c7b2e0bbaca41b14b0145f5eece48";
       Step(
         function do_post()
         {
@@ -241,7 +241,7 @@ suite('multilayer', function() {
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               // CORS headers should be sent with response
               // from layergroup creation via POST
               checkCORSHeaders(res);
@@ -305,10 +305,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists("map|config", expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel("map|config", expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -338,7 +338,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token; // = "5c6c7b2e0bbaca41b14b0145f5eece48";
       Step(
         function do_get()
         {
@@ -416,10 +416,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists("map|config", expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel("map|config", expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -449,7 +449,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token = "808d676ac16a8ff464ff0fbf8e1c730d";
       Step(
         function do_get()
         {
@@ -522,10 +522,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists('map|config', expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel('map|config', expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -577,9 +577,9 @@ suite('multilayer', function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
-          var expected_token = "7eb0c08cd6b07d7df671932855c5e80e";
+          var expected_token = "7b6b7a935b84f5ed372cbb0c2131f9a0";
           assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
-          redis_client.del("map_style|windshaft_test|~" + expected_token, function(err) {
+          redis_client.hdel('map|config', expected_token, function(err) {
             done();
           });
       });
@@ -716,19 +716,21 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          var prefix = "map_style|windshaft_test|~";
-          redis_client.keys(prefix+"*", function(err, matches) {
+          var prefix = "map|config";
+          redis_client.hkeys(prefix, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 2);
-              assert.ok(_.indexOf(matches, prefix+token1) > -1,
+              assert.ok(_.indexOf(matches, token1) > -1,
                         "Missing expected token " + token1 + " from redis");
-              assert.ok(_.indexOf(matches, prefix+token2) > -1,
+              assert.ok(_.indexOf(matches, token2) > -1,
                         "Missing expected token " + token2 + " from redis");
-              redis_client.del(matches, function(err) {
+              var cb = function(err, deleted) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
-              });
+              };
+              redis_client.hdel.apply(redis_client,
+                _.union("map|config", matches, cb));
           });
         }
       );
@@ -755,7 +757,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "32994445c0a4525432fcd7013bf6524c";
+      var expected_token; // = "32994445c0a4525432fcd7013bf6524c";
       Step(
         function do_post()
         {
@@ -795,10 +797,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hexists('map|config', expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis");
-              redis_client.del(matches, function(err) {
+              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              redis_client.hdel('map|config', expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -977,12 +979,8 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
-            if ( ! err ) {
-              redis_client.del(matches, function(err) {
-                done();
-              });
-            }
+          redis_client.hdel("map|config", expected_token, function(err) {
+            done();
           });
       });
     });
@@ -1009,12 +1007,8 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
-            if ( ! err ) {
-              redis_client.del(matches, function(err) {
-                done();
-              });
-            }
+          redis_client.hdel("map|config", expected_token, function(err) {
+            done();
           });
       });
     });
@@ -1071,9 +1065,7 @@ suite('multilayer', function() {
           var next = this;
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
-            redis_client.del(matches, next);
-          });
+          redis_client.hdel("map|config", expected_token, next);
         },
         function finish(err) {
           done(err);
@@ -1168,13 +1160,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.keys("map_style|windshaft_test|~" + expected_token, function(err, matches) {
+          redis_client.hdel("map|config", expected_token, function(err) {
               if ( err ) errors.push(err.message);
-              redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
-              });
+              if ( errors.length ) done(new Error(errors));
+              else done(null);
           });
         }
       );
