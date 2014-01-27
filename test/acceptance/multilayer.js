@@ -134,10 +134,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists("map|config", expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel("map|config", expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -197,10 +197,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists("map|config", expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel("map|config", expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -305,10 +305,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists("map|config", expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel("map|config", expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -416,10 +416,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists("map|config", expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel("map|config", expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -522,10 +522,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists('map|config', expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel('map|config', expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -579,7 +579,7 @@ suite('multilayer', function() {
           var parsedBody = JSON.parse(res.body);
           var expected_token = "7b6b7a935b84f5ed372cbb0c2131f9a0";
           assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
-          redis_client.hdel('map|config', expected_token, function(err) {
+          redis_client.del("map_cfg|" +  expected_token, function(err) {
             done();
           });
       });
@@ -716,21 +716,19 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          var prefix = "map|config";
-          redis_client.hkeys(prefix, function(err, matches) {
+          redis_client.keys('map_cfg|*', function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 2);
-              assert.ok(_.indexOf(matches, token1) > -1,
+              assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
                         "Missing expected token " + token1 + " from redis");
-              assert.ok(_.indexOf(matches, token2) > -1,
+              assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
                         "Missing expected token " + token2 + " from redis");
               var cb = function(err, deleted) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
               };
-              redis_client.hdel.apply(redis_client,
-                _.union("map|config", matches, cb));
+              redis_client.del(matches, cb);
           });
         }
       );
@@ -797,10 +795,10 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hexists('map|config', expected_token, function(err, exists) {
+          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
               assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.hdel('map|config', expected_token, function(err) {
+              redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
                 else done(null);
@@ -979,7 +977,7 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.hdel("map|config", expected_token, function(err) {
+          redis_client.del("map_cfg|" +  expected_token, function(err) {
             done();
           });
       });
@@ -1007,7 +1005,7 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.hdel("map|config", expected_token, function(err) {
+          redis_client.del("map_cfg|" +  expected_token, function(err) {
             done();
           });
       });
@@ -1065,7 +1063,7 @@ suite('multilayer', function() {
           var next = this;
           var parsed = JSON.parse(res.body);
           var expected_token = parsed.layergroupid;
-          redis_client.hdel("map|config", expected_token, next);
+          redis_client.del("map_cfg|" +  expected_token, next);
         },
         function finish(err) {
           done(err);
@@ -1160,7 +1158,7 @@ suite('multilayer', function() {
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(err.message);
-          redis_client.hdel("map|config", expected_token, function(err) {
+          redis_client.del("map_cfg|" +  expected_token, function(err) {
               if ( err ) errors.push(err.message);
               if ( errors.length ) done(new Error(errors));
               else done(null);
