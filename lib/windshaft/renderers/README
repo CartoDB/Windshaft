@@ -1,0 +1,24 @@
+Renderers are expected to expose the following interfaces:
+
+  /// Get a tile given ZXY params
+  //
+  /// @param z zoom level
+  /// @param x 
+  /// @param y 
+  /// @param callback function(err, tileobj)
+  ///
+  getTile(z, x, y, callback)
+
+They are created by renderer factories having the following
+interface:
+
+  /// Get a renderer given a map and data store configuration 
+  //
+  /// @param mapConfig map configuration
+  /// @param dbParams datastore configuration
+  /// @param format output format for the tile
+  /// @param layer layer number within the mapConfig
+  /// @param callback function(err, renderer)
+  ///
+  getRenderer(mapConfig, dbParams, format, layer, callback)
+
