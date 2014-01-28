@@ -1,5 +1,5 @@
 var assert = require('assert');
-var torque = require('../../lib/windshaft/renderers/torque');
+var TorqueFactory = require('../../lib/windshaft/renderers/torque');
 
 function GenSQL() {
   PSQLDummy.n = Date.now()
@@ -59,7 +59,7 @@ describe('torque', function() {
   var sqlApi = null;
   beforeEach(function(){
     sqlApi = GenSQL();
-    torque.initialize({
+    torque = new TorqueFactory({
       sqlClass: sqlApi 
     });
   });
