@@ -18,6 +18,19 @@ function GenSQL() {
 
 describe('torque', function() {
 
+  var mapConfig_notorque = {
+    layers: [
+      {
+        type: 'cartodb',
+        options: {
+          sql: 'select * form table',
+          cartocss: ['#layer { marker-fill: #000; }'].join(''),
+          cartocss_version: '2.1.1'
+        }
+      }
+    ]
+  };
+
 
   var mapConfig = {
     layers: [
@@ -73,9 +86,19 @@ describe('torque', function() {
     it('should return error when format is unsuported', function(done) {
       torque.getRenderer(mapConfig, {}, 'dummy', function(err, renderer) {
         assert.ok(err !== null);
+        assert.ok(err instanceof Error);
         done();
       });
     });
+
+    it("should raise an error when there is no torque layers", function(done) {
+      torque.getRenderer(mapConfig_notorque, {}, 'json.torque', function(err, renderer) {
+        assert.ok(err !== null);
+        assert.ok(err instanceof Error);
+        assert.ok(err.message == "mapconfig does not contain any torque layer");
+        done();
+      });
+    })
 
   });
 
