@@ -44,7 +44,7 @@ suite('torque', function() {
 
     });
 
-    test("layergroup with 2 layers, each with its type and style", function(done) {
+    test.skip("layergroup with 2 layers, each with its type and style", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
