@@ -12,7 +12,7 @@ Renderers are expected to expose the following interfaces:
 They are created by renderer factories having the following
 interface:
 
-  /// Get a renderer given a map and data store configuration 
+  /// Create a renderer given a map and data store configuration 
   //
   /// @param mapConfig map configuration
   /// @param dbParams datastore configuration
@@ -20,5 +20,11 @@ interface:
   /// @param layer layer number within the mapConfig
   /// @param callback function(err, renderer)
   ///
-  getRenderer(mapConfig, dbParams, format, layer, callback)
+  createRenderer(mapConfig, dbParams, format, layer, callback)
+
+  /// Destroy a renderer 
+  //
+  /// Disposed renderers should not be used anymore
+  ///
+  disposeRenderer(renderer, callback)
 
