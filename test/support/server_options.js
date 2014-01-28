@@ -10,7 +10,7 @@ module.exports = function(opts) {
           datasource: global.environment.postgres,
           cachedir: global.environment.millstone.cache_basedir,
           mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik,
-          gc_prob: 1 // run the garbage collector at each invocation
+          gc_prob: 0 // run the garbage collector at each invocation
         },
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
