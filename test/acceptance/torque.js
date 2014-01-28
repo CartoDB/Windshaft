@@ -44,6 +44,43 @@ suite('torque', function() {
 
     });
 
+    test("missing XXX from torque layer", function(done) {
+
+      var layergroup =  {
+        version: '1.1.0',
+        layers: [
+           { type: 'torque', options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.2',
+               interactivity: [ 'cartodb_id' ]
+             } }
+        ]
+      };
+
+      var expected_token; 
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function checkResponse(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     test.skip("layergroup with 2 layers, each with its type and style", function(done) {
 
       var layergroup =  {
