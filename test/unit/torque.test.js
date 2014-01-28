@@ -23,7 +23,7 @@ describe('torque', function() {
       {
         type: 'cartodb',
         options: {
-          sql: 'select * form table',
+          sql: 'select * from table',
           cartocss: ['#layer { marker-fill: #000; }'].join(''),
           cartocss_version: '2.1.1'
         }
@@ -37,7 +37,7 @@ describe('torque', function() {
       {
         type: 'torque',
         options: {
-          sql: 'select * form table',
+          sql: 'select * from table',
           cartocss: ['',
             'Map {',
             '-torque-time-attribute: "date";',
@@ -76,9 +76,60 @@ describe('torque', function() {
         }]
       ];
       torque.getRenderer(mapConfig, {}, 'json.torque', function(err, renderer) {
-        assert.ok(err === null);
+        assert.ok(!err, err);
         assert.ok(!!renderer);
         assert.ok(!!renderer.getTile);
+        done();
+      });
+    });
+
+    it("should raise an error on missing -torque-frame-count", function(done) {
+      sqlApi.responses = [
+        [null, { fields: { 'date': { type: 'date' } } }],
+        [null, { rows: [
+          { min_date: 0, max_date: 10, num_steps: 1, xmin: 0, xmax: 10, ymin: 0, ymax: 10 }
+          ]
+        }]
+      ];
+      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-frame-count:[^;]*;/, ''));
+      torque.getRenderer(brokenConfig, {}, 'json.torque', function(err, renderer) {
+        assert.ok(err !== null);
+        assert.ok(err instanceof Error);
+        assert.equal(err.message, "Missing required property '-torque-frame-count' in torque layer CartoCSS");
+        done();
+      });
+    });
+
+    it("should raise an error on missing -torque-resolution", function(done) {
+      sqlApi.responses = [
+        [null, { fields: { 'date': { type: 'date' } } }],
+        [null, { rows: [
+          { min_date: 0, max_date: 10, num_steps: 1, xmin: 0, xmax: 10, ymin: 0, ymax: 10 }
+          ]
+        }]
+      ];
+      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-resolution:[^;]*;/, ''));
+      torque.getRenderer(brokenConfig, {}, 'json.torque', function(err, renderer) {
+        assert.ok(err !== null);
+        assert.ok(err instanceof Error);
+        assert.equal(err.message, "Missing required property '-torque-resolution' in torque layer CartoCSS");
+        done();
+      });
+    });
+
+    it("should raise an error on missing -torque-time-attribute", function(done) {
+      sqlApi.responses = [
+        [null, { fields: { 'date': { type: 'date' } } }],
+        [null, { rows: [
+          { min_date: 0, max_date: 10, num_steps: 1, xmin: 0, xmax: 10, ymin: 0, ymax: 10 }
+          ]
+        }]
+      ];
+      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-time-attribute:[^;]*;/, ''));
+      torque.getRenderer(brokenConfig, {}, 'json.torque', function(err, renderer) {
+        assert.ok(err !== null);
+        assert.ok(err instanceof Error);
+        assert.equal(err.message, "Missing required property '-torque-time-attribute' in torque layer CartoCSS");
         done();
       });
     });
