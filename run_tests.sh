@@ -79,7 +79,7 @@ fi
 PATH=node_modules/.bin/:$PATH
 
 echo "Running tests"
-mocha -u tdd -t 3000 ${TESTS}
+mocha -u tdd -t 5000 ${TESTS}
 ret=$?
 
 cleanup
