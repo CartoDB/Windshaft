@@ -87,6 +87,7 @@ describe('torque', function() {
       torque.getRenderer(mapConfig, {}, 'dummy', function(err, renderer) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
+        assert.ok(err.message == "format not supported: dummy");
         done();
       });
     });
