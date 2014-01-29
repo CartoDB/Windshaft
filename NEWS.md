@@ -5,6 +5,7 @@ Version 0.15.1-dev
 
  - Fix testsuite run against PostGIS-1.5 (#108, #109)
  - Fix core dependency list to include 'semver' (#112)
+ - Fix use of maxzoom (#78, again)
 
 Version 0.15.0
 2014-01-14
