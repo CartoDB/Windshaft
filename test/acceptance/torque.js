@@ -38,6 +38,7 @@ suite('torque', function() {
 
       // Check that we start with an empty redis db 
       redis_client.keys("*", function(err, matches) {
+          if ( err ) { done(err); return; }
           assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
           done();
       });
@@ -50,15 +51,12 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ]
+               sql: 'select cartodb_id, the_geom from test_table',
+               cartocss: '#layer { marker-fill:blue; }'
              } }
         ]
       };
 
-      var expected_token; 
       Step(
         function do_post()
         {
@@ -73,6 +71,11 @@ suite('torque', function() {
         function checkResponse(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error,
+            "Missing required property '-torque-frame-count' in torque layer CartoCSS");
           return null;
         },
         function finish(err) {
