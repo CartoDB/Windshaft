@@ -74,6 +74,7 @@ suite('torque', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
           var error = parsed.errors[0];
+          console.log("ERRRRRR", error);
           assert.equal(error,
             "Missing required property '-torque-frame-count' in torque layer CartoCSS");
           return null;
@@ -121,7 +122,7 @@ suite('torque', function() {
           assert.ok(parsed.errors, parsed);
           var error = parsed.errors[0];
           assert.equal(error,
-            "Missing required property '-torque-time-attribute' in torque layer CartoCSS");
+            "Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
           return null;
         },
         function finish(err) {
@@ -136,8 +137,8 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select now() as d, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d }',
+               sql: "select 1 as id, now() as d, 'SRID=4326;POINT(0 0)'::geometry as the_geom, 'SRID=3785;POINT(0 0)'::geometry as the_geom_webmercator",
+               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(id)\'; }',
                cartocss_version: '2.0.1'
              } }
         ]
