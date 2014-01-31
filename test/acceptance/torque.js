@@ -157,10 +157,7 @@ suite('torque', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) {
-console.log("at checkPost, err is " + err);
-            throw err;
-          }
+          if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // CORS headers should be sent with response
           // from layergroup creation via POST
@@ -172,70 +169,41 @@ console.log("at checkPost, err is " + err);
         },
         function do_get_tile(err)
         {
-          if ( err ) {
-console.log("at do_get_tile, err is " + err);
-            throw err;
-          }
+          if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
               encoding: 'binary'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
-                function(err, similarity) {
-                  next(err);
-              });
-          });
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_mapnik_error_1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode != 200 ? (': ' + res.body) : '' ));
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.error, "No 'mapnik' layers in MapConfig");
+          return null;
         },
         function do_get_grid0(err)
         {
-          if ( err ) {
-console.log("at do_get_grid0, err is " + err);
-            throw err;
-          }
+          if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
                  + '/0/0/0/0.grid.json',
               method: 'GET'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
-                function(err, similarity) {
-                  next(err);
-              });
-          });
+          }, {}, function(res, err) { next(err, res); });
         },
-        function do_get_grid1(err)
-        {
-          if ( err ) {
-console.log("at do_get_grid1, err is " + err);
-            throw err;
-          }
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/1/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
-                function(err, similarity) {
-                  next(err);
-              });
-          });
+        function check_mapnik_error_2(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode != 200 ? (': ' + res.body) : '' ));
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.error, "No 'mapnik' layers in MapConfig");
+          return null;
         },
         function do_get_torque0(err)
         {
-          if ( err ) {
-console.log("at do_get_torque0, err is " + err);
-            throw err;
-          }
+          if ( err ) throw err;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
@@ -245,26 +213,6 @@ console.log("at do_get_torque0, err is " + err);
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
-                function(err, similarity) {
-                  next(err);
-              });
-          });
-        },
-        function do_get_torque1(err)
-        {
-          if ( err ) {
-console.log("at do_get_torque1, err is " + err);
-            throw err;
-          }
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token
-                 + '/1/0/0/0.json.torque?interactivity=cartodb_id',
-              method: 'GET'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
               });
