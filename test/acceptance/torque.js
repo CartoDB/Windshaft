@@ -130,22 +130,15 @@ suite('torque', function() {
       );
     });
 
-    test.skip("layergroup with 2 layers, each with its type and style", function(done) {
+    test.skip("can render tile for valid", function(done) {
 
-      var layergroup =  {
-        version: '1.0.1',
+      var mapconfig =  {
+        version: '1.1.0',
         layers: [
-           { type: 'cartodb', options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.1',
-               interactivity: [ 'cartodb_id' ]
-             } },
            { type: 'torque', options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ]
+               sql: "select now() as d, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d }',
+               cartocss_version: '2.0.1'
              } }
         ]
       };
@@ -159,21 +152,29 @@ suite('torque', function() {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
               headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-              // CORS headers should be sent with response
-              // from layergroup creation via POST
-              checkCORSHeaders(res);
-              var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-              else expected_token = parsedBody.layergroupid;
-              next(null, res);
-          });
+              data: JSON.stringify(mapconfig)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function checkPost(err, res) {
+          if ( err ) {
+console.log("at checkPost, err is " + err);
+            throw err;
+          }
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          // CORS headers should be sent with response
+          // from layergroup creation via POST
+          checkCORSHeaders(res);
+          var parsedBody = JSON.parse(res.body);
+          if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+          else expected_token = parsedBody.layergroupid;
+          return null;
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+          if ( err ) {
+console.log("at do_get_tile, err is " + err);
+            throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
@@ -190,7 +191,10 @@ suite('torque', function() {
         },
         function do_get_grid0(err)
         {
-          if ( err ) throw err;
+          if ( err ) {
+console.log("at do_get_grid0, err is " + err);
+            throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
@@ -207,7 +211,10 @@ suite('torque', function() {
         },
         function do_get_grid1(err)
         {
-          if ( err ) throw err;
+          if ( err ) {
+console.log("at do_get_grid1, err is " + err);
+            throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
@@ -224,7 +231,10 @@ suite('torque', function() {
         },
         function do_get_torque0(err)
         {
-          if ( err ) throw err;
+          if ( err ) {
+console.log("at do_get_torque0, err is " + err);
+            throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
@@ -241,7 +251,10 @@ suite('torque', function() {
         },
         function do_get_torque1(err)
         {
-          if ( err ) throw err;
+          if ( err ) {
+console.log("at do_get_torque1, err is " + err);
+            throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token
@@ -261,7 +274,7 @@ suite('torque', function() {
           if ( err ) errors.push(err.message);
           redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
               if ( err ) errors.push(err.message);
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+              //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
               redis_client.del("map_cfg|" +  expected_token, function(err) {
                 if ( err ) errors.push(err.message);
                 if ( errors.length ) done(new Error(errors));
