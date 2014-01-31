@@ -14,8 +14,10 @@ interface:
 
   /// Create a renderer given a map and data store configuration 
   //
-  /// @param mapConfig map configuration
-  /// @param dbParams datastore configuration
+  /// @param mapConfig map configuration, see
+  ///        http://github.com/CartoDB/Windshaft/wiki/MapConfig-specification
+  /// @param dbParams datastore configuration, with supported members:
+  ///        user,pass,host,port,dbname
   /// @param format output format for the tile
   /// @param layer layer number within the mapConfig
   /// @param callback function(err, renderer)
