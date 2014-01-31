@@ -216,6 +216,9 @@ suite('torque', function() {
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           // TODO: check actual torque tile content
+          var tile_content = [{"x__uint8":42.6666666666667,"y__uint8":42.6666666666667,"vals__uint8":[1],"dates__uint16":[0]}];
+          var parsed = JSON.parse(res.body);
+          assert.ok(_.isEqual(tile_content, parsed));
           return null;
         },
         function finish(err) {
