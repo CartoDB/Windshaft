@@ -45,20 +45,20 @@ suite('torque', function() {
 
     });
 
-    test("missing XXX from torque layer", function(done) {
+    test("missing required property from torque layer", function(done) {
 
       var layergroup =  {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
                sql: 'select cartodb_id, the_geom from test_table',
-               cartocss: '#layer { marker-fill:blue; }'
+               cartocss: 'Map { marker-fill:blue; }'
              } }
         ]
       };
 
       Step(
-        function do_post()
+        function do_post1()
         {
           var next = this;
           assert.response(server, {
@@ -76,6 +76,52 @@ suite('torque', function() {
           var error = parsed.errors[0];
           assert.equal(error,
             "Missing required property '-torque-frame-count' in torque layer CartoCSS");
+          return null;
+        },
+        function do_post2(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          var css = 'Map { -torque-frame-count: 2; }';
+          layergroup.layers[0].options.cartocss = css;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function checkResponse2(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error,
+            "Missing required property '-torque-resolution' in torque layer CartoCSS");
+          return null;
+        },
+        function do_post3(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          var css = 'Map { -torque-frame-count: 2; -torque-resolution: 3; }'
+          layergroup.layers[0].options.cartocss = css;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function checkResponse3(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error,
+            "Missing required property '-torque-time-attribute' in torque layer CartoCSS");
           return null;
         },
         function finish(err) {
