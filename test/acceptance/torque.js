@@ -131,7 +131,7 @@ suite('torque', function() {
       );
     });
 
-    test.skip("can render tile for valid", function(done) {
+    test("can render tile for valid mapconfig", function(done) {
 
       var mapconfig =  {
         version: '1.1.0',
@@ -209,14 +209,14 @@ suite('torque', function() {
               url: '/database/windshaft_test/layergroup/' + expected_token
                  + '/0/0/0/0.json.torque',
               method: 'GET'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
-                function(err, similarity) {
-                  next(err);
-              });
-          });
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_torque_response(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+          // TODO: check actual torque tile content
+          return null;
         },
         function finish(err) {
           var errors = [];
