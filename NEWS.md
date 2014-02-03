@@ -4,6 +4,7 @@ Version 0.16.0
  New features:
 
  - Support for torque tiles (#113)
+ - New attributes service (#121)
 
  Enhancements:
 
