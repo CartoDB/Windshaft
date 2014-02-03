@@ -163,6 +163,25 @@ describe('torque', function() {
   });
 
   describe('Renderer', function() {
+    it('should get metadata', function(done) {
+      sqlApi.responses = [
+        [null, { fields: { 'date': { type: 'date' } } }],
+        [null, { rows: [
+          { min_date: 0, max_date: 10, num_steps: 1, xmin: 0, xmax: 10, ymin: 0, ymax: 10 }
+          ]
+        }]
+      ]
+      torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+        assert.ok(err === null);
+        var m = renderer.getMetadata()
+        assert.equal(0, m.start)
+        assert.equal(10000, m.end)
+        assert.equal(1, m.data_steps)
+        assert.equal('date', m.columnType);
+        done();
+      });
+
+    })
     it('should get a tile', function(done) {
       sqlApi.responses = [
         [null, { fields: { 'date': { type: 'date' } } }],
