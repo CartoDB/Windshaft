@@ -1,5 +1,13 @@
-Version 0.15.2
+Version 0.16.0
 2014-MM-DD
+
+ New features:
+
+ - Support for torque tiles (#113)
+
+ Enhancements:
+
+ - Store full layergroup configuration in redis (#114)
 
 Version 0.15.1
 2014-01-30
