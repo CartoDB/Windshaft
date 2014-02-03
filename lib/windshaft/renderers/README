@@ -14,6 +14,13 @@ Renderers are expected to expose the following interfaces:
   ///
   getTile(z, x, y, callback)
 
+  /// Get metadata information about the tileset
+  //
+  /// Format of the returned object is renderer-specific,
+  /// see renderer documentation for that.
+  ///
+  getMetadata()
+
 They are created by renderer factories having the following
 interface:
 
