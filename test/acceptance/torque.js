@@ -51,7 +51,7 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: 'select cartodb_id, the_geom from test_table',
+               sql: 'select cartodb_id, the_geom_webmercator from test_table',
                cartocss: 'Map { marker-fill:blue; }'
              } }
         ]
@@ -137,7 +137,7 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, now() as d, 'SRID=4326;POINT(0 0)'::geometry as the_geom, 'SRID=3785;POINT(0 0)'::geometry as the_geom_webmercator",
+               sql: "select 1 as id, now() as d, 'SRID=3785;POINT(0 0)'::geometry as the_geom_webmercator",
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(id)\'; }',
                cartocss_version: '2.0.1'
              } }
