@@ -1,5 +1,13 @@
-Version 0.16.1
+Version 0.17.0
 2014-02-DD
+
+ New features:
+
+ - Configurable endpoint for multilayer API (#126)
+
+ Bug fixes:
+
+ - Fix coordinate order in TorqueRenderer.getTile 
 
 Version 0.16.0
 2014-02-04
