@@ -137,7 +137,7 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, now() as d, 'SRID=3785;POINT(0 0)'::geometry as the_geom_webmercator",
+               sql: "select 1 as id, '1970-01-02'::date as d, 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator UNION select 2, '1970-01-01'::date, 'SRID=3857;POINT(1 1)'::geometry",
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(id)\'; }',
                cartocss_version: '2.0.1'
              } }
@@ -165,6 +165,16 @@ suite('torque', function() {
           var parsedBody = JSON.parse(res.body);
           if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
           else expected_token = parsedBody.layergroupid;
+          var meta = parsedBody.metadata;
+          assert.ok(!_.isUndefined(meta),
+            'No metadata in torque MapConfig creation response: ' + res.body);
+          var tm = meta.torque;
+          assert.ok(tm,
+            'No "torque" in metadata:' + JSON.stringify(meta));
+          var tm0 = tm[0];
+          assert.ok(tm0,
+            'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
+          assert.deepEqual(tm0, {"start":0,"end":86400000,"data_steps":2,"column_type":"date"});
           return null;
         },
         function do_get_tile(err)
@@ -215,7 +225,7 @@ suite('torque', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          var tile_content = [{"x__uint8":42.6666666666667,"y__uint8":42.6666666666667,"vals__uint8":[1],"dates__uint16":[0]}];
+          var tile_content = [{"x__uint8":42.6666666666667,"y__uint8":42.6666666666667,"vals__uint8":[1,1],"dates__uint16":[0,2]}];
           var parsed = JSON.parse(res.body);
           assert.deepEqual(tile_content, parsed);
           return null;
