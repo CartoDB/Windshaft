@@ -16,10 +16,12 @@ Renderers are expected to expose the following interfaces:
 
   /// Get metadata information about the tileset
   //
-  /// Format of the returned object is renderer-specific,
+  /// @param callback function(err, meta)
+  ///
+  /// Format of the 'meta' object is renderer-specific,
   /// see renderer documentation for that.
   ///
-  getMetadata()
+  getMetadata(callback)
 
 They are created by renderer factories having the following
 interface:
