@@ -173,12 +173,13 @@ describe('torque', function() {
       ]
       torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
         assert.ok(err === null);
-        var m = renderer.getMetadata()
-        assert.equal(0, m.start)
-        assert.equal(10000, m.end)
-        assert.equal(1, m.data_steps)
-        assert.equal('date', m.column_type);
-        done();
+        renderer.getMetadata(function(err, m) {
+          assert.equal(0, m.start)
+          assert.equal(10000, m.end)
+          assert.equal(1, m.data_steps)
+          assert.equal('date', m.column_type);
+          done();
+        })
       });
 
     })
