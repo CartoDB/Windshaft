@@ -567,20 +567,6 @@ suite('server', function() {
         });
     });
 
-    test("processXML can edit generated XML",  function(done) {
-        assert.response(server, {
-            // NOTE: overrideDBUser is hanlded by the req2params installed by ../support/server_options.js
-            //       and forces change of authentication in the XML
-            url: '/database/windshaft_test/table/test_table/6/31/24.png?cache_buster=666&overrideDBUser=fake',
-            method: 'GET'
-        },{
-        }, function(res) {
-          assert.equal(res.statusCode, 401, res.statusCode + ( res.statusCode != 200 ? ( ": " + res.body ) : '' ));
-          // TODO: also test that a new request with no overrideDBUser gets permission to access the tile ?
-          done();
-        });
-    });
-
     test("get'ing a tile after post'ing a style should return an expected tile",  function(done){
       var style = "#test_table_3{marker-fill: blue;marker-line-color: black;}";
       Step(

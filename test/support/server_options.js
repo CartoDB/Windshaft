@@ -30,20 +30,6 @@ module.exports = function(opts) {
             req.params =  _.extend({}, req.params);
             _.extend(req.params, req.query);
 
-            req.params.processXML = function(req, xml, callback) {
-                var params = req.params;
-                if ( params.overrideDBUser ) {
-                  var re = RegExp("(</Datasource>)");
-                  if ( ! xml.match(re) ) {
-                    callback(new Error("Cannot find a match for '" + re + "' in " + xml));
-                    return;
-                  }
-                  xml = xml.replace(re, '<Parameter name="user"><![CDATA[' +
-                              params.overrideDBUser + ']]></Parameter>$1');
-                }
-                callback(null, xml);
-            },
-
             // send the finished req object on
             callback(null,req);
         },

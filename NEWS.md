@@ -10,6 +10,10 @@ Version 0.16.0
 
  - Store full layergroup configuration in redis (#114)
 
+ Backward incompatible changes:
+
+ - Drop support for XML processor hook (#119)
+
 Version 0.15.1
 2014-01-30
 
