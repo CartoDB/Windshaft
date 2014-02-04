@@ -177,7 +177,7 @@ describe('torque', function() {
         assert.equal(0, m.start)
         assert.equal(10000, m.end)
         assert.equal(1, m.data_steps)
-        assert.equal('date', m.columnType);
+        assert.equal('date', m.column_type);
         done();
       });
 
