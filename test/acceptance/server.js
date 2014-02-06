@@ -202,7 +202,7 @@ suite('server', function() {
     ////////////////////////////////////////////////////////////////////
     //
     // GET TILE
-    //
+    // --{
     ////////////////////////////////////////////////////////////////////
 
     test("get'ing a tile with default style should return an expected tile",  function(done){
@@ -846,9 +846,36 @@ suite('server', function() {
 
     });
 
+    // Test that you cannot write to the database from a tile request
+    //
+    // Test for http://github.com/CartoDB/Windshaft/issues/130
+    //
+    test.skip("database access is read-only", function(done) {
+
+      Step(
+        function doGet() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/0/0/0.png?sql=select+st_point(0,0)+as+the_geom,*+from+test_table_inserter(st_setsrid(st_point(0,0),4326),\'write\')',
+              method: 'GET'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' )); 
+          assert.deepEqual(JSON.parse(res.body),  {"error":"test unexpected error"});
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+
+    });
+
 
     ////////////////////////////////////////////////////////////////////
-    //
+    // --}
     // OPTIONS TILE
     //
     ////////////////////////////////////////////////////////////////////

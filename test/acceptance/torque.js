@@ -246,6 +246,43 @@ suite('torque', function() {
       );
     });
 
+    // Test that you cannot write to the database from a torque tile request
+    //
+    // Test for http://github.com/CartoDB/Windshaft/issues/130
+    //
+    test.skip("database access is read-only", function(done) {
+      var mapconfig =  {
+        version: '1.1.0',
+        layers: [
+           { type: 'torque', options: {
+               sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator,now() as d,* from test_table_inserter(st_setsrid(st_point(0,0),4326),'write')",
+               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(*)\'; }'
+               , cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(mapconfig)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function checkPost(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+        },
+        function finish(err) {
+          done(err)
+        }
+      );
+
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // TEARDOWN

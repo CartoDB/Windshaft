@@ -50,6 +50,11 @@ UPDATE test_table SET the_geom_webmercator = ST_Transform(the_geom, 3857);
 CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
 CREATE INDEX test_table_the_geom_webmercator_idx ON test_table USING gist (the_geom_webmercator);
 
+CREATE FUNCTION test_table_inserter(geometry, text) returns int AS $$
+ INSERT INTO test_table(name, the_geom, the_geom_webmercator)
+  SELECT $2, $1, ST_Transform($1, 3857) RETURNING cartodb_id;
+$$ LANGUAGE 'sql' SECURITY DEFINER;
+
 -- second table
 CREATE TABLE test_table_2 (
     updated_at timestamp without time zone DEFAULT now(),
