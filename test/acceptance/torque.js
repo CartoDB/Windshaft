@@ -250,7 +250,7 @@ suite('torque', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    test.skip("database access is read-only", function(done) {
+    test("database access is read-only", function(done) {
       var mapconfig =  {
         version: '1.1.0',
         layers: [
@@ -274,7 +274,14 @@ suite('torque', function() {
         },
         function checkPost(err, res) {
           if ( err ) throw err;
+          // TODO: should be 403 Forbidden
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors);
+          assert.equal(parsed.errors.length, 1);
+          var msg = parsed.errors[0];
+          assert.equal(msg, "cannot execute INSERT in a read-only transaction");
+          return null;
         },
         function finish(err) {
           done(err)
