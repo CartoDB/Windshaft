@@ -51,7 +51,9 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: 'select cartodb_id, the_geom_webmercator from test_table',
+               sql: 'select cartodb_id, the_geom from test_table',
+               geom_column: 'the_geom',
+               srid: 4326,
                cartocss: 'Map { marker-fill:blue; }'
              } }
         ]
@@ -137,7 +139,8 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, '1970-01-02'::date as d, 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator UNION select 2, '1970-01-01'::date, 'SRID=3857;POINT(1 1)'::geometry",
+               sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, '1970-01-01'::date, 'POINT(1 1)'::geometry",
+               geom_column: 'the_geom',
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(id)\'; }',
                cartocss_version: '2.0.1'
              } }
@@ -255,7 +258,8 @@ suite('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator,now() as d,* from test_table_inserter(st_setsrid(st_point(0,0),4326),'write')",
+               sql: "select 'SRID=3857;POINT(0 0)'::geometry as g, now() as d,* from test_table_inserter(st_setsrid(st_point(0,0),4326),'write')",
+               geom_column: 'g',
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(*)\'; }'
                , cartocss_version: '2.0.1'
              } }
