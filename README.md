@@ -58,8 +58,8 @@ var Windshaft = require('windshaft');
 // that adds 'dbname' and 'table' variables onto the Express.js req.params
 // object.  In this example, the base URL is such that dbname and table will
 // automatically be added to the req.params object by express.js. req2params
-// can be extended to allow full control over the specifying of dbname and
-// table, and also allows for the req.params object to be extended with
+// can be extended to allow full control over the specifying of database
+// parameters and also allows for the req.params object to be extended with
 // other variables, such as:
 //
 // * sql - custom sql query to narrow results shown in map)
@@ -70,6 +70,12 @@ var Windshaft = require('windshaft');
 // * interactivity - specify the column to use in the UTFGrid
 //                   interactivity layer (defaults to null)
 // * style - specify map style in the Carto map language on a per tile basis
+//
+// * dbuser - username for database connection
+// * dbpassword - password for database connection
+// * dbhost - database host
+// * dbport - database port
+// * dbname - database name
 //
 // the base url is also used for persisiting and retrieving map styles via:
 //
