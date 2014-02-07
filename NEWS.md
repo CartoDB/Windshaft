@@ -1,6 +1,10 @@
 Version 0.17.1
 2014-02-MM
 
+ Bug fixes:
+
+ - Check attribute service validity at MapConfig creation time (#131)
+
 Version 0.17.0
 2014-02-04
 

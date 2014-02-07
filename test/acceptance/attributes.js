@@ -136,6 +136,44 @@ suite('attributes', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/131
+    test("are checked at map creation time",
+    function(done) {
+
+      // clone the mapconfig test
+      var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
+      // append unexistant attribute name
+      mapconfig.layers[1].options.sql = 'SELECT * FROM test_table';
+      mapconfig.layers[1].options.attributes.id = 'unexistant';
+      mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
+
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(mapconfig)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function checkPost(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors);
+          assert.equal(parsed.errors.length, 1);
+          var msg = parsed.errors[0];
+          assert.equal(msg, 'column "unexistant" does not exist');
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     test("can be used with jsonp", function(done) {
 
       var expected_token; 
@@ -243,6 +281,7 @@ suite('attributes', function() {
           assert.equal(parsed.errors.length, 1);
           var msg = parsed.errors[0];
           assert.equal(msg, "cannot execute INSERT in a read-only transaction");
+          return null;
         },
         function finish(err) {
           done(err);
