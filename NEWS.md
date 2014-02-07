@@ -5,6 +5,7 @@ Version 0.17.1
 
  - Check attribute service validity at MapConfig creation time (#131)
  - Use read-only transactions for torque tiles and attributes (#130)
+ - Fix reading database password (dbpassword) from req.param (#134)
 
  Enhancements:
 
