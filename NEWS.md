@@ -8,6 +8,7 @@ Version 0.17.1
 
  Enhancements:
 
+ - Add 'torque.json' and 'torque.bin' format aliases (#133)
  - Allow specifying name of torque geometry column in the MapConfig (#125)
 
 Version 0.17.0

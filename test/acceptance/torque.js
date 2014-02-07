@@ -224,7 +224,26 @@ suite('torque', function() {
               method: 'GET'
           }, {}, function(res, err) { next(err, res); });
         },
-        function check_torque_response(err, res) {
+        function check_torque0_response(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+          var tile_content = [{"x__uint8":42.6666666666667,"y__uint8":42.6666666666667,"vals__uint8":[1,1],"dates__uint16":[0,2]}];
+          var parsed = JSON.parse(res.body);
+          assert.deepEqual(tile_content, parsed);
+          return null;
+        },
+        function do_get_torque0_1(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/0/0/0/0.torque.json',
+              method: 'GET'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_torque0_response_1(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
