@@ -252,7 +252,7 @@ suite('attributes', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    test.skip("database access is read-only", function(done) {
+    test("database access is read-only", function(done) {
 
       // clone the mapconfig test
       var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));

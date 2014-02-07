@@ -4,6 +4,7 @@ Version 0.17.1
  Bug fixes:
 
  - Check attribute service validity at MapConfig creation time (#131)
+ - Use read-only transactions for torque tiles and attributes (#130)
 
 Version 0.17.0
 2014-02-04
