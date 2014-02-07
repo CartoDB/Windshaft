@@ -555,8 +555,8 @@ suite('multilayer', function() {
                attributes: { id: 'cartodb_id', columns: ['n'] }
              } },
            { type: 'torque', options: {
-               sql: "select cartodb_id, '1970-01-01'::date as d, ST_SnapToGrid(the_geom_webmercator,1e40) as the_geom_webmercator from test_table WHERE cartodb_id = 4",
-               cartocss: 'Map { -torque-frame-count:1; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:"count(*)"; } #layer { marker-fill:blue; marker-allow-overlap:true; }'
+               sql: "select cartodb_id, '1970-01-01'::date as d, ST_SnapToGrid(the_geom_webmercator,1e10) as the_geom_webmercator from test_table WHERE cartodb_id = 4",
+               cartocss: 'Map { -torque-frame-count:1; -torque-resolution:1; -torque-time-attribute:d; -torque-aggregation-function:"count(*)"; } #layer { marker-fill:blue; marker-allow-overlap:true; }'
              } }
         ]
       };
@@ -670,8 +670,8 @@ suite('multilayer', function() {
           var parsed = JSON.parse(res.body);
           assert.deepEqual(parsed[0].vals__uint8, [1]);
           assert.deepEqual(parsed[0].dates__uint16, [0]);
-          //var tile_content = [{"x__uint8":0,"y__uint8":0,"vals__uint8":[1],"dates__uint16":[0]}];
-          //assert.deepEqual(tile_content, parsed);
+          assert.equal(parsed[0].x__uint8, 128);
+          assert.equal(parsed[0].y__uint8, 128);
           return null;
         },
         function finish(err) {
