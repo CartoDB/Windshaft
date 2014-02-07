@@ -848,7 +848,11 @@ suite('server', function() {
 
     // Test that you cannot write to the database from a tile request
     //
-    // Test for http://github.com/CartoDB/Windshaft/issues/130
+    // See http://github.com/CartoDB/Windshaft/issues/130
+    // Needs a fix on the mapnik side:
+    // https://github.com/mapnik/mapnik/pull/2143
+    //
+    // TODO: enable based on Mapnik version ?
     //
     test.skip("database access is read-only", function(done) {
 
@@ -862,12 +866,17 @@ suite('server', function() {
         },
         function check(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 404, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' )); 
-          assert.deepEqual(JSON.parse(res.body),  {"error":"test unexpected error"});
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' )); 
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.error);
+          var msg = parsed.error;
+          assert.ok(msg.match(/read-only transaction/), msg);
           return null;
         },
         function finish(err) {
-          done(err);
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/style',
+              method: 'DELETE' },{}, function(res) { done(err); });
         }
       );
 
