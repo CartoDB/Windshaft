@@ -120,6 +120,24 @@ suite('attributes', function() {
           assert.deepEqual(parsed, {"n":6});
           return null;
         },
+        function do_get_attr_1_404(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/-666',
+              method: 'GET'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_attr_1_404(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.error);
+          var msg = parsed.error;
+          assert.ok(msg.match(/0 features.*identified by fid -666/), msg);
+          return null;
+        },
         function finish(err) {
           var errors = [];
           if ( err ) errors.push(''+err);
