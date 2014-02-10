@@ -536,7 +536,7 @@ suite('multilayer', function() {
     });
 
     test("layergroup with 3 mixed layers, mapnik torque and attributes",
-    function(done) { 
+    function(done) {
 
       var layergroup =  {
         version: '1.1.0',
@@ -672,6 +672,27 @@ suite('multilayer', function() {
           assert.deepEqual(parsed[0].dates__uint16, [0]);
           assert.equal(parsed[0].x__uint8, 128);
           assert.equal(parsed[0].y__uint8, 128);
+          return null;
+        },
+        function do_get_torque1(err)
+        {
+// Layer 1 is not a torque layer...
+// See https://github.com/CartoDB/Windshaft/issues/136
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + expected_token
+                 + '/1/0/0/0.json.torque',
+              method: 'GET'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check_torque1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.error, res.body);
+          var msg = parsed.error;
+          assert.ok(msg.match(/not a torque layer/), msg);
           return null;
         },
         function finish(err) {
