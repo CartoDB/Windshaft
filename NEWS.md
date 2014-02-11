@@ -14,6 +14,7 @@ Version 0.17.1
  - Improve error message on attempts to fetch torque tile from
    non-torque layers (#136)
  - Include X-Tiler-Profiler header in POST /style endpoint (#138)
+ - Improve speed of POST /style and DELETE /style (#138)
 
 Version 0.17.0
 2014-02-04
