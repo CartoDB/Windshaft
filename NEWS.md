@@ -1,3 +1,10 @@
+Version 0.17.2
+2014-02-DD
+
+ Enhancements:
+
+ - Reduce debug logs (#139)
+
 Version 0.17.1
 2014-02-11
 
