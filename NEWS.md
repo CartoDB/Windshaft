@@ -1,6 +1,10 @@
 Version 0.17.3
 2014-02-DD
 
+ Enhancements:
+
+ - Advertise support for node-0.10 (#128)
+
 Version 0.17.2
 2014-02-11
 
