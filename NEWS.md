@@ -13,6 +13,7 @@ Version 0.17.1
  - Allow specifying name of torque geometry column in the MapConfig (#125)
  - Improve error message on attempts to fetch torque tile from
    non-torque layers (#136)
+ - Include X-Tiler-Profiler header in POST /style endpoint (#138)
 
 Version 0.17.0
 2014-02-04
