@@ -5,6 +5,7 @@ Version 0.18.0
 
  - Advertise support for node-0.10 (#128)
  - Use a single pooler for mapnik and torque renderers (#142)
+ - Improve garbage collection performance (#141)
 
 Version 0.17.2
 2014-02-11
