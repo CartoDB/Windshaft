@@ -36,7 +36,8 @@
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb2",
         "underscore.string": "~1.1.6",
         "pg": "~2.6.2",
-        "torque.js": "~2.2.00"
+        "torque.js": "~2.2.00",
+        "node-statsd": "~0.0.7"
     },
     "devDependencies": {
         "mocha": "~1.14.0",
