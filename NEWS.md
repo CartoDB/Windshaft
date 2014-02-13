@@ -1,6 +1,10 @@
 Version 0.18.1
 2014-MM-DD
 
+ Bug fixes:
+
+ - Fix duplicated garbage collection via grainstore upgrade
+
 Version 0.18.0
 2014-02-12
 
