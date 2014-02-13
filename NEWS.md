@@ -8,6 +8,7 @@ Version 0.18.1
  Enhancements:
 
  - Speed up construction of mapnik renderers
+ - Allow disabling statsD via configuration (#144)
 
 Version 0.18.0
 2014-02-12
