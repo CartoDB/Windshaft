@@ -1,6 +1,10 @@
 Version 0.18.2
 2014-MM-DD
 
+ Bug fixes:
+
+ - Fix error message on unexistent map config token (#148)
+
 Version 0.18.1
 2014-02-13
 

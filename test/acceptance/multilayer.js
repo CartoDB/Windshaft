@@ -1344,6 +1344,35 @@ suite('multilayer', function() {
       );
     });
 
+    // See http://github.com/CartoDB/Windshaft/issues/97
+    test("unexistent layergroup token error", function(done) {
+      Step(
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/deadbeef/0/0/0/0.grid.json',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function checkResponse(err, res) {
+          if ( err ) throw err;
+          // FIXME: should be 404
+          assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.deepEqual(parsed, {"error":"Map config token 'deadbeef' not found in redis"});
+          return null
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
+
+
     // TODO: check lifetime of layergroup!
 
     ////////////////////////////////////////////////////////////////////
