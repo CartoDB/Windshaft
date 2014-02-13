@@ -5,6 +5,10 @@ Version 0.18.1
 
  - Fix duplicated garbage collection via grainstore upgrade
 
+ Enhancements:
+
+ - Speed up construction of mapnik renderers
+
 Version 0.18.0
 2014-02-12
 
