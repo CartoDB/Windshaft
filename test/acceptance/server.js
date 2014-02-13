@@ -205,7 +205,7 @@ suite('server', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a tile with default style should return an expected tile",  function(done){
+    test.only("get'ing a tile with default style should return an expected tile",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
             method: 'GET',

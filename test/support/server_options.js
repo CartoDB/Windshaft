@@ -58,6 +58,12 @@ module.exports = function(opts) {
             res.layercount = cfg.layers.length;
             callback(null);
         },
+        useProfiler: true,
+        statsd: {
+            host: 'localhost',
+            port: 8125
+            // support all allowed node-statsd options
+        }
 
     }
 

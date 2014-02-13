@@ -5,6 +5,10 @@ Version 0.18.2
 
  - Fix error message on unexistent map config token (#148)
 
+ Enhancements:
+
+ - Integrate statsD support in Profiler
+
 Version 0.18.1
 2014-02-13
 
