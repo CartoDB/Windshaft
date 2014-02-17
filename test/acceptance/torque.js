@@ -76,7 +76,6 @@ suite('torque', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
           var error = parsed.errors[0];
-          console.log("ERRRRRR", error);
           assert.equal(error,
             "Missing required property '-torque-frame-count' in torque layer CartoCSS");
           return null;
@@ -125,6 +124,46 @@ suite('torque', function() {
           var error = parsed.errors[0];
           assert.equal(error,
             "Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
+    // See http://github.com/CartoDB/Windshaft/issues/150
+    test.skip("unquoted property in torque layer", function(done) {
+
+      var layergroup =  {
+        version: '1.1.0',
+        layers: [
+           { type: 'torque', options: {
+               sql: 'select updated_at as d, cartodb_id as id, the_geom from test_table',
+               geom_column: 'the_geom',
+               srid: 4326,
+               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:"d"; -torque-aggregation-function:count(id); }',
+             } }
+        ]
+      };
+      Step(
+        function do_post1()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function checkResponse(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error, "Something meaningful here");
           return null;
         },
         function finish(err) {
