@@ -1,6 +1,10 @@
 Version 0.18.3
 2014-MM-DD
 
+ Enhancements:
+
+ - Use log4js express logger if global.log4js is defined (#140)
+
 Version 0.18.2
 2014-02-17
 
