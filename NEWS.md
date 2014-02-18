@@ -4,6 +4,7 @@ Version 0.18.3
  Enhancements:
 
  - Use log4js express logger if global.log4js is defined (#140)
+ - Include format in rendering profile labels (#152)
 
 Version 0.18.2
 2014-02-17
