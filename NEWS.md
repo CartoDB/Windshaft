@@ -4,6 +4,7 @@ Version 0.19.0
  New features:
 
  - Use own .sendResponse function for all responses
+ - Make MapStore instance accessible via app
 
  Enhancements:
 
