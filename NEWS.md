@@ -1,5 +1,9 @@
-Version 0.18.3
+Version 0.19.0
 2014-MM-DD
+
+ New features:
+
+ - Use own .sendResponse function for all responses
 
  Enhancements:
 
