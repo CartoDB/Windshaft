@@ -5,6 +5,7 @@ Version 0.19.0
 
  - Use own .sendResponse function for all responses
  - Make MapStore instance accessible via app
+ - Allow passing RedisPooler via server options (#146)
 
  Enhancements:
 
