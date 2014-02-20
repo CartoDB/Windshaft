@@ -1,6 +1,10 @@
 Version 0.19.1
 2014-MM-DD
 
+ Enhancements:
+
+ - Do not send 0 timings to statsd (fixes "Bad line: 0,ms" messages)
+
 Version 0.19.0
 2014-02-19
 
