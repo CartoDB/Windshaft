@@ -1397,6 +1397,7 @@ suite('multilayer', function() {
       Step(
         function do_post()
         {
+          server.req2params_calls = 0;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
