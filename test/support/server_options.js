@@ -60,6 +60,7 @@ module.exports = function(opts) {
         },
         afterLayergroupCreate: function(req, cfg, res, callback) {
             res.layercount = cfg.layers.length;
+            this.afterLayergroupCreateCalls = this.afterLayergroupCreateCalls ? this.afterLayergroupCreateCalls + 1 : 1;
             callback(null);
         },
         useProfiler: true,
