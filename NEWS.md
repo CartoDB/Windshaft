@@ -8,6 +8,10 @@ Version 0.19.1
  - Do not invalidate renderer caches when NO cache_buster is given (#158)
  - Call afterLayergroupCreate only after MapConfig verification (#159)
 
+ Bug fixes:
+
+ - Fix MapStore.save always false "known" return variable (#162)
+
 Version 0.19.0
 2014-02-19
 
