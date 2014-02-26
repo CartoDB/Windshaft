@@ -30,6 +30,10 @@ module.exports = function(opts) {
             req.params =  _.extend({}, req.params);
             _.extend(req.params, req.query);
 
+            // increment number of calls counter 
+            // NOTE: "this" would likely point to the server instance
+            this.req2params_calls = this.req2params_calls ? this.req2params_calls + 1 : 1;
+
             // send the finished req object on
             callback(null,req);
         },

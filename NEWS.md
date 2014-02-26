@@ -4,6 +4,7 @@ Version 0.19.1
  Enhancements:
 
  - Do not send 0 timings to statsd (fixes "Bad line: 0,ms" messages)
+ - Do not call req2params more then once on MapConfig creation (#157) 
 
 Version 0.19.0
 2014-02-19
