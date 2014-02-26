@@ -222,6 +222,77 @@ suite('server', function() {
         });
     });
 
+    test("response of get tile can be served by renderer cache",  function(done){
+      var cb = Date.now();
+      Step(
+        function get1 () {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster=' + cb,
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res, err) { next(err, res); });
+        },
+        function check1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200);
+          var xwc = res.headers['x-windshaft-cache'];
+          assert.ok(!xwc);
+          return null;
+        },
+        function get2() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster=' + cb,
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res, err) { next(err, res); });
+        },
+        function check2(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200);
+          var xwc = res.headers['x-windshaft-cache'];
+          assert.ok(xwc);
+          assert.ok(xwc > 0);
+          return null;
+        },
+        function get3() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res, err) { next(err, res); });
+        },
+        function check3(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200);
+          var xwc = res.headers['x-windshaft-cache'];
+          assert.ok(xwc);
+          assert.ok(xwc > 0);
+          return null;
+        },
+        function get4() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster='+(cb+1),
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res, err) { next(err, res); });
+        },
+        function check4(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200);
+          var xwc = res.headers['x-windshaft-cache'];
+          assert.ok(!xwc);
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
         assert.response(server, {
