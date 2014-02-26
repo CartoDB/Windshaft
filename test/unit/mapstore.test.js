@@ -13,7 +13,7 @@ var   _             = require('underscore')
 suite('mapstore', function() {
  
     var redis_client = redis.createClient(serverOptions.redis.port);
-    var redis_pool = new RedisPool(serverOptions.redis.port);
+    var redis_pool = new RedisPool(serverOptions.redis);
 
     suiteSetup(function(done) {
       // Check that we start with an empty redis db 
