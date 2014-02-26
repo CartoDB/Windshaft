@@ -147,6 +147,45 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/154
+    test("mapnik tokens cannot be used with attributes service", function(done) {
+      var layergroup =  {
+        version: '1.1.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, 1 as n, the_geom, !bbox! as b from test_table limit 1',
+               cartocss: '#layer { marker-fill:red }', 
+               cartocss_version: '2.0.1',
+               attributes: { id:'cartodb_id', columns:['n'] }
+             } }
+        ]
+      };
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json; charset=utf-8' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check(err, res) {
+          assert.equal(res.statusCode, 400, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors);
+          assert.equal(parsed.errors.length, 1);
+          var msg = parsed.errors[0];
+          assert.ok(msg.match(/Attribute service cannot be activated/), msg);
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     // See https://github.com/Vizzuality/Windshaft/issues/71
     test("single layer with multiple css sections", function(done) {
       var layergroup =  {
