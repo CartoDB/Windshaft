@@ -70,7 +70,7 @@ suite('mapstore', function() {
         function delMap(err) {
           var next = this;
           map_store.del(mapID, function(e) {
-            if ( e ) console.err("Could not delete map " + mapID + ": " + e);
+            if ( e ) console.log("Could not delete map " + mapID + ": " + e);
             next(err);
           });
         },
