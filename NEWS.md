@@ -9,6 +9,7 @@ Version 0.19.1
  - Call afterLayergroupCreate only after MapConfig verification (#159)
  - Drop LRU cache for "seen" layergroups (#160)
  - Clearer error on mapnik tokens use with attribute service (#154)
+ - Include MapConfig specification and MultilayerAPI documents in repo
 
  Bug fixes:
 
