@@ -4,6 +4,7 @@ Version 0.19.2
  Enhancements:
 
  - Send 404 instead of 400 on attempts to fetch non-existing database items
+ - Send 500 status and better error message on db connection error
 
 Version 0.19.1
 2014-02-26

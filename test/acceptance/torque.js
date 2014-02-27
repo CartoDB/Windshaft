@@ -352,6 +352,47 @@ suite('torque', function() {
 
     });
 
+    // See http://github.com/CartoDB/Windshaft/issues/164
+    test("gives a 500 on database connection refused", function(done) {
+
+      var mapconfig =  {
+        version: '1.1.0',
+        layers: [
+           { type: 'torque', options: {
+               sql: "select 1 as id, '1970-01-03'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, '1970-01-01'::date, 'POINT(1 1)'::geometry",
+               geom_column: 'the_geom',
+               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; -torque-aggregation-function:\'count(id)\'; }',
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var expected_token; 
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup?dbport=1234567',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(mapconfig)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function checkPost(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error, "cannot connect to the database");
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // TEARDOWN
