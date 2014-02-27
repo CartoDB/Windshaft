@@ -342,7 +342,7 @@ suite('torque', function() {
           assert.ok(parsed.errors);
           assert.equal(parsed.errors.length, 1);
           var msg = parsed.errors[0];
-          assert.equal(msg, "cannot execute INSERT in a read-only transaction");
+          assert.equal(msg, "TorqueRenderer: cannot execute INSERT in a read-only transaction");
           return null;
         },
         function finish(err) {
@@ -384,7 +384,7 @@ suite('torque', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
           var error = parsed.errors[0];
-          assert.equal(error, "cannot connect to the database");
+          assert.equal(error, "TorqueRenderer: cannot connect to the database");
           return null;
         },
         function finish(err) {
