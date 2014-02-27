@@ -1041,7 +1041,7 @@ suite('multilayer', function() {
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           // See http://github.com/CartoDB/Windshaft/issues/159
           assert.equal(server.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
@@ -1087,7 +1087,7 @@ suite('multilayer', function() {
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           // See http://github.com/CartoDB/Windshaft/issues/159
           assert.equal(server.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);

@@ -178,7 +178,7 @@ suite('attributes', function() {
         },
         function checkPost(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors);
           assert.equal(parsed.errors.length, 1);

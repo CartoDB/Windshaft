@@ -1,6 +1,10 @@
 Version 0.19.2
 2014-MM-DD
 
+ Enhancements:
+
+ - Send 404 instead of 400 on attempts to fetch non-existing database items
+
 Version 0.19.1
 2014-02-26
 
