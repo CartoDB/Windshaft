@@ -1,6 +1,10 @@
 Version 0.19.3
 2014-03-DD
 
+ Enhancements:
+
+ - Log full connection string on PostgreSQL connection error (#165)
+
 Version 0.19.2
 2014-02-27
 
