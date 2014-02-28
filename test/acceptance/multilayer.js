@@ -1484,6 +1484,77 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/163
+    test("has different token for different database",
+    function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var token1, token2; 
+      Step(
+        function do_post_1()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err,res); });
+        },
+        function check_post_1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          token1 = parsedBody.layergroupid;
+          return null;
+        },
+        function do_post_2()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/template_postgis/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err,res); });
+        },
+        function check_post_2(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          token2 = parsedBody.layergroupid;
+          assert.ok(token1 != token2);
+          return null;
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push('' + err);
+          redis_client.keys('map_cfg|*', function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 2);
+              assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
+                        "Missing expected token " + token1 + " from redis");
+              assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
+                        "Missing expected token " + token2 + " from redis");
+              var cb = function(err, deleted) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              };
+              redis_client.del(matches, cb);
+          });
+        }
+      );
+    });
+
 
 
     // TODO: check lifetime of layergroup!
