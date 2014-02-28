@@ -269,7 +269,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token; // = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token; 
       Step(
         function do_post()
         {
@@ -377,7 +377,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token; // = "5c6c7b2e0bbaca41b14b0145f5eece48";
+      var expected_token; 
       Step(
         function do_get()
         {
@@ -488,7 +488,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "808d676ac16a8ff464ff0fbf8e1c730d";
+      var expected_token = "cb0a407726cc8cb47711e90a30dd9422";
       Step(
         function do_get()
         {
@@ -785,20 +785,29 @@ suite('multilayer', function() {
              } }
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
+      var expected_token = "de2cb5791aa16a76d803d2b34ff952d9";
+      Step(
+        function do_post() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check(err, res) {
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
-          var expected_token = "7b6b7a935b84f5ed372cbb0c2131f9a0";
           assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
-          redis_client.del("map_cfg|" +  expected_token, function(err) {
-            done();
+          return null;
+        },
+        function finish(err) {
+          redis_client.del("map_cfg|" +  expected_token, function(e) {
+            done(err);
           });
-      });
+        }
+      );
     });
 
     test("check that distinct maps result in distinct tiles", function(done) {
