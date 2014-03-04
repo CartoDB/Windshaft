@@ -1,6 +1,10 @@
 Version 0.19.4
 2014-MM-DD
 
+ Enhancements:
+
+ - Catch profiler exceptions (#166)
+
 Version 0.19.3
 2014-03-04
 
