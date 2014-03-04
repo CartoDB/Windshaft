@@ -6,6 +6,7 @@ Version 0.19.3
  - Log full connection string on PostgreSQL connection error (#165)
  - Prefix statsd resulting from hits of / and /version endpoints
  - Use 403 status, not 401, for forbidden access
+ - Upgrade grainstore to 0.18.1
 
 Version 0.19.2
 2014-02-27
