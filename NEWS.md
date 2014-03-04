@@ -3,7 +3,7 @@ Version 0.19.4
 
  Enhancements:
 
- - Catch profiler exceptions (#166)
+ - Catch statsd exceptions (#166, #167)
 
 Version 0.19.3
 2014-03-04
