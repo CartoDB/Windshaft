@@ -490,7 +490,7 @@ suite('multilayer', function() {
 
       var expected_token = "cb0a407726cc8cb47711e90a30dd9422";
       Step(
-        function do_get()
+        function do_get_token()
         {
           var next = this;
           assert.response(server, {
@@ -501,11 +501,14 @@ suite('multilayer', function() {
                   }),
               method: 'GET',
               headers: {'Content-Type': 'application/json' }
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.body, 'jsonp_test(' + JSON.stringify({layergroupid: expected_token, layercount: 2}) + ');');
-              next(null, res);
-          });
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check_token(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.body, 'jsonp_test(' + JSON.stringify({layergroupid: expected_token, layercount: 2}) + ');');
+          // TODO: check caching headers !
+          return null;
         },
         function do_get_tile(err)
         {
