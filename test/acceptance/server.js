@@ -953,6 +953,57 @@ suite('server', function() {
 
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/167
+    test("does not die on unexistent statsd host",  function(done) {
+      Step(
+        function change_config() {
+          var CustomOptions = _.clone(ServerOptions);
+          CustomOptions.statsd = _.clone(CustomOptions.statsd);
+          CustomOptions.statsd.host = 'whoami.vizzuality.com';
+          CustomOptions.statsd.cacheDns = false;
+          server = new Windshaft.Server(CustomOptions);
+          server.setMaxListeners(0);
+          return null;
+        },
+        function do_get(err) {
+          if ( err ) throw err;
+          var next = this;
+          var errors = [];
+          // We need multiple requests to make sure
+          // statsd_client eventually tries to send
+          // stats _and_ DNS lookup is given enough
+          // time (an interval is used later for that)
+          var numreq = 10;
+          var pending = numreq;
+          var completed = function(err) {
+            if ( err ) errors.push(err);
+            if ( ! --pending ) {
+              setTimeout(function() {
+              next(errors.length ? new Error(errors.join(',')) : null);
+              }, 10);
+              return;
+            }
+          };
+          for (var i=0; i<numreq; ++i) {
+            assert.response(server, {
+                url: '/database/windshaft_test/table/test_table/6/31/24.png',
+                method: 'GET'
+            },{}, function(res, err) { completed(err); });
+          }
+        },
+        function do_check(err, res) {
+          if ( err ) throw err;
+          // being alive is enough !
+          return null;
+        },
+        function finish(err) {
+          // reset server
+          server = new Windshaft.Server(ServerOptions);
+          done(err);
+        }
+      );
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     // --}
