@@ -1,6 +1,10 @@
 Version 0.20.0
 2014-03-DD
 
+ Enhancements:
+
+ - Do not cache bogus renderers (#171)
+
 Version 0.19.4
 2014-03-05
 

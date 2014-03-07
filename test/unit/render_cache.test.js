@@ -212,7 +212,12 @@ suite('render_cache', function() {
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.dbuser = "root";
+            // This is an attempt at finding a value for "dbuser" which 
+            // is not the empty string but still works at connecting to
+            // the database. Failure to connect would result in the
+            // renderer not staying in the cache, as per
+            // http://github.com/CartoDB/Windshaft/issues/171
+            req.params.dbuser = process.env['PGUSER'] || process.env['USER'];
 
             render_cache.getRenderer(req, function(err, renderer){
                 delete req.params.sql;
@@ -267,6 +272,27 @@ suite('render_cache', function() {
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
             setTimeout(function(){assert.equal(_.keys(render_cache.renderers).length, 0); done();},200);
+        });
+    });
+
+    // Remove from cache renderers erroing out
+    // See https://github.com/CartoDB/Windshaft/issues/171
+    test('does not keep erroring renderers in cache', function(done){
+        var render_cache = new RenderCache(10000, mml_store);
+        assert.equal(_.keys(render_cache.renderers).length, 0);
+        var req = {params: {dbname: "windshaft_test", table: 'nonexistant', x:4, y:4, z:4, format:'png' }};
+        render_cache.getRenderer(req, function(err, renderer){
+            assert.ok(err);
+            // Need next tick as the renderer is removed from
+            // the cache after the callback is invoked 
+            setTimeout(function() {
+              err = null;
+              try {
+                assert.equal(_.keys(render_cache.renderers).length, 0);
+              }
+              catch (e) { err = e; }
+              done(err);
+            }, 0);
         });
     });
 
