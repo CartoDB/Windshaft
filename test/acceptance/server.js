@@ -1004,6 +1004,49 @@ suite('server', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft/issues/173
+    test("does not send db details in connection error response",  function(done) {
+      var base_key = 'map_style|windshaft_test|test_table';
+      Step(
+        function change_config() {
+          var CustomOptions = _.clone(ServerOptions);
+          CustomOptions.grainstore = _.clone(CustomOptions.grainstore);
+          CustomOptions.grainstore.datasource = _.clone(CustomOptions.grainstore.datasource);
+          CustomOptions.grainstore.datasource.port = '666';
+          server = new Windshaft.Server(CustomOptions);
+          server.setMaxListeners(0);
+          return null;
+        },
+        function do_get(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/6/31/24.png',
+              method: 'GET'
+          },{}, function(res, err) { next(err, res); });
+        },
+        function do_check(err, res) {
+          if ( err ) throw err;
+          // TODO: should be 500 !
+          assert.equal(res.statusCode, 400);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.error);
+          var msg = parsed.error;
+          assert.ok(msg.match(/connection/), msg);
+          assert.ok(!msg.match(/666/), msg);
+          return null;
+        },
+        function finish(err) {
+          // reset server
+          server = new Windshaft.Server(ServerOptions);
+          redis_client.del(base_key, function(e) {
+            if ( e ) console.error(e);
+            done(err);
+          });
+        }
+      );
+    });
+
 
     ////////////////////////////////////////////////////////////////////
     // --}
