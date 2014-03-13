@@ -925,7 +925,7 @@ suite('server_gettile', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.error);
           var msg = parsed.error;
-          assert.ok(msg.match(/connection/), msg);
+          assert.ok(msg.match(/connect/), msg);
           assert.ok(!msg.match(/666/), msg);
           return null;
         },
