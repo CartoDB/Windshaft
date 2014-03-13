@@ -5,6 +5,7 @@ Version 0.20.0
 
  - Do not cache bogus renderers (#171)
  - Upgrade carto to 0.9.5-cdb3
+ - Use INFO level for express logging
 
 Version 0.19.4
 2014-03-05
