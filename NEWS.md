@@ -11,6 +11,7 @@ Version 0.20.0
  Other changes:
 
  - Use external module as profiler (#174)
+ - Switch to 3-clause BSD license (#175)
 
 Version 0.19.4
 2014-03-05

@@ -9,7 +9,7 @@
     "url": "https://github.com/Vizzuality/Windshaft",
     "licenses": [{
         "type": "BSD",
-        "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENCE"
+        "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENSE"
     }],
     "repository": {
         "type": "git",
