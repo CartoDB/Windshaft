@@ -8,6 +8,10 @@ Version 0.20.0
  - Use INFO level for express logging
  - Do not include connection info in error responses (#173)
 
+ Other changes:
+
+ - Use external module as profiler (#174)
+
 Version 0.19.4
 2014-03-05
 
