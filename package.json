@@ -6,14 +6,14 @@
     "keywords": [
       "cartodb"
     ],
-    "url": "https://github.com/Vizzuality/Windshaft",
+    "url": "https://github.com/CartoDB/Windshaft",
     "licenses": [{
         "type": "BSD",
-        "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENSE"
+        "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
     }],
     "repository": {
         "type": "git",
-        "url": "git://github.com/Vizzuality/Windshaft.git"
+        "url": "git://github.com:CartoDB/Windshaft.git"
     },
     "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
     "contributors": [
