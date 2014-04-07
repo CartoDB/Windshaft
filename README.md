@@ -95,7 +95,7 @@ var config = {
         grainstore: {
           datasource: {
             user:'postgres', host: '127.0.0.1',
-        		port: 5432
+            port: 5432
           }
         }, //see grainstore npm for other options
         renderCache: {
@@ -161,6 +161,12 @@ Windshaft config (e.g. `ERROR: column "the_geom_webmercator" does not exist`),
 try `redis-cli flushall`. Windshaft caches MML files in Redis than can contain SQL
 and may not expire them when you change your Windshaft config, but manually flushing 
 redis should do the trick.
+
+### Uncaught Error: Command failed running tests
+You need [ImageMagick](http://www.imagemagick.org/) to run some tests. In Mac OS X
+there are some issues running with latest versions of ImageMagick. If you use
+[Homebrew](http://brew.sh/) you can try with a
+[modified Formula to install ImageMagick version 6.7.7](https://gist.github.com/rochoa/10017167).
 
 --
 Thanks to the Mapnik and Mapbox team for making such flexible tools
