@@ -13,7 +13,7 @@
     }],
     "repository": {
         "type": "git",
-        "url": "git://github.com:CartoDB/Windshaft.git"
+        "url": "git://github.com/CartoDB/Windshaft.git"
     },
     "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
     "contributors": [
