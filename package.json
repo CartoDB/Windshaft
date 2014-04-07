@@ -6,14 +6,14 @@
     "keywords": [
       "cartodb"
     ],
-    "url": "https://github.com/Vizzuality/Windshaft",
+    "url": "https://github.com/CartoDB/Windshaft",
     "licenses": [{
         "type": "BSD",
-        "url": "https://github.com/Vizzuality/Windshaft/blob/master/LICENSE"
+        "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
     }],
     "repository": {
         "type": "git",
-        "url": "git://github.com/Vizzuality/Windshaft.git"
+        "url": "git://github.com/CartoDB/Windshaft.git"
     },
     "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
     "contributors": [
@@ -32,7 +32,6 @@
         "mapnik": "~0.7.17",
         "semver": "~1.1.0",
         "redis-mpool": "~0.0.2",
-        "lru-cache": "~2.3.0",
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.0.1",
         "underscore.string": "~1.1.6",
