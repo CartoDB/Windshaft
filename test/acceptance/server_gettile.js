@@ -11,7 +11,6 @@ var   assert        = require('../support/assert')
     , mapnik        = require('mapnik')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
-    , semver        = require('semver')
     , http          = require('http');
 
 function rmdir_recursive_sync(dirname) {
@@ -42,23 +41,7 @@ suite('server_gettile', function() {
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
-    var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
-
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
-
-    var default_style;
-    if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
-      // 2.0.0 default
-      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
-    }
-    else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
-      // 2.1.0 default
-      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
-    }
-    else {
-      // 2.2.0+ default
-      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
-    }
 
     suiteSetup(function(done) {
 
