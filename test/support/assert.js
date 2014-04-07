@@ -66,7 +66,7 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
  * @param {Server} server
  * @param {Object} req
  * @param {Object|Function} res
- * @param {String} msg
+ * @param {String|Function} msg
  */
 assert.response = function(server, req, res, msg){
     var port = 5555;
