@@ -44,6 +44,8 @@ suite('server_gettile', function() {
 
     var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
 
+    var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
+
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
       // 2.0.0 default
@@ -107,7 +109,7 @@ suite('server_gettile', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  2, function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
@@ -196,7 +198,7 @@ suite('server_gettile', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  2, function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
@@ -293,8 +295,7 @@ suite('server_gettile', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 done();
             });
@@ -311,8 +312,7 @@ suite('server_gettile', function() {
         },{}, function(res){
             assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'),
                      "Did hit renderer cache on first time");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) { done(err); return; }
                 assert.response(server, {
                     url: '/database/windshaft_test/table/test_table/13/4011/3087.png?cache_buster=5&' + style,
@@ -341,8 +341,7 @@ suite('server_gettile', function() {
         },{}, function(res){
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, similarity) {
                 if (err) throw err;
                 done();
             });
@@ -358,8 +357,7 @@ suite('server_gettile', function() {
         },{}, function(res){
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 done();
             });
@@ -376,8 +374,7 @@ suite('server_gettile', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 done();
             });
@@ -406,7 +403,7 @@ suite('server_gettile', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', 2, function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
 
@@ -420,7 +417,7 @@ suite('server_gettile', function() {
                     status: 200,
                     headers: { 'Content-Type': 'image/png' }
                 }, function(res){
-                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', 2, function(err, similarity) {
+                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                         if (err) throw err;
                         assert.deepEqual(res.headers['content-type'], "image/png");
 
@@ -433,12 +430,12 @@ suite('server_gettile', function() {
                             status: 200,
                             headers: { 'Content-Type': 'image/png' }
                         }, function(res){
-                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', 2, function(err, similarity) {
+                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                                 if (err) throw err;
                                 assert.deepEqual(res.headers['content-type'], "image/png");
                                 done();
                             });
-                        });
+                    });
                     });
                 });
             });
@@ -471,8 +468,7 @@ suite('server_gettile', function() {
         },{}, function(res){
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_default_mapnik_point.png',  2,
-              function(err, similarity) {
+            assert.imageEqualsFile(res.body, './test/fixtures/test_default_mapnik_point.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                 if (err) throw err;
                 done();
             });
@@ -545,8 +541,7 @@ suite('server_gettile', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   err = err ? null : new Error("Tile starts with unexpected style!");
                   next(err);
               });
@@ -583,8 +578,7 @@ suite('server_gettile', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   if (err) { next(err); return; }
                   next(null);
               });
@@ -614,8 +608,7 @@ suite('server_gettile', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -650,8 +643,7 @@ suite('server_gettile', function() {
           },{}, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   if (err) { next(err); return; }
                   next(null);
               });
@@ -668,8 +660,7 @@ suite('server_gettile', function() {
           },{ }, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -685,8 +676,7 @@ suite('server_gettile', function() {
           },{ }, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   if (err) { next(err); return; }
                   next(null);
               });
@@ -718,8 +708,7 @@ suite('server_gettile', function() {
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
               numrequests = res_serv_status.numrequests;
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -745,8 +734,7 @@ suite('server_gettile', function() {
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res_serv_status.numrequests, numrequests+1);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -765,8 +753,7 @@ suite('server_gettile', function() {
               // millstone should not make another request
               assert.equal(res_serv_status.numrequests, numrequests+1);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', 2,
-              function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });

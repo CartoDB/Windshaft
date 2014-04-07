@@ -1,29 +1,39 @@
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
-var fs = require('fs');
-var http = require('http');
-var path = require('path');
-var exec = require('child_process').exec;
+var exec = require('child_process').exec,
+    fs = require('fs'),
+    http = require('http'),
+    path = require('path'),
+    util = require('util');
 
 var assert = module.exports = exports = require('assert');
 
-//
-// @param tol tolerated mean color distance, as a percent. See FUZZY in
-//            http://www.imagemagick.org/script/command-line-options.php#metric
-//
-assert.imageEqualsFile = function(buffer, file_b, tol, callback) {
+/**
+ * Takes an image data as an input and an image path and compare them using ImageMagick fuzz algorithm, if case the
+ * similarity is not within the tolerance limit it will callback with an error.
+ *
+ * @param buffer The image data to compare from
+ * @param {string} referenceImageRelativeFilePath The relative file to compare against
+ * @param {number} tolerance tolerated mean color distance, as a per mil (‰)
+ * @param {function} callback Will call to home with null in case there is no error, otherwise with the error itself
+ * @see FUZZY in http://www.imagemagick.org/script/command-line-options.php#metric
+ */
+assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
     if (!callback) callback = function(err) { if (err) throw err; };
-    file_b = path.resolve(file_b);
-    var file_a = '/tmp/windshaft-test-image-' + (Math.random() * 1e16); // TODO: make predictable 
-    var err = fs.writeFileSync(file_a, buffer, 'binary');
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath),
+        testImageFilePath = '/tmp/windshaft-test-image-' + (Math.random() * 1e16); // TODO: make predictable
+    var err = fs.writeFileSync(testImageFilePath, buffer, 'binary');
     if (err) throw err;
 
-    var fuzz = tol + '%';
-    exec('compare -metric fuzz "' + file_a + '" "' +
-            file_b + '" /dev/null', function(err, stdout, stderr) {
+    var imageMagickCmd = util.format(
+        'compare -metric fuzz "%s" "%s" /dev/null',
+        testImageFilePath, referenceImageFilePath
+    );
+
+    exec(imageMagickCmd, function(err, stdout, stderr) {
         if (err) {
-            fs.unlinkSync(file_a);
+            fs.unlinkSync(testImageFilePath);
             callback(err);
         } else {
             stderr = stderr.trim();
@@ -32,15 +42,18 @@ assert.imageEqualsFile = function(buffer, file_b, tol, callback) {
               callback(new Error("No match for " + stderr));
               return;
             }
-            var similarity = parseFloat(metrics[2]);
-            if ( similarity > (tol/100) ) {
-              var err = new Error('Images not equal(' + similarity + '): ' +
-                      file_a  + '    ' + file_b);
-              err.similarity = similarity;
-              callback(err);
+            var similarity = parseFloat(metrics[2]),
+                tolerancePerMil = (tolerance / 1000);
+            if (similarity > tolerancePerMil) {
+                err = new Error(util.format(
+                    'Images %s and %s are not equal (got %d similarity, expected %d)',
+                    testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil)
+                );
+                err.similarity = similarity;
+                callback(err);
             } else {
-              fs.unlinkSync(file_a);
-              callback(null);
+                fs.unlinkSync(testImageFilePath);
+                callback(null);
             }
         }
     });

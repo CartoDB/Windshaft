@@ -29,6 +29,8 @@ suite('multilayer', function() {
     mapnik.register_system_fonts();
     var available_system_fonts = _.keys(mapnik.fontFiles());
 
+    var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
+
     checkCORSHeaders = function(res) {
       var h = res.headers['access-control-allow-headers'];
       assert.ok(h);
@@ -227,8 +229,7 @@ suite('multilayer', function() {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
               checkCORSHeaders(res);
-              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -301,8 +302,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -412,8 +412,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -521,8 +520,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -635,8 +633,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -884,8 +881,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer2.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -918,8 +914,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer3.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer3.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -1014,8 +1009,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer4.png', 2,
-                function(err, similarity) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer4.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
