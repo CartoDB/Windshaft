@@ -1,0 +1,19 @@
+1. Test (make clean all check), fix if broken before proceeding
+2. Ensure proper version in package.json 
+3. Ensure NEWS section exists for the new version, review it, add release date
+4. Commit package.json, NEWS
+5. git tag -a Major.Minor.Patch # use NEWS section as content
+6. Announce on cartodb@googlegroups.com
+7. Stub NEWS/package for next version
+
+Versions:
+
+Bugfix releases increment Patch component of version.
+Feature releases increment Minor and set Patch to zero.
+If backward compatibility is broken, increment Major and
+set to zero Minor and Patch.
+
+Branches named 'b<Major>.<Minor>' are kept for any critical
+fix that might need to be shipped before next feature release
+is ready.
+
