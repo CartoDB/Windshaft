@@ -35,7 +35,7 @@
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.0.1",
         "pg": "~2.6.2",
-        "torque.js": "~2.2.00",
+        "torque.js": "~2.2.0",
         "node-statsd": "~0.0.7"
     },
     "devDependencies": {
