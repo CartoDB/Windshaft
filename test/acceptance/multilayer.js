@@ -709,8 +709,8 @@ suite('multilayer', function() {
           var parsed = JSON.parse(res.body);
           assert.deepEqual(parsed[0].vals__uint8, [1]);
           assert.deepEqual(parsed[0].dates__uint16, [0]);
-          assert.equal(parsed[0].x__uint8, 128);
-          assert.equal(parsed[0].y__uint8, 128);
+          assert.equal(parsed[0].x__uint8, 127);
+          assert.equal(parsed[0].y__uint8, 127);
           return null;
         },
         function do_get_torque1(err)
