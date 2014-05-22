@@ -254,14 +254,14 @@ suite('server_gettile', function() {
     });
 
 
-    test("get'ing a tile from a query with no geometry field returns 404 status",  function(done){
+    test("get'ing a tile from a query with no geometry field returns 400 status",  function(done){
         var sql = querystring.stringify({sql: "SELECT 1"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
             method: 'GET',
             encoding: 'binary'
         },{}, function(res) {
-            assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
             var body_parsed = JSON.parse(res.body);
             assert.ok(/column.*does not exist/.test(body_parsed.error), "Unexpected error: " + body_parsed.error);
             done();
