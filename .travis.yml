@@ -3,7 +3,7 @@ before_script:
   - sudo mv /etc/apt/sources.list.d/pgdg-source.list* /tmp
   - sudo apt-get -qq purge postgis* postgresql*
   - sudo rm -Rf /var/lib/postgresql /etc/postgresql
-  - sudo apt-add-repository --yes ppa:mapnik/v2.2.0
+  - sudo apt-add-repository --yes ppa:mapnik/v2.1.0
   - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.3
   - sudo apt-add-repository --yes ppa:cartodb/gis
   - sudo apt-get update
