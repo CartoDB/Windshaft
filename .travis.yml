@@ -6,6 +6,7 @@ before_install:
   - sudo rm -Rf /var/lib/postgresql /etc/postgresql
   - sudo apt-add-repository --yes ppa:mapnik/v2.2.0
   - sudo apt-get update
+  - sudo apt-get install -q postgresql-9.3-postgis-2.1
   - sudo apt-get install -q postgresql-contrib-9.3
   - sudo apt-get install -q libmapnik-dev
   - sudo apt-get install -q gdal-bin
