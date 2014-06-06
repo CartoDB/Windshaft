@@ -2,12 +2,12 @@ addons:
   postgresql: "9.3"
 
 before_script:
-  - psql -U postgres -c 'create database template_postgis'
-  - psql -U postgres -c 'create extension postgis' template_postgis
   - sudo apt-add-repository --yes ppa:mapnik/v2.2.0
   - sudo apt-get update
   - sudo apt-get install -q libmapnik-dev
   - sudo apt-get install -q gdal-bin
+  - psql -U postgres -c 'create database template_postgis'
+  - psql -U postgres -c 'create extension postgis' template_postgis
   # Tell npm to use known registrars:
   # see http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
   - npm config set ca ""
