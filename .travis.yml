@@ -2,8 +2,8 @@ addons:
   postgresql: "9.3"
 
 before_script:
-  - psql -U postgres -c 'create extension postgis'
   - psql -U postgres -c 'create database template_postgis'
+  - psql -U postgres -c 'create extension postgis' template_postgis
   - sudo apt-add-repository --yes ppa:mapnik/v2.2.0
   - sudo apt-get update
   - sudo apt-get install -q libmapnik-dev
