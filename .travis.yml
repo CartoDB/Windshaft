@@ -15,6 +15,7 @@ before_install:
 
 before_script:
   - psql -U postgres -c 'create database template_postgis'
+  - psql -U postgres -c 'create extension postgis'
   - psql -U postgres -c 'create extension postgis' -d template_postgis
   # Tell npm to use known registrars:
   # see http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
