@@ -209,7 +209,14 @@ suite('render_cache', function() {
     test('clears both auth and non-auth renderer caches on reset', function(done){
         var render_cache = new RenderCache(10000, mml_store);
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {
+            user: 'postgres',
+            dbname: "windshaft_test",
+            table: 'test_table',
+            x: 4, y:4, z:4,
+            geom_type:'polygon',
+            format:'png'
+        }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             // This is an attempt at finding a value for "dbuser" which 

@@ -62,7 +62,7 @@ suite('attributes', function() {
 
     });
 
-    test("can only be fetched from layer having an attributes spec",
+    test.skip("can only be fetched from layer having an attributes spec",
     function(done) {
 
       var expected_token; 
