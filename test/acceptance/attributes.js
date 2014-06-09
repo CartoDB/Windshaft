@@ -21,6 +21,7 @@ suite('attributes', function() {
     //
     ////////////////////////////////////////////////////////////////////
     var req2params = ServerOptions.req2params;
+    ServerOptions = _.clone(ServerOptions);
     ServerOptions.req2params = function (req, callback) {
         req.params.dbuser = 'postgres';
         req2params(req, callback);
