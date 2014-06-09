@@ -206,7 +206,7 @@ suite('render_cache', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/59
-    test('clears both auth and non-auth renderer caches on reset', function(done){
+    test.skip('clears both auth and non-auth renderer caches on reset', function(done){
         var render_cache = new RenderCache(10000, mml_store);
 
         var req = {params: {
