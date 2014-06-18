@@ -36,6 +36,7 @@ dropdb windshaft_test | 2>&1
 createdb -EUTF8 windshaft_test || die "Could not create test database"
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
+dropdb windshaft_test2 | 2>&1
 createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test database 2"
 
 echo "...Populating windshaft_test database with test data"
