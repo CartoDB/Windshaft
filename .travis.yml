@@ -22,7 +22,7 @@ before_script:
   - npm config set ca ""
 
 env:
-  - NPROCS=1 JOBS=1
+  - NPROCS=1 JOBS=1 PGUSER=postgres
 
 language: node_js
 node_js:
