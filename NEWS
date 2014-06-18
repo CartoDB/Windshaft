@@ -17,7 +17,7 @@ Version 0.21.0
 
  Bug fixes:
 
- - Do not omit points close to the tile boundary from torque tiles
+ - Do not omit points close to the tile boundary from torque tiles (#186)
  - Use correct torque.js dependency
 
 Version 0.20.0
