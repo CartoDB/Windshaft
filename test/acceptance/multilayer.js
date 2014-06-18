@@ -1551,7 +1551,7 @@ suite('multilayer', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/template_postgis/layergroup',
+              url: '/database/windshaft_test2/layergroup',
               method: 'POST',
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
