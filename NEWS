@@ -3,7 +3,8 @@ Version 0.22.0
 
  Enhancements:
 
- - Cache buster does not invalidate renderer if it is numeric and smaller than cached buster.
+ - Cache buster does not invalidate renderer if it is numeric and smaller
+   than cached buster (#177)
 
 Version 0.21.0
 2014-05-07
