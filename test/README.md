@@ -31,8 +31,9 @@ accessible as specified in the environment configuration.
 Create a spatial database called "windshaft_test" and load the script
 fixtures/windshaft.test.sql to initialize it. 
 The script ```./prepare_test``` attempts to do all of it for you.
-Note that the spatial DB must be loaded with a version of PostGIS
-providing 'AsBinary' and friends (including legacy.sql for PostGIS-2.0).
+Note that if running mapnik < 2.0.2, the spatial DB must be loaded with
+a version of PostGIS providing 'AsBinary' and friends (including legacy.sql
+for PostGIS-2.0).
 
 Flushing your redis database may be needed if you are developing or after
 changes to the environment configuration: ```redis-cli -p 6333 flushall```.
