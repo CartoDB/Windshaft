@@ -3,6 +3,9 @@ Version 0.22.0
 
  Enhancements:
 
+ - dbhost and dbport are no longer hashed in on the MapConfig identifier hash,
+   so dbhost and dbport can be dynamically altered at runtime keeping the same
+   URL schema.
  - Cache buster does not invalidate renderer if it is numeric and smaller
    than cached buster (#177)
 
