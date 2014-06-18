@@ -30,8 +30,7 @@ accessible as specified in the environment configuration.
 
 Create a spatial database called "windshaft_test" and load the script
 fixtures/windshaft.test.sql to initialize it. 
-The script ```./prepare_test``` attempts to do all of it for you,
-but needs the existance of a 'template_postgis' database.
+The script ```./prepare_test``` attempts to do all of it for you.
 Note that the spatial DB must be loaded with a version of PostGIS
 providing 'AsBinary' and friends (including legacy.sql for PostGIS-2.0).
 
