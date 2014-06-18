@@ -36,12 +36,12 @@ die() {
 echo "...Configuring Windshaft test database"
 
 echo "...Recreating windshaft_test database"
-dropdb -U postgres windshaft_test | 2>&1
-createdb -U postgres -Ttemplate_postgis -EUTF8 windshaft_test || die "Could not create test database"
-psql -U postgres -c 'create extension postgis' windshaft_test
+dropdb windshaft_test | 2>&1
+createdb -Ttemplate_postgis -EUTF8 windshaft_test || die "Could not create test database"
+psql -c 'create extension postgis' windshaft_test
 
 echo "...Populating windshaft_test database with test data"
-psql -U postgres --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/windshaft.test.sql ||
+psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/windshaft.test.sql ||
   die "Cound not populate test database" 
 
 echo "...Test database configuration complete"
