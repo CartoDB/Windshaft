@@ -20,12 +20,7 @@ suite('attributes', function() {
     // SETUP
     //
     ////////////////////////////////////////////////////////////////////
-    var req2params = ServerOptions.req2params;
-    ServerOptions = _.clone(ServerOptions);
-    ServerOptions.req2params = function (req, callback) {
-        req.params.dbuser = 'postgres';
-        req2params(req, callback);
-    };
+
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);

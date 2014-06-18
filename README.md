@@ -151,6 +151,11 @@ It is also possible for tests to recurse into some of
 the submodules, that's done with ```make check-submodules```
 (or ```make check-full``` to run both)
 
+You'll need to be sure your PGUSER (or your libpq default) is
+set to a "superuser" PostgreSQL account, for example:
+
+ PGUSER=postgres make check
+
 Troubleshooting
 ---------------
 
