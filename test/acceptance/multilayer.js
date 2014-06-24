@@ -1586,6 +1586,79 @@ suite('multilayer', function() {
       );
     });
 
+    // See http://github.com/CartoDB/Windshaft/issues/191
+    test("mapnik layer with custom geom_column",
+    function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: 'select 1 as i, ST_SetSRID(ST_MakePoint(0,0),4326) as g',
+               cartocss: '#layer { marker-fill:red; marker-width:100; }',
+               cartocss_version: '2.0.1',
+               geom_column: 'g'
+             } }
+        ]
+      };
+      var token1;
+      Step(
+        function do_post_1()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err,res); });
+        },
+        function check_post_1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          token1 = parsedBody.layergroupid;
+          return null;
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup/' + token1 + '/0/0/0.png',
+              method: 'GET',
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              checkCORSHeaders(res);
+              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+                  next(err);
+              });
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push('' + err);
+          redis_client.keys('map_cfg|*', function(err, matches) {
+              if ( err ) errors.push(err.message);
+              try {
+                assert.equal(matches.length, 1);
+                assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
+                          "Missing expected token " + token1 + " from redis");
+              } catch (e) {
+                errors.push('' + e);
+              }
+              var cb = function(err, deleted) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              };
+              redis_client.del(matches, cb);
+          });
+        }
+      );
+    });
+
 
 
     // TODO: check lifetime of layergroup!
