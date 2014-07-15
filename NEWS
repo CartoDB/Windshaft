@@ -1,3 +1,7 @@
+ New features:
+
+ - Add support for raster layers (#190)
+
  Bug fixes:
 
  - Support specifying column name in MapConfig (#191)

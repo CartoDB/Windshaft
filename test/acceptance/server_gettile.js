@@ -11,6 +11,7 @@ var   assert        = require('../support/assert')
     , mapnik        = require('mapnik')
     , Windshaft     = require('../../lib/windshaft')
     , ServerOptions = require('../support/server_options')
+    , semver        = require('semver')
     , http          = require('http');
 
 function rmdir_recursive_sync(dirname) {
@@ -459,7 +460,7 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/100
-    test("unused directives are not tolerated if strict",  function(done){
+    var test_strictness = function(done){
         var style = querystring.stringify({
           style: "#test_table{point-transform: 'scale(100)';}",
           sql: "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom"
@@ -472,7 +473,17 @@ suite('server_gettile', function() {
             assert.equal(res.statusCode, 400);
             done();
         });
-    });
+    };
+    var test_strict_lbl = "unused directives are not tolerated if strict";
+    if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
+      // Strictness handling changed in 2.3.x, possibly a bug:
+      // see http://github.com/mapnik/mapnik/issues/2301
+      console.warn("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
+      test.skip(test_strict_lbl,  test_strictness);
+    }
+    else {
+      test(test_strict_lbl,  test_strictness);
+    }
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
