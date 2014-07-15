@@ -34,7 +34,7 @@ suite('raster', function() {
       assert.equal(h, '*');
     };
 
-    var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
+    var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
     suiteSetup(function(done) {
 
@@ -50,7 +50,7 @@ suite('raster', function() {
     test("can render raster for valid mapconfig", function(done) {
 
       var mapconfig =  {
-        version: '1.1.0',
+        version: '1.2.0',
         layers: [
            { type: 'mapnik', options: {
                sql: "select ST_AsRaster(" +
