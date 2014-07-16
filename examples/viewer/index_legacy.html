@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Windshaft test</title>
+    <meta charset="utf-8" />
+    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="leaflet.js"></script>
+    <script src="wax.leaf.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            var map = new L.Map('map');
+            var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}";
+
+            var layers = [];
+            var tilejson = {
+                tilejson: '1.0.0',
+                scheme: 'xyz',
+                tiles: [],
+                grids: [],
+                formatter: function(options, data) { return data.id }
+            };
+
+
+            $('#update_map').click(function(ev){
+                ev.preventDefault();
+
+                var dbname = $('#dbname').val();
+                var table = $('#table').val();
+
+                var url = _.template(baseURL, {dbname: dbname, table: table});
+
+                tilejson.tiles = [url + '.png'];
+                tilejson.grids = [url + '.grid.json'];
+
+                _.each(layers, function(layer){
+                    map.removeLayer(layer)
+                });
+
+                var testMap = new wax.leaf.connector(tilejson);
+                map.addLayer(testMap);
+                map.setView(new L.LatLng(51.505, -0.09), 1, true);
+                wax.leaf.interaction(map, tilejson);
+                layers.push(testMap);
+            });
+        });
+    </script>
+
+    <link rel="stylesheet" href="leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
+</head>
+<body>
+<input type="text" value="windshaft_test" id="dbname">
+<input type="text" value="test_table" id="table">
+<input type="button" id="update_map" value="Go">
+<span style="color:white;background:#ff9999;padding:2px 5px;font-family: sans-serif;font-size: 12px;">to use the default settings, ensure you have run ./tests/prepare_test, started windshaft with `node readme_server.js`. Finally, click "Go"</span>
+<div id="map" style="width: 1500px; height: 900px"></div>
+</body>
+</html>

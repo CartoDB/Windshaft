@@ -8,6 +8,7 @@ var _         = require('underscore');
 var config = {
     base_url: '/database/:dbname/table/:table',
     base_url_notable: '/database/:dbname',
+    base_url_mapconfig: '/database/:dbname/layergroup',
     grainstore: {
                  datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
     }, //see grainstore npm for other options
@@ -31,4 +32,4 @@ var config = {
 var ws = new Windshaft.Server(config);
 ws.listen(4000);
 
-console.log("map tiles are now being served out of: http://localhost:4000" + config.base_url + '/:z/:x/:y');
+console.log("map tiles are now being served out of: http://localhost:4000" + config.base_url_mapconfig);

@@ -11,7 +11,27 @@
     <script>
         $(document).ready(function(){
             var map = new L.Map('map');
-            var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}";
+            var baseURL_def = "http://localhost:4000/database/template_postgis/layergroup";
+            var mapConfig_def = JSON.stringify({
+              version:"1.2.0",
+              layers:[
+                { type:"mapnik",
+                  options:{
+                    sql: "select ST_AsRaster(ST_Buffer('SRID=3857;LINESTRING(-1e7 -1e7, 1e7 1e7)'::geometry, 1e6, 4), 1e5, -1e5, '8BUI', 64) g",
+                    geom_column: "g",
+                    geom_type: "raster",
+                    cartocss: "#style{ raster-opacity: 1;}",
+                    cartocss_version: "2.0.0"
+                  }},
+                { type:"mapnik",
+                  options:{
+                    sql: "select ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
+                    geom_column: "g",
+                    cartocss: "#s { polygon-fill: blue; line-color: red; }",
+                    cartocss_version: "2.0.0"
+                  }}
+              ]
+            });
 
             var layers = [];
             var tilejson = {
@@ -22,39 +42,77 @@
                 formatter: function(options, data) { return data.id }
             };
 
+            setMap = function(token) {
+              var baseURL = $('#baseurl').val();
+              var url = baseURL + '/' + token + '/{z}/{x}/{y}';
 
-            $('#update_map').click(function(ev){
+              tilejson.tiles = [url + '.png'];
+              tilejson.grids = [url + '.grid.json'];
+
+              _.each(layers, function(layer){
+                  map.removeLayer(layer)
+              });
+
+              var testMap = new wax.leaf.connector(tilejson);
+              map.addLayer(testMap);
+              map.setView(new L.LatLng(0, 0), 1, true);
+              wax.leaf.interaction(map, tilejson);
+              layers.push(testMap);
+            };
+
+            submitForm = function(ev){
                 ev.preventDefault();
 
-                var dbname = $('#dbname').val();
-                var table = $('#table').val();
+                var baseUrl = $('#baseurl').val();
+                var mapConfig = $('#mapconfig').val();
 
-                var url = _.template(baseURL, {dbname: dbname, table: table});
-
-                tilejson.tiles = [url + '.png'];
-                tilejson.grids = [url + '.grid.json'];
-
-                _.each(layers, function(layer){
-                    map.removeLayer(layer)
+                $.ajax({
+                  url: baseUrl,
+                  type: 'POST',
+                  contentType: 'application/json',
+                  error: function(xhr, textStatus, errorThrown) {
+                    alert("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
+                  },
+                  success: function(data, textStatus, xhr) {
+                    console.log("Success: " + textStatus + " / " + JSON.stringify(data));
+                    var token = data.layergroupid;
+                    setMap(token);
+                  },
+                  data: mapConfig
                 });
 
-                var testMap = new wax.leaf.connector(tilejson);
-                map.addLayer(testMap);
-                map.setView(new L.LatLng(51.505, -0.09), 1, true);
-                wax.leaf.interaction(map, tilejson);
-                layers.push(testMap);
-            });
+            };
+
+            resetForm = function() {
+              $('#baseurl').val(baseURL_def);
+              $('#mapconfig').val(mapConfig_def);
+            };
+
+            $('#update_map').click(submitForm);
+
+            $('#reset').click(resetForm);
+
+            resetForm();
         });
     </script>
 
     <link rel="stylesheet" href="leaflet.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="../dist/leaflet.ie.css" /><![endif]-->
 </head>
 <body>
-<input type="text" value="windshaft_test" id="dbname">
-<input type="text" value="test_table" id="table">
+<p>
+<input type="button" id="reset" value="reset">
+to values meant for use against server started with: <code>node ../readme_server.js</code>
+</p>
+
+<p>
+Base URL: <input type="text" size="50" id="baseurl">
 <input type="button" id="update_map" value="Go">
-<span style="color:white;background:#ff9999;padding:2px 5px;font-family: sans-serif;font-size: 12px;">to use the default settings, ensure you have run ./tests/prepare_test, started windshaft with `node readme_server.js`. Finally, click "Go"</span>
-<div id="map" style="width: 1500px; height: 900px"></div>
+<br />
+MapConfig (see <a href="https://github.com/strk/Windshaft/blob/pgraster/doc/MapConfig-1.2.0.md">docs</a>):
+<br/>
+<textarea id="mapconfig" cols="100" rows="5"></textarea>
+</p>
+
+<div id="map" style="width: 800px; height: 600px"></div>
 </body>
 </html>
