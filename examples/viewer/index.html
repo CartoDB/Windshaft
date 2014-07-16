@@ -64,7 +64,7 @@
                 ev.preventDefault();
 
                 var baseUrl = $('#baseurl').val();
-                var mapConfig = $('#mapconfig').val();
+                var mapConfig = $('#mapconfig').val().replace(/[\r\n]/gm,"");
 
                 $.ajax({
                   url: baseUrl,
