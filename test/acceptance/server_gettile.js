@@ -84,21 +84,30 @@ suite('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a tile with default style should return an expected tile",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
-                done();
-            });
-        });
+    test("get'ing a tile with default style should return an expected tile", 
+    function(done){
+      Step (
+        function makeGet() {
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png32',
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res) { next(null,res); });
+        },
+        function checkResponse(err, res) {
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          assert.equal(res.headers['content-type'], "image/png");
+          assert.imageEqualsFile(res.body,
+            './test/fixtures/test_table_13_4011_3088.png',
+            IMAGE_EQUALS_TOLERANCE_PER_MIL, this);
+        },
+        function finish(err) {
+          assert.response(server, {
+              url: '/database/windshaft_test/table/test_table/style',
+              method: 'DELETE' },{}, function(res) { done(err); });
+        }
+      );
     });
 
     test("response of get tile can be served by renderer cache",  function(done){
@@ -114,7 +123,7 @@ suite('server_gettile', function() {
         },
         function check1(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 200);
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var xwc = res.headers['x-windshaft-cache'];
           assert.ok(!xwc);
           return null;
