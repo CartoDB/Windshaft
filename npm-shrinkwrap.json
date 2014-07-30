@@ -10,7 +10,7 @@
     },
     "grainstore": {
       "version": "0.18.2",
-      "from": "git://github.com/CartoDB/grainstore.git#0.18.2"
+      "from": "git://github.com/CartoDB/grainstore.git#0.18.2",
       "dependencies": {
         "redis-mpool": {
           "version": "0.0.4",
