@@ -1,6 +1,6 @@
 {
   "name": "windshaft",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "dependencies": {
     "underscore": {
       "version": "1.3.3"
@@ -9,7 +9,8 @@
       "version": "0.0.5"
     },
     "grainstore": {
-      "version": "0.18.1",
+      "version": "0.18.2",
+      "from": "git://github.com/CartoDB/grainstore.git#0.18.2"
       "dependencies": {
         "redis-mpool": {
           "version": "0.0.4",

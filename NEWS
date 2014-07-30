@@ -1,5 +1,5 @@
 Version 0.22.0
-2014-MM-DD
+2014-07-30
 
  Enhancements:
 
@@ -8,6 +8,16 @@ Version 0.22.0
    URL schema.
  - Cache buster does not invalidate renderer if it is numeric and smaller
    than cached buster (#177)
+ - Literal expression for some regular expressions
+ - Profiler header sent as JSON string
+
+ Bug fixes:
+
+ - Returns 400 errors for bad filters and missing columns in queries
+
+ Other changes:
+
+ - Metrics documentation
 
 Version 0.21.0
 2014-05-07
