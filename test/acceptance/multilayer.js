@@ -575,7 +575,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 3 mixed layers, mapnik torque and attributes",
+    test.skip("layergroup with 3 mixed layers, mapnik torque and attributes",
     function(done) {
 
       var layergroup =  {
@@ -1047,7 +1047,7 @@ suite('multilayer', function() {
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
-          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           // See http://github.com/CartoDB/Windshaft/issues/159
           assert.equal(server.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
@@ -1093,7 +1093,7 @@ suite('multilayer', function() {
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
-          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           // See http://github.com/CartoDB/Windshaft/issues/159
           assert.equal(server.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
@@ -1176,6 +1176,40 @@ suite('multilayer', function() {
           done();
         } catch (err) { done(err); }
       });
+    });
+
+    test("post'ing style with non existent column in filter returns 400 with error", function(done) {
+        var layergroup =  {
+            version: '1.0.1',
+            layers: [
+                { options: {
+                    sql: 'select * from test_table limit 1',
+                    cartocss: '#test_table::outline[address="one"], [address="two"] { marker-fill: red; }',
+                    cartocss_version: '2.0.2',
+                    interactivity: [ 'cartodb_id' ]
+                } },
+                { options: {
+                    sql: 'select * from test_big_poly limit 1',
+                    cartocss: '#test_big_poly { marker-fill:blue }',
+                    cartocss_version: '2.0.2',
+                    interactivity: [ 'cartodb_id' ]
+                } }
+            ]
+        };
+
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            data: JSON.stringify(layergroup)
+        }, {}, function(res) {
+            assert.equal(res.statusCode, 400, res.body);
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.errors.length, 1);
+            var error = parsed.errors[0];
+            assert.ok(error.match(/column "address" does not exist/m), error);
+            done();
+        });
     });
 
     test("quotes in CartoCSS", function(done) {
@@ -1517,7 +1551,7 @@ suite('multilayer', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/template_postgis/layergroup',
+              url: '/database/windshaft_test2/layergroup',
               method: 'POST',
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)

@@ -4,10 +4,10 @@
 -- To use:
 -- 
 -- > dropdb windshaft_test
--- > createdb -Ttemplate_postgis -EUTF8 windshaft_test
+-- > createdb -EUTF8 windshaft_test
+-- > psql -c 'create extension postgis' windshaft_test
 -- > psql windshaft_test < windshaft.test.sql
 --
--- NOTE: requires a postgis template called template_postgis
 --
 
 --SET statement_timeout = 0;

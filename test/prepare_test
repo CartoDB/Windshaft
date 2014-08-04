@@ -3,10 +3,6 @@
 # This is where postgresql connection parameters are read from
 TESTENV=../config/environments/test
 
-# NOTE: assumes existance of a "template_postgis" loaded with
-#       compatible version of postgis (legacy.sql included)
-
-
 # Extract postgres configuration
 
 pgUSER=`node -e "console.log(require('${TESTENV}').postgres.user || '')"`
@@ -37,7 +33,11 @@ echo "...Configuring Windshaft test database"
 
 echo "...Recreating windshaft_test database"
 dropdb windshaft_test | 2>&1
-createdb -Ttemplate_postgis -EUTF8 windshaft_test || die "Could not create test database" 
+createdb -EUTF8 windshaft_test || die "Could not create test database"
+psql -c 'create extension postgis' windshaft_test ||
+  die "Could not install postgis in test database"
+dropdb windshaft_test2 | 2>&1
+createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test database 2"
 
 echo "...Populating windshaft_test database with test data"
 psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/windshaft.test.sql ||
