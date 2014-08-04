@@ -11,7 +11,7 @@
     "chronograph": {
       "version": "0.1.0",
       "from": "git://github.com/CartoDB/chronographjs.git#0.1.0"
-    }
+    },
     "grainstore": {
       "version": "0.18.2",
       "from": "git://github.com/CartoDB/grainstore.git#0.18.2",
