@@ -1,15 +1,25 @@
 before_install:
+  - sudo mv /etc/apt/sources.list.d/pgdg-source.list* /tmp
+  - sudo apt-get -qq purge postgis* postgresql*
+  - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.3
+  - sudo apt-add-repository --yes ppa:cartodb/gis
+  - sudo rm -Rf /var/lib/postgresql /etc/postgresql
   - sudo apt-add-repository --yes ppa:mapnik/v2.1.0
-  - sudo apt-get update -q
-  - sudo apt-get install -q libmapnik-dev 
-  - createdb template_postgis
-  - psql -c "CREATE EXTENSION postgis" template_postgis
+  - sudo apt-get update
+  - sudo apt-get install -q postgresql-9.3-postgis-2.1
+  - sudo apt-get install -q postgresql-contrib-9.3
+  - sudo apt-get install -q libmapnik-dev
+  - sudo apt-get install -q gdal-bin
+  - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.3/main/pg_hba.conf
+  - sudo service postgresql restart
+
+before_script:
   # Tell npm to use known registrars:
   # see http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
   - npm config set ca ""
 
 env:
-  - NPROCS=1 JOBS=1
+  - NPROCS=1 JOBS=1 PGUSER=postgres
 
 language: node_js
 node_js:

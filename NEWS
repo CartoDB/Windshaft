@@ -1,5 +1,23 @@
 Version 0.22.0
-2014-MM-DD
+2014-07-30
+
+ Enhancements:
+
+ - dbhost and dbport are no longer hashed in on the MapConfig identifier hash,
+   so dbhost and dbport can be dynamically altered at runtime keeping the same
+   URL schema.
+ - Cache buster does not invalidate renderer if it is numeric and smaller
+   than cached buster (#177)
+ - Literal expression for some regular expressions
+ - Profiler header sent as JSON string
+
+ Bug fixes:
+
+ - Returns 400 errors for bad filters and missing columns in queries
+
+ Other changes:
+
+ - Metrics documentation
 
 Version 0.21.0
 2014-05-07
@@ -12,7 +30,7 @@ Version 0.21.0
 
  Bug fixes:
 
- - Do not omit points close to the tile boundary from torque tiles
+ - Do not omit points close to the tile boundary from torque tiles (#186)
  - Use correct torque.js dependency
 
 Version 0.20.0

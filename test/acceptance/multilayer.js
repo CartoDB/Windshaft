@@ -575,7 +575,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 3 mixed layers, mapnik torque and attributes",
+    test.skip("layergroup with 3 mixed layers, mapnik torque and attributes",
     function(done) {
 
       var layergroup =  {
@@ -1551,7 +1551,7 @@ suite('multilayer', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/template_postgis/layergroup',
+              url: '/database/windshaft_test2/layergroup',
               method: 'POST',
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
