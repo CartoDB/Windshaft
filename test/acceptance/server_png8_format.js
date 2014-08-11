@@ -118,7 +118,6 @@ suite('server_png8_format', function() {
             'marker-placement: point;',
             'marker-allow-overlap: true;',
             'marker-clip: false;',
-            'marker-multi-policy: largest;',
         '}'
     ].join(' ');
 
