@@ -35,8 +35,8 @@ assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
     var imageFilePathA = createImageFromBuffer(bufferA, randStr + '-a'),
         imageFilePathB = createImageFromBuffer(bufferB, randStr + '-b');
 
-    imageFilesAreEqual(imageFilePathA, imageFilePathB, tolerance, function(err) {
-        callback(err, [imageFilePathA, imageFilePathB]);
+    imageFilesAreEqual(imageFilePathA, imageFilePathB, tolerance, function(err, similarity) {
+        callback(err, [imageFilePathA, imageFilePathB], similarity);
     });
 };
 
@@ -73,10 +73,10 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
                     testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil, resultFilePath)
                 );
                 err.similarity = similarity;
-                callback(err);
+                callback(err, similarity);
             } else {
                 fs.unlinkSync(resultFilePath);
-                callback(null);
+                callback(null, similarity);
             }
         }
     });

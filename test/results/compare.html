@@ -89,12 +89,13 @@
             var result = results[i];
             var template = [
                 '<div class="covered"',
+                        'title="' + result.similarity + '"',
                         'data-passive="' + result.passive + '"',
                         'data-active="' + result.active + '">',
                     '<div class="handle"></div>',
                     '<div class="changeable"></div>',
                 '</div>'
-            ].join('');
+            ].join(' ');
             $results.append($(template))
         }
     }

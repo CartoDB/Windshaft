@@ -81,8 +81,8 @@ suite('server_png8_format', function() {
                     assert.equal(responsePng8.headers['content-type'], "image/png");
                     bufferPng8 = responsePng8.body;
                     assert.ok(bufferPng8.length < bufferPng32.length);
-                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, imagePaths) {
-                        callback(err, imagePaths, done);
+                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, imagePaths, similarity) {
+                        callback(err, imagePaths, similarity, done);
                     });
                 });
             });
@@ -122,20 +122,23 @@ suite('server_png8_format', function() {
         '}'
     ].join(' ');
 
-    var allImagePaths = [];
+    var allImagePaths = [],
+        similarities = [];
     allLevelTiles.forEach(function(tile) {
         testOutputForPng32AndPng8('intensity visualization', tile, {
             q: 'SELECT * FROM populated_places_simple_reduced',
             style: intensityStyle
-        }, function(err, imagePaths, done) {
+        }, function(err, imagePaths, similarity, done) {
             allImagePaths.push(imagePaths);
+            similarities.push(similarity);
             var transformPaths = [];
-            allImagePaths.forEach(function(imagePath) {
+            for (var i = 0, len = allImagePaths.length; i < len; i++) {
                 transformPaths.push({
-                    passive: imagePath[0],
-                    active: imagePath[1]
+                    passive: allImagePaths[i][0],
+                    active: allImagePaths[i][1],
+                    similarity: similarities[i]
                 })
-            });
+            }
             var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
             fs.writeFileSync('test/results/png/results.js', output);
             if (err) throw err;
