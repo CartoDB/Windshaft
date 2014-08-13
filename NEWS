@@ -1,6 +1,13 @@
 Version 0.24.0
 2014-mm-dd
 
+ Enhancements:
+ - Upgrades dependencies:
+    - underscore
+    - grainstore
+    - redis-mpool
+    - pg
+
 
 Version 0.23.0
 2014-08-07
