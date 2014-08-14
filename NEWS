@@ -1,5 +1,8 @@
-Version 0.24.2
+Version 0.25.0
 2014-mm-dd
+
+New features:
+ - Deprecates psql and starts using cartodb-psql module
 
 
 Version 0.24.1

@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.24.2",
+    "version": "0.25.0",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "keywords": [
@@ -33,7 +33,7 @@
         "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
-        "pg": "git://github.com/CartoDB/node-postgres.git#2.6.2-cdb1",
+        "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
         "torque.js": "~2.2.0",
         "node-statsd": "~0.0.7"
     },
