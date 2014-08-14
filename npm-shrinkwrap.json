@@ -1,6 +1,6 @@
 {
   "name": "windshaft",
-  "version": "0.24.1",
+  "version": "0.24.2",
   "dependencies": {
     "underscore": {
       "version": "1.6.0"
