@@ -74,13 +74,14 @@ suite('boundary points', function() {
             z: 0,
             x: 0,
             y: 0,
-            expects: {
-                x__uint8: [128],
-                y__uint8: [128],
-                vals__uint8: [
-                    {v: 8, d: 'all records in this pixel'}
-                ]
-            }
+            expects: [
+                {
+                    x__uint8: 128,
+                    y__uint8: 128,
+                    vals__uint8: [{v: 8, d: 'all records in this pixel'}],
+                    dates__uint16: [0]
+                }
+            ]
         },
         {
             desc: '1/0/0',
@@ -92,13 +93,14 @@ suite('boundary points', function() {
             z: 1,
             x: 0,
             y: 0,
-            expects: {
-                x__uint8: [255],
-                y__uint8: [1],
-                vals__uint8: [
-                    {v: 1, d: '-r1,r1'}
-                ]
-            }
+            expects: [
+                {
+                    x__uint8: 255,
+                    y__uint8: 1,
+                    vals__uint8: [{v: 1, d: '-r1,r1'}],
+                    dates__uint16: [0]
+                }
+            ]
         },
         {
             desc: '1/1/0',
@@ -110,14 +112,20 @@ suite('boundary points', function() {
             z: 1,
             x: 1,
             y: 0,
-            expects: {
-                x__uint8: [0, 0],
-                y__uint8: [0, 1],
-                vals__uint8: [
-                    {v: 5, d: 'Records around the origin are in this pixel'},
-                    {v: 1, d: '-r1/2,r1 is here'}
-                ]
-            }
+            expects: [
+                {
+                    x__uint8: 0,
+                    y__uint8: 0,
+                    vals__uint8: [{v: 5, d: 'Records around the origin are in this pixel'}],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 0,
+                    y__uint8: 1,
+                    vals__uint8: [{v: 1, d: '-r1/2,r1 is here'}],
+                    dates__uint16: [0]
+                }
+            ]
         },
         {
             desc: '1/0/1',
@@ -129,13 +137,14 @@ suite('boundary points', function() {
             z: 1,
             x: 0,
             y: 1,
-            expects: {
-                x__uint8: [255],
-                y__uint8: [255],
-                vals__uint8: [
-                    {v: 1, d: '-r1,-r1 is here'}
-                ]
-            }
+            expects: [
+                {
+                    x__uint8: 255,
+                    y__uint8: 255,
+                    vals__uint8: [{v: 1, d: '-r1,-r1 is here'}],
+                    dates__uint16: [0]
+                }
+            ]
         },
         {
             desc: '1/1/1',
@@ -147,22 +156,9 @@ suite('boundary points', function() {
             z: 1,
             x: 1,
             y: 1,
-            expects: {
-                x__uint8: [],
-                y__uint8: [],
-                vals__uint8: []
-            }
+            expects: []
         }
     ];
-
-    function diffRepr(parsed, expected) {
-        console.log('\n');
-        console.log('parsed', parsed);
-        console.log('\n');
-        console.log('expected', expected);
-        console.log('\n');
-        return '';
-    }
 
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
@@ -192,27 +188,40 @@ suite('boundary points', function() {
                     assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
                     var parsed = JSON.parse(res.body);
 
-                    assert.equal(
-                        parsed.length,
-                        tileRequest.expects.x__uint8.length,
-                        'Number of points did not match ' +
-                            'got=' + parsed.length + '; ' +
-                            'expected=' + tileRequest.expects.x__uint8.length +
-                            '\n' + diffRepr(parsed, tileRequest.expects));
-
                     var i = 0;
-                    parsed.forEach(function (pix) {
-                        assert.equal(pix.x__uint8, tileRequest.expects.x__uint8[i]);
-                        assert.equal(pix.y__uint8, tileRequest.expects.y__uint8[i]);
+                    tileRequest.expects.forEach(function(expected) {
+                        assert.equal(parsed[i].x__uint8, expected.x__uint8);
+                        assert.equal(parsed[i].y__uint8, expected.y__uint8);
 
-                        assert.equal(pix.vals__uint8.length, tileRequest.expects.vals__uint8.length);
                         var j = 0;
-                        tileRequest.expects.vals__uint8.forEach(function (val) {
-                            assert.equal(pix.vals__uint8[j++], val.v, val.d);
+                        expected.vals__uint8.forEach(function(val) {
+                            assert.equal(
+                                parsed[i].vals__uint8[j],
+                                val.v,
+                                'desc: ' + val.d + ' number of points. ' +
+                                'Number of points got=' + parsed.length + '; ' +
+                                'expected=' + tileRequest.expects.length +
+                                    '\n\tindex=' + i +
+                                    '\n\tvals__uint8 index=' + j +
+                                    '\n\tgot=' + parsed[i].vals__uint8[j] +
+                                    '\n\texpected=' + val.v +
+                                    '\nRESULT\n------' +
+                                    '\n' + JSON.stringify(parsed, null, 4) +
+                                    '\nEXPECTED\n--------' +
+                                    '\n' + JSON.stringify(tileRequest.expects, null, 4));
+
+                            j++;
                         });
 
                         i++;
                     });
+
+                    assert.equal(
+                        parsed.length,
+                        tileRequest.expects.length,
+                        'Number of points did not match ' +
+                            'got=' + parsed.length + '; ' +
+                            'expected=' + tileRequest.expects.length);
 
                     // clear redis keys
                     redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
