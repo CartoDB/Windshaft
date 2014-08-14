@@ -173,6 +173,10 @@
       "version": "0.1.0",
       "from": "git://github.com/CartoDB/node-step-profiler.git#0.1.0"
     },
+    "cartodb-psql": {
+        "version": "0.4.0",
+        "from": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0"
+    },
     "torque.js": {
       "version": "2.2.0"
     },
