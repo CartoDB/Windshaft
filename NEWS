@@ -1,6 +1,10 @@
 Version 0.25.0
 2014-mm-dd
 
+Enhancements:
+ - Removes npm-shrinkwrap.json as it was a temporary measure to fix a problem
+   with srs.
+
 New features:
  - Deprecates psql and starts using cartodb-psql module
 
