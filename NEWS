@@ -1,5 +1,5 @@
 Version 0.25.0
-2014-mm-dd
+2014-08-18
 
 Enhancements:
  - Removes npm-shrinkwrap.json as it was a temporary measure to fix a problem
