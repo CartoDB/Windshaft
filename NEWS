@@ -1,6 +1,9 @@
 Version 0.26.0
 2014-mm-dd
 
+Bug fixes:
+ - Responds with 400 error on invalid json input (#156)
+
 Version 0.25.0
 2014-08-18
 
