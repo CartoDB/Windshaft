@@ -1,5 +1,30 @@
-Version 0.24.1
+Version 0.25.2
 2014-mm-dd
+
+Version 0.25.1
+2014-08-19
+
+Bug fixes:
+ - Responds with 400 error on invalid json input (#156)
+
+Version 0.25.0
+2014-08-18
+
+Enhancements:
+ - Removes npm-shrinkwrap.json as it was a temporary measure to fix a problem
+   with srs.
+
+New features:
+ - Deprecates psql and starts using cartodb-psql module
+
+
+Version 0.24.1
+2014-08-13
+
+Enhancements:
+ - Checks mapnik version for grainstore is configured, otherwise it uses
+   installed one
+
 
 Version 0.24.0
 2014-08-13
