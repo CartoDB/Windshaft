@@ -227,7 +227,6 @@ suite('boundary points', function() {
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
         test('\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n\thandles ' + tileRequest.desc + '.json.torque', function (done) {
-            var errors = [];
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',
@@ -352,9 +351,10 @@ suite('boundary points', function() {
                 url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
                 method: 'GET'
             }, {}, function (res, err) {
+                assert.ok(!err, 'Failed to request torque.json');
+
                 layergroupIdsToDelete.push(layergroupId);
                 var parsed = JSON.parse(res.body);
-                console.log(parsed);
 
                 assert.deepEqual(parsed, [{
                     x__uint8: 255,
@@ -373,7 +373,7 @@ suite('boundary points', function() {
         layergroupIdsToDelete.forEach(function(expected_token) {
             redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
                 assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-                redis_client.del("map_cfg|" + expected_token, function (err) {
+                redis_client.del("map_cfg|" + expected_token, function () {
                     done();
                 });
             });
