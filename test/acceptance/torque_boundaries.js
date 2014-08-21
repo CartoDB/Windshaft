@@ -6,7 +6,7 @@ var   assert        = require('../support/assert')
 
 suite('boundary points', function() {
 
-    var layergroupIdsToDelete = [];
+    var layergroupIdToDelete = null;
 
     suiteSetup(function(done) {
         // Check that we start with an empty redis db
@@ -18,7 +18,7 @@ suite('boundary points', function() {
     });
 
     beforeEach(function() {
-        layergroupIdsToDelete = [];
+        layergroupIdToDelete = null;
     });
 
     var server = new Windshaft.Server(ServerOptions);
@@ -239,14 +239,13 @@ suite('boundary points', function() {
 
                 var parsedBody = JSON.parse(res.body);
                 var expected_token = parsedBody.layergroupid;
+                layergroupIdToDelete = expected_token;
 
                 var partialUrl = tileRequest.z + '/' + tileRequest.x + '/' + tileRequest.y;
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup/' + expected_token + '/0/' + partialUrl + '.json.torque',
                     method: 'GET'
                 }, {}, function (res, err) {
-                    layergroupIdsToDelete.push(expected_token);
-
                     assert.ok(!err, 'Failed to get json');
 
                     assert.equal(res.statusCode, 200, res.body);
@@ -345,6 +344,7 @@ suite('boundary points', function() {
 
             var parsedBody = JSON.parse(res.body);
             var layergroupId = parsedBody.layergroupid;
+            layergroupIdToDelete = layergroupId;
 
 
             assert.response(server, {
@@ -353,7 +353,6 @@ suite('boundary points', function() {
             }, {}, function (res, err) {
                 assert.ok(!err, 'Failed to request torque.json');
 
-                layergroupIdsToDelete.push(layergroupId);
                 var parsed = JSON.parse(res.body);
 
                 assert.deepEqual(parsed, [{
@@ -369,15 +368,10 @@ suite('boundary points', function() {
     });
 
     afterEach(function(done) {
-        // clear redis keys
-        layergroupIdsToDelete.forEach(function(expected_token) {
-            redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
-                assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-                redis_client.del("map_cfg|" + expected_token, function () {
-                    done();
-                });
-            });
-        })
+        var redisKey = 'map_cfg|' + layergroupIdToDelete;
+        redis_client.del(redisKey, function () {
+            done();
+        });
     });
 
     suiteTeardown(function(done) {
