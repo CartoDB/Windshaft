@@ -315,6 +315,59 @@ suite('boundary points', function() {
         });
     });
 
+    test('regression london point', function(done) {
+        var londonPointMapConfig =  {
+            version: '1.1.0',
+            layers: [
+                { type: 'torque', options: {
+                    sql: "SELECT " +
+                            "1 as i, " +
+                            "'1970-01-02'::date as d, " +
+                            "ST_MakePoint(-11309.9155492599,6715342.44989312) g",
+                    geom_column: 'g',
+                    cartocss: 'Map { ' +
+                        '-torque-frame-count:2; ' +
+                        '-torque-resolution:1; ' +
+                        '-torque-time-attribute:"d"; ' +
+                        '-torque-data-aggregation:linear; ' +
+                        '-torque-aggregation-function:"count(i)"; }',
+                    cartocss_version: '1.0.1'
+                } }
+            ]
+        };
+
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            data: JSON.stringify(londonPointMapConfig)
+        }, {}, function (res, err) {
+            assert.ok(!err, 'Failed to create layergroup');
+
+            var parsedBody = JSON.parse(res.body);
+            var layergroupId = parsedBody.layergroupid;
+
+
+            assert.response(server, {
+                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
+                method: 'GET'
+            }, {}, function (res, err) {
+                layergroupIdsToDelete.push(layergroupId);
+                var parsed = JSON.parse(res.body);
+                console.log(parsed);
+
+                assert.deepEqual(parsed, [{
+                    x__uint8: 255,
+                    y__uint8: 172,
+                    vals__uint8: [1],
+                    dates__uint16: [0]
+                }]);
+
+                done();
+            });
+        });
+    });
+
     afterEach(function(done) {
         // clear redis keys
         layergroupIdsToDelete.forEach(function(expected_token) {
