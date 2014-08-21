@@ -6,6 +6,8 @@ var   assert        = require('../support/assert')
 
 suite('boundary points', function() {
 
+    var layergroupIdsToDelete = [];
+
     suiteSetup(function(done) {
         // Check that we start with an empty redis db
         redis_client.keys("*", function(err, matches) {
@@ -13,6 +15,10 @@ suite('boundary points', function() {
             assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
             done();
         });
+    });
+
+    beforeEach(function() {
+        layergroupIdsToDelete = [];
     });
 
     var server = new Windshaft.Server(ServerOptions);
@@ -76,12 +82,29 @@ suite('boundary points', function() {
             y: 0,
             expects: [
                 {
+                    x__uint8: 255,
+                    y__uint8: 128,
+                    vals__uint8: [{
+                        v: 2,
+                        d: 'i=9 and i=11'
+                    }],
+                    dates__uint16: [0]
+                },
+                {
                     x__uint8: 128,
                     y__uint8: 128,
                     vals__uint8: [{
                         v: 8,
-                        d: 'all records in this pixel\n' +
-                            'this should return `12` but to simplify right now we exclude the points in border'
+                        d: 'i=[1..8]'
+                    }],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 128,
+                    y__uint8: 255,
+                    vals__uint8: [{
+                        v: 2,
+                        d: 'i=10 and i=12'
                     }],
                     dates__uint16: [0]
                 }
@@ -100,8 +123,20 @@ suite('boundary points', function() {
             expects: [
                 {
                     x__uint8: 255,
-                    y__uint8: 1,
+                    y__uint8: 0,
                     vals__uint8: [{v: 2, d: 'i=6 (-r1,r1) and i=7(-r1/2,r1)'}],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 255,
+                    y__uint8: 1,
+                    vals__uint8: [{v: 2, d: 'i=1 and i=3'}],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 255,
+                    y__uint8: 255,
+                    vals__uint8: [{v: 2, d: 'i=10 and i=12'}],
                     dates__uint16: [0]
                 }
             ]
@@ -120,19 +155,19 @@ suite('boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 0,
-                    vals__uint8: [{v: 1, d: 'i=11 (s1-r1/2,0)'}],
+                    vals__uint8: [{v: 2, d: 'i=9 and i=11'}],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 0,
                     y__uint8: 0,
-                    vals__uint8: [{v: 2, d: 'i=1 (0,0) and i=5 (o,o)'}],
+                    vals__uint8: [{v: 2, d: 'i=1 and i=5'}],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 0,
                     y__uint8: 255,
-                    vals__uint8: [{v: 1, d: 'i=12 (0,s1-r1/2)'}],
+                    vals__uint8: [{v: 2, d: 'i=10 and i=12'}],
                     dates__uint16: [0]
                 }
             ]
@@ -151,7 +186,7 @@ suite('boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 255,
-                    vals__uint8: [{v: 1, d: '-r1,-r1 is here'}],
+                    vals__uint8: [{v: 3, d: 'i=1, i=2 and i=8'}],
                     dates__uint16: [0]
                 }
             ]
@@ -166,7 +201,26 @@ suite('boundary points', function() {
             z: 1,
             x: 1,
             y: 1,
-            expects: []
+            expects: [
+                {
+                    x__uint8: 255,
+                    y__uint8: 255,
+                    vals__uint8: [{
+                        v: 2,
+                        d: 'i=9 and i=11'
+                    }],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 0,
+                    y__uint8: 255,
+                    vals__uint8: [{
+                        v: 2,
+                        d: 'i=1 and i=4'
+                    }],
+                    dates__uint16: [0]
+                }
+            ]
         }
     ];
 
@@ -192,6 +246,8 @@ suite('boundary points', function() {
                     url: '/database/windshaft_test/layergroup/' + expected_token + '/0/' + partialUrl + '.json.torque',
                     method: 'GET'
                 }, {}, function (res, err) {
+                    layergroupIdsToDelete.push(expected_token);
+
                     assert.ok(!err, 'Failed to get json');
 
                     assert.equal(res.statusCode, 200, res.body);
@@ -253,25 +309,22 @@ suite('boundary points', function() {
                             '\nEXPECTED\n--------' +
                             '\n' + JSON.stringify(tileRequest.expects, null, 4));
 
-                    // clear redis keys
-                    redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
-                        if (err) errors.push(err.message);
-                        assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-                        redis_client.del("map_cfg|" + expected_token, function (err) {
-                            if (err) {
-                                errors.push(err.message);
-                            }
-
-                            if (errors.length) {
-                                done(new Error(errors));
-                            } else {
-                                done(null);
-                            }
-                        });
-                    });
+                    done();
                 });
             });
         });
+    });
+
+    afterEach(function(done) {
+        // clear redis keys
+        layergroupIdsToDelete.forEach(function(expected_token) {
+            redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
+                assert.ok(exists, "Missing expected token " + expected_token + " from redis");
+                redis_client.del("map_cfg|" + expected_token, function (err) {
+                    done();
+                });
+            });
+        })
     });
 
     suiteTeardown(function(done) {
