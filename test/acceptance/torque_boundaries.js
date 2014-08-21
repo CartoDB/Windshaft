@@ -78,7 +78,11 @@ suite('boundary points', function() {
                 {
                     x__uint8: 128,
                     y__uint8: 128,
-                    vals__uint8: [{v: 8, d: 'all records in this pixel'}],
+                    vals__uint8: [{
+                        v: 8,
+                        d: 'all records in this pixel\n' +
+                            'this should return `12` but to simplify right now we exclude the points in border'
+                    }],
                     dates__uint16: [0]
                 }
             ]
@@ -97,7 +101,7 @@ suite('boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 1,
-                    vals__uint8: [{v: 1, d: '-r1,r1'}],
+                    vals__uint8: [{v: 2, d: 'i=6 (-r1,r1) and i=7(-r1/2,r1)'}],
                     dates__uint16: [0]
                 }
             ]
@@ -114,15 +118,21 @@ suite('boundary points', function() {
             y: 0,
             expects: [
                 {
-                    x__uint8: 0,
+                    x__uint8: 255,
                     y__uint8: 0,
-                    vals__uint8: [{v: 5, d: 'Records around the origin are in this pixel'}],
+                    vals__uint8: [{v: 1, d: 'i=11 (s1-r1/2,0)'}],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 0,
-                    y__uint8: 1,
-                    vals__uint8: [{v: 1, d: '-r1/2,r1 is here'}],
+                    y__uint8: 0,
+                    vals__uint8: [{v: 2, d: 'i=1 (0,0) and i=5 (o,o)'}],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 0,
+                    y__uint8: 255,
+                    vals__uint8: [{v: 1, d: 'i=12 (0,s1-r1/2)'}],
                     dates__uint16: [0]
                 }
             ]
@@ -190,15 +200,31 @@ suite('boundary points', function() {
 
                     var i = 0;
                     tileRequest.expects.forEach(function(expected) {
-                        assert.equal(parsed[i].x__uint8, expected.x__uint8);
-                        assert.equal(parsed[i].y__uint8, expected.y__uint8);
+                        assert.equal(
+                            parsed[i].x__uint8,
+                            expected.x__uint8,
+                            parsed[i].x__uint8 + ' == ' + expected.x__uint8 +
+                                '\nRESULT\n------' +
+                                '\n' + JSON.stringify(parsed, null, 4) +
+                                '\nEXPECTED\n--------' +
+                                '\n' + JSON.stringify(tileRequest.expects, null, 4)
+                        );
+                        assert.equal(
+                            parsed[i].y__uint8,
+                            expected.y__uint8,
+                            parsed[i].y__uint8 + ' == ' + expected.y__uint8 +
+                                '\nRESULT\n------' +
+                                '\n' + JSON.stringify(parsed, null, 4) +
+                                '\nEXPECTED\n--------' +
+                                '\n' + JSON.stringify(tileRequest.expects, null, 4)
+                        );
 
                         var j = 0;
                         expected.vals__uint8.forEach(function(val) {
                             assert.equal(
                                 parsed[i].vals__uint8[j],
                                 val.v,
-                                'desc: ' + val.d + ' number of points. ' +
+                                'desc: ' + val.d +
                                 'Number of points got=' + parsed.length + '; ' +
                                 'expected=' + tileRequest.expects.length +
                                     '\n\tindex=' + i +
@@ -221,7 +247,11 @@ suite('boundary points', function() {
                         tileRequest.expects.length,
                         'Number of points did not match ' +
                             'got=' + parsed.length + '; ' +
-                            'expected=' + tileRequest.expects.length);
+                            'expected=' + tileRequest.expects.length +
+                            '\nRESULT\n------' +
+                            '\n' + JSON.stringify(parsed, null, 4) +
+                            '\nEXPECTED\n--------' +
+                            '\n' + JSON.stringify(tileRequest.expects, null, 4));
 
                     // clear redis keys
                     redis_client.exists("map_cfg|" + expected_token, function (err, exists) {
