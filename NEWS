@@ -2,6 +2,7 @@ Version 0.26.0
 2014-mm-dd
 
  - Torque query improvements
+ - New header for database host serving the request
 
 Version 0.25.1
 2014-08-19
