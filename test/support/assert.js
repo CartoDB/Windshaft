@@ -22,13 +22,36 @@ var assert = module.exports = exports = require('assert');
 assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
     if (!callback) callback = function(err) { if (err) throw err; };
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath),
-        testImageFilePath = '/tmp/windshaft-test-image-' + (Math.random() * 1e16); // TODO: make predictable
-    var err = fs.writeFileSync(testImageFilePath, buffer, 'binary');
-    if (err) throw err;
+        testImageFilePath = createImageFromBuffer(buffer, 'test');
 
+    imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, function(err) {
+        fs.unlinkSync(testImageFilePath);
+        callback(err);
+    });
+};
+
+assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
+    var randStr = (Math.random() * 1e16).toString().substring(0, 8);
+    var imageFilePathA = createImageFromBuffer(bufferA, randStr + '-a'),
+        imageFilePathB = createImageFromBuffer(bufferB, randStr + '-b');
+
+    imageFilesAreEqual(imageFilePathA, imageFilePathB, tolerance, function(err, similarity) {
+        callback(err, [imageFilePathA, imageFilePathB], similarity);
+    });
+};
+
+function createImageFromBuffer(buffer, nameHint) {
+    var imageFilePath = path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
+    var err = fs.writeFileSync(imageFilePath, buffer, 'binary');
+    if (err) throw err;
+    return imageFilePath;
+}
+
+function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, callback) {
+    var resultFilePath = path.resolve(util.format('/tmp/windshaft-result-%s-diff.png', Date.now()));
     var imageMagickCmd = util.format(
-        'compare -metric fuzz "%s" "%s" /dev/null',
-        testImageFilePath, referenceImageFilePath
+        'compare -metric fuzz "%s" "%s" "%s"',
+        testImageFilePath, referenceImageFilePath, resultFilePath
     );
 
     exec(imageMagickCmd, function(err, stdout, stderr) {
@@ -46,18 +69,18 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
                 tolerancePerMil = (tolerance / 1000);
             if (similarity > tolerancePerMil) {
                 err = new Error(util.format(
-                    'Images %s and %s are not equal (got %d similarity, expected %d)',
-                    testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil)
+                    'Images %s and %s are not equal (got %d similarity, expected %d). Result %s',
+                    testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil, resultFilePath)
                 );
                 err.similarity = similarity;
-                callback(err);
+                callback(err, similarity);
             } else {
-                fs.unlinkSync(testImageFilePath);
-                callback(null);
+                fs.unlinkSync(resultFilePath);
+                callback(null, similarity);
             }
         }
     });
-};
+}
 
 /**
  * Assert response from `server` with

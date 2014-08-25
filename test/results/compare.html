@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>PNG32 vs PNG8 tests output</title>
+    <link rel="stylesheet" href="compare-lib/css/coveringBad.css" type="text/css"/>
+    <style>
+        body {
+            background-color: #000;
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+
+        #results div.covered {
+            float: left;
+            margin-left: 20px;
+        }
+
+        .controls {
+            text-align: center;
+            background-color: #999;
+            padding: 20px 0;
+            color: #333;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        a.active {
+            text-decoration: underline;
+        }
+
+        .handle {
+            cursor: move;
+        }
+
+        .control-background a.black {
+            color: #000;
+        }
+        .control-background a.white {
+            color: #fff;
+        }
+
+        .covered {
+            border : 1px solid #fff;
+            margin : 20px auto;
+        }
+    </style>
+    <style id="stylable">
+        .covered {
+            width  : 256px;
+            height : 256px;
+        }
+
+        .changeable, .covered {
+            background-size: 256px 256px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h2>PNG32 vs PNG8</h2>
+    <div class="control-background">
+        background:
+        <a href="#" data-bg-color="#000" data-border-color="#fff" class="black active">black</a>
+        <a href="#" data-bg-color="#fff" data-border-color="#000" class="white">white</a>
+    </div>
+    <div class="control-size">
+        <a href="#" data-size="256" class="active">256x256</a>
+        <a href="#" data-size="512">512x512</a>
+        <a href="#" data-size="1024">1024x1024</a>
+    </div>
+</div>
+
+
+<div id="results"></div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="compare-lib/js/coveringBad.js"></script>
+
+<script type="text/javascript">
+    function handleResults(results) {
+        var $results = $('#results');
+        for (var i = 0, len = results.length; i < len; i++) {
+            var result = results[i];
+            var template = [
+                '<div class="covered"',
+                        'title="' + result.similarity + '"',
+                        'data-passive="' + result.passive + '"',
+                        'data-active="' + result.active + '">',
+                    '<div class="handle"></div>',
+                    '<div class="changeable"></div>',
+                '</div>'
+            ].join(' ');
+            $results.append($(template))
+        }
+    }
+</script>
+<script type="text/javascript" src="png/results.js"></script>
+<script type="text/javascript">
+
+    var $controlsBackground = $('.control-background a');
+    $controlsBackground.click(function() {
+        $controlsBackground.removeClass('active');
+        $(this).addClass('active');
+
+        $(document.body).css('background-color', $(this).data('bg-color'));
+        $('.covered').css('border-color', $(this).data('border-color'));
+        $('.changeable').css('border-right-color', $(this).data('border-color'));
+        $('.handle').css('background-color', $(this).data('border-color'));
+    });
+
+
+    var $controlsSize = $('.control-size a');
+    $controlsSize.click(function() {
+        $controlsSize.removeClass('active');
+        $(this).addClass('active');
+
+        var size = $(this).data('size');
+        var template = [
+            '.covered {',
+                'width  : ' + size + 'px;',
+                'height : ' + size + 'px;',
+            '}',
+            '.changeable, .covered {',
+                'background-size: ' + size + 'px ' + size + 'px;',
+            '}'
+        ].join(' ');
+
+        $('style#stylable').text(template);
+
+        $('.covered').coveringBad({
+            marginY: 0,
+            marginX: 0,
+            setX: 128,
+            setY: 128 ,
+            direction: "horizontal"
+        });
+    });
+
+
+    $('.covered').coveringBad({
+        marginY : 0,
+        marginX : 0,
+        setX  : 128,
+        setY  : 128 ,
+        direction   : "horizontal"
+    });
+
+</script>
+</body>
+</html>
