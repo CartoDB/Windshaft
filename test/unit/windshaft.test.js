@@ -3,6 +3,7 @@ var   _             = require('underscore')
     , assert        = require('assert')
     , Windshaft     = require('../../lib/windshaft')
     , serverOptions = require('../support/server_options')
+    , StatsClient = require('../../lib/windshaft/stats/client')
     , tests         = module.exports = {};
 
 suite('windshaft', function() {
@@ -52,6 +53,57 @@ suite('windshaft', function() {
             expectedStatusCode,
             "Error status code for multiline/PSQL does not match"
         );
+    });
+
+    test('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
+        var expectedCalls = 1, // it will call increment once for the general error
+            invalidFormat = 'png2',
+            invalidFormatRegexp = new RegExp(invalidFormat);
+        StatsClient.getInstance = function() {
+            return {
+                increment: function(label) {
+                    assert.equal(label.match(invalidFormatRegexp), null,
+                        'Invalid format is getting into increment method');
+                    expectedCalls--;
+                }
+            }
+        }
+        var ws = new Windshaft.Server(serverOptions);
+        var reqMock = {
+            params: {
+                format: invalidFormat
+            }
+        };
+        ws.sendError = function(){}
+        ws.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
+
+        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
+    });
+
+    test('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
+        var expectedCalls = 2, // general error + format error
+            validFormat = 'png',
+            validFormatRegexp = new RegExp(validFormat),
+            formatMatched = false;
+        StatsClient.getInstance = function() {
+            return {
+                increment: function(label) {
+                    formatMatched = formatMatched || !!label.match(validFormatRegexp);
+                    expectedCalls--;
+                }
+            }
+        }
+        var ws = new Windshaft.Server(serverOptions);
+        var reqMock = {
+            params: {
+                format: validFormat
+            }
+        };
+        ws.sendError = function(){}
+        ws.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
+
+        assert.ok(formatMatched, 'Format was never matched in increment method')
+        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
 
 });

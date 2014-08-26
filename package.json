@@ -22,6 +22,7 @@
       "Sandro Santilli <strk@vizzuality.com>"
     ],
     "dependencies": {
+        "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
         "underscore": "~1.6.0",
         "step": "~0.0.5",
         "grainstore": "git://github.com/CartoDB/grainstore.git#0.20.0",

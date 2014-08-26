@@ -1,8 +1,18 @@
 Version 0.26.0
 2014-mm-dd
 
+Enhancements:
  - Torque query improvements
  - New header for database host serving the request
+ - Metrics revamp: removes and adds some metrics
+    - Profiler is now always available as a proxy so no need to keep checking
+      if it exists.
+    - Tracks and reports time for torque queries, using chronograph module
+ - Stats client now lives in its own file
+
+Bug fixes:
+ - Increments counters and track timers only for supported formats
+
 
 Version 0.25.1
 2014-08-19
