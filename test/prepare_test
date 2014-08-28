@@ -41,6 +41,10 @@ createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test
 
 echo "...Populating windshaft_test database with test data"
 psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/windshaft.test.sql ||
-  die "Cound not populate test database" 
+  die "Cound not populate test database"
+
+echo "...Populating windshaft_test database with reduced populated places data"
+psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/populated_places_simple_reduced.sql ||
+  die "Cound not populate test database"
 
 echo "...Test database configuration complete"

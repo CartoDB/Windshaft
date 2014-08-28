@@ -15,7 +15,8 @@ suite('cache_buster', function() {
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,
         CACHE_BUSTER       = 5555555,
-        CACHE_BUSTER_NEWER = 9999999;
+        CACHE_BUSTER_NEWER = 9999999,
+        ONE_DAY_IN_MILISECONDS = 86400 * 1000;
 
     test('renderer is recreated when buster is NaN and not equal to cached one', function () {
         var cacheEntry = new CacheEntry();
@@ -80,5 +81,36 @@ suite('cache_buster', function() {
             true,
             "It SHOULD (re)create the renderer when it is undefined"
         );
+    });
+
+    test('renderer cache is set to param one if is numeric and not too far in the future', function() {
+        var now = Date.now();
+        renderCache._getMaxCacheBusterValue = function() {
+            return now;
+        };
+        var inThePastCacheBuster = now - ONE_DAY_IN_MILISECONDS;
+
+        var cacheBuster = renderCache.getCacheBusterValue(inThePastCacheBuster);
+
+        assert.equal(cacheBuster, inThePastCacheBuster);
+    });
+
+    test('renderer cache is not set far in the future when using number cache buster', function() {
+        var now = Date.now();
+        renderCache._getMaxCacheBusterValue = function() {
+            return now;
+        };
+        var farInTheFutureCacheBuster = now + (5 * ONE_DAY_IN_MILISECONDS);
+
+        var cacheBuster = renderCache.getCacheBusterValue(farInTheFutureCacheBuster);
+
+        assert.equal(cacheBuster, now);
+    });
+
+    test('value for cache buster is original when is not number', function() {
+        var cacheBusterParamValue = 'test';
+        var cacheBuster = renderCache.getCacheBusterValue(cacheBusterParamValue);
+
+        assert.equal(cacheBuster, cacheBusterParamValue);
     });
 });

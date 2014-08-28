@@ -6,8 +6,68 @@
 
  - Support specifying column name in MapConfig (#191)
 
+Version 0.26.0
+2014-mm-dd
+
+Enhancements:
+ - Torque query improvements
+ - New header for database host serving the request
+ - Metrics revamp: removes and adds some metrics
+    - Profiler is now always available as a proxy so no need to keep checking
+      if it exists.
+    - Tracks and reports time for torque queries, using chronograph module
+ - Stats client now lives in its own file
+
+Bug fixes:
+ - Increments counters and track timers only for supported formats
+
+
+Version 0.25.1
+2014-08-19
+
+Bug fixes:
+ - Responds with 400 error on invalid json input (#156)
+
+Version 0.25.0
+2014-08-18
+
+Enhancements:
+ - Removes npm-shrinkwrap.json as it was a temporary measure to fix a problem
+   with srs.
+
+New features:
+ - Deprecates psql and starts using cartodb-psql module
+
+
+Version 0.24.1
+2014-08-13
+
+Enhancements:
+ - Checks mapnik version for grainstore is configured, otherwise it uses
+   installed one
+
+
+Version 0.24.0
+2014-08-13
+
+ Enhancements:
+ - Upgrades dependencies:
+    - underscore
+    - grainstore
+    - redis-mpool
+    - pg
+ - Specifies name in the redis pool
+
+
+Version 0.23.0
+2014-08-07
+
+ New features:
+
+ - Upgrade to grainstore 0.19.0 version
+
 Version 0.22.0
-2014-MM-DD
+2014-07-30
 
  Enhancements:
 
@@ -16,6 +76,16 @@ Version 0.22.0
    URL schema.
  - Cache buster does not invalidate renderer if it is numeric and smaller
    than cached buster (#177)
+ - Literal expression for some regular expressions
+ - Profiler header sent as JSON string
+
+ Bug fixes:
+
+ - Returns 400 errors for bad filters and missing columns in queries
+
+ Other changes:
+
+ - Metrics documentation
 
 Version 0.21.0
 2014-05-07

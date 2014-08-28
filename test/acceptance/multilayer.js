@@ -1659,7 +1659,36 @@ suite('multilayer', function() {
       );
     });
 
-
+    test('error 400 on json syntax error', function(done) {
+        var layergroup =  {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: 'select the_geom from test_table limit 1',
+                        cartocss: '#layer { marker-fill:red }'
+                    }
+                }
+            ]
+        };
+        assert.response(server,
+            {
+                url: '/database/windshaft_test/layergroup',
+                method: 'POST',
+                headers: {'Content-Type': 'application/json; charset=utf-8' },
+                data: '{' + JSON.stringify(layergroup)
+            },
+            {
+                status: 400
+            },
+            function(res) {
+                var parsedBody = JSON.parse(res.body);
+                assert.equal(parsedBody.error, 'SyntaxError');
+                assert.equal(parsedBody.msg, 'Unexpected token {');
+                done();
+            }
+        );
+    });
 
     // TODO: check lifetime of layergroup!
 
