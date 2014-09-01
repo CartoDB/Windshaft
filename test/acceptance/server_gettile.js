@@ -459,6 +459,7 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/100
+    // See https://github.com/mapnik/mapnik/issues/2301
     test("unused directives are not tolerated if strict",  function(done){
         var style = querystring.stringify({
           style: "#test_table{point-transform: 'scale(100)';}",
