@@ -90,7 +90,7 @@ suite('server_gettile', function() {
         function makeGet() {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png32',
+              url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
               method: 'GET',
               encoding: 'binary'
           },{}, function(res) { next(null,res); });
