@@ -930,6 +930,18 @@ suite('server_gettile', function() {
       );
     });
 
+    test.skip('high cpu regression with mapnik <2.3.x', function(done) {
+        assert.response(server,
+            {
+                url: '/database/windshaft_test/table/test_table/0/0/0.png?style=%23test_table+%7Bmarker-fill%3A%23ff7%3B+%0A++++marker-max-error%3A0.447492761618%3B+%0A++++marker-line-opacity%3A0.659371340628%3B+%0A++++marker-allow-overlap%3Atrue%3B+%0A++++polygon-fill%3Agreen%3B+%0A++++marker-spacing%3A0.0%3B+%0A++++marker-width%3A4.0%3B+%0A++++marker-height%3A18.0%3B+%0A++++marker-opacity%3A0.942312062822%3B+%0A++++line-color%3Agreen%3B+%0A++++line-gamma%3A0.945973211092%3B+%0A++++line-cap%3Asquare%3B+%0A++++polygon-opacity%3A0.12576055992%3B+%0A++++marker-type%3Aarrow%3B+%0A++++polygon-gamma%3A0.46354913107%3B+%0A++++line-dasharray%3A33%2C23%3B+%0A++++line-join%3Abevel%3B+%0A++++marker-placement%3Aline%3B+%0A++++line-width%3A1.0%3B+%0A++++marker-line-color%3A%23ff7%3B+%0A++++line-opacity%3A0.39403752154%3B+%0A++++marker-line-width%3A3.0%3B+%0A++++%7D&sql=SELECT+%27my+polygon+name+here%27+as+name%2C+st_envelope%28st_buffer%28st_transform%28st_setsrid%28st_makepoint%28-26.6592894004%2C49.7990296995%29%2C4326%29%2C3857%29%2C10000000%29%29+as+the_geom+FROM+generate_series%28-6%2C6%29+x+UNION+ALL+SELECT+%27my+marker+name+here%27+as+name%2C+st_transform%28st_setsrid%28st_makepoint%2849.6042060319%2C-49.0522997372%29%2C4326%29%2C3857%29+as+the_geom+FROM+generate_series%28-6%2C6%29+x',
+                method: 'GET'
+            },
+            {
+                status: 200
+            },
+            done
+        );
+    });
 
 
     ////////////////////////////////////////////////////////////////////

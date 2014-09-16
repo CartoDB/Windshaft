@@ -57,6 +57,7 @@
 
         .changeable, .covered {
             background-size: 256px 256px;
+            background-color: #000;
         }
     </style>
 </head>
@@ -108,10 +109,15 @@
         $controlsBackground.removeClass('active');
         $(this).addClass('active');
 
-        $(document.body).css('background-color', $(this).data('bg-color'));
-        $('.covered').css('border-color', $(this).data('border-color'));
-        $('.changeable').css('border-right-color', $(this).data('border-color'));
-        $('.handle').css('background-color', $(this).data('border-color'));
+        var bgColor = $(this).data('bg-color'),
+            borderColor = $(this).data('border-color');
+
+        $(document.body).css('background-color', bgColor);
+        $('.covered').css('border-color', borderColor);
+        $('.changeable').css('border-right-color', borderColor);
+        $('.handle').css('background-color', borderColor);
+
+        changeStyle($('.control-size a.active').data('size'), bgColor);
     });
 
 
@@ -121,17 +127,7 @@
         $(this).addClass('active');
 
         var size = $(this).data('size');
-        var template = [
-            '.covered {',
-                'width  : ' + size + 'px;',
-                'height : ' + size + 'px;',
-            '}',
-            '.changeable, .covered {',
-                'background-size: ' + size + 'px ' + size + 'px;',
-            '}'
-        ].join(' ');
-
-        $('style#stylable').text(template);
+        changeStyle(size, $('.control-background a.active').data('bg-color'));
 
         $('.covered').coveringBad({
             marginY: 0,
@@ -142,6 +138,20 @@
         });
     });
 
+    function changeStyle(size, color) {
+        var template = [
+            '.covered {',
+                    'width  : ' + size + 'px;',
+                    'height : ' + size + 'px;',
+            '}',
+            '.changeable, .covered {',
+                    'background-size: ' + size + 'px ' + size + 'px;',
+                    'background-color: ' + color + ';',
+            '}'
+        ].join(' ');
+
+        $('style#stylable').text(template);
+    }
 
     $('.covered').coveringBad({
         marginY : 0,
