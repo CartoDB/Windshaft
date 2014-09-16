@@ -12,6 +12,7 @@ Enhancements:
  - Upgrade dependencies:
     - grainstore
     - tilelive-mapnik
+    - tilelive
 
 Bug fixes:
  - Increments counters and track timers only for supported formats
