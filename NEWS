@@ -1,13 +1,8 @@
- New features:
-
- - Add support for raster layers (#190)
-
- Bug fixes:
-
- - Support specifying column name in MapConfig (#191)
-
 Version 0.26.0
 2014-mm-dd
+
+New features:
+ - Add support for raster layers (#190)
 
 Enhancements:
  - Torque query improvements
@@ -20,6 +15,7 @@ Enhancements:
 
 Bug fixes:
  - Increments counters and track timers only for supported formats
+ - Support specifying column name in MapConfig (#191)
 
 
 Version 0.25.1
