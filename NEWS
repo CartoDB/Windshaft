@@ -9,6 +9,9 @@ Enhancements:
       if it exists.
     - Tracks and reports time for torque queries, using chronograph module
  - Stats client now lives in its own file
+ - Upgrade dependencies:
+    - grainstore
+    - tilelive-mapnik
 
 Bug fixes:
  - Increments counters and track timers only for supported formats

@@ -317,7 +317,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -334,7 +334,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -427,7 +427,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -444,7 +444,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -535,7 +535,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -552,7 +552,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -648,7 +648,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -665,7 +665,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -896,7 +896,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -929,7 +929,7 @@ suite('multilayer', function() {
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -1406,7 +1406,7 @@ suite('multilayer', function() {
           if ( err ) throw err;
           var next = this;
           assert.equal(res.statusCode, 200, res.body);
-          assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var grid = JSON.parse(res.body);
           assert.ok(grid);
           assert.ok(grid.hasOwnProperty('data'));
