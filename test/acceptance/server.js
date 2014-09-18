@@ -443,7 +443,7 @@ suite('server', function() {
             method: 'GET'
         },{}, function(res){
             assert.equal(res.statusCode, 200, res.body);
-            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8; charset=utf-8');
+            assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
     });
@@ -454,7 +454,7 @@ suite('server', function() {
             method: 'GET'
         },{}, function(res){
             assert.equal(res.statusCode, 200, res.body);
-            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8; charset=utf-8');
+            assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
             var regexp = '^test\\((.*)\\);$';
             var matches = res.body.match(regexp);
             assert.equal(matches.length, 2, 'Unexpected JSONP response:'  + res.body);
@@ -468,7 +468,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             var expected_json = {
                 "1":{"name":"Hawai"},
@@ -488,7 +488,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             var expected_json = {
                 "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
@@ -532,7 +532,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
         });
@@ -546,7 +546,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
@@ -564,7 +564,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });

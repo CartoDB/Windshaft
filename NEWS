@@ -1,8 +1,12 @@
-Version 0.26.0
+Version 0.26.1
 2014-mm-dd
 
 New features:
  - Add support for raster layers (#190)
+
+
+Version 0.26.0
+2014-09-18
 
 Enhancements:
  - Torque query improvements
@@ -12,6 +16,10 @@ Enhancements:
       if it exists.
     - Tracks and reports time for torque queries, using chronograph module
  - Stats client now lives in its own file
+ - Upgrade dependencies:
+    - grainstore
+    - tilelive-mapnik
+    - tilelive
 
 Bug fixes:
  - Increments counters and track timers only for supported formats
