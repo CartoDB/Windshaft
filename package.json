@@ -45,7 +45,6 @@
     "scripts": {
         "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/acceptance/*.js"
     },
-    "engineStrict": true,
     "engines" : {
         "node": ">=0.10 <0.11",
         "npm" : ">=1.2.1"
