@@ -1,6 +1,9 @@
 Version 0.26.1
 2014-mm-dd
 
+Enhancements:
+ - Upgrades grainstore dependency to be able to use 2.3.0 carto styles
+
 New features:
  - Add support for raster layers (#190)
 
