@@ -8,7 +8,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -q postgresql-9.3-postgis-2.1
   - sudo apt-get install -q postgresql-contrib-9.3
-  - sudo apt-get install -q libprotoc-dev
+  - sudo apt-get install -q libprotobuf-dev libprotoc-dev
   - sudo apt-get install -q libmapnik-dev
   - sudo apt-get install -q gdal-bin
   - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.3/main/pg_hba.conf
