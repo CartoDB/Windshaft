@@ -18,9 +18,7 @@ styling API.
 * Allows setting of CORS headers to allow access to tile data from
   Javascript
 
-![Puma Concolor by @eightysteele] (
-http://github.com/Vizzuality/Windshaft/raw/master/examples/puma_concolor.png
-)
+![Puma Concolor by @eightysteele] (https://github.com/CartoDB/Windshaft/raw/mapnik-2.3.x/examples/puma_concolor.png)
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
 its raw form. The idea is that you the developer will want to graft your
