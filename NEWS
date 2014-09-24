@@ -7,9 +7,6 @@ New features:
 Enhancements:
  - Upgrades grainstore dependency to be able to use 2.3.0 carto styles
 
-Announcements
- - Drops support for node.js 0.8.x
-
 
 Version 0.26.0
 2014-09-18
