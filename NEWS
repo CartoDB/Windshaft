@@ -1,6 +1,12 @@
 Version 0.26.1
 2014-mm-dd
 
+New features:
+ - Starts using mapnik 2.3.x with node-mapnik 1.4.15
+
+Enhancements:
+ - Upgrades grainstore dependency to be able to use 2.3.0 carto styles
+
 Announcements
  - Drops support for node.js 0.8.x
 

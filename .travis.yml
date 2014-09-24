@@ -4,11 +4,13 @@ before_install:
   - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.3
   - sudo apt-add-repository --yes ppa:cartodb/gis
   - sudo rm -Rf /var/lib/postgresql /etc/postgresql
-  - sudo apt-add-repository --yes ppa:mapnik/v2.1.0
+  - sudo apt-add-repository --yes ppa:mapnik/nightly-2.3
   - sudo apt-get update
   - sudo apt-get install -q postgresql-9.3-postgis-2.1
   - sudo apt-get install -q postgresql-contrib-9.3
+  - sudo apt-get install -q libprotobuf-dev protobuf-compiler
   - sudo apt-get install -q libmapnik-dev
+  - sudo apt-get install -q mapnik-input-plugin-gdal mapnik-input-plugin-ogr mapnik-input-plugin-postgis
   - sudo apt-get install -q gdal-bin
   - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.3/main/pg_hba.conf
   - sudo service postgresql restart
@@ -23,6 +25,7 @@ env:
 
 language: node_js
 node_js:
+  - "0.8"
   - "0.10"
 
 notifications:
