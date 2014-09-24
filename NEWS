@@ -1,5 +1,5 @@
-Version 0.26.1
-2014-mm-dd
+Version 0.27.0
+2014-09-24
 
 New features:
  - Starts using mapnik 2.3.x with node-mapnik 1.4.15
