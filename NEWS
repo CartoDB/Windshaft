@@ -1,11 +1,18 @@
-Version 0.26.1
+Version 0.27.1
 2014-mm-dd
-
-Enhancements:
- - Upgrades grainstore dependency to be able to use 2.3.0 carto styles
 
 New features:
  - Add support for raster layers (#190)
+
+
+Version 0.27.0
+2014-09-24
+
+New features:
+ - Starts using mapnik 2.3.x with node-mapnik 1.4.15
+
+Enhancements:
+ - Upgrades grainstore dependency to be able to use 2.3.0 carto styles
 
 
 Version 0.26.0
