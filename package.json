@@ -39,7 +39,7 @@
         "node-statsd": "~0.0.7"
     },
     "devDependencies": {
-        "mocha": "~1.14.0",
+        "mocha": "~1.21.4",
         "redis": "~0.8.3"
     },
     "scripts": {

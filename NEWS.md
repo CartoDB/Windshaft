@@ -4,6 +4,8 @@
 Announcements:
  - Downgrades node-mapnik to 1.4.10
 
+Enhancements:
+ - Upgrades mocha
 
 # Version 0.27.0
 2014-09-24
