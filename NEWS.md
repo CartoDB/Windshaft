@@ -1,6 +1,9 @@
 # Version 0.27.1
 2014-mm-dd
 
+Announcements:
+ - Downgrades node-mapnik to 1.4.10
+
 
 # Version 0.27.0
 2014-09-24
