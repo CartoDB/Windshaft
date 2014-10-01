@@ -1,6 +1,10 @@
 # Version 0.27.2
 2014-mm-dd
 
+Announcements:
+ - Downgrades node-mapnik to 0.7.26-cdb1
+
+
 # Version 0.27.1
 2014-09-30
 
