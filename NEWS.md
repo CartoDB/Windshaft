@@ -1,6 +1,9 @@
 # Version 0.27.3
 2014-mm-dd
 
+Announcements:
+ - Comes back to use mapnik 2.3.x from cartodb/node-mapnik@1.4.15-cdb branch
+
 
 # Version 0.27.2
 2014-10-01
