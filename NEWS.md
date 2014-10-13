@@ -1,6 +1,9 @@
 # Version 0.28.1
 2014-mm-dd
 
+Bug fixes:
+ - Delays RenderCache initialization so StatsD client is created with proper configuration
+
 # Version 0.28.0
 2014-10-03
 
