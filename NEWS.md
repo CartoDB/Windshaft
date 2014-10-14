@@ -1,5 +1,5 @@
 # Version 0.28.2
-2014-mm-dd
+2014-10-14
 
 Bug fixes:
  - Consider resolution to determine the LEAST value in torque queries
