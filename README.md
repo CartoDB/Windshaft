@@ -31,6 +31,7 @@ an Open Source Geospatial Database on the Cloud.
 Dependencies
 ------------
 * Node >=0.8
+* npm >=1.2.1
 * Mapnik 2.0.1, 2.0.2 or 2.1.0 (http://github.com/mapnik/mapnik-reference)
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
