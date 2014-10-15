@@ -1,8 +1,8 @@
-# Version 0.28.3
-2014-mm-dd
+# Version 0.29.0
+2014-10-15
 
 New features:
- - Exposes statsd client globaly
+ - Exposes statsd client globally
 
 
 # Version 0.28.2
