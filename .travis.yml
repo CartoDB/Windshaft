@@ -1,11 +1,6 @@
 addons:
   postgresql: "9.3"
 
-before_script:
-  # Tell npm to use known registrars:
-  # see http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
-  - npm config set ca ""
-
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
 
