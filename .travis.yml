@@ -1,14 +1,5 @@
-before_install:
-  - sudo mv /etc/apt/sources.list.d/pgdg-source.list* /tmp
-  - sudo apt-get -qq purge postgis* postgresql*
-  - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.3
-  - sudo apt-add-repository --yes ppa:cartodb/gis
-  - sudo rm -Rf /var/lib/postgresql /etc/postgresql
-  - sudo apt-get update
-  - sudo apt-get install -q postgresql-9.3-postgis-2.1
-  - sudo apt-get install -y postgresql-server-dev-9.3 # build node.js pg module
-  - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.3/main/pg_hba.conf
-  - sudo service postgresql restart
+addons:
+  postgresql: "9.3"
 
 before_script:
   # Tell npm to use known registrars:
