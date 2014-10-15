@@ -1,5 +1,8 @@
-# Version 0.29.1
+# Version 0.30.0
 2014-mm-dd
+
+New features
+ - Report stats about number of renderers and mapnik pools
 
 
 # Version 0.29.0

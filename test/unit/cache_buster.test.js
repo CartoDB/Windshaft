@@ -10,7 +10,7 @@ var   _             = require('underscore')
 suite('cache_buster', function() {
 
     var mmlStore  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore),
-        renderCache = new RenderCache(10000, mmlStore),
+        renderCache = new RenderCache({timeout: 10000}, mmlStore),
         NAN_CACHE_BUSTER_ID = 'foo_id',
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,
