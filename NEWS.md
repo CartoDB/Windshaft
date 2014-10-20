@@ -1,6 +1,8 @@
 # Version 0.30.1
 2014-mm-dd
 
+Enhancements:
+ - Don't autoload fonts when creating new tilelive-mapnik objects
 
 # Version 0.30.0
 2014-10-15

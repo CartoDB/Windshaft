@@ -29,7 +29,7 @@
         "express": "~2.5.11",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb",
         "tilelive": "~4.5.3",
-        "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnikx/tarball/cdb",
+        "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
         "semver": "~1.1.4",
         "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
