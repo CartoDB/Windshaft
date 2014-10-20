@@ -3,6 +3,8 @@
 
 Enhancements:
  - Don't autoload fonts when creating new tilelive-mapnik objects
+ - Add a couple of metrics in render cache to track xml generation and tilelive loading time
+
 
 # Version 0.30.0
 2014-10-15
