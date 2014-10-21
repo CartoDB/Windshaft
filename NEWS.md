@@ -1,8 +1,17 @@
-# Version 0.30.1
+# Version 0.31.1
 2014-mm-dd
 
 New features:
  - Add support for raster layers (#190)
+
+
+
+# Version 0.31.0
+2014-10-20
+
+Enhancements:
+ - Don't autoload fonts when creating new tilelive-mapnik objects
+ - Add a couple of metrics in render cache to track xml generation and tilelive loading time
 
 
 # Version 0.30.0
