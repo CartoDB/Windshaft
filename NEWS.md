@@ -3,6 +3,7 @@
 
 New features:
  - Add support for raster layers (#190)
+ - Expose tilelive so it is possible to use the same version externally
 
 
 # Version 0.31.0
