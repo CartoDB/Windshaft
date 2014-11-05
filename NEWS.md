@@ -1,5 +1,5 @@
 # Version 0.32.0
-2014-mm-dd
+2014-11-05
 
 New features:
  - Add support for raster layers (#190)
