@@ -2,6 +2,7 @@
 2014-mm-dd
 
 Enhancements:
+
     - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
         * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
         * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
