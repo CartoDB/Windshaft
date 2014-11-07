@@ -3,8 +3,8 @@
 
 Enhancements:
     - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
-        * `postgres.snap_to_grid=true` will use ST_SnapToGrid
-        * `postgres.snap_to_grid=true` and `global.environment.postgres.clip_by_box2d=true` will use both
+        * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
+        * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
             - ST_ClipByBox2D requires Postgis >=2.2
             - This requires function CDB_ScaleDenominatorToZoom
 
