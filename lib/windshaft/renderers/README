@@ -36,7 +36,7 @@ interface:
   /// @param layer layer number within the mapConfig
   /// @param callback function(err, renderer)
   ///
-  createRenderer(mapConfig, dbParams, format, layer, callback)
+  getRenderer(mapConfig, dbParams, format, layer, callback)
 
   /// Destroy a renderer 
   //
