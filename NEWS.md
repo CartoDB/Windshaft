@@ -1,5 +1,11 @@
-# Version 0.32.1
+# Version 0.32.2
 2014-mm-dd
+
+# Version 0.32.1
+2014-12-02
+
+Announcements:
+ - Upgrades grainstore dependency
 
 
 # Version 0.32.0
