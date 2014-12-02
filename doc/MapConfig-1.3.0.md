@@ -61,14 +61,14 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
                // {String} end URL to retrieve the tiles from.
                // Where {z} — zoom level, {x} and {y} — tile coordinates.
                // And {s} the subdomain, {s} is OPTIONAL. See `subdomains`.
-               urlTemplate: "http://{s}.example.com/{z}/{x}/{y}.png", <- THIS IS NEW
+               urlTemplate: "http://{s}.example.com/{z}/{x}/{y}.png",// <- THIS IS NEW
 
                // OPTIONAL
                // {Array<String>} it will be used to retrieve from different subdomains.
                // It will consistently replace {s} from `urlTemplate`.
                // Defaults to ['a', 'b', 'c'] when {s} is present in `urlTemplate`, [] otherwise.
                // It only applies to `http` type
-               subdomains: ['a', 'b', 'c'], <- THIS IS NEW
+               subdomains: ['a', 'b', 'c'],// <- THIS IS NEW
 
                // REQUIRED for `mapnik` and `torque`
                // string, SQL to be performed on user database to fetch the data to be rendered.
