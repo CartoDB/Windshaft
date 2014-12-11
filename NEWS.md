@@ -1,5 +1,6 @@
 # Version 0.32.2
 2014-mm-dd
+ - Upgrades mapnik
 
 # Version 0.32.1
 2014-12-02
