@@ -1,5 +1,5 @@
 var assert = require('assert');
-var TorqueFactory = require('../../lib/windshaft/renderers/torque');
+var TorqueFactory = require('../../lib/windshaft/renderers/torque').factory;
 
 function GenSQL() {
   PSQLDummy.n = Date.now()
