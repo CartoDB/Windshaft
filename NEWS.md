@@ -1,5 +1,8 @@
-# Version 0.32.3
+# Version 0.33.0
 2014-mm-dd
+
+New features:
+ - Render torque tiles server side (WIP)
 
 
 # Version 0.32.2
