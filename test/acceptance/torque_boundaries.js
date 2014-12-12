@@ -422,8 +422,8 @@ suite('boundary points', function() {
                     {
                         x__uint8: 47,
                         y__uint8: 127,
-                        vals__uint8: [1, 1],
-                        dates__uint16: [0, 1]
+                        vals__uint8: [2],
+                        dates__uint16: [0]
                     },
                     {
                         x__uint8: 48,
