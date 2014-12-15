@@ -1,5 +1,8 @@
 # Version 0.32.4
-2014-mm-dd
+2014-12-15
+
+Bugfixes:
+ - Torque Infinity number of steps (#233)
 
 
 # Version 0.32.3
