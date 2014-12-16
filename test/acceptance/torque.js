@@ -267,7 +267,7 @@ suite('torque', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,2]}];
+          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,1]}];
           var parsed = JSON.parse(res.body);
           assert.deepEqual(tile_content, parsed);
           return null;
@@ -286,7 +286,7 @@ suite('torque', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,2]}];
+          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,1]}];
           var parsed = JSON.parse(res.body);
           assert.deepEqual(tile_content, parsed);
           return null;
