@@ -1,8 +1,25 @@
-# Version 0.32.3
+# Version 0.32.5
 2014-mm-dd
 
 Enhancements:
  - Don't expose the underlying map configuration store technology
+
+
+# Version 0.32.4
+2014-12-15
+
+Bugfixes:
+ - Torque Infinity number of steps (#233)
+
+
+# Version 0.32.3
+2014-12-15
+
+Bugfixes:
+ - Fix incorrect number of steps in Torque (see https://github.com/CartoDB/torque/issues/60)
+
+Enhancements:
+ - Split torque renderer functionality into several files
 
 
 # Version 0.32.2
