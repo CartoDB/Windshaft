@@ -58,8 +58,6 @@ extent: "-180,-90,180,90", //optional (currently unused)
 maxzoom: 18, //optional (currently used to fetch test tile&grids)
 minzoom:3, //optional (currently unused)
 stat_tag: "string", // optional, for stats agregration -- **windshaft-cartodb extension**
-global_cartocss:'#layer0{} #layer1{}...', // optional, takes precedence over per-layer setting
-global_cartocss_version: '2.0.1', // optional, takes precedence over per-layer setting
 // layers are defined in order to the first will be rendered first
 layers: [
    {
@@ -67,8 +65,8 @@ layers: [
      options: {
        sql: 'select * from whatever',
        affected_tables: [ 'table1', 'schema.table2', '"MixedCase"."Table"' ], /* optional */
-       cartocss: '#layer { ... }', /* global_cartocss takes precedence over this, if present */
-       cartocss_version: '2.0.1', /* global_cartocss_version takes precedence over this, if present */
+       cartocss: '#layer { ... }',
+       cartocss_version: '2.0.1',
        interactivity: [ 'field1', ... ] 
      }
    }, 
