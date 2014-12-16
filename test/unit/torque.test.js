@@ -208,6 +208,38 @@ describe('torque', function() {
       });
     });
 
+    it('should not get Infinity steps', function(done) {
+        var mapConfig = {
+            layers: [
+                {
+                    type: 'torque',
+                    options: {
+                        sql: "select * from test_table LIMIT 0",
+                        cartocss: [
+                            "Map {" +
+                                "-torque-frame-count:1;" +
+                                "-torque-resolution:1;" +
+                                "-torque-aggregation-function:'count(*)';" +
+                                "-torque-time-attribute:'updated_at';" +
+                            "}"
+                        ].join('')
+                    },
+                    cartocss_version: '2.1.1'
+                }
+
+            ]
+        };
+
+        sqlApi.responses = [
+            [null, { fields: { updated_at: { type: "date" } } }],
+            [null, { rows: [ { num_steps: 0, max_date: null, min_date: null } ] }]
+        ];
+        torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+            assert.equal(renderer.attrs.step, 1, 'Number of steps cannot be Infinity');
+            done();
+        });
+    });
+
   });
 
 });
