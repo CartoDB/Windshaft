@@ -7,7 +7,7 @@ env:
 language: node_js
 node_js:
   - "0.8"
-  - "0.10"
+  - "0.10.33"
 
 notifications:
   irc:
