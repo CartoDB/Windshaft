@@ -6,6 +6,7 @@ Announcements:
 
 Enhancements:
  - Don't expose the underlying map configuration store technology
+ - Reset getInstance method after each test
 
 
 # Version 0.32.4
