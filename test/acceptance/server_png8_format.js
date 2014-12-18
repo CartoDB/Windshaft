@@ -14,7 +14,6 @@ function rmdir_recursive_sync(dirname) {
         var f = dirname + "/" + files[i];
         var s = fs.lstatSync(f);
         if ( s.isFile() ) {
-            console.log("Unlinking " + f);
             fs.unlinkSync(f)
         }
         else rmdir_recursive_sync(f);

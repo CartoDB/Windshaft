@@ -20,7 +20,6 @@ function rmdir_recursive_sync(dirname) {
     var f = dirname + "/" + files[i];
     var s = fs.lstatSync(f);
     if ( s.isFile() ) {
-      console.log("Unlinking " + f);
       fs.unlinkSync(f)
     }
     else rmdir_recursive_sync(f);
@@ -76,7 +75,6 @@ suite('server', function() {
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
-                console.log("File '" + filename + "' not found");
                 response.write("404 Not Found\n");
               } else {
                 response.writeHead(200);
@@ -123,13 +121,9 @@ suite('server', function() {
         }, function(res) {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('windshaft'), "No 'windshaft' version in " + parsed);
-          console.log("Windshaft: " + parsed.windshaft);
           assert.ok(parsed.hasOwnProperty('grainstore'), "No 'grainstore' version in " + parsed);
-          console.log("Grainstore: " + parsed.grainstore);
           assert.ok(parsed.hasOwnProperty('node_mapnik'), "No 'node_mapnik' version in " + parsed);
-          console.log("Node-mapnik: " + parsed.node_mapnik);
           assert.ok(parsed.hasOwnProperty('mapnik'), "No 'mapnik' version in " + parsed);
-          console.log("Mapnik: " + parsed.mapnik);
           // TODO: check actual versions ?
           done();
         });
@@ -751,7 +745,6 @@ suite('server', function() {
           }
 
           var cachedir = global.environment.millstone.cache_basedir;
-          console.log("Dropping cache dir " + cachedir);
           rmdir_recursive_sync(cachedir);
               
           redis_client.flushall(function() {
