@@ -774,42 +774,6 @@ suite('multilayer', function() {
       });
     });
 
-    test("layergroup with global_cartocss_version", function(done) {
-      var layergroup =  {
-        version: '1.0.0',
-        global_cartocss_version: '2.0.1',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-             } }
-        ]
-      };
-      var expected_token = "de2cb5791aa16a76d803d2b34ff952d9";
-      Step(
-        function do_post() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function do_check(err, res) {
-          assert.equal(res.statusCode, 200, res.body);
-          var parsedBody = JSON.parse(res.body);
-          assert.deepEqual(parsedBody, {layergroupid:expected_token,"layercount":1});
-          return null;
-        },
-        function finish(err) {
-          redis_client.del("map_cfg|" +  expected_token, function(e) {
-            done(err);
-          });
-        }
-      );
-    });
-
     test("check that distinct maps result in distinct tiles", function(done) {
 
       var layergroup1 =  {
@@ -961,18 +925,20 @@ suite('multilayer', function() {
 
       var layergroup =  {
         version: '1.0.1',
-        global_cartocss_version: '2.0.2',
         layers: [
            { options: {
                sql: "select st_setsrid('LINESTRING(-60 -60,-60 60)'::geometry, 4326) as the_geom",
+               cartocss_version: '2.0.2',
                cartocss: '#layer { line-width:16; line-color:#ff0000; }'
              } },
            { options: {
                sql: "select st_setsrid('LINESTRING(-100 0,100 0)'::geometry, 4326) as the_geom",
+               cartocss_version: '2.0.2',
                cartocss: '#layer { line-width:16; line-color:#00ff00; }'
              } },
            { options: {
                sql: "select st_setsrid('LINESTRING(60 -60,60 60)'::geometry, 4326) as the_geom",
+               cartocss_version: '2.0.2',
                cartocss: '#layer { line-width:16; line-color:#0000ff; }'
              } }
         ]
@@ -1033,9 +999,9 @@ suite('multilayer', function() {
     test("sql/cartocss combination errors", function(done) {
       var layergroup =  {
         version: '1.0.1',
-        global_cartocss_version: '2.0.2',
         layers: [{ options: {
            sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#layer [missing=1] { line-width:16; }'
         }}]
       };
@@ -1067,19 +1033,21 @@ suite('multilayer', function() {
     test("sql/interactivity combination error", function(done) {
       var layergroup =  {
         version: '1.0.1',
-        global_cartocss_version: '2.0.2',
         layers: [
           { options: {
            sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#layer { line-width:16; }',
            interactivity: 'i'
           }},
           { options: {
            sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#layer { line-width:16; }'
           }},
           { options: {
            sql: "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#layer { line-width:16; }',
            interactivity: 'missing'
           }}
@@ -1110,15 +1078,16 @@ suite('multilayer', function() {
     test("blank CartoCSS error", function(done) {
       var layergroup =  {
         version: '1.0.1',
-        global_cartocss_version: '2.0.2',
         layers: [
           { options: {
            sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#style { line-width:16 }',
            interactivity: 'i'
           }},
           { options: {
            sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '',
            interactivity: 'i'
           }}
@@ -1145,14 +1114,15 @@ suite('multilayer', function() {
     test("Invalid mapnik-geometry-type CartoCSS error", function(done) {
       var layergroup =  {
         version: '1.0.1',
-        global_cartocss_version: '2.0.2',
         layers: [
           { options: {
            sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#style [mapnik-geometry-type=bogus] { line-width:16 }'
           }},
           { options: {
            sql: "select 1 as i, 'LINESTRING(0 0, 1 0)'::geometry as the_geom",
+           cartocss_version: '2.0.2',
            cartocss: '#style [mapnik-geometry-type=bogus] { line-width:16 }'
           }}
         ]
@@ -1430,7 +1400,7 @@ suite('multilayer', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/97
-    test("unexistent layergroup token error", function(done) {
+    test("nonexistent layergroup token error", function(done) {
       Step(
         function do_get_tile(err)
         {
@@ -1447,7 +1417,7 @@ suite('multilayer', function() {
           // FIXME: should be 404
           assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"error":"Map config token 'deadbeef' not found in redis"});
+          assert.deepEqual(parsed, {"error": "Invalid or nonexistent map configuration token 'deadbeef'"});
           return null
         },
         function finish(err) {

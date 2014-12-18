@@ -4,6 +4,12 @@
 New features:
  - Render torque tiles server side (WIP)
 
+Announcements:
+- Remove support for global_cartocss and global_cartocss_version in multilayer config (#207)
+
+Enhancements:
+ - Don't expose the underlying map configuration store technology
+
 
 # Version 0.32.4
 2014-12-15
