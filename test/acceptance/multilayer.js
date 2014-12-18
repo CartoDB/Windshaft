@@ -1430,7 +1430,7 @@ suite('multilayer', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/97
-    test("unexistent layergroup token error", function(done) {
+    test("nonexistent layergroup token error", function(done) {
       Step(
         function do_get_tile(err)
         {
@@ -1447,7 +1447,7 @@ suite('multilayer', function() {
           // FIXME: should be 404
           assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"error":"Map config token 'deadbeef' not found in redis"});
+          assert.deepEqual(parsed, {"error": "Invalid or nonexistent map configuration token 'deadbeef'"});
           return null
         },
         function finish(err) {

@@ -1,6 +1,9 @@
 # Version 0.32.5
 2014-mm-dd
 
+Enhancements:
+ - Don't expose the underlying map configuration store technology
+
 
 # Version 0.32.4
 2014-12-15
