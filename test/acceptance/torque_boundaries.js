@@ -76,7 +76,12 @@ suite('boundary points', function() {
     var tileRequests = [
         {
             desc: '0/0/0',
-            repr: [],
+            repr: [
+                ' ------',
+                '|      |',
+                '|      |',
+                ' ------'
+            ],
             z: 0,
             x: 0,
             y: 0,
@@ -226,7 +231,7 @@ suite('boundary points', function() {
 
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
-        test('\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n\thandles ' + tileRequest.desc + '.json.torque', function (done) {
+        test('handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n', function (done) {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',
