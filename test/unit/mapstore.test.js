@@ -7,7 +7,7 @@ var   _             = require('underscore')
     , Step          = require('step')
     , serverOptions = require('../support/server_options')
     , MapStore      = require('../../lib/windshaft/storages/mapstore')
-    , MapConfig     = require('../../lib/windshaft/mapconfig')
+    , MapConfig     = require('../../lib/windshaft/models/mapconfig')
 ;
 
 suite('mapstore', function() {
