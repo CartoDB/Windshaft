@@ -1,6 +1,9 @@
 # Version 0.33.0
 2014-mm-dd
 
+New features:
+ - Render torque tiles server side (WIP)
+
 Announcements:
 - Remove support for global_cartocss and global_cartocss_version in multilayer config (#207)
 
