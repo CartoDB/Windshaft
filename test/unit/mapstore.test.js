@@ -6,7 +6,7 @@ var   _             = require('underscore')
     , redis         = require('redis')
     , Step          = require('step')
     , serverOptions = require('../support/server_options')
-    , MapStore      = require('../../lib/windshaft/mapstore')
+    , MapStore      = require('../../lib/windshaft/storages/mapstore')
     , MapConfig     = require('../../lib/windshaft/mapconfig')
 ;
 
