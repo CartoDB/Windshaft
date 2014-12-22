@@ -36,7 +36,7 @@
         "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
         "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
-        "torque.js": "https://github.com/CartoDB/torque/tarball/74-instantiate-windshaft-provider-without-fetchmap",
+        "torque.js": "https://github.com/CartoDB/torque/tarball/master",
         "node-statsd": "~0.0.7"
     },
     "devDependencies": {
