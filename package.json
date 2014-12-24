@@ -25,6 +25,7 @@
         "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
         "underscore": "~1.6.0",
         "step": "~0.0.5",
+        "queue-async": "~1.0.7",
         "grainstore": "https://github.com/CartoDB/grainstore/tarball/0.22.1",
         "express": "~2.5.11",
         "tilelive": "~4.5.3",
