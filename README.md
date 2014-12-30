@@ -145,15 +145,15 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run ```make check``` (or ```npm test```).
-It is also possible for tests to recurse into some of
-the submodules, that's done with ```make check-submodules```
-(or ```make check-full``` to run both)
+To execute them, run ```npm check```.
 
 You'll need to be sure your PGUSER (or your libpq default) is
 set to a "superuser" PostgreSQL account, for example:
 
- PGUSER=postgres make check
+```shell
+PGUSER=postgres npm test
+```
+
 
 Troubleshooting
 ---------------
