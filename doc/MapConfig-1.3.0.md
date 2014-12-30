@@ -29,15 +29,15 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // minzoom to be renderer. From this zoom tiles will respond 404. Must be less than maxzoom
     // default: 0
-    minzoom:3,
+    minzoom: 3,
 
     // REQUIRED
-    // Array of layers defined in render order. Different kind of layers supported
-    // are described below
+    // Array of layers defined in render order
+    // Different kind of layers supported are described below
     layers: [
         {
             // REQUIRED
-            // string, sets layer type, can take 3 values:
+            // string, sets layer type, can take 4 values:
             //  - 'mapnik'  - rasterized tiles
             //  - 'cartodb' - an alias for mapnik, for backward compatibility
             //  - 'torque'  - render vector tiles in torque format (to be linked)
@@ -45,7 +45,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
             type: 'mapnik',
 
             // REQUIRED
-            // object, set different options for each layer type, there are 3 common mandatory attributes
+            // object, set different options for each layer type
             options: {
                 // See different options by layer type bellow this
             }
@@ -70,6 +70,20 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     //
     sql: 'select * from table',
 
+    // REQUIRED
+    // string, CartoCSS style to render the tiles
+    //
+    // CartoCSS specification depend on layer type:
+    //  Mapnik: https://github.com/mapnik/mapnik-reference/blob/master/2.3.0/reference.json
+    cartocss: '#layer { ... }',
+
+    // REQUIRED
+    // string, CartoCSS style version of cartocss attribute
+    //
+    // Version semantic is specific to the layer type.
+    //
+    cartocss_version: '2.0.1',
+
     // OPTIONAL
     // name of the column containing the geometry
     // Defaults to 'the_geom_webmercator'
@@ -92,20 +106,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // spatial reference identifier of the geometry column
     // Defaults to 3857
     srid: 3857,
-
-    // REQUIRED
-    // string, CartoCSS style to render the tiles
-    //
-    // CartoCSS specification depend on layer type:
-    //  Mapnik: https://github.com/mapnik/mapnik-reference/blob/master/2.3.0/reference.json
-    cartocss: '#layer { ... }',
-
-    // REQUIRED
-    // string, CartoCSS style version of cartocss attribute
-    //
-    // Version semantic is specific to the layer type.
-    //
-    cartocss_version: '2.0.1',
 
     // OPTIONAL
     // string array, contains tables that SQL uses. It used when affected tables can't be
@@ -145,16 +145,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     //
     sql: 'select * from table',
 
-    // OPTIONAL
-    // name of the column containing the geometry
-    // Defaults to 'the_geom_webmercator'
-    geom_column: 'the_geom_webmercator',
-
-    // OPTIONAL
-    // spatial reference identifier of the geometry column
-    // Defaults to 3857
-    srid: 3857,
-
     // REQUIRED
     // string, CartoCSS style to render the tiles
     //
@@ -168,6 +158,16 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // Version semantic is specific to the layer type.
     //
     cartocss_version: '1.0.0',
+
+    // OPTIONAL
+    // name of the column containing the geometry
+    // Defaults to 'the_geom_webmercator'
+    geom_column: 'the_geom_webmercator',
+
+    // OPTIONAL
+    // spatial reference identifier of the geometry column
+    // Defaults to 3857
+    srid: 3857,
 
     // OPTIONAL
     // string array, contains tables that SQL uses. It used when affected tables can't be
