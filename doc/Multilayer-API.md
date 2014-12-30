@@ -166,7 +166,16 @@ torque layer type.
 
 ## Fetch grids
 
-`GET :base_url_mapconfig/:TOKEN/:LAYER/:Z/:X/:Y.grid.json`
+`GET :base_url_mapconfig/:TOKEN/:LAYER/{z}/{x}/{y}.grid.json`
+
+
+## Fetch static preview
+
+### By center + zoom + image dimensions
+`GET :base_url_mapconfig/static/center/:TOKEN/:Z/:LAT/:LNG/:WIDTH/:HEIGHT.:format`
+
+### By bounding box + image dimensions
+`GET :base_url_mapconfig/static/bbox/:TOKEN/:WEST,:SOUTH,:EAST,:NORTH/:WIDTH/:HEIGHT.:format`
 
 
 ## Fetch attributes
