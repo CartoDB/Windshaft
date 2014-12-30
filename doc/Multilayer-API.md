@@ -132,10 +132,10 @@ In case of error it will be like:
 
 ```json
 {
-    errors: [
-        // sql errors (syntax errors)
-        // cartodcss errors (syntax)
-        // runtime errors (no permissions)
+    "errors": [
+        "sql errors (syntax errors)",
+        "cartodcss errors (syntax)",
+        "runtime errors (no permissions)"
     ]
 }
 ```
