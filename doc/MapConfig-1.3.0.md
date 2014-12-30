@@ -160,6 +160,11 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     cartocss_version: '1.0.0',
 
     // OPTIONAL
+    // The step to render when requesting a torque.png tile
+    // Defaults to 0
+    step: 0,
+
+    // OPTIONAL
     // name of the column containing the geometry
     // Defaults to 'the_geom_webmercator'
     geom_column: 'the_geom_webmercator',
