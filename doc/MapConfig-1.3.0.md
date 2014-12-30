@@ -198,7 +198,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
 ```javascript
 {
-    // REQUIRED for `http`
+    // REQUIRED
     // {String} end URL to retrieve the tiles from.
     // Where {z} — zoom level, {x} and {y} — tile coordinates.
     // And {s} the subdomain, {s} is OPTIONAL. See `subdomains`.
