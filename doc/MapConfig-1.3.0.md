@@ -54,7 +54,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
-## Mapnik layers options
+## 2.1 Mapnik layers options
 
 ```javascript
 {
@@ -133,7 +133,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
-## Torque layers options
+## 2.2 Torque layers options
 
 ```javascript
 {
@@ -196,7 +196,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 ```
 
 
-## Http layers options
+## 2.3 Http layers options
 
 ```javascript
 {
