@@ -31,15 +31,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
         // default: 0
         minzoom:3,
 
-        // OPTIONAL
-        // global CartoCSS, is prepend in cartocss generated when the full configuration is rendered
-        // takes precedence over per-layer cartocss setting
-        global_cartocss:'#layer0{} #layer1{}...', 
-
-        // OPTIONAL
-        // global CartoCSS version, takes precedence over per-layer setting
-        global_cartocss_version: '2.0.1', // optional,
-
         // REQUIRED
         // Array of layers defined in render order. Different kind of layers supported
         // are described below
