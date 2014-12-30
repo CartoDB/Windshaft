@@ -34,21 +34,23 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // REQUIRED
     // Array of layers defined in render order. Different kind of layers supported
     // are described below
-    layers: [{
-        // REQUIRED
-        // string, sets layer type, can take 3 values:
-        //  - 'mapnik'  - rasterized tiles
-        //  - 'cartodb' - an alias for mapnik, for backward compatibility
-        //  - 'torque'  - render vector tiles in torque format (to be linked)
-        //  - 'http'    - load tiles over HTTP
-        type: 'mapnik',
+    layers: [
+        {
+            // REQUIRED
+            // string, sets layer type, can take 3 values:
+            //  - 'mapnik'  - rasterized tiles
+            //  - 'cartodb' - an alias for mapnik, for backward compatibility
+            //  - 'torque'  - render vector tiles in torque format (to be linked)
+            //  - 'http'    - load tiles over HTTP
+            type: 'mapnik',
 
-        // REQUIRED
-        // object, set different options for each layer type, there are 3 common mandatory attributes
-        options: {
-            // See different options by layer type bellow this
+            // REQUIRED
+            // object, set different options for each layer type, there are 3 common mandatory attributes
+            options: {
+                // See different options by layer type bellow this
+            }
         }
-    }]
+    ]
 }
 ```
 
@@ -202,6 +204,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // {String} end URL to retrieve the tiles from.
     // Where {z} — zoom level, {x} and {y} — tile coordinates.
     // And {s} the subdomain, {s} is OPTIONAL. See `subdomains`.
+    //
+    // NOTE: URLs must be included in the configuration whitelist to be valid
     urlTemplate: "http://{s}.example.com/{z}/{x}/{y}.png",
 
     // OPTIONAL
