@@ -34,7 +34,7 @@
         "canvas": "1.1.6",
         "semver": "~1.1.4",
         "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
-        "carto": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
+        "carto": "https://github.com/CartoDB/carto/tarball/update_to_master",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
         "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
         "torque.js": "https://github.com/CartoDB/torque/tarball/master",
