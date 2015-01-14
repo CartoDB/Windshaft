@@ -1,10 +1,18 @@
 # Version 0.33.0
 2014-mm-dd
 
+New features:
+ - Static previews with support for base layers (HTTP layers) and torque layers
+ - Support to render/proxy HTTP layers
+ - Render torque tiles server side
+   - It misses rendering with *buffer size*
+
 Announcements:
 - Remove support for global_cartocss and global_cartocss_version in multilayer config (#207)
 
 Enhancements:
+ - Split big server.js file into controllers
+ - Split RenderCache: renderer factory so RenderCache does not know about mapnik (not totally true)
  - Don't expose the underlying map configuration store technology
  - Reset getInstance method after each test
 

@@ -3,7 +3,7 @@ var   _             = require('underscore')
     , assert        = require('assert')
     , CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js')
     , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/render_cache.js')
+    , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
