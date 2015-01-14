@@ -1,5 +1,5 @@
 # Version 0.33.0
-2014-mm-dd
+2015-01-14
 
 New features:
  - Static previews with support for base layers (HTTP layers) and torque layers
