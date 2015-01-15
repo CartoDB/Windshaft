@@ -144,11 +144,16 @@ In case of error it will be like:
 ## Fetch tiles
 
 `GET :base_url_mapconfig/:TOKEN/{z}/{x}/{y}.png` or
+`GET :base_url_mapconfig/:TOKEN/{z}/{x}/{y}@{resolution}x.png` or
 `GET :base_url_mapconfig/:TOKEN/:LAYER/{z}/{x}/{y}.png` (for backward
 compatibility).
 
 Will render all `cartodb`/`mapnik` layers together in the specified order,
 layer blending will happen based on the cartocss.
+
+The `@{resolution}x` option will render the image for retina displays, by
+default it supports resolution={1,2}, with `@2x` the image will be 512x512
+pixels instead of 256x256 pixels.
 
 
 ## Fetch tile for a layer
