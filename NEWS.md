@@ -1,5 +1,10 @@
-# Version 0.33.1
-2015-mm-dd
+# Version 0.34.0
+2015-01-15
+
+New features:
+ - New endpoint for map config tiles to be rendered with different resolutions, à la retina display.
+   - Resolution can be specified with `{z}/{x}/{y}@{resolution}x.png`, like in `0/0/0@2x.png`.
+   - It only supports mapnik tiles right now, torque png tiles should be next.
 
 
 # Version 0.33.0
