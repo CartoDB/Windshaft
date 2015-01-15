@@ -1,5 +1,5 @@
 # Version 0.34.0
-2015-mm-dd
+2015-01-15
 
 New features:
  - New endpoint for map config tiles to be rendered with different resolutions, à la retina display.
