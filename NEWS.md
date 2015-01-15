@@ -6,6 +6,9 @@ New features:
    - Resolution can be specified with `{z}/{x}/{y}@{resolution}x.png`, like in `0/0/0@2x.png`.
    - It only supports mapnik tiles right now, torque png tiles should be next.
 
+Announcements:
+ - Remove full layerconfig dump to logfile
+
 
 # Version 0.33.0
 2015-01-14
