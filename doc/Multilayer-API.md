@@ -151,6 +151,8 @@ compatibility).
 Will render all `cartodb`/`mapnik` layers together in the specified order,
 layer blending will happen based on the cartocss.
 
+### Retina support
+
 The `@{resolution}x` option will render the image for retina displays, by
 default it supports resolution={1,2}, with `@2x` the image will be 512x512
 pixels instead of 256x256 pixels.
