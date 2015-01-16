@@ -8,6 +8,13 @@ var   _             = require('underscore')
 
 suite('windshaft', function() {
 
+    var statsClientGetInstanceFn = StatsClient.getInstance;
+
+    afterEach(function(done) {
+        StatsClient.getInstance = statsClientGetInstanceFn;
+        done();
+    });
+
     test('true',  function() {
         assert.equal(global.environment.name, 'test');
     });
@@ -59,24 +66,23 @@ suite('windshaft', function() {
         var expectedCalls = 1, // it will call increment once for the general error
             invalidFormat = 'png2',
             invalidFormatRegexp = new RegExp(invalidFormat);
-        StatsClient.getInstance = function() {
-            return {
-                increment: function(label) {
-                    assert.equal(label.match(invalidFormatRegexp), null,
-                        'Invalid format is getting into increment method');
-                    expectedCalls--;
-                }
+        mockStatsClientGetInstance({
+            increment: function(label) {
+                assert.equal(label.match(invalidFormatRegexp), null,
+                    'Invalid format is getting into increment method');
+                expectedCalls--;
             }
-        }
+        });
         var ws = new Windshaft.Server(serverOptions);
         var reqMock = {
             params: {
                 format: invalidFormat
             }
         };
-        ws.sendError = function(){}
+        ws.sendError = function(){};
         ws.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
 
+        StatsClient.getInstance =
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
 
@@ -85,14 +91,12 @@ suite('windshaft', function() {
             validFormat = 'png',
             validFormatRegexp = new RegExp(validFormat),
             formatMatched = false;
-        StatsClient.getInstance = function() {
-            return {
-                increment: function(label) {
-                    formatMatched = formatMatched || !!label.match(validFormatRegexp);
-                    expectedCalls--;
-                }
+        mockStatsClientGetInstance({
+            increment: function(label) {
+                formatMatched = formatMatched || !!label.match(validFormatRegexp);
+                expectedCalls--;
             }
-        }
+        });
         var ws = new Windshaft.Server(serverOptions);
         var reqMock = {
             params: {
@@ -105,5 +109,11 @@ suite('windshaft', function() {
         assert.ok(formatMatched, 'Format was never matched in increment method')
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
+
+    function mockStatsClientGetInstance(instance) {
+        StatsClient.getInstance = function() {
+            return instance;
+        };
+    }
 
 });

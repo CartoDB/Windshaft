@@ -6,8 +6,8 @@ var   _             = require('underscore')
     , redis         = require('redis')
     , Step          = require('step')
     , serverOptions = require('../support/server_options')
-    , MapStore      = require('../../lib/windshaft/mapstore')
-    , MapConfig     = require('../../lib/windshaft/mapconfig')
+    , MapStore      = require('../../lib/windshaft/storages/mapstore')
+    , MapConfig     = require('../../lib/windshaft/models/mapconfig')
 ;
 
 suite('mapstore', function() {

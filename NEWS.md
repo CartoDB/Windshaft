@@ -1,5 +1,5 @@
-# Version 0.33.0
-2014-mm-dd
+# Version 0.34.1
+2015-mm-dd
 
 Enhancements:
 
@@ -8,6 +8,37 @@ Enhancements:
     * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
         - ST_ClipByBox2D requires Postgis >=2.2
         - This requires function CDB_ScaleDenominatorToZoom
+
+
+# Version 0.34.0
+2015-01-15
+
+New features:
+ - New endpoint for map config tiles to be rendered with different resolutions, à la retina display.
+   - Resolution can be specified with `{z}/{x}/{y}@{resolution}x.png`, like in `0/0/0@2x.png`.
+   - It only supports mapnik tiles right now, torque png tiles should be next.
+
+Announcements:
+ - Remove full layerconfig dump to logfile
+
+
+# Version 0.33.0
+2015-01-14
+
+New features:
+ - Static previews with support for base layers (HTTP layers) and torque layers
+ - Support to render/proxy HTTP layers
+ - Render torque tiles server side
+   - It misses rendering with *buffer size*
+
+Announcements:
+- Remove support for global_cartocss and global_cartocss_version in multilayer config (#207)
+
+Enhancements:
+ - Split big server.js file into controllers
+ - Split RenderCache: renderer factory so RenderCache does not know about mapnik (not totally true)
+ - Don't expose the underlying map configuration store technology
+ - Reset getInstance method after each test
 
 
 # Version 0.32.4
