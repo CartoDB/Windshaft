@@ -298,6 +298,17 @@ suite('render_cache', function() {
         });
     });
 
+    test('does not keep renderers in cache for unexistent tokes', function(done) {
+        var renderCache = makeRenderCache();
+        assert.equal(Object.keys(renderCache.renderers).length, 0);
+        var req = { params: { token: "wadus", x:4, y:4, z:4, format:'png' } };
+        renderCache.getRenderer(req, function(err, renderer) {
+            assert.ok(err);
+            assert.equal(Object.keys(renderCache.renderers).length, 0);
+            done();
+        });
+    });
+
     suiteTeardown(function(done) {
       // Flush redis cache
       // See https://github.com/Vizzuality/Windshaft/issues/24
