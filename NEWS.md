@@ -1,5 +1,5 @@
 # Version 0.35.0
-2015-mm-dd
+2015-01-27
 
 Announcements:
  - Freeze torque.js version to 2.8
