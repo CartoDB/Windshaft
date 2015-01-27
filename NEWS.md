@@ -1,8 +1,9 @@
-# Version 0.34.1
+# Version 0.35.0
 2015-mm-dd
 
 Announcements:
  - Freeze torque.js version to 2.8
+ - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
 
 
 # Version 0.34.0

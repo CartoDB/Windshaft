@@ -1,5 +1,3 @@
-# DRAF VERSION
-
 # 1. Purpose
 
 This specification describes [MapConfig](MapConfig-specification.md) format version 1.3.0.
