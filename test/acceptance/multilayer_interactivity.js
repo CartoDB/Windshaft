@@ -5,7 +5,7 @@ var th            = require('../support/test_helper');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('multilayer', function() {
+suite('multilayer interactivity and layers order', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     var redisClient = redis.createClient(ServerOptions.redis.port);
@@ -23,7 +23,7 @@ suite('multilayer', function() {
     }
 
     function testInteractivityLayersOrderScenario(testScenario) {
-        test('interactivity layers order – ' + testScenario.desc, function(done) {
+        test(testScenario.desc, function(done) {
             var layergroup =  {
                 version: '1.3.0',
                 layers: testScenario.layers
