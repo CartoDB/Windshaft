@@ -19,7 +19,7 @@ suite('multilayer interactivity and layers order', function() {
     });
 
     function layerType(layer) {
-        return layer.type;
+        return layer.type || 'undefined';
     }
 
     function testInteractivityLayersOrderScenario(testScenario) {
