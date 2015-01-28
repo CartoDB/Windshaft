@@ -1,5 +1,5 @@
 # Version 0.35.1
-2015-mm-dd
+2015-01-28
 
 Bugfixes:
  - Fix grid layers order to have the proper index in grainstore (#253)
