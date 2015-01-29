@@ -1,5 +1,16 @@
-# Version 0.34.1
-2015-mm-dd
+# Version 0.35.1
+2015-01-28
+
+Bugfixes:
+ - Fix grid layers order to have the proper index in grainstore (#253)
+
+
+# Version 0.35.0
+2015-01-27
+
+Announcements:
+ - Freeze torque.js version to 2.8
+ - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
 
 Enhancements:
 
