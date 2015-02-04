@@ -26,4 +26,12 @@ suite('datasource', function() {
         assert.equal(emptyDatasource.isEmpty(), false);
         done();
     });
+
+    test('at least one non-undefined (in the middle) should NOT report an empty datasource', function(done) {
+        var datasourceBuilder = new Datasource.Builder();
+        datasourceBuilder.withLayerDatasource(4, {user: 'foo'});
+        var emptyDatasource = datasourceBuilder.build();
+        assert.equal(emptyDatasource.isEmpty(), false);
+        done();
+    });
 });
