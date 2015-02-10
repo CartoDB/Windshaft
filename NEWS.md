@@ -16,6 +16,14 @@ Announcements:
  - Freeze torque.js version to 2.8
  - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
 
+Enhancements:
+
+- Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
+    * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
+    * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
+        - ST_ClipByBox2D requires Postgis >=2.2
+        - This requires function CDB_ScaleDenominatorToZoom
+
 
 # Version 0.34.0
 2015-01-15
