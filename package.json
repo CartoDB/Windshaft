@@ -48,7 +48,7 @@
         "redis": "~0.8.3"
     },
     "scripts": {
-        "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/acceptance/*.js"
+        "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/acceptance/*.js"
     },
     "engines" : {
         "node": ">=0.8 <0.11",
