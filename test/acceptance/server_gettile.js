@@ -82,7 +82,7 @@ suite('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a tile with default style should return an expected tile", 
+    test.skip("get'ing a tile with default style should return an expected tile",
     function(done){
       Step (
         function makeGet() {
@@ -108,7 +108,7 @@ suite('server_gettile', function() {
       );
     });
 
-    test("response of get tile can be served by renderer cache",  function(done){
+    test.skip("response of get tile can be served by renderer cache",  function(done){
       var cb = Date.now();
       Step(
         function get1 () {
@@ -179,7 +179,7 @@ suite('server_gettile', function() {
       );
     });
 
-    test("should not choke when queries end with a semicolon",  function(done){
+    test.skip("should not choke when queries end with a semicolon",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/0/0/0.png?'
               + querystring.stringify({sql: "SELECT * FROM test_table limit 2;"}),
@@ -192,7 +192,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("should not choke when sql ends with a semicolon and some blanks",  function(done){
+    test.skip("should not choke when sql ends with a semicolon and some blanks",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/0/0/0.png?'
               + querystring.stringify({sql: "SELECT * FROM test_table limit 2; \t\n"}),
@@ -205,7 +205,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("should not strip quoted semicolons within an sql query",  function(done){
+    test.skip("should not strip quoted semicolons within an sql query",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/0/0/0.png?'
               + querystring.stringify({sql: "SELECT * FROM test_table where name != ';\n'"}),
@@ -218,7 +218,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
+    test.skip("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
         var sql = querystring.stringify({sql: "BOGUS FROM test_table"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
@@ -232,7 +232,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get tile jsonp error is returned with 200 status",  function(done){
+    test.skip("get tile jsonp error is returned with 200 status",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?sql=bogus&callback=test',
             method: 'GET'
@@ -244,7 +244,7 @@ suite('server_gettile', function() {
     });
 
 
-    test("get'ing a tile from a query with no geometry field returns 400 status",  function(done){
+    test.skip("get'ing a tile from a query with no geometry field returns 400 status",  function(done){
         var sql = querystring.stringify({sql: "SELECT 1"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
@@ -258,7 +258,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get'ing two tiles with same configuration uses renderer cache",  function(done){
+    test.skip("get'ing two tiles with same configuration uses renderer cache",  function(done){
         // NOTE: mus tuse the same cache_buster
         var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
         assert.response(server, {
@@ -287,7 +287,7 @@ suite('server_gettile', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:5}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
 
-    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+    test.skip("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
@@ -303,7 +303,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+    test.skip("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
         var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
@@ -320,7 +320,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get'ing a tile with url specified bogus style should return 400 status",  function(done){
+    test.skip("get'ing a tile with url specified bogus style should return 400 status",  function(done){
         var style = querystring.stringify({style: "#test_table{xxxxx;}"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
@@ -333,7 +333,7 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
-    test("unused directives are tolerated",  function(done){
+    test.skip("unused directives are tolerated",  function(done){
         var style = querystring.stringify({
           style: "#test_table{point-transform: 'scale(100)';}",
           sql: "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom"
@@ -375,10 +375,10 @@ suite('server_gettile', function() {
       test.skip(test_strict_lbl,  test_strictness);
     }
     else {
-      test(test_strict_lbl,  test_strictness);
+      test.skip(test_strict_lbl,  test_strictness);
     }
 
-    test("beforeTileRender is called when the client request a tile",  function(done) {
+    test.skip("beforeTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/6/31/24.png',
             method: 'GET'
@@ -388,7 +388,7 @@ suite('server_gettile', function() {
         }, function() { done(); });
     });
 
-    test("afterTileRender is called when the client request a tile",  function(done) {
+    test.skip("afterTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/6/31/24.png',
             method: 'GET'
@@ -399,7 +399,7 @@ suite('server_gettile', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/31
-    test("PostgreSQL errors are sent in response body",  function(done) {
+    test.skip("PostgreSQL errors are sent in response body",  function(done) {
         var sql = querystring.stringify({sql: "BROKEN QUERY"})
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
@@ -414,7 +414,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test("base and custom style tile referencing external resources do not affect each other", 
+    test.skip("base and custom style tile referencing external resources do not affect each other",
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/circle.svg'); marker-transform:'scale(0.2)'; }";
       var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
@@ -513,7 +513,7 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/107
-    test("external resources get localized on renderer creation", 
+    test.skip("external resources get localized on renderer creation",
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
@@ -588,7 +588,7 @@ suite('server_gettile', function() {
       );
     });
 
-    test("referencing unexistant external resources returns an error", 
+    test.skip("referencing unexistant external resources returns an error",
         function(done){
       var url = "http://localhost:" + res_serv_port + "/notfound.png";
       var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
@@ -606,7 +606,7 @@ suite('server_gettile', function() {
     });
 
     // Test for https://github.com/Vizzuality/Windshaft/issues/65
-    test("catching non-Error exception doesn't kill the backend", function(done) {
+    test.skip("catching non-Error exception doesn't kill the backend", function(done) {
 
       assert.response(server, {
           url: '/database/windshaft_test/table/test_table/0/0/0.png?testUnexpectedError=1',
@@ -656,7 +656,7 @@ suite('server_gettile', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/167
-    test("does not die on unexistent statsd host",  function(done) {
+    test.skip("does not die on unexistent statsd host",  function(done) {
       Step(
         function change_config() {
           var CustomOptions = _.clone(ServerOptions);
@@ -707,7 +707,7 @@ suite('server_gettile', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/173
-    test("does not send db details in connection error response",  function(done) {
+    test.skip("does not send db details in connection error response",  function(done) {
       var base_key = 'map_style|windshaft_test|test_table';
       Step(
         function change_config() {
@@ -760,6 +760,14 @@ suite('server_gettile', function() {
             },
             done
         );
+    });
+
+    test.skip('#85 see 6f3c82dd896e7333bca04160942204f488931af9', function(done) {
+        done();
+    });
+
+    test.skip('#97 see 86ba195058557e30798cb9d1cf967765c4161dd5', function(done) {
+        done();
     });
 
 
