@@ -46,6 +46,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
             // object, set different options for each layer type
             options: {
                 // See different options by layer type bellow this
+                // NOTE: Options not defined in the different layers will be discarded
             }
         }
     ]
@@ -113,6 +114,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // string array, contains fields renderer inside grid.json
     // all the params should be exposed by the results of executing the query in sql attribute
+    // NOTE: `interactivity` is incompatible with `geom_type` so it is not possible to create
+    // a layergroup instance with a `raster` layer with geom_type='raster'.
     interactivity: [ 'field1', 'field2', .. ]
 
     // OPTIONAL
@@ -178,11 +181,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     affected_tables: [ 'table1', 'schema.table2', '"MixedCase"."Table"' ],
 
     // OPTIONAL
-    // string array, contains fields renderer inside grid.json
-    // all the params should be exposed by the results of executing the query in sql attribute
-    interactivity: [ 'field1', 'field2', .. ]
-
-    // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
     // NOTE: enabling the attribute service is forbidden if the "sql" option contains
     //       substitution token that make it dependent on zoom level or viewport extent.
@@ -243,6 +241,8 @@ of MapConfig.
 
  - Add support for 'http' layer type
  - Add support in torque layers to specify the step to render when rendering the associated png
+ - Removes interactivity option for mapnik layers with raster geom_type
+ - Removes interactivity option for torque layers. It was never used.
 
 ## 1.2.0
 
