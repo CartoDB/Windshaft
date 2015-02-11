@@ -141,11 +141,13 @@ suite('server_png8_format', function() {
             similarities.push(similarity);
             var transformPaths = [];
             for (var i = 0, len = allImagePaths.length; i < len; i++) {
-                transformPaths.push({
-                    passive: allImagePaths[i][0],
-                    active: allImagePaths[i][1],
-                    similarity: similarities[i]
-                })
+                if (similarities[i] > 0.075) {
+                    transformPaths.push({
+                        passive: allImagePaths[i][0],
+                        active: allImagePaths[i][1],
+                        similarity: similarities[i]
+                    });
+                }
             }
             var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
             fs.writeFileSync('test/results/png/results.js', output);
