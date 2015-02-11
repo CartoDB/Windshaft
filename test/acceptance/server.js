@@ -154,17 +154,6 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a json with default style should return an grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
-            method: 'GET'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200, res.body);
-            assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
-        });
-    });
-
     test("grid jsonp",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&callback=test',
@@ -199,26 +188,6 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and multiple interactivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
-            var expected_json = {
-                "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
-                "2":{"address":"Calle de la Palma 72, Madrid, Spain","name":"El Estocolmo"},
-                "3":{"address":"Plaza Conde de Toreno 2, Madrid, Spain","name":"El Rey del Tallarín"},
-                "4":{"address":"Manuel Fernández y González 8, Madrid, Spain","name":"El Lacón"},
-                "5":{"address":"Calle Divino Pastor 12, Madrid, Spain","name":"El Pico"}
-            };
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
-            done();
-        });
-    });
-
     test("get'ing a json with default style and no interactivity should return an error",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
@@ -239,19 +208,6 @@ suite('server', function() {
             assert.equal(res.statusCode, 200);
             assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
             done();
-        });
-    });
-
-    test("get'ing a json with default style and sql should return a constrained grid",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=cartodb_id&' + sql,
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
-            assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.grid.json', 2, done);
         });
     });
 
