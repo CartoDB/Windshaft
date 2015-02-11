@@ -40,6 +40,16 @@ suite('server_png8_format', function() {
     var redisClient = redis.createClient(ServerOptions.redis.port);
 
     suiteSetup(function(done) {
+        var testPngFilesDir = __dirname + '/../results/png';
+        fs.readdirSync(testPngFilesDir)
+            .filter(function(fileName) {
+                return /.*\.png$/.test(fileName);
+            })
+            .map(function(fileName) {
+                return testPngFilesDir + '/' + fileName;
+            })
+            .forEach(fs.unlinkSync);
+
         // Check that we start with an empty redis db
         redisClient.keys("*", function(err, matches) {
             if ( err ) { done(err); return; }
