@@ -151,25 +151,6 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
-    // OPTIONS STYLE
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    test("get'ing options on style should return CORS headers",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/style',
-            method: 'OPTIONS'
-        },{
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
-              'Access-Control-Allow-Origin': '*'
-            }
-        }, function() { done(); });
-    });
-
-    ////////////////////////////////////////////////////////////////////
-    //
     // POST STYLE
     //
     ////////////////////////////////////////////////////////////////////
