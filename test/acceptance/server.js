@@ -130,31 +130,12 @@ suite('server', function() {
     });
 
     ////////////////////////////////////////////////////////////////////
-    // 
-    // OPTIONS TILE
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    test("get'ing options on tile should return CORS headers",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
-            method: 'OPTIONS'
-        },{
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
-              'Access-Control-Allow-Origin': '*'
-            }
-        }, function() { done(); });
-    });
-
-    ////////////////////////////////////////////////////////////////////
     //
     // GET GRID 
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("grid jsonp",  function(done){
+    test.skip("grid jsonp",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&callback=test',
             method: 'GET'
@@ -168,7 +149,7 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and single interactivity should return a grid",  function(done){
+    test.skip("get'ing a json with default style and single interactivity should return a grid",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
             method: 'GET'
@@ -188,7 +169,7 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and no interactivity should return an error",  function(done){
+    test.skip("get'ing a json with default style and no interactivity should return an error",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
@@ -200,7 +181,7 @@ suite('server', function() {
         });
     });
 
-    test("get grid jsonp error is returned with 200 status",  function(done){
+    test.skip("get grid jsonp error is returned with 200 status",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?callback=test',
             method: 'GET'
@@ -212,7 +193,7 @@ suite('server', function() {
     });
 
     // See http://github.com/Vizzuality/Windshaft/issues/50
-    test("get'ing a json with no data should return an empty grid",  function(done){
+    test.skip("get'ing a json with no data should return an empty grid",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 0"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
@@ -227,7 +208,7 @@ suite('server', function() {
 
     // Another test for http://github.com/Vizzuality/Windshaft/issues/50
     // this time with interactivity and cache_buster
-    test("get'ing a json with no data but interactivity should return an empty grid",  function(done){
+    test.skip("get'ing a json with no data but interactivity should return an empty grid",  function(done){
         var sql = querystring.stringify({
           sql: "SELECT * FROM test_table limit 0",
           interactivity: 'cartodb_id',
@@ -244,7 +225,7 @@ suite('server', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/67
-    test("get'ing a solid grid while changing interactivity fields",  function(done){
+    test.skip("get'ing a solid grid while changing interactivity fields",  function(done){
         var baseurl = '/database/windshaft_test/table/test_big_poly/3/2/2.grid.json?'
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
         baseurl += querystring.stringify({
