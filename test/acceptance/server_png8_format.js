@@ -20,7 +20,7 @@ function rmdir_recursive_sync(dirname) {
     }
 }
 
-var IMAGE_EQUALS_TOLERANCE_PER_MIL = 70;
+var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
 suite('server_png8_format', function() {
 
@@ -38,6 +38,8 @@ suite('server_png8_format', function() {
 
 
     var redisClient = redis.createClient(ServerOptions.redis.port);
+
+    var layergroupId;
 
     suiteSetup(function(done) {
         var testPngFilesDir = __dirname + '/../results/png';
@@ -63,38 +65,61 @@ suite('server_png8_format', function() {
     });
 
 
-    function testOutputForPng32AndPng8(desc, tile, requestParams, callback) {
-
-        var styleQuerystring = querystring.stringify(requestParams);
-        var tilePartialUrl =  _.template('<%= z %>/<%= x %>/<%= y %>.png', tile);
-
-        var requestPayload = {
-            url: '/database/windshaft_test/table/populated_places_simple_reduced/' + tilePartialUrl + '?' + styleQuerystring,
-            method: 'GET',
-            encoding: 'binary'
-        };
-
-        var requestHeaders = {
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        };
+    function testOutputForPng32AndPng8(desc, tile, callback) {
 
         var bufferPng32,
             bufferPng8;
 
         test(desc + '; tile: ' + JSON.stringify(tile),  function(done){
-            assert.response(serverPng32, requestPayload, requestHeaders, function(responsePng32) {
-                assert.equal(responsePng32.headers['content-type'], "image/png");
-                bufferPng32 = responsePng32.body;
-                assert.response(serverPng8, requestPayload, requestHeaders, function(responsePng8) {
-                    assert.equal(responsePng8.headers['content-type'], "image/png");
-                    bufferPng8 = responsePng8.body;
-                    assert.ok(bufferPng8.length < bufferPng32.length);
-                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, imagePaths, similarity) {
-                        callback(err, imagePaths, similarity, done);
+            assert.response(
+                serverPng32,
+                {
+                    url: '/database/windshaft_test/layergroup',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(layergroup)
+                },
+                {
+                    status: 200
+                },
+                function(res, err) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    layergroupId = JSON.parse(res.body).layergroupid;
+
+                    var tilePartialUrl =  _.template('/<%= z %>/<%= x %>/<%= y %>.png', tile);
+
+                    var requestPayload = {
+                        url: '/database/windshaft_test/layergroup/' + layergroupId + tilePartialUrl,
+                        method: 'GET',
+                        encoding: 'binary'
+                    };
+
+                    var requestHeaders = {
+                        status: 200,
+                        headers: {
+                            'Content-Type': 'image/png'
+                        }
+                    };
+
+                    assert.response(serverPng32, requestPayload, requestHeaders, function(responsePng32) {
+                        assert.equal(responsePng32.headers['content-type'], "image/png");
+                        bufferPng32 = responsePng32.body;
+                        assert.response(serverPng8, requestPayload, requestHeaders, function(responsePng8) {
+                            assert.equal(responsePng8.headers['content-type'], "image/png");
+                            bufferPng8 = responsePng8.body;
+                            assert.ok(bufferPng8.length < bufferPng32.length);
+                            assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, imagePaths, similarity) {
+                                callback(err, imagePaths, similarity, done);
+                            });
+                        });
                     });
-                });
-            });
+                }
+            );
         });
     }
 
@@ -114,29 +139,37 @@ suite('server_png8_format', function() {
     }
 
 
-    var intensityStyle = [
-        '#populated_places_simple_reduced {',
-            'marker-fill: #FFCC00;',
-            'marker-width: 10;',
-            'marker-line-color: #FFF;',
-            'marker-line-width: 1.5;',
-            'marker-line-opacity: 1;',
-            'marker-fill-opacity: 0.9;',
-            'marker-comp-op: multiply;',
-            'marker-type: ellipse;',
-            'marker-placement: point;',
-            'marker-allow-overlap: true;',
-            'marker-clip: false;',
-        '}'
-    ].join(' ');
+    var layergroup =  {
+        version: '1.3.0',
+        layers: [
+            {
+                options: {
+                    sql: 'SELECT * FROM populated_places_simple_reduced',
+                    cartocss: [
+                        '#populated_places_simple_reduced {',
+                            'marker-fill: #FFCC00;',
+                            'marker-width: 10;',
+                            'marker-line-color: #FFF;',
+                            'marker-line-width: 1.5;',
+                            'marker-line-opacity: 1;',
+                            'marker-fill-opacity: 0.9;',
+                            'marker-comp-op: multiply;',
+                            'marker-type: ellipse;',
+                            'marker-placement: point;',
+                            'marker-allow-overlap: true;',
+                            'marker-clip: false;',
+                        '}'
+                    ].join(' '),
+                    cartocss_version: '2.0.1'
+                }
+            }
+        ]
+    };
 
     var allImagePaths = [],
         similarities = [];
     allLevelTiles.forEach(function(tile) {
-        testOutputForPng32AndPng8('intensity visualization', tile, {
-            q: 'SELECT * FROM populated_places_simple_reduced',
-            style: intensityStyle
-        }, function(err, imagePaths, similarity, done) {
+        testOutputForPng32AndPng8('intensity visualization', tile, function(err, imagePaths, similarity, done) {
             allImagePaths.push(imagePaths);
             similarities.push(similarity);
             var transformPaths = [];
@@ -160,20 +193,27 @@ suite('server_png8_format', function() {
     suiteTeardown(function(done) {
         var errors = [];
 
-        // Check that we left the redis db empty
-        redisClient.keys("*", function(err, matches) {
-            if ( err ) errors.push(err);
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err) {
+        redisClient.del(['map_cfg|' + layergroupId], function(err) {
+            if (err) {
                 errors.push(err);
             }
+            // Check that we left the redis db empty
+            redisClient.keys("*", function(err, matches) {
+                if ( err ) {
+                    errors.push(err);
+                }
+                try {
+                    assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
+                } catch (err) {
+                    errors.push(err);
+                }
 
-            var cachedir = global.environment.millstone.cache_basedir;
-            rmdir_recursive_sync(cachedir);
+                var cachedir = global.environment.millstone.cache_basedir;
+                rmdir_recursive_sync(cachedir);
 
-            redisClient.flushall(function() {
-                done(errors.length ? new Error(errors) : null);
+                redisClient.flushall(function() {
+                    done(errors.length ? new Error(errors) : null);
+                });
             });
         });
     });
