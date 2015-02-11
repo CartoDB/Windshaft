@@ -179,24 +179,6 @@ suite('server_gettile', function() {
       );
     });
 
-    test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
-            method: 'GET',
-            encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
-                done();
-            });
-        });
-    });
-
     test("should not choke when queries end with a semicolon",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/0/0/0.png?'
@@ -276,23 +258,6 @@ suite('server_gettile', function() {
         });
     });
 
-    test("get'ing a tile with url specified style should return an expected tile",  function(done){
-        var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                done();
-            });
-        });
-    });
-
     test("get'ing two tiles with same configuration uses renderer cache",  function(done){
         // NOTE: mus tuse the same cache_buster
         var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
@@ -321,23 +286,6 @@ suite('server_gettile', function() {
 
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:5}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
-
-
-    test("get'ing a tile with url specified style should return an expected tile twice",  function(done){
-        var style = querystring.stringify({style: test_style_black_200});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, similarity) {
-                if (err) throw err;
-                done();
-            });
-        });
-    });
 
     test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
@@ -382,68 +330,6 @@ suite('server_gettile', function() {
             assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
             done();
         });
-    });
-
-    test("dynamically set styles in same session and then back to default",  function(done){
-        var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
-
-                // second style
-                var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
-                assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-                    method: 'GET',
-                    encoding: 'binary'
-                },{
-                    status: 200,
-                    headers: { 'Content-Type': 'image/png' }
-                }, function(res){
-                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                        if (err) throw err;
-                        assert.deepEqual(res.headers['content-type'], "image/png");
-
-                        //back to default
-                        assert.response(server, {
-                            url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
-                            method: 'GET',
-                            encoding: 'binary'
-                        },{
-                            status: 200,
-                            headers: { 'Content-Type': 'image/png' }
-                        }, function(res){
-                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                                if (err) throw err;
-                                assert.deepEqual(res.headers['content-type'], "image/png");
-                                done();
-                            });
-                    });
-                    });
-                });
-            });
-        });
-    });
-
-    test("get'ing a tile with CORS enabled should return CORS headers",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token',
-              'Access-Control-Allow-Origin': '*'
-            }
-        }, function() { done(); });
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
@@ -526,71 +412,6 @@ suite('server_gettile', function() {
               'Body does not contain the "syntax error" message: ' + res.body);
           done();
         });
-    });
-
-    test("get'ing a tile after post'ing a style should return an expected tile",  function(done){
-      var style = "#test_table_3{marker-fill: blue;marker-line-color: black;}";
-      Step(
-        // Make sure we don't get the style we want, at first
-        function getTile0() {
-          var next = this;
-          assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                  err = err ? null : new Error("Tile starts with unexpected style!");
-                  next(err);
-              });
-          });
-        },
-        // Set the style we want
-        function postStyle(err) {
-          if ( err ) throw err;
-          var next = this;
-          //next(null, {statusCode: 200}); return;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table_3/style',
-              method: 'POST',
-              headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({style: style})
-          }, {}, function(res) { next(null, res); });
-        },
-        // Check style setting succeeded
-        function checkPost(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 200, res.body);
-          //assert.equal(res.body, "ok");
-          return null;
-        },
-        // Now check we get the tile styled as we specified
-        function getTile(err, data) {
-          if ( err ) throw err;
-          var next = this;
-          assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
-          },{
-              status: 200,
-              headers: { 'Content-Type': 'image/png' }
-          }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                  if (err) { next(err); return; }
-                  next(null);
-              });
-          });
-        },
-        function finish(err) {
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table_3/style',
-              method: 'DELETE' },{}, function(res) { done(err); });
-        }
-      );
     });
 
     test("base and custom style tile referencing external resources do not affect each other", 
