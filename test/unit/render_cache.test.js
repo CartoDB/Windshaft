@@ -4,6 +4,8 @@ var   _             = require('underscore')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
     , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
+    , MapStore   = require('../../lib/windshaft/storages/mapstore')
+    , MapConfig   = require('../../lib/windshaft/models/mapconfig')
     , RendererFactory = require('../../lib/windshaft/renderers/renderer_factory')
     , redis         = require('redis')
     , Step          = require('step')
@@ -23,7 +25,34 @@ suite('render_cache', function() {
         }
     });
 
-    var mapStore, mapnikOpts;
+    var mapConfig = MapConfig.create({
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select 1 id, null::geometry the_geom',
+                    cartocss: '#layer { }',
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ]
+    });
+
+    var mapConfig2 = MapConfig.create({
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select 2 id, null::geometry the_geom',
+                    cartocss: '#layer { }',
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ]
+    });
+
+    var mapStore = new MapStore({}),
+        mapnikOpts;
 
 
     function makeRenderCache(opts) {
@@ -33,11 +62,20 @@ suite('render_cache', function() {
 
 
     suiteSetup(function(done) {
-      // Check that we start with an empty redis db 
-      redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0);
-          done();
-      });
+        // Check that we start with an empty redis db
+        redis_client.keys("*", function(err, matches) {
+            if (err) {
+                return done(err);
+            }
+            assert.equal(matches.length, 0);
+
+            mapStore.save(mapConfig, function(err) {
+                if (err) {
+                    return done(err);
+                }
+                mapStore.save(mapConfig2, done);
+            });
+        });
     });
 
     test('has a cache of render objects', function(){
@@ -128,11 +166,11 @@ suite('render_cache', function() {
 
     test('can generate > 1 tilelive object', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req = {params: {dbname: "windshaft_test", table: 'test_table_2', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+            req = {params: {dbname: "windshaft_test", token: mapConfig2.id(), x: 4, y:4, z:4, format:'png' }};
             render_cache.getRenderer(req, function(err, renderer2){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 done();
@@ -143,7 +181,7 @@ suite('render_cache', function() {
 
     test('can reuse tilelive object', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -157,13 +195,13 @@ suite('render_cache', function() {
     test('can delete all tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
 
-            var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
-                sql: "(SELECT * FROM test_table LIMIT 50) as q" }};
+            var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format: 'png',
+                scale_factor: 2}};
             render_cache.getRenderer(req, function(err, renderer){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 render_cache.reset(req);
@@ -177,19 +215,19 @@ suite('render_cache', function() {
     test('can delete only related tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
+            req.params.scale_factor = 2;
 
             render_cache.getRenderer(req, function(err, renderer){
-                delete req.params.sql;
-                req.params.table = 'test_table_2';
+                delete req.params.scale_factor;
+                req.params.token = mapConfig2.id();
 
                 render_cache.getRenderer(req, function(err, renderer){
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    req.params.table = 'test_table';
+                    req.params.token = mapConfig.id();
                     render_cache.reset(req);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1);
@@ -243,20 +281,20 @@ suite('render_cache', function() {
     test('can purge all tilelive objects', function(done){
         var render_cache = makeRenderCache();
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
+            req.params.scale_factor = 2;
 
             render_cache.getRenderer(req, function(err, renderer){
-                delete req.params.sql;
-                req.params.table = 'test_table_2';
+                delete req.params.scale_factor;
+                req.params.token = mapConfig2.id();
 
                 render_cache.getRenderer(req, function(err, renderer){
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    req.params.table = 'test_table';
+                    req.params.token = mapConfig.id();
                     render_cache.purge();
 
                     assert.equal(_.keys(render_cache.renderers).length, 0);
