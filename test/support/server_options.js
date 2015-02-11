@@ -46,18 +46,6 @@ module.exports = function(opts) {
             headers['X-AfterTileRender2'] = 'called';
             callback(null, tile, headers);
         },
-        beforeStateChange: function(req, callback) {
-            this.beforeStateChangeCalls = this.beforeStateChangeCalls ? this.beforeStateChangeCalls + 1 : 1;
-            callback(null, req);
-        },
-        afterStyleChange: function(req, data, callback) {
-            this.afterStyleChangeCalls = this.afterStyleChangeCalls ? this.afterStyleChangeCalls + 1 : 1;
-            callback(null, data);
-        },
-        afterStyleDelete: function(req, data, callback) {
-            this.afterStyleDeleteCalls = this.afterStyleDeleteCalls ? this.afterStyleDeleteCalls + 1 : 1;
-            callback(null, data);
-        },
         afterLayergroupCreate: function(req, cfg, res, callback) {
             res.layercount = cfg.layers.length;
             this.afterLayergroupCreateCalls = this.afterLayergroupCreateCalls ? this.afterLayergroupCreateCalls + 1 : 1;
