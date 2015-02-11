@@ -1,5 +1,6 @@
 var assert = require('assert');
 var TorqueFactory = require('../../lib/windshaft/renderers/torque').factory;
+var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
 function GenSQL() {
   PSQLDummy.n = Date.now()
@@ -18,7 +19,7 @@ function GenSQL() {
 
 describe('torque', function() {
 
-  var mapConfig_notorque = {
+  var layergroup_notorque = {
     layers: [
       {
         type: 'cartodb',
@@ -30,31 +31,42 @@ describe('torque', function() {
       }
     ]
   };
+  var mapConfig_notorque = MapConfig.create(layergroup_notorque);
 
+  function makeCartoCss(mapAttributes) {
+      mapAttributes = mapAttributes || [
+          '-torque-time-attribute: "date";',
+          '-torque-aggregation-function: "count(cartodb_id)";',
+          '-torque-frame-count: 760;',
+          '-torque-animation-duration: 15;',
+          '-torque-resolution: 2'
+      ];
+      return [
+        'Map {',
+          mapAttributes.join(' '),
+        '}',
+        '#layer {',
+          'marker-width: 3;',
+        '}'
+      ].join('')
+  }
 
-  var mapConfig = {
-    layers: [
-      {
-        type: 'torque',
-        options: {
-          sql: 'select * from table',
-          cartocss: ['',
-            'Map {',
-            '-torque-time-attribute: "date";',
-            '-torque-aggregation-function: "count(cartodb_id)";',
-            '-torque-frame-count: 760;',
-            '-torque-animation-duration: 15;',
-            '-torque-resolution: 2',
-            '}',
-            '#layer {',
-            "  marker-width: 3; ",
-            '}'
-          ].join(''),
-          cartocss_version: '2.1.1'
-        }
-      }
-    ]
+  function layergroupConfig(cartocss) {
+    cartocss = cartocss || makeCartoCss();
+    return {
+        layers: [
+            {
+                type: 'torque',
+                options: {
+                    sql: 'select * from table',
+                    cartocss: cartocss,
+                    cartocss_version: '2.1.1'
+                }
+            }
+        ]
+    }
   };
+  var mapConfig = MapConfig.create(layergroupConfig());
 
   var sqlApi = null;
   beforeEach(function(){
@@ -91,7 +103,14 @@ describe('torque', function() {
           ]
         }]
       ];
-      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-frame-count:[^;]*;/, ''));
+      var brokenConfig = MapConfig.create(layergroupConfig(makeCartoCss(
+          [
+              '-torque-time-attribute: "date";',
+              '-torque-aggregation-function: "count(cartodb_id)";',
+              '-torque-animation-duration: 15;',
+              '-torque-resolution: 2'
+          ]
+      )));
       torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
@@ -108,7 +127,14 @@ describe('torque', function() {
           ]
         }]
       ];
-      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-resolution:[^;]*;/, ''));
+      var brokenConfig = MapConfig.create(layergroupConfig(makeCartoCss(
+          [
+              '-torque-time-attribute: "date";',
+              '-torque-aggregation-function: "count(cartodb_id)";',
+              '-torque-frame-count: 760;',
+              '-torque-animation-duration: 15;'
+          ]
+      )));
       torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
@@ -125,7 +151,14 @@ describe('torque', function() {
           ]
         }]
       ];
-      var brokenConfig = JSON.parse(JSON.stringify(mapConfig).replace(/-torque-time-attribute:[^;]*;/, ''));
+      var brokenConfig = MapConfig.create(layergroupConfig(makeCartoCss(
+          [
+              '-torque-aggregation-function: "count(cartodb_id)";',
+              '-torque-frame-count: 760;',
+              '-torque-animation-duration: 15;',
+              '-torque-resolution: 2'
+          ]
+      )));
       torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
@@ -209,7 +242,7 @@ describe('torque', function() {
     });
 
     it('should not get Infinity steps', function(done) {
-        var mapConfig = {
+        var layergroup = {
             layers: [
                 {
                     type: 'torque',
@@ -229,6 +262,7 @@ describe('torque', function() {
 
             ]
         };
+        var mapConfig = MapConfig.create(layergroup);
 
         sqlApi.responses = [
             [null, { fields: { updated_at: { type: "date" } } }],
