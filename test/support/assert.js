@@ -199,9 +199,9 @@ assert.response = function(server, req, res, msg){
                       : res.body === response.body;
                     assert.ok(
                         eql,
-                        msg + 'Invalid response body.\n'
-                            + '    Expected: ' + res.body + '\n'
-                            + '    Got: ' + response.body
+                        msg + colorize('[red]{Invalid response body.}\n'
+                            + '    Expected: [green]{' + res.body + '}\n'
+                            + '    Got: [red]{' + response.body + '}')
                     );
                 }
 
@@ -210,9 +210,9 @@ assert.response = function(server, req, res, msg){
                     assert.equal(
                         response.statusCode,
                         status,
-                        msg + 'Invalid response status code.\n'
+                        msg + colorize('[red]{Invalid response status code.}\n'
                             + '    Expected: [green]{' + status + '}\n'
-                            + '    Got: [red]{' + response.statusCode + '}'
+                            + '    Got: [red]{' + response.statusCode + '}')
                     );
                 }
 
@@ -228,9 +228,9 @@ assert.response = function(server, req, res, msg){
                               : expected == actual;
                         assert.ok(
                             eql,
-                            msg + 'Invalid response header [bold]{' + name + '}.\n'
+                            msg + colorize('Invalid response header [bold]{' + name + '}.\n'
                                 + '    Expected: [green]{' + expected + '}\n'
-                                + '    Got: [red]{' + actual + '}'
+                                + '    Got: [red]{' + actual + '}')
                         );
                     }
                 }
@@ -303,3 +303,16 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
 };
 
 
+/**
+ * Colorize the given string using ansi-escape sequences.
+ * Disabled when --boring is set.
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function colorize(str) {
+    var colors = { bold: 1, red: 31, green: 32, yellow: 33 };
+    return str.replace(/\[(\w+)\]\{([^]*?)\}/g, function(_, color, str) {
+        return '\x1B[' + colors[color] + 'm' + str + '\x1B[0m';
+    });
+}
