@@ -1,13 +1,43 @@
-# Version 0.34.1
+# Version 0.37.0
 2015-mm-dd
 
-Enhancements:
-
+New features:
 - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
     * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
     * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
         - ST_ClipByBox2D requires Postgis >=2.2
         - This requires function CDB_ScaleDenominatorToZoom
+
+
+# Version 0.36.0
+2015-02-13
+
+New features:
+ - Adds a fallback http renderer
+ - Mapconfig per layer datasource
+ - Plain renderer based on mapnik.Image
+ - Enable regex matching in valid url templates for http renderer
+
+Bugfixes:
+ - Use a different zero-based index for grid layers so they can pick up their proper interactivity (#253)
+
+Enhancements:
+ - Create layergroup improvements, model now does all the validation for the mapconfig
+
+
+# Version 0.35.1
+2015-01-28
+
+Bugfixes:
+ - Fix grid layers order to have the proper index in grainstore (#253)
+
+
+# Version 0.35.0
+2015-01-27
+
+Announcements:
+ - Freeze torque.js version to 2.8
+ - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
 
 
 # Version 0.34.0
