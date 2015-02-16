@@ -2,11 +2,14 @@
 2015-mm-dd
 
 New features:
-- Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
+ - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
     * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
     * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
         - ST_ClipByBox2D requires Postgis >=2.2
         - This requires function CDB_ScaleDenominatorToZoom
+
+Bufixes:
+ - Don't allow to instantiate a mapnik raster layer with interactivity option (#244)
 
 
 # Version 0.36.0
