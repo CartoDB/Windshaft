@@ -1,5 +1,21 @@
-# Version 0.35.2
+# Version 0.36.1
 2015-mm-dd
+
+
+# Version 0.36.0
+2015-02-13
+
+New features:
+ - Adds a fallback http renderer
+ - Mapconfig per layer datasource
+ - Plain renderer based on mapnik.Image
+ - Enable regex matching in valid url templates for http renderer
+
+Bugfixes:
+ - Use a different zero-based index for grid layers so they can pick up their proper interactivity (#253)
+
+Enhancements:
+ - Create layergroup improvements, model now does all the validation for the mapconfig
 
 
 # Version 0.35.1
