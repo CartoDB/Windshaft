@@ -1,5 +1,5 @@
 # Version 0.37.0
-2015-mm-dd
+2015-02-16
 
 New features:
  - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
