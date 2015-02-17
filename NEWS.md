@@ -1,6 +1,9 @@
 # Version 0.37.1
 2015-mm-dd
 
+Enhancements:
+ - Make `urlTemplate` option mandatory in http layers (#265)
+
 
 # Version 0.37.0
 2015-02-16
@@ -12,7 +15,7 @@ New features:
         - ST_ClipByBox2D requires Postgis >=2.2
         - This requires function CDB_ScaleDenominatorToZoom
 
-Bufixes:
+Bugfixes:
  - Don't allow to instantiate a mapnik raster layer with interactivity option (#244)
 
 
