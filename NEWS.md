@@ -1,5 +1,5 @@
 # Version 0.37.2
-2015-mm-dd
+2015-02-17
 
 Enhancements:
  - Do not use `inner_cdbq` wrapped queries if `ST_ClipByBox2D` or `ST_SnapToGrid` are not enabled.
