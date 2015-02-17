@@ -1,6 +1,9 @@
 # Version 0.37.3
 2015-mm-dd
 
+Bugfixes:
+ - Use datasource for layer when retrieving attributes (#266)
+
 
 # Version 0.37.2
 2015-02-17
