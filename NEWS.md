@@ -1,5 +1,5 @@
 # Version 0.37.1
-2015-mm-dd
+2015-02-17
 
 Enhancements:
  - Make `urlTemplate` option mandatory in http layers (#265)
