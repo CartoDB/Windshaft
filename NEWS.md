@@ -1,6 +1,9 @@
 # Version 0.37.4
 2015-mm-dd
 
+Enhancements:
+ - Allow exact match along regex matching in urlTemplate for http layers
+
 
 # Version 0.37.3
 2015-02-17

@@ -51,4 +51,14 @@ suite('renderer_http_factory', function() {
         done();
     });
 
+    test('valid urlTemplate requiring input escape', function(done) {
+        var urlTemplateRequiringEscape =
+            'https://{s}.maps.nlp.nokia.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?lg=eng';
+        assert.equal(
+            HttpRendererFactory.isValidUrlTemplate(urlTemplateRequiringEscape, regexWhitelistSample.concat([urlTemplateRequiringEscape])),
+            true
+        );
+        done();
+    });
+
 });
