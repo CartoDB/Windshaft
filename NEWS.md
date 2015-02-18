@@ -1,5 +1,63 @@
-# Version 0.35.2
+# Version 0.37.5
 2015-mm-dd
+
+
+# Version 0.37.4
+2015-02-18
+
+Enhancements:
+ - Allow exact match along regex matching in urlTemplate for http layers
+
+
+# Version 0.37.3
+2015-02-17
+
+Bugfixes:
+ - Use datasource for layer when retrieving attributes (#266)
+
+
+# Version 0.37.2
+2015-02-17
+
+Enhancements:
+ - Do not use `inner_cdbq` wrapped queries if `ST_ClipByBox2D` or `ST_SnapToGrid` are not enabled.
+
+
+# Version 0.37.1
+2015-02-17
+
+Enhancements:
+ - Make `urlTemplate` option mandatory in http layers (#265)
+
+
+# Version 0.37.0
+2015-02-16
+
+New features:
+ - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
+    * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
+    * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
+        - ST_ClipByBox2D requires Postgis >=2.2
+        - This requires function CDB_ScaleDenominatorToZoom
+
+Bugfixes:
+ - Don't allow to instantiate a mapnik raster layer with interactivity option (#244)
+
+
+# Version 0.36.0
+2015-02-13
+
+New features:
+ - Adds a fallback http renderer
+ - Mapconfig per layer datasource
+ - Plain renderer based on mapnik.Image
+ - Enable regex matching in valid url templates for http renderer
+
+Bugfixes:
+ - Use a different zero-based index for grid layers so they can pick up their proper interactivity (#253)
+
+Enhancements:
+ - Create layergroup improvements, model now does all the validation for the mapconfig
 
 
 # Version 0.35.1
@@ -15,14 +73,6 @@ Bugfixes:
 Announcements:
  - Freeze torque.js version to 2.8
  - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
-
-Enhancements:
-
-- Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
-    * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
-    * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
-        - ST_ClipByBox2D requires Postgis >=2.2
-        - This requires function CDB_ScaleDenominatorToZoom
 
 
 # Version 0.34.0
