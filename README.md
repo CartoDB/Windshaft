@@ -1,11 +1,12 @@
 Windshaft map tiler
 ===================
 
+A Node.js map tile server for PostGIS with CartoCSS map styling API.
+
+[![NPM](https://nodei.co/npm/windshaft.png?downloads=true&downloadRank=true)](https://nodei.co/npm/windshaft)
+
 [![Build Status](https://travis-ci.org/CartoDB/Windshaft.png?branch=master)](https://travis-ci.org/CartoDB/Windshaft)
 [![Code Climate](https://codeclimate.com/github/CartoDB/Windshaft/badges/gpa.png)](https://codeclimate.com/github/CartoDB/Windshaft)
-
-A Node.js based webmercator map tile server for PostGIS with Carto map
-styling API.
 
 * Pluggable routing to provide customizable tile API URL endpoints
 * Before and after filters to allow custom access control and caching
