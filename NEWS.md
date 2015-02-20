@@ -1,5 +1,5 @@
 # Version 0.37.5
-2015-mm-dd
+2015-02-20
 
 Enhancements:
  - Force followRedirect in http renderers (#268)
