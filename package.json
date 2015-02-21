@@ -48,6 +48,7 @@
         "redis": "~0.8.3"
     },
     "scripts": {
+        "preinstall": "sh ./scripts/check-node-canvas.sh",
         "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/integration/renderers/*.js test/acceptance/*.js"
     },
     "engines" : {
