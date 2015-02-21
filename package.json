@@ -4,22 +4,24 @@
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js based map tile server for PostGIS & Mapnik",
     "keywords": [
-      "cartodb"
+        "cartodb"
     ],
     "url": "https://github.com/CartoDB/Windshaft",
-    "licenses": [{
-        "type": "BSD",
-        "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
-    }],
+    "licenses": [
+        {
+            "type": "BSD",
+            "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "git://github.com/CartoDB/Windshaft.git"
     },
     "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
     "contributors": [
-      "Simon Tokumine <simon@vizzuality.com>",
-      "Javi Santana <jsantana@vizzuality.com>",
-      "Sandro Santilli <strk@vizzuality.com>"
+        "Simon Tokumine <simon@vizzuality.com>",
+        "Javi Santana <jsantana@vizzuality.com>",
+        "Sandro Santilli <strk@vizzuality.com>"
     ],
     "dependencies": {
         "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
@@ -51,8 +53,8 @@
         "preinstall": "sh ./scripts/check-node-canvas.sh",
         "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/integration/renderers/*.js test/acceptance/*.js"
     },
-    "engines" : {
+    "engines": {
         "node": ">=0.8 <0.11",
-        "npm" : ">=1.2.1"
+        "npm": ">=1.2.1"
     }
 }
