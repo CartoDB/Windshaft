@@ -1,7 +1,7 @@
+require('./test_helper');
 var step = require('step');
 var assert = require('./assert');
 var redis = require('redis');
-var th = require('./test_helper');
 var _ = require('underscore');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('./server_options');
@@ -119,5 +119,5 @@ function createFinishFn(layergroupid) {
         redisClient.del(redisKey, function (err) {
             return done(err);
         });
-    }
+    };
 }
