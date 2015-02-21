@@ -4,8 +4,15 @@ all:
 clean:
 	rm -rf node_modules/*
 
-check-local:
-	npm test
+check: test
 
-check: check-local
-test: check-local
+test:
+	sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/integration/renderers/*.js test/acceptance/*.js
+
+jshint:
+	@./node_modules/.bin/jshint lib/
+
+test-all: jshint test
+
+
+.PHONY: test jshint
