@@ -1,11 +1,12 @@
 Windshaft map tiler
 ===================
 
-[![Build Status](http://travis-ci.org/CartoDB/Windshaft.png)]
-(http://travis-ci.org/CartoDB/Windshaft)
+A Node.js map tile server for PostGIS with CartoCSS map styling API.
 
-A Node.js based webmercator map tile server for PostGIS with Carto map
-styling API.
+[![NPM](https://nodei.co/npm/windshaft.png?downloads=true&downloadRank=true)](https://nodei.co/npm/windshaft)
+
+[![Build Status](https://travis-ci.org/CartoDB/Windshaft.png?branch=master)](https://travis-ci.org/CartoDB/Windshaft)
+[![Code Climate](https://codeclimate.com/github/CartoDB/Windshaft/badges/gpa.png)](https://codeclimate.com/github/CartoDB/Windshaft)
 
 * Pluggable routing to provide customizable tile API URL endpoints
 * Before and after filters to allow custom access control and caching
@@ -25,16 +26,18 @@ its raw form. The idea is that you the developer will want to graft your
 own auth/metrics/caching/scaling on top of decent core components. Same
 old story: high cohesion, low coupling makes us happy.
 
-Windshaft is a library used by cartodb.com,
+Windshaft is a library used by [cartodb.com](https://cartodb.com/),
 an Open Source Geospatial Database on the Cloud.
+
 
 Dependencies
 ------------
 * Node >=0.8
 * npm >=1.2.1
-* Mapnik 2.0.1, 2.0.2 or 2.1.0 (http://github.com/mapnik/mapnik-reference)
+* Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0 (http://github.com/mapnik/mapnik-reference)
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
+* libcairo2, libjpeg8 and libgif for server side canvas support
 
 
 Install
@@ -129,31 +132,30 @@ See examples directory for running server and maptile viewer
 Installing Mapnik
 -----------------
 
-**Source**
-https://github.com/mapnik/mapnik/downloads
+Latest [node-mapnik](https://github.com/mapnik/node-mapnik) versions comes
+compiled for some platforms and architectures, in case you need it you can
+always compile, package and install it manually. The recommended option is
+to use [mapnik-packaging](https://github.com/mapnik/mapnik-packaging). You
+can also use other alternatives:
 
-**OSX**
+ - **Source**: https://github.com/mapnik/mapnik
+ - **OSX**: https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
+ - **Linux**: https://github.com/mapnik/mapnik/wiki/LinuxInstallation
 
-http://trac.mapnik.org/wiki/MacInstallation/Homebrew
-
-**Linux**
-
-There should be .deb packages out there with stable 2.0.0 packages right now.
-Search fro libmapnik2-dev
 
 Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run ```make check``` (or ```npm test```).
-It is also possible for tests to recurse into some of
-the submodules, that's done with ```make check-submodules```
-(or ```make check-full``` to run both)
+To execute them, run ```npm check```.
 
 You'll need to be sure your PGUSER (or your libpq default) is
 set to a "superuser" PostgreSQL account, for example:
 
- PGUSER=postgres make check
+```shell
+PGUSER=postgres npm test
+```
+
 
 Troubleshooting
 ---------------

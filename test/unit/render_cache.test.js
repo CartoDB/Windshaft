@@ -3,7 +3,8 @@ var   _             = require('underscore')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/render_cache.js')
+    , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
+    , RendererFactory = require('../../lib/windshaft/renderers/renderer_factory')
     , redis         = require('redis')
     , Step          = require('step')
     , serverOptions = require('../support/server_options')
@@ -15,6 +16,21 @@ suite('render_cache', function() {
 
     // initialize core mml_store
     var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
+
+    var rendererFactory = new RendererFactory({
+        mapnik: {
+            mmlStore: mml_store
+        }
+    });
+
+    var mapStore, mapnikOpts;
+
+
+    function makeRenderCache(opts) {
+        opts = opts || { timeout: 10000 };
+        return new RenderCache(opts, mml_store, mapStore, mapnikOpts, rendererFactory);
+    }
+
 
     suiteSetup(function(done) {
       // Check that we start with an empty redis db 
@@ -29,40 +45,8 @@ suite('render_cache', function() {
         assert.ok(_.isObject(render_cache.renderers));
     });
 
-    test('can create a unique key from request, stripping xyz/callback', function(){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
-
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point:select *::::');
-    });
-
-    test('cache key includes style', function(){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png' }};
-
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point::::#test_table{}:');
-    });
-
-    test('cache key includes style_version', function(){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
-
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table::png:point::::#test_table{}:2.1.0');
-    });
-
-    // WARNING!
-    // This behavior is (ab)used by Windshaft-cartodb to balance between different dbhosts
-    // so renderer caches get reused when there is another one open with same dbuser
-    // but different dbhost. Please do not disable unless this is taken into account.
-    test('cache key includes dbname and dbuser but not dbhost', function(){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
-        var req1 = {params: {dbhost: "1.2.3.4", dbuser: "windshaft_user", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
-        var req2 = {params: {dbhost: "1.2.3.5", dbuser: "windshaft_user", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
-        assert.equal(render_cache.createKey(req1.params), render_cache.createKey(req2.params));
-    });
-
     test('cache creation invokes renderer cache processor', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { c.was_here = 1; cb(); } }};
 
         render_cache.getRenderer(req, function(err, item) {
@@ -73,7 +57,7 @@ suite('render_cache', function() {
     });
 
     test('cache renderer creation hook can error out', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { cb(new Error('no dice')); }}};
 
         render_cache.getRenderer(req, function(err, item) {
@@ -83,7 +67,7 @@ suite('render_cache', function() {
     });
 
     test('cache renderer hook is only called when a _new_ cache is created', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
         req.params.processRendererCache = function(c, r, cb) {
           c.was_here = 2;
@@ -115,7 +99,7 @@ suite('render_cache', function() {
     });
 
     test('cache renderer item contains cache_buster', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', cache_buster:6 }};
 
         render_cache.getRenderer(req, function(err, item) {
@@ -130,7 +114,7 @@ suite('render_cache', function() {
      */
 
     test('can generate a tilelive object', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
@@ -143,7 +127,7 @@ suite('render_cache', function() {
 
 
     test('can generate > 1 tilelive object', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
@@ -158,7 +142,7 @@ suite('render_cache', function() {
 
 
     test('can reuse tilelive object', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
@@ -171,7 +155,7 @@ suite('render_cache', function() {
     });
 
     test('can delete all tilelive objects when reset', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
@@ -191,7 +175,7 @@ suite('render_cache', function() {
 
 
     test('can delete only related tilelive objects when reset', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
@@ -218,7 +202,7 @@ suite('render_cache', function() {
 
     // See https://github.com/Vizzuality/Windshaft/issues/59
     test.skip('clears both auth and non-auth renderer caches on reset', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
 
         var req = {params: {
             user: 'postgres',
@@ -257,7 +241,7 @@ suite('render_cache', function() {
 
 
     test('can purge all tilelive objects', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
 
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
@@ -284,7 +268,7 @@ suite('render_cache', function() {
     });
 
     test('automatically deletes tilelive only after timeout', function(done){
-        var render_cache = new RenderCache({timeout: 100}, mml_store);
+        var render_cache = makeRenderCache({timeout: 100});
         var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -296,7 +280,7 @@ suite('render_cache', function() {
     // Remove from cache renderers erroing out
     // See https://github.com/CartoDB/Windshaft/issues/171
     test('does not keep erroring renderers in cache', function(done){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         assert.equal(_.keys(render_cache.renderers).length, 0);
         var req = {params: {dbname: "windshaft_test", table: 'nonexistant', x:4, y:4, z:4, format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
@@ -311,6 +295,17 @@ suite('render_cache', function() {
               catch (e) { err = e; }
               done(err);
             }, 0);
+        });
+    });
+
+    test('does not keep renderers in cache for unexistent tokes', function(done) {
+        var renderCache = makeRenderCache();
+        assert.equal(Object.keys(renderCache.renderers).length, 0);
+        var req = { params: { token: "wadus", x:4, y:4, z:4, format:'png' } };
+        renderCache.getRenderer(req, function(err, renderer) {
+            assert.ok(err);
+            assert.equal(Object.keys(renderCache.renderers).length, 0);
+            done();
         });
     });
 

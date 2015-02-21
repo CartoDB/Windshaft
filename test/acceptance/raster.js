@@ -126,6 +126,50 @@ suite('raster', function() {
       );
     });
 
+    test("raster geom type does not allow interactivity", function(done) {
+
+        var mapconfig =  {
+            version: '1.2.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: [
+                                "select 1 id,",
+                                "ST_AsRaster(ST_MakeEnvelope(-100, -40, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst"
+                        ].join(' '),
+                        geom_column: 'rst',
+                        geom_type: 'raster',
+                        cartocss: '#layer { raster-opacity: 1.0 }',
+                        cartocss_version: '2.0.1',
+                        interactivity: 'id'
+                    }
+                }
+            ]
+        };
+
+        assert.response(server,
+            {
+                url: '/database/windshaft_test/layergroup',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(mapconfig)
+            },
+            {
+                status: 400
+            },
+            function(res, err) {
+                assert.ok(!err);
+                checkCORSHeaders(res);
+                var parsedBody = JSON.parse(res.body);
+                assert.deepEqual(parsedBody, { errors: [ 'Mapnik raster layers do not support interactivity' ] })
+                done();
+            }
+        );
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // TEARDOWN

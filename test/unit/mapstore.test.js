@@ -6,8 +6,8 @@ var   _             = require('underscore')
     , redis         = require('redis')
     , Step          = require('step')
     , serverOptions = require('../support/server_options')
-    , MapStore      = require('../../lib/windshaft/mapstore')
-    , MapConfig     = require('../../lib/windshaft/mapconfig')
+    , MapStore      = require('../../lib/windshaft/storages/mapstore')
+    , MapConfig     = require('../../lib/windshaft/models/mapconfig')
 ;
 
 suite('mapstore', function() {
@@ -41,7 +41,7 @@ suite('mapstore', function() {
 
     test('can save a map and tell if it existed already', function(done) {
       var map_store = new MapStore({pool:redis_pool, expire_time:50000});
-      var map = new MapConfig({
+      var map = MapConfig.create({
         version: '1.0.1',
         layers: [
            { options: {

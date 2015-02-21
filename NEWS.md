@@ -1,10 +1,122 @@
+# Version 0.37.6
+2015-mm-dd
+
+Bugfixes:
+ - Adds qualifyURL function as option for the Point renderer (#272)
+   - For now it is just an identity function
+
+Announcements:
+ - Upgrades carto to 0.15.1-cdb1 (#271)
+ - Upgrades torque.js to 2.10.0 (#271)
+
+
+# Version 0.37.5
+2015-02-20
+
+Enhancements:
+ - Force followRedirect in http renderers (#268)
+
+
+# Version 0.37.4
+2015-02-18
+
+Enhancements:
+ - Allow exact match along regex matching in urlTemplate for http layers
+
+
+# Version 0.37.3
+2015-02-17
+
+Bugfixes:
+ - Use datasource for layer when retrieving attributes (#266)
+
+
+# Version 0.37.2
+2015-02-17
+
+Enhancements:
+ - Do not use `inner_cdbq` wrapped queries if `ST_ClipByBox2D` or `ST_SnapToGrid` are not enabled.
+
+
+# Version 0.37.1
+2015-02-17
+
+Enhancements:
+ - Make `urlTemplate` option mandatory in http layers (#265)
+
+
+# Version 0.37.0
+2015-02-16
+
+New features:
+ - Improvements for Mapnik queries using ST_SnapToGrid and ST_ClipByBox2D. New queries can be enabled via config:
+    * `renderer.snapToGrid=true` will ONLY use ST_SnapToGrid
+    * `renderer.snapToGrid=true` and `renderer.clipByBox2d=true` will use both: ST_SnapToGrid and ST_ClipByBox2D
+        - ST_ClipByBox2D requires Postgis >=2.2
+        - This requires function CDB_ScaleDenominatorToZoom
+
+Bugfixes:
+ - Don't allow to instantiate a mapnik raster layer with interactivity option (#244)
+
+
+# Version 0.36.0
+2015-02-13
+
+New features:
+ - Adds a fallback http renderer
+ - Mapconfig per layer datasource
+ - Plain renderer based on mapnik.Image
+ - Enable regex matching in valid url templates for http renderer
+
+Bugfixes:
+ - Use a different zero-based index for grid layers so they can pick up their proper interactivity (#253)
+
+Enhancements:
+ - Create layergroup improvements, model now does all the validation for the mapconfig
+
+
+# Version 0.35.1
+2015-01-28
+
+Bugfixes:
+ - Fix grid layers order to have the proper index in grainstore (#253)
+
+
+# Version 0.35.0
+2015-01-27
+
+Announcements:
+ - Freeze torque.js version to 2.8
+ - Makes mapconfig `1.3.0` version final, no more `1.3.0-alpha` version required
+
+
+# Version 0.34.0
+2015-01-15
+
+New features:
+ - New endpoint for map config tiles to be rendered with different resolutions, à la retina display.
+   - Resolution can be specified with `{z}/{x}/{y}@{resolution}x.png`, like in `0/0/0@2x.png`.
+   - It only supports mapnik tiles right now, torque png tiles should be next.
+
+Announcements:
+ - Remove full layerconfig dump to logfile
+
+
 # Version 0.33.0
-2014-mm-dd
+2015-01-14
+
+New features:
+ - Static previews with support for base layers (HTTP layers) and torque layers
+ - Support to render/proxy HTTP layers
+ - Render torque tiles server side
+   - It misses rendering with *buffer size*
 
 Announcements:
 - Remove support for global_cartocss and global_cartocss_version in multilayer config (#207)
 
 Enhancements:
+ - Split big server.js file into controllers
+ - Split RenderCache: renderer factory so RenderCache does not know about mapnik (not totally true)
  - Don't expose the underlying map configuration store technology
  - Reset getInstance method after each test
 
