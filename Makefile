@@ -1,5 +1,5 @@
 all:
-	npm install
+	sh ./scripts/install.sh
 
 clean:
 	rm -rf node_modules/*
