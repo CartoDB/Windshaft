@@ -21,7 +21,8 @@
     "contributors": [
         "Simon Tokumine <simon@vizzuality.com>",
         "Javi Santana <jsantana@vizzuality.com>",
-        "Sandro Santilli <strk@vizzuality.com>"
+        "Sandro Santilli <strk@vizzuality.com>",
+        "Raul Ochoa <rochoa@cartodb.com>"
     ],
     "dependencies": {
         "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
