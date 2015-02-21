@@ -34,10 +34,10 @@
         "canvas": "1.1.6",
         "semver": "~1.1.4",
         "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
-        "carto": "https://github.com/CartoDB/carto/tarball/update_to_master",
+        "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
         "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
-        "torque.js": "https://github.com/CartoDB/torque/tarball/2.8",
+        "torque.js": "https://github.com/CartoDB/torque/tarball/2.10.0",
         "request": "2.48.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
         "sphericalmercator": "1.0.2",
@@ -48,6 +48,7 @@
         "redis": "~0.8.3"
     },
     "scripts": {
+        "preinstall": "sh ./scripts/check-node-canvas.sh",
         "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/integration/renderers/*.js test/acceptance/*.js"
     },
     "engines" : {
