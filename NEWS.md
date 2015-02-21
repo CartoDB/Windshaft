@@ -1,6 +1,10 @@
 # Version 0.37.6
 2015-mm-dd
 
+Announcements:
+ - Upgrades carto to 0.15.1-cdb1 (#271)
+ - Upgrades torque.js to 2.10.0 (#271)
+
 
 # Version 0.37.5
 2015-02-20
