@@ -1,6 +1,10 @@
 # Version 0.37.6
 2015-mm-dd
 
+Bugfixes:
+ - Adds qualifyURL function as option for the Point renderer (#272)
+   - For now it is just an identity function
+
 Announcements:
  - Upgrades carto to 0.15.1-cdb1 (#271)
  - Upgrades torque.js to 2.10.0 (#271)
