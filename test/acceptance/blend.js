@@ -1,9 +1,9 @@
 require('../support/test_helper');
 var assert = require('../support/assert');
 var redis = require('redis');
-var testTile = require('../support/test_tile');
+var testClient = require('../support/test_client');
 
-suite('torque png renderer', function() {
+suite('blend png renderer', function() {
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
@@ -66,10 +66,10 @@ suite('torque png renderer', function() {
         {
             tile: {
                 z: 2,
-                    x: 2,
-                    y: 1,
-                    layer: 'all',
-                    format: 'png'
+                x: 2,
+                y: 1,
+                layer: 'all',
+                format: 'png'
             },
             plainColor: 'white'
         },
@@ -93,7 +93,7 @@ suite('torque png renderer', function() {
         var tileRequest = testScenario.tile;
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
         test('tile all/' + zxy.join('/') + '.png', function (done) {
-            testTile(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res, finish) {
+            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res, finish) {
                 assert.imageEqualsFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     finish(done);
