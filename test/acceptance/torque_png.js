@@ -1,7 +1,7 @@
 var assert = require('../support/assert');
 var redis = require('redis');
 var th = require('../support/test_helper');
-var testTile = require('../support/test_tile');
+var testClient = require('../support/test_client');
 
 suite('torque png renderer', function() {
 
@@ -71,13 +71,16 @@ suite('torque png renderer', function() {
     ];
 
     function torquePngFixture(zxy) {
-        return './test/fixtures/torque/populated_places_simple_reduced-' + zxy.join('.') + '.png'
+        return './test/fixtures/torque/populated_places_simple_reduced-' + zxy.join('.') + '.png';
     }
 
     tileRequests.forEach(function(tileRequest) {
-        var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
+        var z = tileRequest.z,
+            x = tileRequest.x,
+            y = tileRequest.y;
+        var zxy = [z, x, y];
         test('tile ' + zxy.join('/') + '.torque.png', function (done) {
-            testTile(torquePngPointsMapConfig, tileRequest, function(err, res, finish) {
+            testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function(err, res, finish) {
                 assert.imageEqualsFile(res.body, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     finish(done);
