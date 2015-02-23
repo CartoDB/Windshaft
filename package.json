@@ -35,6 +35,7 @@
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
         "canvas": "1.1.6",
+        "worker-farm": "~1.2.0",
         "semver": "~1.1.4",
         "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
