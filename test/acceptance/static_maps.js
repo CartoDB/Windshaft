@@ -67,33 +67,29 @@ suite('static_maps', function() {
 
     test('center image', function (done) {
         var mapConfig = staticMapConfig(validUrlTemplate);
-        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, finish) {
+        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, image) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-
             assert.equal(image.width(), width);
             assert.equal(image.height(), height);
 
-            finish(done);
+            done();
         });
     });
 
     test('center image with invalid basemap', function (done) {
         var mapConfig = staticMapConfig(invalidUrlTemplate);
-        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, finish) {
+        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, image) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-
             assert.equal(image.width(), width);
             assert.equal(image.height(), height);
 
-            finish(done);
+            done();
         });
     });
 
@@ -106,17 +102,15 @@ suite('static_maps', function() {
 
     test('bbox', function (done) {
         var mapConfig = staticMapConfig(validUrlTemplate);
-        testClient.getStaticBbox(mapConfig, west, south, east, north, bbWidth, bbHeight, function(err, res, finish) {
+        testClient.getStaticBbox(mapConfig, west, south, east, north, bbWidth, bbHeight, function(err, res, image) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-
             assert.equal(image.width(), bbWidth);
             assert.equal(image.height(), bbHeight);
 
-            finish(done);
+            done();
         });
     });
 

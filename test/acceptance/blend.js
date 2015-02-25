@@ -93,10 +93,10 @@ suite('blend png renderer', function() {
         var tileRequest = testScenario.tile;
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
         test('tile all/' + zxy.join('/') + '.png', function (done) {
-            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res, finish) {
+            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
                 assert.imageEqualsFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
-                    finish(done);
+                    done();
                 });
             });
         });

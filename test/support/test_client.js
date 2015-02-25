@@ -3,6 +3,7 @@ var step = require('step');
 var assert = require('./assert');
 var redis = require('redis');
 var _ = require('underscore');
+var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('./server_options');
 
@@ -180,17 +181,13 @@ function getGeneric(layergroupConfig, url, contentType, callback) {
         },
         function validateTile(err, res) {
             assert.ok(!err, 'Failed to get tile');
+            var redisKey = 'map_cfg|' + layergroupid;
 
-            return callback(err, res, createFinishFn(layergroupid));
+            var img = new mapnik.Image.fromBytesSync(new Buffer(res.body, 'binary'));
+
+            redisClient.del(redisKey, function (/*delErr*/) {
+                return callback(err, res, img);
+            });
         }
     );
-}
-
-function createFinishFn(layergroupid) {
-    return function(done) {
-        var redisKey = 'map_cfg|' + layergroupid;
-        redisClient.del(redisKey, function (err) {
-            return done(err);
-        });
-    };
 }

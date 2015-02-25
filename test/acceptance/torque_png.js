@@ -1,6 +1,7 @@
+require('../support/test_helper');
+
 var assert = require('../support/assert');
 var redis = require('redis');
-var th = require('../support/test_helper');
 var testClient = require('../support/test_client');
 
 suite('torque png renderer', function() {
@@ -26,7 +27,8 @@ suite('torque png renderer', function() {
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
+                    sql: "SELECT * FROM populated_places_simple_reduced where the_geom" +
+                        " && ST_MakeEnvelope(-90, 0, 90, 65)",
                     cartocss: [
                         'Map {',
                         '    -torque-frame-count:1;',
@@ -80,10 +82,10 @@ suite('torque png renderer', function() {
             y = tileRequest.y;
         var zxy = [z, x, y];
         test('tile ' + zxy.join('/') + '.torque.png', function (done) {
-            testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function(err, res, finish) {
+            testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function(err, res) {
                 assert.imageEqualsFile(res.body, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
-                    finish(done);
+                    done();
                 });
             });
         });
