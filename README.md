@@ -1,7 +1,7 @@
 Windshaft map tiler
 ===================
 
-A Node.js map tile server for PostGIS with CartoCSS map styling API.
+A Node.js map tile server for PostGIS with CartoCSS styling.
 
 [![NPM](https://nodei.co/npm/windshaft.png?downloads=true&downloadRank=true)](https://nodei.co/npm/windshaft)
 

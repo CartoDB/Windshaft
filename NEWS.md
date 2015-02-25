@@ -1,5 +1,9 @@
-# Version 0.37.6
+# Version 0.38.1
 2015-mm-dd
+
+
+# Version 0.38.0
+2015-02-23
 
 Bugfixes:
  - Adds qualifyURL function as option for the Point renderer (#272)

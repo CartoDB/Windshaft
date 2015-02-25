@@ -1,25 +1,28 @@
 {
     "name": "windshaft",
-    "version": "0.37.6",
+    "version": "0.38.1",
     "main": "./lib/windshaft/index.js",
-    "description": "A Node.js based map tile server for PostGIS & Mapnik",
+    "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
     "keywords": [
-      "cartodb"
+        "cartodb"
     ],
     "url": "https://github.com/CartoDB/Windshaft",
-    "licenses": [{
-        "type": "BSD",
-        "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
-    }],
+    "licenses": [
+        {
+            "type": "BSD",
+            "url": "https://github.com/CartoDB/Windshaft/blob/master/LICENSE"
+        }
+    ],
     "repository": {
         "type": "git",
         "url": "git://github.com/CartoDB/Windshaft.git"
     },
     "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
     "contributors": [
-      "Simon Tokumine <simon@vizzuality.com>",
-      "Javi Santana <jsantana@vizzuality.com>",
-      "Sandro Santilli <strk@vizzuality.com>"
+        "Simon Tokumine <simon@vizzuality.com>",
+        "Javi Santana <jsantana@vizzuality.com>",
+        "Sandro Santilli <strk@vizzuality.com>",
+        "Raul Ochoa <rochoa@cartodb.com>"
     ],
     "dependencies": {
         "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
@@ -31,12 +34,12 @@
         "tilelive": "~4.5.3",
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
-        "canvas": "1.1.6",
+        "canvas": "1.2.0",
         "semver": "~1.1.4",
-        "redis-mpool": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
+        "redis-mpool": "~0.3.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
-        "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
+        "cartodb-psql": "~0.4.0",
         "torque.js": "https://github.com/CartoDB/torque/tarball/2.10.0",
         "request": "2.48.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
@@ -44,15 +47,16 @@
         "node-statsd": "~0.0.7"
     },
     "devDependencies": {
+        "jshint": "~2.6.0",
         "mocha": "~1.21.4",
         "redis": "~0.8.3"
     },
     "scripts": {
         "preinstall": "sh ./scripts/check-node-canvas.sh",
-        "test": "sh ./run_tests.sh ${RUNTESTFLAGS} test/unit/*.js test/unit/renderers/*.js test/integration/renderers/*.js test/acceptance/*.js"
+        "test": "make test-all"
     },
-    "engines" : {
+    "engines": {
         "node": ">=0.8 <0.11",
-        "npm" : ">=1.2.1"
+        "npm": ">=1.2.1"
     }
 }
