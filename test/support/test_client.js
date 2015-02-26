@@ -183,7 +183,10 @@ function getGeneric(layergroupConfig, url, contentType, callback) {
             assert.ok(!err, 'Failed to get tile');
             var redisKey = 'map_cfg|' + layergroupid;
 
-            var img = new mapnik.Image.fromBytesSync(new Buffer(res.body, 'binary'));
+            var img;
+            if (contentType === pngContentType) {
+                img = new mapnik.Image.fromBytesSync(new Buffer(res.body, 'binary'));
+            }
 
             redisClient.del(redisKey, function (/*delErr*/) {
                 return callback(err, res, img);
