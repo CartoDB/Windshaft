@@ -1,5 +1,5 @@
 # Version 0.38.2
-2015-mm-dd
+2015-02-26
 
 Announcements:
  - Upgrades node-canvas 1.2.1
