@@ -91,6 +91,66 @@ suite('torque png renderer', function() {
         });
     });
 
+
+    var mapConfigTorqueOffset = {
+        version: '1.3.0',
+        layers: [
+            {
+                type: 'torque',
+                options: {
+                    sql: "SELECT * FROM populated_places_simple_reduced",
+                    cartocss: [
+                        'Map {',
+                        '-torque-frame-count:1;',
+                        '-torque-animation-duration:30;',
+                        '-torque-time-attribute:"cartodb_id";',
+                        '-torque-aggregation-function:"count(cartodb_id)";',
+                        '-torque-resolution:2;',
+                        '-torque-data-aggregation:linear;',
+                        '}',
+                        '',
+                        '#populated_places_simple_reduced{',
+                        '  comp-op: lighter;',
+                        '  marker-fill-opacity: 0.9;',
+                        '  marker-line-color: #2167AB;',
+                        '  marker-line-width: 5;',
+                        '  marker-line-opacity: 1;',
+                        '  marker-type: ellipse;',
+                        '  marker-width: 6;',
+                        '  marker-fill: #FF9900;',
+                        '}',
+                        '#populated_places_simple_reduced[frame-offset=1] {',
+                        ' marker-width:8;',
+                        ' marker-fill-opacity:0.45; ',
+                        '}',
+                        '#populated_places_simple_reduced[frame-offset=2] {',
+                        ' marker-width:10;',
+                        ' marker-fill-opacity:0.225; ',
+                        '}'
+                    ].join(' '),
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ]
+    };
+
+    test('torque static map with offset', function(done) {
+        var w = 600,
+            h = 400;
+
+        testClient.getStaticBbox(mapConfigTorqueOffset, -170, -87, 170, 87, w, h, function(err, res, img) {
+            if (err) {
+                return done(err);
+            }
+
+            assert.equal(img.width(), w);
+            assert.equal(img.height(), h);
+
+            done();
+        });
+
+    });
+
     suiteTeardown(function(done) {
         // Check that we left the redis db empty
         redisClient.keys("*", function(err, matches) {
