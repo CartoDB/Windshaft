@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     CAIRO_PKG_CONFIG=`pkg-config cairo --cflags-only-I 2> /dev/null`
