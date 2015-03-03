@@ -5,6 +5,15 @@
 
 var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
+
+// Force 'test' environment
+var ENV = 'test';
+
+// set environment specific variables
+global.settings     = require('../config/settings');
+global.environment  = require('../config/environments/' + ENV);
+_.extend(global.settings, global.environment);
+
 var config = {
     base_url: '/database/:dbname/table/:table',
     base_url_notable: '/database/:dbname',
