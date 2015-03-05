@@ -3,6 +3,7 @@
 
 Enhancements:
  - Upgrades tilelive-mapnik@0.6.15 to use fromString async method to create map objects
+ - Upgrades torque.js@2.10.1
 
 
 # Version 0.38.2
