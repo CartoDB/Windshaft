@@ -1,6 +1,9 @@
 # Version 0.38.3
 2015-mm-dd
 
+Bugfixes:
+ - Support for torque heatmaps server side rendering (#294)
+
 Enhancements:
  - Upgrades tilelive-mapnik@0.6.15 to use fromString async method to create map objects
  - Upgrades torque.js@2.11.0
