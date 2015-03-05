@@ -1,6 +1,9 @@
 # Version 0.38.3
 2015-mm-dd
 
+Enhancements:
+ - Upgrades tilelive-mapnik@0.6.15 to use fromString async method to create map objects
+
 
 # Version 0.38.2
 2015-02-26
