@@ -1,5 +1,8 @@
-# Version 0.38.3
+# Version 0.39.0
 2015-mm-dd
+
+New features:
+ - Allow buffer-size in torque server side rendering (#292)
 
 Bugfixes:
  - Support for torque heatmaps server side rendering (#294)
