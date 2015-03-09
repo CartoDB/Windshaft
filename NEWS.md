@@ -1,5 +1,5 @@
 # Version 0.39.0
-2015-mm-dd
+2015-03-09
 
 New features:
  - Allow buffer-size in torque server side rendering (#292)
