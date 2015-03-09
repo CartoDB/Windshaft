@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.38.1",
+    "version": "0.39.1",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
     "keywords": [
@@ -32,15 +32,15 @@
         "grainstore": "~0.23.0",
         "express": "~2.5.11",
         "tilelive": "~4.5.3",
-        "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+        "tilelive-mapnik": "0.6.15",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
-        "canvas": "1.2.0",
+        "canvas": "1.2.1",
         "semver": "~1.1.4",
         "redis-mpool": "~0.3.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "step-profiler": "git://github.com/CartoDB/node-step-profiler.git#0.1.0",
         "cartodb-psql": "~0.4.0",
-        "torque.js": "https://github.com/CartoDB/torque/tarball/2.10.0",
+        "torque.js": "~2.11.0",
         "request": "2.48.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
         "sphericalmercator": "1.0.2",
@@ -52,7 +52,7 @@
         "redis": "~0.8.3"
     },
     "scripts": {
-        "preinstall": "sh ./scripts/check-node-canvas.sh",
+        "preinstall": "make pre-install",
         "test": "make test-all"
     },
     "engines": {

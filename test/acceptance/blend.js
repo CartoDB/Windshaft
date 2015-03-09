@@ -37,6 +37,7 @@ suite('blend png renderer', function() {
                             "where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
                         cartocss: [
                             'Map {',
+                            '    buffer-size:0;',
                             '    -torque-frame-count:1;',
                             '    -torque-animation-duration:30;',
                             '    -torque-time-attribute:"cartodb_id";',

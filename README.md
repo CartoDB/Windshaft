@@ -9,35 +9,39 @@ A Node.js map tile server for PostGIS with CartoCSS styling.
 [![Code Climate](https://codeclimate.com/github/CartoDB/Windshaft/badges/gpa.png)](https://codeclimate.com/github/CartoDB/Windshaft)
 
 * Pluggable routing to provide customizable tile API URL endpoints
-* Before and after filters to allow custom access control and caching
-  strategies
-* Can render arbitrary SQL queries 
+* Before and after filters to allow custom access control and caching strategies
+* Can render arbitrary SQL queries
 * Generates image and UTFGrid interactivity tiles
-* Accepts, stores, serves, and applies map styles written in the Carto
-  markup language (same markup as Mapbox Tilemill)
-* Accepts custom map styles on a per tile basis in the tile request
-* Allows setting of CORS headers to allow access to tile data from
-  Javascript
-
-![Puma Concolor by @eightysteele] (https://github.com/CartoDB/Windshaft/raw/master/examples/puma_concolor.png)
+* Accepts, stores, serves, and applies map styles written in [CartoCSS](https://github.com/mapbox/carto/blob/master/docs/latest.md)
+* Supports re-projections
+* Allows setting of CORS headers to allow access to tile data from client side
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
 its raw form. The idea is that you the developer will want to graft your
 own auth/metrics/caching/scaling on top of decent core components. Same
 old story: high cohesion, low coupling makes us happy.
+See [Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb).
 
 Windshaft is a library used by [cartodb.com](https://cartodb.com/),
 an Open Source Geospatial Database on the Cloud.
+
+
+Some examples
+-------------
+![Playing with colors by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_0.png) ![Circumpolar Arctic Vegetation by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_1.png)
+![Bolivia deforestation by @saleiva](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_2.png) ![Traffic accidents by @rochoa](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_3.png)
+
+More examples built on top of Windshaft can be found in [CartoDB's gallery](http://cartodb.com/gallery/).
 
 
 Dependencies
 ------------
 * Node >=0.8
 * npm >=1.2.1
-* Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0 (http://github.com/mapnik/mapnik-reference)
+* Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
-* libcairo2, libjpeg8 and libgif for server side canvas support
+* libcairo2, libpango1.0, libjpeg8 and libgif for server side canvas support
 
 
 Install
@@ -147,7 +151,7 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run ```npm check```.
+To execute them, run `npm test`.
 
 You'll need to be sure your PGUSER (or your libpq default) is
 set to a "superuser" PostgreSQL account, for example:
@@ -159,14 +163,6 @@ PGUSER=postgres npm test
 
 Troubleshooting
 ---------------
-
-### Postgres errors persist after configuration change
-
-If you're seeing Postgres errors that you can't dispel through changes in your
-Windshaft config (e.g. `ERROR: column "the_geom_webmercator" does not exist`),
-try `redis-cli flushall`. Windshaft caches MML files in Redis than can contain SQL
-and may not expire them when you change your Windshaft config, but manually flushing 
-redis should do the trick.
 
 ### Uncaught Error: Command failed running tests
 

@@ -1,5 +1,33 @@
-# Version 0.38.1
+# Version 0.39.1
 2015-mm-dd
+
+
+# Version 0.39.0
+2015-03-09
+
+New features:
+ - Allow buffer-size in torque server side rendering (#292)
+
+Bugfixes:
+ - Support for torque heatmaps server side rendering (#294)
+
+Enhancements:
+ - Upgrades tilelive-mapnik@0.6.15 to use fromString async method to create map objects
+ - Upgrades torque.js@2.11.0
+
+
+# Version 0.38.2
+2015-02-26
+
+Announcements:
+ - Upgrades node-canvas 1.2.1
+
+
+# Version 0.38.1
+2015-02-25
+
+Announcements:
+ - Upgrades node-canvas 1.2.0
 
 
 # Version 0.38.0

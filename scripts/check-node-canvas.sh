@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     CAIRO_PKG_CONFIG=`pkg-config cairo --cflags-only-I 2> /dev/null`
@@ -11,7 +11,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "#                                                                                 #"
         echo "# node-canvas install error: some packages required by 'cairo' are not found      #"
         echo "#                                                                                 #"
-        echo "# Use '\033[1mmake all\033[0m', it will take care of common/known issues                        #"
+        echo -e "# Use '\033[1mmake all\033[0m', it will take care of common/known issues                        #"
         echo "#                                                                                 #"
         echo "# As an alternative try:                                                          #"
         echo "# Try to 'export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig' #"
