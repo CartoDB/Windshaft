@@ -41,7 +41,7 @@ Dependencies
 * Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
-* libcairo2, libpango1.0, libjpeg8 and libgif for server side canvas support
+* libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
 
 Install
