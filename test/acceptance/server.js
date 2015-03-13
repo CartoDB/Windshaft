@@ -1,18 +1,13 @@
 // FLUSHALL Redis before starting
+require('../support/test_helper');
 
-var   assert        = require('../support/assert')
-    , tests         = module.exports = {}
-    , _             = require('underscore')
-    , querystring   = require('querystring')
-    , fs            = require('fs')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Step          = require('step')
-    , mapnik        = require('mapnik')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options')
-    , semver        = require('semver')
-    , http          = require('http');
+var assert        = require('../support/assert');
+var querystring   = require('querystring');
+var fs            = require('fs');
+var redis         = require('redis');
+var Windshaft     = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
+var http          = require('http');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -20,9 +15,10 @@ function rmdir_recursive_sync(dirname) {
     var f = dirname + "/" + files[i];
     var s = fs.lstatSync(f);
     if ( s.isFile() ) {
-      fs.unlinkSync(f)
+      fs.unlinkSync(f);
+    } else {
+        rmdir_recursive_sync(f);
     }
-    else rmdir_recursive_sync(f);
   }
 }
 
@@ -40,22 +36,6 @@ suite('server', function() {
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
-
-    var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
-
-    var default_style;
-    if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
-      // 2.0.0 default
-      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
-    }
-    else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
-      // 2.1.0 default
-      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
-    }
-    else {
-      // 2.2.0+ default
-      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
-    }
 
     suiteSetup(function(done) {
 
@@ -226,7 +206,7 @@ suite('server', function() {
 
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/67
     test.skip("get'ing a solid grid while changing interactivity fields",  function(done){
-        var baseurl = '/database/windshaft_test/table/test_big_poly/3/2/2.grid.json?'
+        var baseurl = '/database/windshaft_test/table/test_big_poly/3/2/2.grid.json?';
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
         baseurl += querystring.stringify({
           style: style211,
@@ -267,7 +247,9 @@ suite('server', function() {
 
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
-          if ( err ) errors.push(err);
+          if ( err ) {
+              errors.push(err);
+          }
           try { 
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
