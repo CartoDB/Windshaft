@@ -1,18 +1,17 @@
 // FLUSHALL Redis before starting
+require('../support/test_helper');
 
-var   assert        = require('../support/assert')
-    , tests         = module.exports = {}
-    , _             = require('underscore')
-    , querystring   = require('querystring')
-    , fs            = require('fs')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Step          = require('step')
-    , mapnik        = require('mapnik')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options')
-    , semver        = require('semver')
-    , http          = require('http');
+var assert = require('../support/assert');
+var _ = require('underscore');
+var querystring = require('querystring');
+var fs = require('fs');
+var redis = require('redis');
+var step = require('step');
+var mapnik = require('mapnik');
+var Windshaft = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
+var semver = require('semver');
+var http = require('http');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -20,9 +19,11 @@ function rmdir_recursive_sync(dirname) {
     var f = dirname + "/" + files[i];
     var s = fs.lstatSync(f);
     if ( s.isFile() ) {
-      fs.unlinkSync(f)
+      fs.unlinkSync(f);
     }
-    else rmdir_recursive_sync(f);
+    else {
+        rmdir_recursive_sync(f);
+    }
   }
 }
 
@@ -84,7 +85,7 @@ suite('server_gettile', function() {
 
     test.skip("get'ing a tile with default style should return an expected tile",
     function(done){
-      Step (
+      step (
         function makeGet() {
           var next = this;
           assert.response(server, {
@@ -103,14 +104,14 @@ suite('server_gettile', function() {
         function finish(err) {
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table/style',
-              method: 'DELETE' },{}, function(res) { done(err); });
+              method: 'DELETE' },{}, function() { done(err); });
         }
       );
     });
 
     test.skip("response of get tile can be served by renderer cache",  function(done){
       var cb = Date.now();
-      Step(
+      step(
         function get1 () {
           var next = this;
           assert.response(server, {
@@ -120,7 +121,9 @@ suite('server_gettile', function() {
           },{}, function(res, err) { next(err, res); });
         },
         function check1(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var xwc = res.headers['x-windshaft-cache'];
           assert.ok(!xwc);
@@ -135,7 +138,9 @@ suite('server_gettile', function() {
           },{}, function(res, err) { next(err, res); });
         },
         function check2(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           assert.equal(res.statusCode, 200);
           var xwc = res.headers['x-windshaft-cache'];
           assert.ok(xwc);
@@ -151,7 +156,9 @@ suite('server_gettile', function() {
           },{}, function(res, err) { next(err, res); });
         },
         function check3(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           assert.equal(res.statusCode, 200);
           var xwc = res.headers['x-windshaft-cache'];
           assert.ok(xwc);
@@ -167,7 +174,9 @@ suite('server_gettile', function() {
           },{}, function(res, err) { next(err, res); });
         },
         function check4(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           assert.equal(res.statusCode, 200);
           var xwc = res.headers['x-windshaft-cache'];
           assert.ok(!xwc);
@@ -181,39 +190,39 @@ suite('server_gettile', function() {
 
     test.skip("should not choke when queries end with a semicolon",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
-              + querystring.stringify({sql: "SELECT * FROM test_table limit 2;"}),
-            method: 'GET',
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
+                querystring.stringify({sql: "SELECT * FROM test_table limit 2;"}),
+            method: 'GET'
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
+        }, function(){
             done();
         });
     });
 
     test.skip("should not choke when sql ends with a semicolon and some blanks",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
-              + querystring.stringify({sql: "SELECT * FROM test_table limit 2; \t\n"}),
-            method: 'GET',
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
+                querystring.stringify({sql: "SELECT * FROM test_table limit 2; \t\n"}),
+            method: 'GET'
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
+        }, function(){
             done();
         });
     });
 
     test.skip("should not strip quoted semicolons within an sql query",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?'
-              + querystring.stringify({sql: "SELECT * FROM test_table where name != ';\n'"}),
-            method: 'GET',
+            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
+                querystring.stringify({sql: "SELECT * FROM test_table where name != ';\n'"}),
+            method: 'GET'
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
+        }, function(){
             done();
         });
     });
@@ -400,7 +409,7 @@ suite('server_gettile', function() {
 
     // See https://github.com/Vizzuality/Windshaft/issues/31
     test.skip("PostgreSQL errors are sent in response body",  function(done) {
-        var sql = querystring.stringify({sql: "BROKEN QUERY"})
+        var sql = querystring.stringify({sql: "BROKEN QUERY"});
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
             method: 'GET'
@@ -416,10 +425,12 @@ suite('server_gettile', function() {
 
     test.skip("base and custom style tile referencing external resources do not affect each other",
         function(done){
-      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/circle.svg'); marker-transform:'scale(0.2)'; }";
-      var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
+      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+          "/circle.svg'); marker-transform:'scale(0.2)'; }";
+      var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+          "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
-      Step(
+      step(
         function getCustomTile0() {
           var next = this;
           assert.response(server, {
@@ -430,14 +441,17 @@ suite('server_gettile', function() {
               status: 200,
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
         },
         // Set another style as default for table
         function postStyle(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           //next(null, {statusCode: 200}); return;
           assert.response(server, {
@@ -449,14 +463,18 @@ suite('server_gettile', function() {
         },
         // Check style setting succeeded
         function checkPost(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           assert.equal(res.statusCode, 200, res.body);
           //assert.equal(res.body, "ok");
           return null;
         },
         // Now check we get the tile styled as we specified
-        function getBaseTile0(err, data) {
-          if ( err ) throw err;
+        function getBaseTile0(err/*, data*/) {
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png',
@@ -465,7 +483,8 @@ suite('server_gettile', function() {
           },{}, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   if (err) { next(err); return; }
                   next(null);
               });
@@ -473,7 +492,9 @@ suite('server_gettile', function() {
         },
         // Now fetch the custom style tile again
         function getCustomTile1(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2&' + stylequery,
@@ -482,14 +503,17 @@ suite('server_gettile', function() {
           },{ }, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg1.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
         },
         // Now fetch the base style tile again 
-        function getBaseTile1(err, data) {
-          if ( err ) throw err;
+        function getBaseTile1(err/*, data*/) {
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=3',
@@ -498,7 +522,8 @@ suite('server_gettile', function() {
           },{ }, function(res){
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   if (err) { next(err); return; }
                   next(null);
               });
@@ -507,7 +532,7 @@ suite('server_gettile', function() {
         function finish(err) {
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
-              method: 'DELETE' },{}, function(res) { done(err); });
+              method: 'DELETE' },{}, function() { done(err); });
         }
       );
     });
@@ -515,10 +540,11 @@ suite('server_gettile', function() {
     // See http://github.com/CartoDB/Windshaft/issues/107
     test.skip("external resources get localized on renderer creation",
         function(done){
-      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
+      var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+          "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
       var numrequests;
-      Step(
+      step(
         function getCustomTile0() {
           var next = this;
           assert.response(server, {
@@ -530,13 +556,16 @@ suite('server_gettile', function() {
               headers: { 'Content-Type': 'image/png' }
           }, function(res){
               numrequests = res_serv_status.numrequests;
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
         },
         function dropLocalizedResources(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var cachedir = global.environment.millstone.cache_basedir;
           rmdir_recursive_sync(cachedir);
           // Reset server to ensure all renderer caches are flushed
@@ -546,7 +575,9 @@ suite('server_gettile', function() {
         },
         // Now fetch the custom style tile again
         function getCustomTile1(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2.2&' + stylequery,
@@ -564,7 +595,9 @@ suite('server_gettile', function() {
         // Now fetch the custom style tile again with an higher cache_buster,
         // checking that the external resource is NOT downloaded again
         function getCustomTile2(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
             url: '/database/windshaft_test/table/test_table_3/13/4011/3088.png?cache_buster=2.3&' + stylequery,
@@ -575,7 +608,8 @@ suite('server_gettile', function() {
               // millstone should not make another request
               assert.equal(res_serv_status.numrequests, numrequests+1);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+              assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_svg2.png',
+                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
           });
@@ -583,7 +617,7 @@ suite('server_gettile', function() {
         function finish(err) {
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table_3/style',
-              method: 'DELETE' },{}, function(res) { done(err); });
+              method: 'DELETE' },{}, function() { done(err); });
         }
       );
     });
@@ -600,7 +634,9 @@ suite('server_gettile', function() {
       },{}, function(res){
         assert.equal(res.statusCode, 400, res.body);
         assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-        assert.deepEqual(JSON.parse(res.body), {"error":"Unable to download '" + url + "' for 'style.mss' (server returned 404)"})
+        assert.deepEqual(JSON.parse(res.body), {
+            "error":"Unable to download '" + url + "' for 'style.mss' (server returned 404)"
+        });
         done();
       });
     });
@@ -629,7 +665,7 @@ suite('server_gettile', function() {
     //
     test.skip("database access is read-only", function(done) {
 
-      Step(
+      step(
         function doGet() {
           var next = this;
           assert.response(server, {
@@ -638,8 +674,10 @@ suite('server_gettile', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' )); 
+          if ( err ) {
+              throw err;
+          }
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode !== 200 ? res.body : '..' ));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.error);
           var msg = parsed.error;
@@ -649,7 +687,7 @@ suite('server_gettile', function() {
         function finish(err) {
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table/style',
-              method: 'DELETE' },{}, function(res) { done(err); });
+              method: 'DELETE' },{}, function() { done(err); });
         }
       );
 
@@ -657,7 +695,7 @@ suite('server_gettile', function() {
 
     // See https://github.com/CartoDB/Windshaft/issues/167
     test.skip("does not die on unexistent statsd host",  function(done) {
-      Step(
+      step(
         function change_config() {
           var CustomOptions = _.clone(ServerOptions);
           CustomOptions.statsd = _.clone(CustomOptions.statsd);
@@ -668,7 +706,9 @@ suite('server_gettile', function() {
           return null;
         },
         function do_get(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           var errors = [];
           // We need multiple requests to make sure
@@ -678,7 +718,9 @@ suite('server_gettile', function() {
           var numreq = 10;
           var pending = numreq;
           var completed = function(err) {
-            if ( err ) errors.push(err);
+            if ( err ) {
+                errors.push(err);
+            }
             if ( ! --pending ) {
               setTimeout(function() {
               next(errors.length ? new Error(errors.join(',')) : null);
@@ -693,8 +735,10 @@ suite('server_gettile', function() {
             },{}, function(res, err) { completed(err); });
           }
         },
-        function do_check(err, res) {
-          if ( err ) throw err;
+        function do_check(err) {
+          if ( err ) {
+              throw err;
+          }
           // being alive is enough !
           return null;
         },
@@ -709,7 +753,7 @@ suite('server_gettile', function() {
     // See https://github.com/CartoDB/Windshaft/issues/173
     test.skip("does not send db details in connection error response",  function(done) {
       var base_key = 'map_style|windshaft_test|test_table';
-      Step(
+      step(
         function change_config() {
           var CustomOptions = _.clone(ServerOptions);
           CustomOptions.grainstore = _.clone(CustomOptions.grainstore);
@@ -720,7 +764,9 @@ suite('server_gettile', function() {
           return null;
         },
         function do_get(err) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/table/test_table/6/31/24.png',
@@ -728,7 +774,9 @@ suite('server_gettile', function() {
           },{}, function(res, err) { next(err, res); });
         },
         function do_check(err, res) {
-          if ( err ) throw err;
+          if ( err ) {
+              throw err;
+          }
           // TODO: should be 500 !
           assert.equal(res.statusCode, 400);
           var parsed = JSON.parse(res.body);
@@ -742,7 +790,9 @@ suite('server_gettile', function() {
           // reset server
           server = new Windshaft.Server(ServerOptions);
           redis_client.del(base_key, function(e) {
-            if ( e ) console.error(e);
+            if ( e ) {
+                console.error(e);
+            }
             done(err);
           });
         }
@@ -787,7 +837,9 @@ suite('server_gettile', function() {
 
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
-          if ( err ) errors.push(err);
+          if ( err ) {
+              errors.push(err);
+          }
           try { 
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
