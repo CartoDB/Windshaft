@@ -1,13 +1,12 @@
 // FLUSHALL Redis before starting
 require('../support/test_helper');
 
-var assert        = require('../support/assert');
-var querystring   = require('querystring');
-var fs            = require('fs');
-var redis         = require('redis');
-var Windshaft     = require('../../lib/windshaft');
+var assert = require('../support/assert');
+var fs = require('fs');
+var redis = require('redis');
+var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
-var http          = require('http');
+var http = require('http');
 var testClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
