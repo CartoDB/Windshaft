@@ -7,13 +7,30 @@ var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('./server_options');
 
+var DEFAULT_POINT_STYLE = [
+    '#layer {',
+    '  marker-fill: #FF6600;',
+    '  marker-opacity: 1;',
+    '  marker-width: 16;',
+    '  marker-line-color: white;',
+    '  marker-line-width: 3;',
+    '  marker-line-opacity: 0.9;',
+    '  marker-placement: point;',
+    '  marker-type: ellipse;',
+    '  marker-allow-overlap: true;',
+    '}'
+].join('');
+
 module.exports = {
+    getStaticBbox: getStaticBbox,
+    getStaticCenter: getStaticCenter,
     getGrid: getGrid,
+    getGridJsonp: getGridJsonp,
+    getTorque: getTorque,
     getTile: getTile,
     getTileLayer: getTileLayer,
-    getTorque: getTorque,
-    getStaticCenter: getStaticCenter,
-    getStaticBbox: getStaticBbox
+
+    DEFAULT_POINT_STYLE: DEFAULT_POINT_STYLE
 };
 
 
@@ -24,7 +41,12 @@ var redisClient = redis.createClient(global.environment.redis.port);
 var jsonContentType = 'application/json; charset=utf-8';
 var pngContentType = 'image/png';
 
-function getStaticBbox(layergroupConfig, west, south, east, north, width, height, callback) {
+function getStaticBbox(layergroupConfig, west, south, east, north, width, height, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = pngContentType;
+    }
+
     var url = [
         'static',
         'bbox',
@@ -33,10 +55,15 @@ function getStaticBbox(layergroupConfig, west, south, east, north, width, height
         width,
         height
     ].join('/') + '.png';
-    return getGeneric(layergroupConfig, url, pngContentType, callback);
+    return getGeneric(layergroupConfig, url, expectedResponse, callback);
 }
 
-function getStaticCenter(layergroupConfig, zoom, lat, lon, width, height, callback) {
+function getStaticCenter(layergroupConfig, zoom, lat, lon, width, height, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = pngContentType;
+    }
+
     var url = [
         'static',
         'center',
@@ -47,10 +74,15 @@ function getStaticCenter(layergroupConfig, zoom, lat, lon, width, height, callba
         width,
         height
     ].join('/') + '.png';
-    return getGeneric(layergroupConfig, url, pngContentType, callback);
+    return getGeneric(layergroupConfig, url, expectedResponse, callback);
 }
 
-function getGrid(layergroupConfig, layer, z, x, y, callback) {
+function getGrid(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = jsonContentType;
+    }
+
     var options = {
         layer: layer,
         z: z,
@@ -58,10 +90,32 @@ function getGrid(layergroupConfig, layer, z, x, y, callback) {
         y: y,
         format: 'grid.json'
     };
-    return getLayer(layergroupConfig, options, jsonContentType, callback);
+    return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTorque(layergroupConfig, layer, z, x, y, callback) {
+function getGridJsonp(layergroupConfig, layer, z, x, y, jsonpCallbackName, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = jsonContentType;
+    }
+
+    var options = {
+        layer: layer,
+        z: z,
+        x: x,
+        y: y,
+        format: 'grid.json',
+        jsonpCallbackName: jsonpCallbackName
+    };
+    return getLayer(layergroupConfig, options, expectedResponse, callback);
+}
+
+function getTorque(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = jsonContentType;
+    }
+
     var options = {
         layer: layer,
         z: z,
@@ -69,30 +123,48 @@ function getTorque(layergroupConfig, layer, z, x, y, callback) {
         y: y,
         format: 'torque.json'
     };
-    return getLayer(layergroupConfig, options, jsonContentType, callback);
+    return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTile(layergroupConfig, z, x, y, callback) {
+function getTile(layergroupConfig, z, x, y, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = pngContentType;
+    }
+
     var options = {
         z: z,
         x: x,
         y: y,
         format: 'png'
     };
-    return getLayer(layergroupConfig, options, pngContentType, callback);
+    return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTileLayer(layergroupConfig, options, callback) {
-    return getLayer(layergroupConfig, options, pngContentType, callback);
+function getTileLayer(layergroupConfig, options, expectedResponse, callback) {
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = pngContentType;
+    }
+
+    return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getLayer(layergroupConfig, options, contentType, callback) {
+function getLayer(layergroupConfig, options, expectedResponse, callback) {
+    return getGeneric(layergroupConfig, tileUrlStrategy(options), expectedResponse, callback);
+}
+
+function tileUrlStrategy(options) {
     var urlLayerPattern = [
         '<%= layer %>',
         '<%= z %>',
         '<%= x %>',
         '<%= y %>'
     ].join('/') + '.<%= format %>';
+
+    if (options.jsonpCallbackName) {
+        urlLayerPattern += '?callback=<%= jsonpCallbackName %>';
+    }
 
     var urlNoLayerPattern = [
         '<%= z %>',
@@ -104,18 +176,26 @@ function getLayer(layergroupConfig, options, contentType, callback) {
 
     var format = options.format || 'png';
 
-    var url = '<%= layergroupid %>/' + urlTemplate({
+    return '<%= layergroupid %>/' + urlTemplate({
         z: options.z === undefined ? 0 : options.z,
         x: options.x === undefined ? 0 : options.x,
         y: options.y === undefined ? 0 : options.y,
         layer: options.layer === undefined ? 0 : options.layer,
-        format: format
+        format: format,
+        jsonpCallbackName: options.jsonpCallbackName
     });
-
-    return getGeneric(layergroupConfig, url, contentType, callback);
 }
 
-function getGeneric(layergroupConfig, url, contentType, callback) {
+function getGeneric(layergroupConfig, url, expectedResponse, callback) {
+    if (_.isString(expectedResponse)) {
+        expectedResponse = {
+            status: 200,
+            headers: {
+                'Content-Type': expectedResponse
+            }
+        };
+    }
+    var contentType = expectedResponse.headers['Content-Type'];
 
     var layergroupid = null;
 
@@ -167,13 +247,6 @@ function getGeneric(layergroupConfig, url, contentType, callback) {
             if (contentType === pngContentType) {
                 request.encoding = 'binary';
             }
-
-            var expectedResponse = {
-                status: 200,
-                headers: {
-                    'Content-Type': contentType
-                }
-            };
 
             assert.response(server, request, expectedResponse, function (res, err) {
                 next(err, res);
