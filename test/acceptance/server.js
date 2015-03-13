@@ -8,6 +8,7 @@ var redis         = require('redis');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http          = require('http');
+var testClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -109,17 +110,32 @@ suite('server', function() {
         });
     });
 
+    function singleLayerMapConfig(sql, cartocss, interactivity) {
+        return {
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: sql,
+                        cartocss: cartocss,
+                        cartocss_version: '2.3.0',
+                        interactivity: interactivity
+                    }
+                }
+            ]
+        };
+    }
+
     ////////////////////////////////////////////////////////////////////
     //
     // GET GRID 
     //
     ////////////////////////////////////////////////////////////////////
 
-    test.skip("grid jsonp",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&callback=test',
-            method: 'GET'
-        },{}, function(res){
+    test("grid jsonp",  function(done){
+        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE, 'name');
+        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', function(err, res) {
             assert.equal(res.statusCode, 200, res.body);
             assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
             var regexp = '^test\\((.*)\\);$';
@@ -129,14 +145,9 @@ suite('server', function() {
         });
     });
 
-    test.skip("get'ing a json with default style and single interactivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+    test("get'ing a json with default style and single interactivity should return a grid",  function(done){
+        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE, 'name');
+        testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             var expected_json = {
                 "1":{"name":"Hawai"},
                 "2":{"name":"El Estocolmo"},
@@ -149,82 +160,61 @@ suite('server', function() {
         });
     });
 
-    test.skip("get'ing a json with default style and no interactivity should return an error",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
-        },{
-        }, function(res){
-            assert.equal(res.statusCode, 400);
-            assert.deepEqual(JSON.parse(res.body), {error: 'Missing interactivity parameter'});
+    test("get'ing a json with default style and no interactivity should return an error",  function(done){
+        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE);
+        var expectedResponse = {
+            status: 400,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        testClient.getGrid(mapConfig, 0, 13, 4011, 3088, expectedResponse, function(err, res) {
+            console.log(res.body);
             done();
         });
     });
 
-    test.skip("get grid jsonp error is returned with 200 status",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?callback=test',
-            method: 'GET'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200);
+    test("get grid jsonp error is returned with 200 status",  function(done){
+        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE);
+        var expectedResponse = {
+            status: 200,
+            headers: {
+                'Content-Type': 'text/javascript; charset=utf-8'
+            }
+        };
+        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', expectedResponse, function(err, res) {
             assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
             done();
         });
     });
 
     // See http://github.com/Vizzuality/Windshaft/issues/50
-    test.skip("get'ing a json with no data should return an empty grid",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 0"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+    test("get'ing a json with no data should return an empty grid",  function(done){
+        var query = 'select * from test_table limit 0';
+        var mapConfig = singleLayerMapConfig(query, testClient.DEFAULT_POINT_STYLE, 'name');
+        testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
     });
 
     // Another test for http://github.com/Vizzuality/Windshaft/issues/50
-    // this time with interactivity and cache_buster
-    test.skip("get'ing a json with no data but interactivity should return an empty grid",  function(done){
-        var sql = querystring.stringify({
-          sql: "SELECT * FROM test_table limit 0",
-          interactivity: 'cartodb_id',
-          cache_buster: 4});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+    test("get'ing a json with no data but interactivity should return an empty grid",  function(done){
+        var query = 'SELECT * FROM test_table limit 0';
+        var mapConfig = singleLayerMapConfig(query, testClient.DEFAULT_POINT_STYLE, 'cartodb_id');
+        testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
     });
 
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/67
-    test.skip("get'ing a solid grid while changing interactivity fields",  function(done){
-        var baseurl = '/database/windshaft_test/table/test_big_poly/3/2/2.grid.json?';
+    test("get'ing a solid grid while changing interactivity fields",  function(done){
+        var query = 'SELECT * FROM test_big_poly';
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
-        baseurl += querystring.stringify({
-          style: style211,
-          style_version: '2.1.0'}
-        );
-        baseurl += '&';
-        assert.response(server, {
-            url: baseurl + 'interactivity=name',
-            method: 'GET'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200, res.body);
+        testClient.getGrid(singleLayerMapConfig(query, style211, 'name'), 0, 3, 2, 2, function(err, res) {
             var expected_data = { "1":{"name":"west"} };
             assert.deepEqual(JSON.parse(res.body).data, expected_data);
-            assert.response(server, {
-                url: baseurl + 'interactivity=cartodb_id',
-                method: 'GET'
-            },{}, function(res){
-                assert.equal(res.statusCode, 200, res.body);
+
+            testClient.getGrid(singleLayerMapConfig(query, style211, 'cartodb_id'), 0, 3, 2, 2, function(err, res) {
                 var expected_data = { "1":{"cartodb_id":"1"} };
                 assert.deepEqual(JSON.parse(res.body).data, expected_data);
                 done();
