@@ -9,6 +9,7 @@ REDIS_PORT=`node -e "console.log(require('${BASEDIR}/config/environments/test.js
 
 OPT_CREATE=yes # create the test environment
 OPT_DROP=yes   # drop the test environment
+OPT_COVERAGE=no
 
 cd $(dirname $0)
 BASEDIR=$(pwd)
@@ -51,6 +52,10 @@ while [ -n "$1" ]; do
                 OPT_CREATE=no
                 shift
                 continue
+        elif test "$1" = "--with-coverage"; then
+                OPT_COVERAGE=yes
+                shift
+                continue
         else
                 break
         fi
@@ -59,8 +64,9 @@ done
 if [ -z "$1" ]; then
         echo "Usage: $0 [<options>] <test> [<test>]" >&2
         echo "Options:" >&2
-        echo " --nocreate   do not create the test environment on start" >&2
-        echo " --nodrop     do not drop the test environment on exit" >&2
+        echo " --nocreate        do not create the test environment on start" >&2
+        echo " --nodrop          do not drop the test environment on exit" >&2
+        echo " --with-coverage   use istanbul to determine code coverage" >&2
         exit 1
 fi
 
@@ -78,8 +84,13 @@ fi
 
 PATH=node_modules/.bin/:$PATH
 
-echo "Running tests"
-mocha -u tdd -t 5000 ${TESTS}
+if test x"$OPT_COVERAGE" = xyes; then
+  echo "Running tests with coverage"
+  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u tdd -t 5000 ${TESTS}
+else
+  echo "Running tests"
+  mocha -u tdd -t 5000 ${TESTS}
+fi
 ret=$?
 
 cleanup

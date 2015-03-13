@@ -4,3 +4,4 @@ test/performance/stresstest*
 redis.pid
 test.log
 npm-debug.log
+coverage/

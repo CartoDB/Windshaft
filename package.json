@@ -47,6 +47,7 @@
         "node-statsd": "~0.0.7"
     },
     "devDependencies": {
+        "istanbul": "~0.3.6",
         "jshint": "~2.6.0",
         "mocha": "~1.21.4",
         "redis": "~0.8.3"
