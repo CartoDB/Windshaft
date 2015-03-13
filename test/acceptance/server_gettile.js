@@ -12,6 +12,7 @@ var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var semver = require('semver');
 var http = require('http');
+var testClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -76,6 +77,40 @@ suite('server_gettile', function() {
 
     });
 
+    function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
+        return {
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: sql,
+                        cartocss: cartocss || testClient.DEFAULT_POINT_STYLE,
+                        cartocss_version: cartocssVersion || '2.3.0',
+                        interactivity: interactivity
+                    }
+                }
+            ]
+        };
+    }
+
+    function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
+        return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
+    }
+
+    function defaultTableQuery(tableName) {
+        return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
+    }
+
+    function imageCompareFn(fixture, done) {
+        return function(err, res) {
+            if (err) {
+                return done(err);
+            }
+            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+        };
+    }
+
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -83,29 +118,9 @@ suite('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test.skip("get'ing a tile with default style should return an expected tile",
-    function(done){
-      step (
-        function makeGet() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
-              method: 'GET',
-              encoding: 'binary'
-          },{}, function(res) { next(null,res); });
-        },
-        function checkResponse(err, res) {
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          assert.equal(res.headers['content-type'], "image/png");
-          assert.imageEqualsFile(res.body,
-            './test/fixtures/test_table_13_4011_3088.png',
-            IMAGE_EQUALS_TOLERANCE_PER_MIL, this);
-        },
-        function finish(err) {
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/style',
-              method: 'DELETE' },{}, function() { done(err); });
-        }
+    test("get'ing a tile with default style should return an expected tile", function(done){
+      testClient.getTile(defaultTableMapConfig('test_table'), 13, 4011, 3088,
+          imageCompareFn('test_table_13_4011_3088.png', done)
       );
     });
 
@@ -188,43 +203,16 @@ suite('server_gettile', function() {
       );
     });
 
-    test.skip("should not choke when queries end with a semicolon",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
-                querystring.stringify({sql: "SELECT * FROM test_table limit 2;"}),
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(){
-            done();
-        });
+    test("should not choke when queries end with a semicolon",  function(done){
+        testClient.getTile(singleLayerMapConfig('SELECT * FROM test_table limit 2;'), 0, 0, 0, done);
     });
 
-    test.skip("should not choke when sql ends with a semicolon and some blanks",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
-                querystring.stringify({sql: "SELECT * FROM test_table limit 2; \t\n"}),
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(){
-            done();
-        });
+    test("should not choke when sql ends with a semicolon and some blanks",  function(done){
+        testClient.getTile(singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'), 0, 0, 0, done);
     });
 
-    test.skip("should not strip quoted semicolons within an sql query",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?' +
-                querystring.stringify({sql: "SELECT * FROM test_table where name != ';\n'"}),
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(){
-            done();
-        });
+    test("should not strip quoted semicolons within an sql query",  function(done){
+        testClient.getTile(singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"), 0, 0, 0, done);
     });
 
     test.skip("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
@@ -296,37 +284,14 @@ suite('server_gettile', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:5}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
 
-    test.skip("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
-        var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                done();
-            });
-        });
+    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+        testClient.getTile(defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'), 13, 4011, 3088,
+            imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
-    test.skip("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
-        var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                done();
-            });
-        });
+    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+        testClient.getTile(defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'), 13, 4011, 3088,
+            imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     test.skip("get'ing a tile with url specified bogus style should return 400 status",  function(done){
@@ -342,23 +307,11 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
-    test.skip("unused directives are tolerated",  function(done){
-        var style = querystring.stringify({
-          style: "#test_table{point-transform: 'scale(100)';}",
-          sql: "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom"
-        });
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            assert.equal(res.headers['content-type'], "image/png");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_default_mapnik_point.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) throw err;
-                done();
-            });
-        });
+    test("unused directives are tolerated",  function(done){
+        var style = "#test_table{point-transform: 'scale(100)';}";
+        var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
+        testClient.getTile(singleLayerMapConfig(sql, style), 0, 0, 0,
+            imageCompareFn('test_default_mapnik_point.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/100
@@ -387,24 +340,19 @@ suite('server_gettile', function() {
       test.skip(test_strict_lbl,  test_strictness);
     }
 
-    test.skip("beforeTileRender is called when the client request a tile",  function(done) {
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: {'X-BeforeTileRender': 'called'}
-        }, function() { done(); });
+    test("beforeTileRender is called when the client request a tile",  function(done) {
+        testClient.getTile(defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
+            assert.equal(res.headers['x-beforetilerender'], 'called');
+            done();
+        });
     });
 
-    test.skip("afterTileRender is called when the client request a tile",  function(done) {
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
-        }, function() { done(); });
+    test("afterTileRender is called when the client request a tile",  function(done) {
+        testClient.getTile(defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
+            assert.equal(res.headers['x-aftertilerender'], 'called');
+            assert.equal(res.headers['x-aftertilerender2'], 'called');
+            done();
+        });
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/31
@@ -799,17 +747,44 @@ suite('server_gettile', function() {
       );
     });
 
-    test.skip('high cpu regression with mapnik <2.3.x', function(done) {
-        assert.response(server,
-            {
-                url: '/database/windshaft_test/table/test_table/0/0/0.png?style=%23test_table+%7Bmarker-fill%3A%23ff7%3B+%0A++++marker-max-error%3A0.447492761618%3B+%0A++++marker-line-opacity%3A0.659371340628%3B+%0A++++marker-allow-overlap%3Atrue%3B+%0A++++polygon-fill%3Agreen%3B+%0A++++marker-spacing%3A0.0%3B+%0A++++marker-width%3A4.0%3B+%0A++++marker-height%3A18.0%3B+%0A++++marker-opacity%3A0.942312062822%3B+%0A++++line-color%3Agreen%3B+%0A++++line-gamma%3A0.945973211092%3B+%0A++++line-cap%3Asquare%3B+%0A++++polygon-opacity%3A0.12576055992%3B+%0A++++marker-type%3Aarrow%3B+%0A++++polygon-gamma%3A0.46354913107%3B+%0A++++line-dasharray%3A33%2C23%3B+%0A++++line-join%3Abevel%3B+%0A++++marker-placement%3Aline%3B+%0A++++line-width%3A1.0%3B+%0A++++marker-line-color%3A%23ff7%3B+%0A++++line-opacity%3A0.39403752154%3B+%0A++++marker-line-width%3A3.0%3B+%0A++++%7D&sql=SELECT+%27my+polygon+name+here%27+as+name%2C+st_envelope%28st_buffer%28st_transform%28st_setsrid%28st_makepoint%28-26.6592894004%2C49.7990296995%29%2C4326%29%2C3857%29%2C10000000%29%29+as+the_geom+FROM+generate_series%28-6%2C6%29+x+UNION+ALL+SELECT+%27my+marker+name+here%27+as+name%2C+st_transform%28st_setsrid%28st_makepoint%2849.6042060319%2C-49.0522997372%29%2C4326%29%2C3857%29+as+the_geom+FROM+generate_series%28-6%2C6%29+x',
-                method: 'GET'
-            },
-            {
-                status: 200
-            },
-            done
-        );
+    test('high cpu regression with mapnik <2.3.x', function(done) {
+        var sql = [
+            "SELECT 'my polygon name here' AS name,",
+            "       st_envelope(st_buffer(st_transform(st_setsrid(st_makepoint(-26.6592894004,49.7990296995),4326),3857),10000000)) AS the_geom",
+            "FROM generate_series(-6,6) x",
+            "UNION ALL",
+            "SELECT 'my marker name here' AS name,",
+            "       st_transform(st_setsrid(st_makepoint(49.6042060319,-49.0522997372),4326),3857) AS the_geom",
+            "FROM generate_series(-6,6) x"
+        ].join(' ');
+
+        var style = [
+            '#test_table {marker-fill:#ff7;',
+            '    marker-max-error:0.447492761618;',
+            '    marker-line-opacity:0.659371340628;',
+            '    marker-allow-overlap:true;',
+            '    polygon-fill:green;',
+            '    marker-spacing:0.0;',
+            '    marker-width:4.0;',
+            '    marker-height:18.0;',
+            '    marker-opacity:0.942312062822;',
+            '    line-color:green;',
+            '    line-gamma:0.945973211092;',
+            '    line-cap:square;',
+            '    polygon-opacity:0.12576055992;',
+            '    marker-type:arrow;',
+            '    polygon-gamma:0.46354913107;',
+            '    line-dasharray:33,23;',
+            '    line-join:bevel;',
+            '    marker-placement:line;',
+            '    line-width:1.0;',
+            '    marker-line-color:#ff7;',
+            '    line-opacity:0.39403752154;',
+            '    marker-line-width:3.0;',
+            '}'
+        ].join('');
+
+        testClient.getTile(singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
     });
 
     test.skip('#85 see 6f3c82dd896e7333bca04160942204f488931af9', function(done) {
