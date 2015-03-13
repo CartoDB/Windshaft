@@ -1,5 +1,9 @@
-# Version 0.39.1
+# Version 0.40.1
 2015-mm-dd
+
+
+# Version 0.40.0
+2015-03-11
 
 New features:
  - Adds stats from tilelive-mapnik to step-profiler: it discerns about rendering and encoding times
