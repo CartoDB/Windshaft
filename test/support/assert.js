@@ -86,7 +86,7 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
  * Assert response from `server` with
  * the given `req` object and `res` assertions object.
  *
- * @param {Server} server
+ * @param {Server|Object} server
  * @param {Object} req
  * @param {Object|Function} res
  * @param {String|Function} msg
