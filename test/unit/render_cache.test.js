@@ -1,19 +1,21 @@
 require('../support/test_helper.js');
 
-var   _             = require('underscore');
-var assert        = require('assert');
-var grainstore    = require('grainstore');
-var RenderCache   = require('../../lib/windshaft/renderers/render_cache');
-var MapStore   = require('../../lib/windshaft/storages/mapstore');
-var MapConfig   = require('../../lib/windshaft/models/mapconfig');
+var _ = require('underscore');
+var assert = require('assert');
+var grainstore = require('grainstore');
+var RenderCache = require('../../lib/windshaft/renderers/render_cache');
+var MapStore = require('../../lib/windshaft/storages/mapstore');
+var MapConfig = require('../../lib/windshaft/models/mapconfig');
 var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
-var redis         = require('redis');
-var step          = require('step');
+var redis = require('redis');
+var RedisPool = require('redis-mpool');
+var step = require('step');
 var serverOptions = require('../support/server_options');
 
 suite('render_cache', function() {
  
     var redis_client = redis.createClient(global.environment.redis.port);
+    var redisPool = new RedisPool(serverOptions.redis);
 
     // initialize core mml_store
     var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
@@ -50,7 +52,7 @@ suite('render_cache', function() {
         ]
     });
 
-    var mapStore = new MapStore({}),
+    var mapStore = new MapStore({pool: redisPool}),
         mapnikOpts;
 
 
