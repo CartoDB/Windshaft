@@ -235,7 +235,7 @@ suite('render_cache', function() {
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             req = {params: {dbname: "windshaft_test", token: mapConfig2.id(), x: 4, y:4, z:4, format:'png' }};
-            render_cache.getRenderer(req, function(/*err, renderer2*/){
+            render_cache.getRenderer(req, function(/*err, renderer2*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 done();
             });
@@ -249,7 +249,7 @@ suite('render_cache', function() {
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            render_cache.getRenderer(req, function(err, renderer){
+            render_cache.getRenderer(req, function(/*err, renderer*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 1);
                 done();
             });
@@ -266,7 +266,7 @@ suite('render_cache', function() {
 
             var req = {params: {dbname: "windshaft_test", token: mapConfig.id(), x: 4, y:4, z:4, format: 'png',
                 scale_factor: 2}};
-            render_cache.getRenderer(req, function(err, renderer){
+            render_cache.getRenderer(req, function(/*err, renderer*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 render_cache.reset(req);
                 assert.equal(_.keys(render_cache.renderers).length, 0);
@@ -284,11 +284,11 @@ suite('render_cache', function() {
             assert.ok(renderer, err);
             req.params.scale_factor = 2;
 
-            render_cache.getRenderer(req, function(err, renderer){
+            render_cache.getRenderer(req, function(/*err, renderer*/) {
                 delete req.params.scale_factor;
                 req.params.token = mapConfig2.id();
 
-                render_cache.getRenderer(req, function(err, renderer){
+                render_cache.getRenderer(req, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
                     req.params.token = mapConfig.id();
@@ -321,13 +321,13 @@ suite('render_cache', function() {
             // the database. Failure to connect would result in the
             // renderer not staying in the cache, as per
             // http://github.com/CartoDB/Windshaft/issues/171
-            req.params.dbuser = process.env['PGUSER'] || process.env['USER'];
+            req.params.dbuser = process.env.PGUSER || process.env.USER;
 
-            render_cache.getRenderer(req, function(err, renderer){
+            render_cache.getRenderer(req, function(/*err, renderer*/) {
                 delete req.params.sql;
                 req.params.table = 'test_table_2';
 
-                render_cache.getRenderer(req, function(err, renderer){
+                render_cache.getRenderer(req, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
                     req.params.table = 'test_table';
@@ -351,11 +351,11 @@ suite('render_cache', function() {
             assert.ok(renderer, err);
             req.params.scale_factor = 2;
 
-            render_cache.getRenderer(req, function(err, renderer){
+            render_cache.getRenderer(req, function(/*err, renderer*/) {
                 delete req.params.scale_factor;
                 req.params.token = mapConfig2.id();
 
-                render_cache.getRenderer(req, function(err, renderer){
+                render_cache.getRenderer(req, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
                     req.params.token = mapConfig.id();
@@ -371,7 +371,17 @@ suite('render_cache', function() {
 
     test('automatically deletes tilelive only after timeout', function(done){
         var render_cache = makeRenderCache({timeout: 100});
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y: 4,
+                z: 4,
+                geom_type: 'polygon',
+                format:'png'
+            }
+        };
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
@@ -385,7 +395,7 @@ suite('render_cache', function() {
         var render_cache = makeRenderCache();
         assert.equal(_.keys(render_cache.renderers).length, 0);
         var req = {params: {dbname: "windshaft_test", table: 'nonexistant', x:4, y:4, z:4, format:'png' }};
-        render_cache.getRenderer(req, function(err, renderer){
+        render_cache.getRenderer(req, function(err/*, renderer*/) {
             assert.ok(err);
             // Need next tick as the renderer is removed from
             // the cache after the callback is invoked 
@@ -404,7 +414,7 @@ suite('render_cache', function() {
         var renderCache = makeRenderCache();
         assert.equal(Object.keys(renderCache.renderers).length, 0);
         var req = { params: { token: "wadus", x:4, y:4, z:4, format:'png' } };
-        renderCache.getRenderer(req, function(err, renderer) {
+        renderCache.getRenderer(req, function(err/*, renderer*/) {
             assert.ok(err);
             assert.equal(Object.keys(renderCache.renderers).length, 0);
             done();
