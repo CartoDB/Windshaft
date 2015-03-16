@@ -1,20 +1,19 @@
-var   _             = require('underscore')
-    , sys           = require('util')
-    , th            = require('../support/test_helper.js')
-    , assert        = require('assert')
-    , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
-    , MapStore   = require('../../lib/windshaft/storages/mapstore')
-    , MapConfig   = require('../../lib/windshaft/models/mapconfig')
-    , RendererFactory = require('../../lib/windshaft/renderers/renderer_factory')
-    , redis         = require('redis')
-    , Step          = require('step')
-    , serverOptions = require('../support/server_options')
-    , tests         = module.exports = {};
+require('../support/test_helper.js');
+
+var   _             = require('underscore');
+var assert        = require('assert');
+var grainstore    = require('grainstore');
+var RenderCache   = require('../../lib/windshaft/renderers/render_cache');
+var MapStore   = require('../../lib/windshaft/storages/mapstore');
+var MapConfig   = require('../../lib/windshaft/models/mapconfig');
+var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
+var redis         = require('redis');
+var step          = require('step');
+var serverOptions = require('../support/server_options');
 
 suite('render_cache', function() {
  
-    var redis_client = redis.createClient(serverOptions.redis.port);
+    var redis_client = redis.createClient(global.environment.redis.port);
 
     // initialize core mml_store
     var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
@@ -85,7 +84,22 @@ suite('render_cache', function() {
 
     test('cache creation invokes renderer cache processor', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { c.was_here = 1; cb(); } }};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y: 4,
+                z: 4,
+                geom_type: 'point',
+                style: "#test_table{}",
+                format:'png',
+                style_version:'2.1.0',
+                processRendererCache: function(c, r, cb) {
+                    c.was_here = 1; cb();
+                }
+            }
+        };
 
         render_cache.getRenderer(req, function(err, item) {
           if ( err ) { done(err); return; }
@@ -96,9 +110,24 @@ suite('render_cache', function() {
 
     test('cache renderer creation hook can error out', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', processRendererCache: function(c, r, cb) { cb(new Error('no dice')); }}};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y: 4,
+                z: 4,
+                geom_type: 'point',
+                style: "#test_table{}",
+                format:'png',
+                style_version: '2.1.0',
+                processRendererCache: function(c, r, cb) {
+                    cb(new Error('no dice'));
+                }
+            }
+        };
 
-        render_cache.getRenderer(req, function(err, item) {
+        render_cache.getRenderer(req, function(err/*, item*/) {
           assert.equal(err.message, "no dice");
           done();
         });
@@ -106,18 +135,30 @@ suite('render_cache', function() {
 
     test('cache renderer hook is only called when a _new_ cache is created', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0' }};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y: 4,
+                z: 4,
+                geom_type: 'point',
+                style: "#test_table{}",
+                format: 'png',
+                style_version:'2.1.0'
+            }
+        };
         req.params.processRendererCache = function(c, r, cb) {
           c.was_here = 2;
           cb();
         };
 
-        Step(
+        step(
           function makeRenderer() {
             render_cache.getRenderer(req, this);
           },
           function getCached(err, item) {
-            if ( err ) throw err;
+            assert.ifError(err);
             assert.equal(item.was_here, 2);
             req.params.processRendererCache = function(c, r, cb) {
               c.was_here = 3;
@@ -126,7 +167,7 @@ suite('render_cache', function() {
             render_cache.getRenderer(req, this);
           },
           function checkNoHook(err, item) {
-            if (err) throw err;
+            assert.ifError(err);
             assert.equal(item.was_here, 2);
             return null;
           },
@@ -138,7 +179,20 @@ suite('render_cache', function() {
 
     test('cache renderer item contains cache_buster', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'point', style:"#test_table{}", format:'png', style_version:'2.1.0', cache_buster:6 }};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y:4,
+                z:4,
+                geom_type: 'point',
+                style: "#test_table{}",
+                format: 'png',
+                style_version: '2.1.0',
+                cache_buster:6
+            }
+        };
 
         render_cache.getRenderer(req, function(err, item) {
           assert.equal(item.cache_buster, 6);
@@ -153,7 +207,17 @@ suite('render_cache', function() {
 
     test('can generate a tilelive object', function(done){
         var render_cache = makeRenderCache();
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {
+            params: {
+                dbname: "windshaft_test",
+                table: 'test_table',
+                x: 4,
+                y: 4,
+                z: 4,
+                geom_type: 'polygon',
+                format:'png'
+            }
+        };
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -171,7 +235,7 @@ suite('render_cache', function() {
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             req = {params: {dbname: "windshaft_test", token: mapConfig2.id(), x: 4, y:4, z:4, format:'png' }};
-            render_cache.getRenderer(req, function(err, renderer2){
+            render_cache.getRenderer(req, function(/*err, renderer2*/){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 done();
             });
