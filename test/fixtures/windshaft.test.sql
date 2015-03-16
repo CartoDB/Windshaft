@@ -20,6 +20,10 @@
 --SET default_tablespace = '';
 --SET default_with_oids = false;
 
+-- public user role
+DROP USER IF EXISTS test_ws_publicuser;
+CREATE USER test_ws_publicuser WITH PASSWORD 'public';
+
 
 -- first table
 CREATE TABLE test_table (
