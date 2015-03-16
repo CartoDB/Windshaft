@@ -87,6 +87,11 @@
         "suite": true,
         "suiteSetup": true,
         "test": true,
-        "suiteTeardown": true
+        "suiteTeardown": true,
+        "beforeEach": true,
+        "before": true,
+        "after": true,
+        "describe": true,
+        "it": true
     }
 }

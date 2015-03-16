@@ -2,13 +2,13 @@ var assert = require('assert');
 var TorqueFactory = require('../../lib/windshaft/renderers/torque').factory;
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
-function GenSQL() {
-  PSQLDummy.n = Date.now()
+function dummyPSQL() {
+  PSQLDummy.n = Date.now();
   function PSQLDummy() {
     this.query = function(sql, callback) {
       var res = PSQLDummy.responses[PSQLDummy.queries.length];
       //console.log("* ", PSQLDummy.n, sql, " => ", res);
-      PSQLDummy.queries.push(sql)
+      PSQLDummy.queries.push(sql);
       callback.apply(module, res);
     };
   }
@@ -48,7 +48,7 @@ describe('torque', function() {
         '#layer {',
           'marker-width: 3;',
         '}'
-      ].join('')
+      ].join('');
   }
 
   function layergroupConfig(cartocss) {
@@ -64,13 +64,15 @@ describe('torque', function() {
                 }
             }
         ]
-    }
-  };
+    };
+  }
+
   var mapConfig = MapConfig.create(layergroupConfig());
 
   var sqlApi = null;
+  var torque = null;
   beforeEach(function(){
-    sqlApi = GenSQL();
+    sqlApi = dummyPSQL();
     torque = new TorqueFactory({
       sqlClass: sqlApi 
     });
@@ -111,7 +113,7 @@ describe('torque', function() {
               '-torque-resolution: 2'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-frame-count' in torque layer CartoCSS");
@@ -135,7 +137,7 @@ describe('torque', function() {
               '-torque-animation-duration: 15;'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-resolution' in torque layer CartoCSS");
@@ -159,7 +161,7 @@ describe('torque', function() {
               '-torque-resolution: 2'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-time-attribute' in torque layer CartoCSS");
@@ -168,27 +170,27 @@ describe('torque', function() {
     });
 
     it('should return error when format is unsuported', function(done) {
-      torque.getRenderer(mapConfig, {}, 'dummy', 0, function(err, renderer) {
+      torque.getRenderer(mapConfig, {}, 'dummy', 0, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message == "format not supported: dummy");
+        assert.ok(err.message === "format not supported: dummy");
         done();
       });
     });
 
     it("should raise an error when layer is not set", function(done) {
-      torque.getRenderer(mapConfig_notorque, {}, 'json.torque', function(err, renderer) {
+      torque.getRenderer(mapConfig_notorque, {}, 'json.torque', function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message == "torque renderer only supports a single layer");
+        assert.ok(err.message === "torque renderer only supports a single layer");
         done();
       });
     });
     it("should raise an error when layer does not exist", function(done) {
-      torque.getRenderer(mapConfig, {}, 'json.torque', 1, function(err, renderer) {
+      torque.getRenderer(mapConfig, {}, 'json.torque', 1, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message == "layer index is greater than number of layers");
+        assert.ok(err.message === "layer index is greater than number of layers");
         done();
       });
     });
@@ -203,19 +205,19 @@ describe('torque', function() {
           { min_date: 0, max_date: 10, num_steps: 1, xmin: 0, xmax: 10, ymin: 0, ymax: 10 }
           ]
         }]
-      ]
+      ];
       torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
         assert.ok(err === null);
         renderer.getMetadata(function(err, m) {
-          assert.equal(0, m.start)
-          assert.equal(10000, m.end)
-          assert.equal(1, m.data_steps)
+          assert.equal(0, m.start);
+          assert.equal(10000, m.end);
+          assert.equal(1, m.data_steps);
           assert.equal('date', m.column_type);
           done();
-        })
+        });
       });
 
-    })
+    });
     it('should get a tile', function(done) {
       sqlApi.responses = [
         [null, { fields: { 'date': { type: 'date' } } }],
