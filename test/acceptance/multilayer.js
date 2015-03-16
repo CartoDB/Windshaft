@@ -575,8 +575,7 @@ suite('multilayer', function() {
       );
     });
 
-    test.skip("layergroup with 3 mixed layers, mapnik torque and attributes",
-    function(done) {
+    test("layergroup with 3 mixed layers, mapnik torque and attributes", function(done) {
 
       var layergroup =  {
         version: '1.1.0',
@@ -1324,7 +1323,10 @@ suite('multilayer', function() {
         }, function() { done(); });
     });
 
-    // See https://github.com/CartoDB/Windshaft/issues/103
+    // See:
+    //  - https://github.com/CartoDB/Windshaft/issues/103
+    //  - https://github.com/mapnik/mapnik/issues/2121
+    //  - https://github.com/mapnik/mapnik/issues/764
     test.skip("layergroup with datetime interactivity", function(done) {
 
       var layergroup =  {
