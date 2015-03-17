@@ -64,7 +64,7 @@ function createLayergroup(layergroupConfig, options, callback) {
     step(
         function requestLayergroup() {
             var next = this;
-            var request = layergroupRequest(layergroupConfig, options.method, options.callbackName);
+            var request = layergroupRequest(layergroupConfig, options.method, options.callbackName, options.params);
             assert.response(server, request, expectedResponse, function (res, err) {
                 next(err, res);
             });
@@ -87,7 +87,7 @@ function createLayergroup(layergroupConfig, options, callback) {
     );
 }
 
-function layergroupRequest(layergroupConfig, method, callbackName) {
+function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {
     method = method || 'POST';
 
     var request = {
@@ -97,7 +97,7 @@ function layergroupRequest(layergroupConfig, method, callbackName) {
         }
     };
 
-    var urlParams = {};
+    var urlParams = _.extend({}, extraParams);
     if (callbackName) {
         urlParams.callback = callbackName;
     }
@@ -275,16 +275,9 @@ function tileUrlStrategy(options) {
 
     var urlTemplate = _.template((options.layer === undefined) ? urlNoLayerPattern : urlLayerPattern);
 
-    var format = options.format || 'png';
+    options.format = options.format || 'png';
 
-    return '<%= layergroupid %>/' + urlTemplate({
-        z: options.z === undefined ? 0 : options.z,
-        x: options.x === undefined ? 0 : options.x,
-        y: options.y === undefined ? 0 : options.y,
-        layer: options.layer === undefined ? 0 : options.layer,
-        format: format,
-        jsonpCallbackName: options.jsonpCallbackName
-    });
+    return '<%= layergroupid %>/' + urlTemplate(_.defaults(options, { z: 0, x: 0, y: 0, layer: 0 }));
 }
 
 function getGeneric(layergroupConfig, url, expectedResponse, callback) {
