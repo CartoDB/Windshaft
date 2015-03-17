@@ -231,18 +231,6 @@ suite('server_gettile', function() {
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
-    test.skip("get'ing a tile with url specified bogus style should return 400 status",  function(done){
-        var style = querystring.stringify({style: "#test_table{xxxxx;}"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res) {
-            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-            done();
-        });
-    });
-
     // See http://github.com/CartoDB/Windshaft/issues/99
     test("unused directives are tolerated",  function(done){
         var style = "#test_table{point-transform: 'scale(100)';}";

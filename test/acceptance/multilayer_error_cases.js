@@ -339,6 +339,11 @@ suite('multilayer error cases', function() {
         });
     });
 
+    test("bogus style should raise 400 status",  function(done){
+        var bogusStyleMapConfig = testClient.defaultTableMapConfig('test_table', '#test_table{xxxxx;}');
+        testClient.createLayergroup(bogusStyleMapConfig, { method: 'GET', statusCode: 400 }, done);
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP
