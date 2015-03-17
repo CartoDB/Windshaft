@@ -201,6 +201,7 @@ suite('server_gettile', function() {
         );
 
         function validateLayergroup(res) {
+            // cache is hit because we create a renderer to validate the map config
             assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'), "Did hit renderer cache on first time");
         }
 
