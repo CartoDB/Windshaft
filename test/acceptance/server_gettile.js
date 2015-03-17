@@ -787,10 +787,6 @@ suite('server_gettile', function() {
         testClient.getTile(singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
     });
 
-    test.skip('#85 see 6f3c82dd896e7333bca04160942204f488931af9', function(done) {
-        done();
-    });
-
     test.skip('#97 see 86ba195058557e30798cb9d1cf967765c4161dd5', function(done) {
         done();
     });
