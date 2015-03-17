@@ -239,18 +239,19 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/100
-    var test_strictness = function(done){
-        var style = querystring.stringify({
-          style: "#test_table{point-transform: 'scale(100)';}",
-          sql: "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom"
-        });
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/0/0/0.png?strict=1&' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res){
-            assert.equal(res.statusCode, 400);
-            done();
+    var test_strictness = function(done) {
+        var nonStrictMapConfig = testClient.singleLayerMapConfig(
+            "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom",
+            "#test_table{point-transform: 'scale(100)';}"
+        );
+        testClient.withLayergroup(nonStrictMapConfig, function(err, requestTile, finish) {
+            var options = {
+                statusCode: 400,
+                contentType: 'application/json; charset=utf-8'
+            };
+            requestTile('/0/0/0.png?strict=1', options, function() {
+                finish(done);
+            });
         });
     };
     var test_strict_lbl = "unused directives are not tolerated if strict";
@@ -261,7 +262,7 @@ suite('server_gettile', function() {
       test.skip(test_strict_lbl,  test_strictness);
     }
     else {
-      test.skip(test_strict_lbl,  test_strictness);
+      test(test_strict_lbl,  test_strictness);
     }
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
