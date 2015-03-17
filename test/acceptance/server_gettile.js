@@ -191,29 +191,32 @@ suite('server_gettile', function() {
         );
     });
 
-    test.skip("get'ing two tiles with same configuration uses renderer cache",  function(done){
-        // NOTE: mus tuse the same cache_buster
-        var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster=5&' + style,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res){
-            assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'),
-                     "Did hit renderer cache on first time");
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                if (err) { done(err); return; }
-                assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table/13/4011/3087.png?cache_buster=5&' + style,
-                    method: 'GET',
-                    encoding: 'binary'
-                }, {},
-                function(res){
-                  assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'),
-                     "Did not hit renderer cache on second time");
-                  done();
+    test("getting two tiles with same configuration uses renderer cache",  function(done) {
+
+        var imageFixture = './test/fixtures/test_table_13_4011_3088_styled.png';
+        var tileUrl = '/13/4011/3088.png';
+        var mapConfig = testClient.defaultTableMapConfig(
+            'test_table',
+            '#test_table{marker-fill: blue;marker-line-color: black;}'
+        );
+
+        function validateLayergroup(res) {
+            assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'), "Did hit renderer cache on first time");
+        }
+
+        testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
+
+            requestTile(tileUrl, function(err, res) {
+                assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
+                assert.ok(res.headers['x-windshaft-cache'] >= 0);
+
+                assert.imageEqualsFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
+
+                    finish(function(finishErr) {
+                        done(err || finishErr);
+                    });
                 });
-             });
+            });
         });
     });
 

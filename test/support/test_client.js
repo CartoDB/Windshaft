@@ -363,7 +363,12 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
     );
 }
 
-function withLayergroup(layergroupConfig, callback) {
+function withLayergroup(layergroupConfig, validationLayergroupFn, callback) {
+    if (!callback) {
+        callback = validationLayergroupFn;
+        validationLayergroupFn = function() {};
+    }
+
     var layergroupExpectedResponse = {
         status: 200,
         headers: {
@@ -386,6 +391,8 @@ function withLayergroup(layergroupConfig, callback) {
             var layergroupid = parsedBody.layergroupid;
 
             assert.ok(layergroupid, 'No layergroup was created');
+
+            validationLayergroupFn(res);
 
             function requestTile(layergroupUrl, options, callback) {
                 if (!callback) {
