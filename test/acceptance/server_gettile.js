@@ -192,20 +192,6 @@ suite('server_gettile', function() {
         );
     });
 
-    test.skip("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
-        var sql = querystring.stringify({sql: "BOGUS FROM test_table"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
-            method: 'GET',
-            encoding: 'binary'
-        },{}, function(res) {
-            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-            var body_parsed = JSON.parse(res.body);
-            assert.ok(/syntax error/.test(body_parsed.error), "Unexpected error: " + body_parsed.error);
-            done();
-        });
-    });
-
     test.skip("get tile jsonp error is returned with 200 status",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png?sql=bogus&callback=test',

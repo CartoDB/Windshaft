@@ -6,6 +6,7 @@ var redis = require('redis');
 var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
+var testClient = require('../support/test_client');
 
 suite('multilayer error cases', function() {
 
@@ -309,6 +310,14 @@ suite('multilayer error cases', function() {
             assert.equal(parsed.errors.length, 1);
             var error = parsed.errors[0];
             assert.ok(error.match(/column "address" does not exist/m), error);
+            done();
+        });
+    });
+
+    test('bogus sql raises 400 status code', function(done) {
+        var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
+        testClient.createLayergroup(bogusSqlMapConfig, 400, function(err, res) {
+            assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
             done();
         });
     });
