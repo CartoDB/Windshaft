@@ -322,6 +322,15 @@ suite('multilayer error cases', function() {
         });
     });
 
+    // should be fixed in #302
+    test.skip('bogus sql raises 200 status code for jsonp', function(done) {
+        var bogusSqlMapConfig = testClient.singleLayerMapConfig('bogus');
+        testClient.createLayergroup(bogusSqlMapConfig, { method: 'GET', callbackName: 'test' }, function(err, res) {
+            assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
+            done();
+        });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP

@@ -192,18 +192,6 @@ suite('server_gettile', function() {
         );
     });
 
-    test.skip("get tile jsonp error is returned with 200 status",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?sql=bogus&callback=test',
-            method: 'GET'
-        },{}, function(res){
-            assert.equal(res.statusCode, 200);
-            assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
-            done();
-        });
-    });
-
-
     test.skip("get'ing a tile from a query with no geometry field returns 400 status",  function(done){
         var sql = querystring.stringify({sql: "SELECT 1"});
         assert.response(server, {
