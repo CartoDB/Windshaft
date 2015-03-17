@@ -8,6 +8,7 @@ var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
+var testClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -62,6 +63,21 @@ suite('regressions', function() {
 
       });
 
+    });
+
+    // See https://github.com/Vizzuality/Windshaft/issues/65
+    test("#65 catching non-Error exception doesn't kill the backend", function(done) {
+        var mapConfig = testClient.defaultTableMapConfig('test_table');
+        testClient.withLayergroup(mapConfig, function(err, requestTile, finish) {
+            var options = {
+                statusCode: 400,
+                contentType: 'application/json; charset=utf-8'
+            };
+            requestTile('/0/0/0.png?testUnexpectedError=1', options, function(err, res) {
+                assert.deepEqual(JSON.parse(res.body),  {"error":"test unexpected error"});
+                finish(done);
+            });
+        });
     });
 
     // Test that you cannot write to the database from a tile request

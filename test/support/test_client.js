@@ -24,6 +24,7 @@ var DEFAULT_POINT_STYLE = [
 
 module.exports = {
     createLayergroup: createLayergroup,
+    withLayergroup: withLayergroup,
 
     singleLayerMapConfig: singleLayerMapConfig,
     defaultTableMapConfig: defaultTableMapConfig,
@@ -358,6 +359,75 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
             redisClient.del(redisKey, function (/*delErr*/) {
                 return callback(err, res, img);
             });
+        }
+    );
+}
+
+function withLayergroup(layergroupConfig, callback) {
+    var layergroupExpectedResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    step(
+        function requestLayergroup() {
+            var next = this;
+            var request = layergroupRequest(layergroupConfig, 'POST');
+            assert.response(server, request, layergroupExpectedResponse, function (res, err) {
+                next(err, res);
+            });
+        },
+        function validateLayergroup(err, res) {
+            assert.ok(!err, 'Failed to request layergroup');
+
+            var parsedBody = JSON.parse(res.body);
+            var layergroupid = parsedBody.layergroupid;
+
+            assert.ok(layergroupid, 'No layergroup was created');
+
+            function requestTile(layergroupUrl, options, callback) {
+                if (!callback) {
+                    callback = options;
+                    options = {
+                        statusCode: 200,
+                        contentType: pngContentType
+                    };
+                }
+
+                var baseUrlTpl = '/database/windshaft_test/layergroup/<%= layergroupid %>';
+                var finalUrl = _.template(baseUrlTpl, { layergroupid: layergroupid }) + layergroupUrl;
+
+                var request = {
+                    url: finalUrl,
+                    method: 'GET'
+                };
+
+                if (options.contentType === pngContentType) {
+                    request.encoding = 'binary';
+                }
+
+                var tileExpectedResponse = {
+                    status: options.statusCode || 200,
+                    headers: {
+                        'Content-Type': options.contentType || pngContentType
+                    }
+                };
+
+                assert.response(server, request, tileExpectedResponse, function (res, err) {
+                    callback(err, res);
+                });
+            }
+
+            function finish(done) {
+                var redisKey = 'map_cfg|' + layergroupid;
+                redisClient.del(redisKey, function (delErr) {
+                    return done(delErr);
+                });
+            }
+
+            return callback(err, requestTile, finish);
         }
     );
 }
