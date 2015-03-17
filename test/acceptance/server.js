@@ -96,13 +96,12 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("get call to server returns 200",  function(done){
+    test("get call to server returns 404",  function(done){
         assert.response(server, {
             url: '/',
             method: 'GET'
         },{
-            // FIXME: shouldn't this be a 404 ?
-            status: 200
+            status: 404
         }, function() { done(); } );
     });
 
