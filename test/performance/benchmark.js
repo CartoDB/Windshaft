@@ -39,9 +39,9 @@ var cached_requests = 20;
 var cache_buster_url;
 var N = cached_requests*50; // number of requests (50 full viewports)
 var concurrency = cached_requests; // number of concurrent requests
-var cols = 5;  
+var cols = 5;
 var lines = 4;
-var zlevs = 2; 
+var zlevs = 2;
 var fetch_grid = 0;
 var idletime = 0; // in seconds (TODO: parametrize)
 var timelimit = 0;
@@ -147,7 +147,7 @@ function end() {
     console.log("Zoom levels:          ", zlevs);
     console.log("Start tile:           ", zstart + "/" + xstart + "/" + ystart);
     console.log("Viewports per cache:  ", isNaN(cached_requests) ? 'all' : cached_requests);
-  if ( cache_buster_url ) 
+  if ( cache_buster_url )
     console.log("Cache buster url:     ", cache_buster_url);
     console.log("Simulated users:      ", users);
     console.log("Concurrency Level:    ", concurrency);
@@ -181,7 +181,7 @@ var error = 0;
 http.globalAgent.maxSockets = concurrency;
 
 if ( timelimit ) {
-  setTimeout(function() { 
+  setTimeout(function() {
     console.log("Interrupting after " + timelimit + " seconds");
     end();
   }, timelimit*1000);
@@ -190,7 +190,7 @@ if ( timelimit ) {
 function fetchTileOrGrid(url, callback)
 {
   // Do not send more than the max requests
-  if ( requests_sent >= N ) { callback(); return; } 
+  if ( requests_sent >= N ) { callback(); return; }
   ++requests_sent;
 
   var t = Date.now();
@@ -280,7 +280,7 @@ function fetchViewport(x0, y0, z, cache_buster, callback)
 }
 
 var now = Date.now();
-var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_"; 
+var cbprefix = 'wb_' + process.env.USER + '_' + process.pid + "_";
 var vpcount = 0;
 var last_cbserial;
 var last_cb;
@@ -305,7 +305,7 @@ function fetchCacheBusterValue(callback)
       last_cb = cb;
       callback(null, last_cb);
       return;
-    } 
+    }
 
     if ( verbose ) {
       console.log("Cache-buster fetching " + cbserial);
@@ -333,7 +333,7 @@ function fetchNextViewport() {
 
     if ( requests_sent >= N ) end();
 
-    // update zoom level 
+    // update zoom level
     var zdist = ( vpcount % zlevs );
     var z = zstart + zdist;
     var zdist_tiles = (1<<zdist);
@@ -342,7 +342,7 @@ function fetchNextViewport() {
 
 
 
-    // update cache_buster 
+    // update cache_buster
     fetchCacheBusterValue(function(err, cb) {
 
       if ( err ) {

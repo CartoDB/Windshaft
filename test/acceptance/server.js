@@ -59,7 +59,7 @@ suite('server', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
 
         if ( err ) { done(err); return; }
@@ -71,7 +71,7 @@ suite('server', function() {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
-            var filename = __dirname + '/../fixtures/markers' + request.url; 
+            var filename = __dirname + '/../fixtures/markers' + request.url;
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -194,7 +194,7 @@ suite('server', function() {
     });
 
     ////////////////////////////////////////////////////////////////////
-    // 
+    //
     // OPTIONS TILE
     //
     ////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ suite('server', function() {
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
         },{
             status: 400,
-            body: /Unrecognized rule: backgxxxxxround-color/ 
+            body: /Unrecognized rule: backgxxxxxround-color/
         }, function() { done(); } );
     });
 
@@ -278,7 +278,7 @@ suite('server', function() {
             data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
         },{
             status: 400,
-            body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/ 
+            body: /Unrecognized rule: backgxxxxxround-color.*Unrecognized rule: foo/
         }, function() { done(); } );
     });
 
@@ -370,7 +370,7 @@ suite('server', function() {
             assert.equal(res.statusCode, 200, res.body);
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
-            // specified is retained 
+            // specified is retained
             assert.equal(parsed.style_version, '2.0.2');
             next(null);
           });
@@ -386,7 +386,7 @@ suite('server', function() {
             assert.equal(res.statusCode, 200, res.body);
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, style);
-            // specified is retained 
+            // specified is retained
             assert.equal(parsed.style_version, mapnik_version);
             next(null);
           });
@@ -418,7 +418,7 @@ suite('server', function() {
             // NOTE: no conversion expected for the specific style (may change)
             assert.equal(parsed.style, style);
             // Style converted to target
-            assert.equal(parsed.style_version, mapnik_version); 
+            assert.equal(parsed.style_version, mapnik_version);
             done();
           });
         }
@@ -427,7 +427,7 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
-    // GET GRID 
+    // GET GRID
     //
     ////////////////////////////////////////////////////////////////////
 
@@ -738,7 +738,7 @@ suite('server', function() {
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
           if ( err ) errors.push(err);
-          try { 
+          try {
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
             errors.push(err);
@@ -746,7 +746,7 @@ suite('server', function() {
 
           var cachedir = global.environment.millstone.cache_basedir;
           rmdir_recursive_sync(cachedir);
-              
+
           redis_client.flushall(function() {
             done(errors.length ? new Error(errors) : null);
           });

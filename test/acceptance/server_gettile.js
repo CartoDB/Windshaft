@@ -45,7 +45,7 @@ suite('server_gettile', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
 
         if ( err ) { done(err); return; }
@@ -57,7 +57,7 @@ suite('server_gettile', function() {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
-            var filename = __dirname + '/../fixtures/markers' + request.url; 
+            var filename = __dirname + '/../fixtures/markers' + request.url;
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -82,7 +82,7 @@ suite('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a tile with default style should return an expected tile", 
+    test("get'ing a tile with default style should return an expected tile",
     function(done){
       Step (
         function makeGet() {
@@ -593,7 +593,7 @@ suite('server_gettile', function() {
       );
     });
 
-    test("base and custom style tile referencing external resources do not affect each other", 
+    test("base and custom style tile referencing external resources do not affect each other",
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/circle.svg'); marker-transform:'scale(0.2)'; }";
       var style2 = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
@@ -666,7 +666,7 @@ suite('server_gettile', function() {
               });
           });
         },
-        // Now fetch the base style tile again 
+        // Now fetch the base style tile again
         function getBaseTile1(err, data) {
           if ( err ) throw err;
           var next = this;
@@ -692,7 +692,7 @@ suite('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/107
-    test("external resources get localized on renderer creation", 
+    test("external resources get localized on renderer creation",
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port + "/square.svg'); marker-transform:'scale(0.2)'; }";
       var stylequery = querystring.stringify({style: style});
@@ -767,7 +767,7 @@ suite('server_gettile', function() {
       );
     });
 
-    test("referencing unexistant external resources returns an error", 
+    test("referencing unexistant external resources returns an error",
         function(done){
       var url = "http://localhost:" + res_serv_port + "/notfound.png";
       var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
@@ -818,7 +818,7 @@ suite('server_gettile', function() {
         },
         function check(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' )); 
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode != 200 ? res.body : '..' ));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.error);
           var msg = parsed.error;
@@ -959,7 +959,7 @@ suite('server_gettile', function() {
       // Check that we left the redis db empty
       redis_client.keys("*", function(err, matches) {
           if ( err ) errors.push(err);
-          try { 
+          try {
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
             errors.push(err);
@@ -967,7 +967,7 @@ suite('server_gettile', function() {
 
           var cachedir = global.environment.millstone.cache_basedir;
           rmdir_recursive_sync(cachedir);
-              
+
           redis_client.flushall(function() {
             done(errors.length ? new Error(errors) : null);
           });

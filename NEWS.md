@@ -420,7 +420,7 @@ Enhancements:
  Enhancements:
 
  - Do not send 0 timings to statsd (fixes "Bad line: 0,ms" messages)
- - Do not call req2params more then once on MapConfig creation (#157) 
+ - Do not call req2params more then once on MapConfig creation (#157)
  - Do not invalidate renderer caches when NO cache_buster is given (#158)
  - Call afterLayergroupCreate only after MapConfig verification (#159)
  - Drop LRU cache for "seen" layergroups (#160)
@@ -512,7 +512,7 @@ Enhancements:
 
  Bug fixes:
 
- - Fix coordinate order in TorqueRenderer.getTile 
+ - Fix coordinate order in TorqueRenderer.getTile
 
 # Version 0.16.0
 2014-02-04
@@ -619,7 +619,7 @@ Enhancements:
 2013-08-13
 
  - Rewrite mapnik XML parsing error to start with style name (#73)
- - Fix error on empty CartoCSS 
+ - Fix error on empty CartoCSS
 
 # Version 0.13.1
 2013-07-18
@@ -648,7 +648,7 @@ Enhancements:
 2013-06-28
 
  - Allow setting layergroup token ttl via config variable
-   grainstore.default_layergroup_ttl 
+   grainstore.default_layergroup_ttl
  - Only check layergroup configuration when first seen (#77)
  - Use tile 30/0/0 for testing layergroups, override with maxzoom (#78)
 
@@ -712,7 +712,7 @@ Enhancements:
    - Drop  /layergroup/:token/:z/:x/:y.grid.json route
    - Add /layergroup/:token/:layer/:z/:x/:y.grid.json route
    - Add /layergroup route to create maps via GET (#69)
-   - Add map config to afterLayergroupCreate hook signature 
+   - Add map config to afterLayergroupCreate hook signature
 
 # Version 0.10.0
 2013-03-29
@@ -842,7 +842,7 @@ Enhancements:
 # Version 0.5.5
 2012-08-07
 
- - Use custom tilelive-mapnik to workaround ever-growing memory use 
+ - Use custom tilelive-mapnik to workaround ever-growing memory use
  - Expose setStyle and delStyle methods
  - Add afterStyleChange and afterStyleDelete callbacks
 
@@ -858,11 +858,11 @@ Enhancements:
 This release drops the requirement of a field already in epsg:3857
 (aka "the_geom_webmercator");
 
- - Raise grainstore dependency to ~0.3.1 to allow for safe 
+ - Raise grainstore dependency to ~0.3.1 to allow for safe
    wgs84 to webmercator reprojection in mapnik.
  - Update tests to use mapnik reprojection.
  - Improve testing tool to accept tolerances
- - Shrinkwrap carto 0.8.1 and mapnik-reference 3.1.0 
+ - Shrinkwrap carto 0.8.1 and mapnik-reference 3.1.0
 
 # Version 0.5.2
 2012-07-20
@@ -873,7 +873,7 @@ This release drops the requirement of a field already in epsg:3857
 # Version 0.5.1
 2012-07-12
 
- - Raise underscore dependency to ~1.3 
+ - Raise underscore dependency to ~1.3
  - Loosen grainstore dependency to >= 0.2.3 < 0.4
  - Loosen hiredis dependency to ~0.1.12
 
@@ -882,7 +882,7 @@ This release drops the requirement of a field already in epsg:3857
 
  NOTE: this release drops support for node-0.4.x
 
- - Requires node-0.6 (#10) 
+ - Requires node-0.6 (#10)
  - Add npm-shrinkwrap.json file to lock dependencies versions
  - Add support for mapnik 2.1.x (#14)
  - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik (#26)
@@ -913,7 +913,7 @@ This release drops the requirement of a field already in epsg:3857
    - Do not hang anymore
    - Fix invalid MML syntax
    - More verbose failures
- - Improved documentation 
+ - Improved documentation
  - Raise grainstore dependency to 0.2.2
 
 # Version 0.4.6

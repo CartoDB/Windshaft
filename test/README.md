@@ -11,7 +11,7 @@ Requirements
    Used to drive the test runs
    You can install globally using ```npm install -g mocha```
  * Redis - http://redis.io/
-   Used to cache styles 
+   Used to cache styles
  * ImageMagick - http://www.imagemagick.org
    Compare tool is used to perform image comparison
 
@@ -29,7 +29,7 @@ PostgreSQL 9.1+ needs to be running, listening on a TCP port and be
 accessible as specified in the environment configuration.
 
 Create a spatial database called "windshaft_test" and load the script
-fixtures/windshaft.test.sql to initialize it. 
+fixtures/windshaft.test.sql to initialize it.
 The script ```./prepare_test``` attempts to do all of it for you.
 Note that if running mapnik < 2.0.2, the spatial DB must be loaded with
 a version of PostGIS providing 'AsBinary' and friends (including legacy.sql

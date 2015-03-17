@@ -38,7 +38,7 @@ suite('raster', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
           if ( err ) { done(err); return; }
           assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
@@ -63,7 +63,7 @@ suite('raster', function() {
              } }
         ]
       };
-      var expected_token; 
+      var expected_token;
       Step(
         function do_post()
         {

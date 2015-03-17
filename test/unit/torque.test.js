@@ -72,7 +72,7 @@ describe('torque', function() {
   beforeEach(function(){
     sqlApi = GenSQL();
     torque = new TorqueFactory({
-      sqlClass: sqlApi 
+      sqlClass: sqlApi
     });
   });
 

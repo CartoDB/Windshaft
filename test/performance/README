@@ -10,7 +10,7 @@ In order to run the performance test you need:
     field name is also written in the environment file)
 
 How to run the test:
- 
+
  1. Run the server, and put in the background:
     ./test_server.js &
     Will tell you something like: "Windshaft tileserver started on port 8080"
@@ -22,5 +22,5 @@ How to run the test:
     PORT is where tileserver started on.
     DBNAME and TABLENAME are the source of data you want to get tiles of.
     NOTE: you can also add the full url to a tile, including any parameter
-    (api_key, style, sql, ...); the tool will take care of figuring out 
-    the structure of the call for you. 
+    (api_key, style, sql, ...); the tool will take care of figuring out
+    the structure of the call for you.
