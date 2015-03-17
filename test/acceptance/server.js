@@ -133,7 +133,7 @@ suite('server', function() {
     ////////////////////////////////////////////////////////////////////
 
     test("grid jsonp",  function(done){
-        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE, 'name');
+        var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', function(err, res) {
             assert.equal(res.statusCode, 200, res.body);
             assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
@@ -145,7 +145,7 @@ suite('server', function() {
     });
 
     test("get'ing a json with default style and single interactivity should return a grid",  function(done){
-        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE, 'name');
+        var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             var expected_json = {
                 "1":{"name":"Hawai"},
@@ -160,7 +160,7 @@ suite('server', function() {
     });
 
     test("get'ing a json with default style and no interactivity should return an error",  function(done){
-        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE);
+        var mapConfig = testClient.singleLayerMapConfig('select * from test_table');
         var expectedResponse = {
             status: 400,
             headers: {
@@ -174,7 +174,7 @@ suite('server', function() {
     });
 
     test("get grid jsonp error is returned with 200 status",  function(done){
-        var mapConfig = singleLayerMapConfig('select * from test_table', testClient.DEFAULT_POINT_STYLE);
+        var mapConfig = testClient.singleLayerMapConfig('select * from test_table');
         var expectedResponse = {
             status: 200,
             headers: {
@@ -190,7 +190,7 @@ suite('server', function() {
     // See http://github.com/Vizzuality/Windshaft/issues/50
     test("get'ing a json with no data should return an empty grid",  function(done){
         var query = 'select * from test_table limit 0';
-        var mapConfig = singleLayerMapConfig(query, testClient.DEFAULT_POINT_STYLE, 'name');
+        var mapConfig = testClient.singleLayerMapConfig(query, null, null, 'name');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
@@ -199,7 +199,7 @@ suite('server', function() {
     // Another test for http://github.com/Vizzuality/Windshaft/issues/50
     test("get'ing a json with no data but interactivity should return an empty grid",  function(done){
         var query = 'SELECT * FROM test_table limit 0';
-        var mapConfig = singleLayerMapConfig(query, testClient.DEFAULT_POINT_STYLE, 'cartodb_id');
+        var mapConfig = testClient.singleLayerMapConfig(query, null, null, 'cartodb_id');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
@@ -209,11 +209,12 @@ suite('server', function() {
     test("get'ing a solid grid while changing interactivity fields",  function(done){
         var query = 'SELECT * FROM test_big_poly';
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
-        testClient.getGrid(singleLayerMapConfig(query, style211, 'name'), 0, 3, 2, 2, function(err, res) {
+        testClient.getGrid(testClient.singleLayerMapConfig(query, style211, null, 'name'), 0, 3, 2, 2, function(err, res) {
             var expected_data = { "1":{"name":"west"} };
             assert.deepEqual(JSON.parse(res.body).data, expected_data);
 
-            testClient.getGrid(singleLayerMapConfig(query, style211, 'cartodb_id'), 0, 3, 2, 2, function(err, res) {
+            var mapConfigCartodbId = testClient.singleLayerMapConfig(query, style211, null, 'cartodb_id');
+            testClient.getGrid(mapConfigCartodbId, 0, 3, 2, 2, function(err, res) {
                 var expected_data = { "1":{"cartodb_id":"1"} };
                 assert.deepEqual(JSON.parse(res.body).data, expected_data);
                 done();

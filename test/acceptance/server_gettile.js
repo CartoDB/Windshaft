@@ -77,31 +77,6 @@ suite('server_gettile', function() {
 
     });
 
-    function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
-        return {
-            version: '1.3.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: sql,
-                        cartocss: cartocss || testClient.DEFAULT_POINT_STYLE,
-                        cartocss_version: cartocssVersion || '2.3.0',
-                        interactivity: interactivity
-                    }
-                }
-            ]
-        };
-    }
-
-    function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
-        return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
-    }
-
-    function defaultTableQuery(tableName) {
-        return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
-    }
-
     function imageCompareFn(fixture, done) {
         return function(err, res) {
             if (err) {
@@ -119,7 +94,7 @@ suite('server_gettile', function() {
     ////////////////////////////////////////////////////////////////////
 
     test("get'ing a tile with default style should return an expected tile", function(done){
-      testClient.getTile(defaultTableMapConfig('test_table'), 13, 4011, 3088,
+      testClient.getTile(testClient.defaultTableMapConfig('test_table'), 13, 4011, 3088,
           imageCompareFn('test_table_13_4011_3088.png', done)
       );
     });
@@ -204,15 +179,17 @@ suite('server_gettile', function() {
     });
 
     test("should not choke when queries end with a semicolon",  function(done){
-        testClient.getTile(singleLayerMapConfig('SELECT * FROM test_table limit 2;'), 0, 0, 0, done);
+        testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2;'), 0, 0, 0, done);
     });
 
     test("should not choke when sql ends with a semicolon and some blanks",  function(done){
-        testClient.getTile(singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'), 0, 0, 0, done);
+        testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'), 0, 0, 0, done);
     });
 
     test("should not strip quoted semicolons within an sql query",  function(done){
-        testClient.getTile(singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"), 0, 0, 0, done);
+        testClient.getTile(
+            testClient.singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"), 0, 0, 0, done
+        );
     });
 
     test.skip("get'ing a tile with default style and bogus sql should return 400 status",  function(done){
@@ -285,13 +262,13 @@ suite('server_gettile', function() {
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
 
     test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
-        testClient.getTile(defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
+        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'),
+            13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
-        testClient.getTile(defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
+        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'),
+            13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     test.skip("get'ing a tile with url specified bogus style should return 400 status",  function(done){
@@ -310,7 +287,7 @@ suite('server_gettile', function() {
     test("unused directives are tolerated",  function(done){
         var style = "#test_table{point-transform: 'scale(100)';}";
         var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
-        testClient.getTile(singleLayerMapConfig(sql, style), 0, 0, 0,
+        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 0, 0, 0,
             imageCompareFn('test_default_mapnik_point.png', done));
     });
 
@@ -341,14 +318,14 @@ suite('server_gettile', function() {
     }
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
-        testClient.getTile(defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
+        testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
             assert.equal(res.headers['x-beforetilerender'], 'called');
             done();
         });
     });
 
     test("afterTileRender is called when the client request a tile",  function(done) {
-        testClient.getTile(defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
+        testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
             assert.equal(res.headers['x-aftertilerender'], 'called');
             assert.equal(res.headers['x-aftertilerender2'], 'called');
             done();
@@ -784,7 +761,7 @@ suite('server_gettile', function() {
             '}'
         ].join('');
 
-        testClient.getTile(singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
+        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
     });
 
     test.skip('#97 see 86ba195058557e30798cb9d1cf967765c4161dd5', function(done) {

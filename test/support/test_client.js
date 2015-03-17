@@ -22,15 +22,18 @@ var DEFAULT_POINT_STYLE = [
 ].join('');
 
 module.exports = {
+    createLayergroup: createLayergroup,
+
+    singleLayerMapConfig: singleLayerMapConfig,
+    defaultTableMapConfig: defaultTableMapConfig,
+
     getStaticBbox: getStaticBbox,
     getStaticCenter: getStaticCenter,
     getGrid: getGrid,
     getGridJsonp: getGridJsonp,
     getTorque: getTorque,
     getTile: getTile,
-    getTileLayer: getTileLayer,
-
-    DEFAULT_POINT_STYLE: DEFAULT_POINT_STYLE
+    getTileLayer: getTileLayer
 };
 
 
@@ -40,6 +43,76 @@ var redisClient = redis.createClient(global.environment.redis.port);
 
 var jsonContentType = 'application/json; charset=utf-8';
 var pngContentType = 'image/png';
+
+function createLayergroup(layergroupConfig, statusCode, callback) {
+    if (!callback) {
+        callback = statusCode;
+        statusCode = 200;
+    }
+
+    var expectedResponse = {
+        status: statusCode,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    step(
+        function createLayergroup() {
+            var next = this;
+            var request = {
+                url: '/database/windshaft_test/layergroup',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(layergroupConfig)
+            };
+            assert.response(server, request, expectedResponse, function (res, err) {
+                next(err, res);
+            });
+        },
+        function validateLayergroup(err, res) {
+            assert.ok(!err, 'Failed to create layergroup');
+
+            var parsedBody = JSON.parse(res.body);
+            var layergroupid = parsedBody.layergroupid;
+
+            assert.ok(layergroupid);
+
+            var redisKey = 'map_cfg|' + layergroupid;
+
+            redisClient.del(redisKey, function (/*delErr*/) {
+                return callback(err, res);
+            });
+        }
+    );
+}
+
+function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
+    return {
+        version: '1.3.0',
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: sql,
+                    cartocss: cartocss || DEFAULT_POINT_STYLE,
+                    cartocss_version: cartocssVersion || '2.3.0',
+                    interactivity: interactivity
+                }
+            }
+        ]
+    };
+}
+
+function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
+    return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
+}
+
+function defaultTableQuery(tableName) {
+    return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
+}
 
 function getStaticBbox(layergroupConfig, west, south, east, north, width, height, expectedResponse, callback) {
     if (!callback) {
