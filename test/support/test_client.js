@@ -3,6 +3,7 @@ var step = require('step');
 var assert = require('./assert');
 var redis = require('redis');
 var _ = require('underscore');
+var querystring = require('querystring');
 var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('./server_options');
@@ -44,30 +45,26 @@ var redisClient = redis.createClient(global.environment.redis.port);
 var jsonContentType = 'application/json; charset=utf-8';
 var pngContentType = 'image/png';
 
-function createLayergroup(layergroupConfig, statusCode, callback) {
+function createLayergroup(layergroupConfig, options, callback) {
     if (!callback) {
-        callback = statusCode;
-        statusCode = 200;
+        callback = options;
+        options = {
+            method: 'POST',
+            statusCode: 200
+        };
     }
 
     var expectedResponse = {
-        status: statusCode,
+        status: options.statusCode || 200,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
     };
 
     step(
-        function createLayergroup() {
+        function requestLayergroup() {
             var next = this;
-            var request = {
-                url: '/database/windshaft_test/layergroup',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(layergroupConfig)
-            };
+            var request = layergroupRequest(layergroupConfig, options.method, options.callbackName);
             assert.response(server, request, expectedResponse, function (res, err) {
                 next(err, res);
             });
@@ -88,6 +85,36 @@ function createLayergroup(layergroupConfig, statusCode, callback) {
             }
         }
     );
+}
+
+function layergroupRequest(layergroupConfig, method, callbackName) {
+    method = method || 'POST';
+
+    var request = {
+        url: '/database/windshaft_test/layergroup',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    var urlParams = {};
+    if (callbackName) {
+        urlParams.callback = callbackName;
+    }
+
+    if (method.toUpperCase() === 'GET') {
+        request.method = 'GET';
+        urlParams.config = JSON.stringify(layergroupConfig);
+    } else {
+        request.method = 'POST';
+        request.data = JSON.stringify(layergroupConfig);
+    }
+
+    if (Object.keys(urlParams).length) {
+        request.url += '?' + querystring.stringify(urlParams);
+    }
+
+    return request;
 }
 
 function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
@@ -274,7 +301,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
     var layergroupid = null;
 
     step(
-        function createLayergroup() {
+        function requestLayergroup() {
             var next = this;
             var request = {
                 url: '/database/windshaft_test/layergroup',

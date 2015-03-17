@@ -316,7 +316,7 @@ suite('multilayer error cases', function() {
 
     test('bogus sql raises 400 status code', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
-        testClient.createLayergroup(bogusSqlMapConfig, 400, function(err, res) {
+        testClient.createLayergroup(bogusSqlMapConfig, { statusCode: 400 }, function(err, res) {
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
             done();
         });
