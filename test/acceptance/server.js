@@ -109,23 +109,6 @@ suite('server', function() {
         });
     });
 
-    function singleLayerMapConfig(sql, cartocss, interactivity) {
-        return {
-            version: '1.3.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: sql,
-                        cartocss: cartocss,
-                        cartocss_version: '2.3.0',
-                        interactivity: interactivity
-                    }
-                }
-            ]
-        };
-    }
-
     ////////////////////////////////////////////////////////////////////
     //
     // GET GRID
@@ -209,7 +192,8 @@ suite('server', function() {
     test("get'ing a solid grid while changing interactivity fields",  function(done){
         var query = 'SELECT * FROM test_big_poly';
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
-        testClient.getGrid(testClient.singleLayerMapConfig(query, style211, null, 'name'), 0, 3, 2, 2, function(err, res) {
+        var mapConfigName = testClient.singleLayerMapConfig(query, style211, null, 'name');
+        testClient.getGrid(mapConfigName, 0, 3, 2, 2, function(err, res) {
             var expected_data = { "1":{"name":"west"} };
             assert.deepEqual(JSON.parse(res.body).data, expected_data);
 
