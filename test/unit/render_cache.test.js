@@ -11,7 +11,7 @@ var   _             = require('underscore')
     , tests         = module.exports = {};
 
 suite('render_cache', function() {
- 
+
     var redis_client = redis.createClient(serverOptions.redis.port);
 
     // initialize core mml_store
@@ -33,7 +33,7 @@ suite('render_cache', function() {
 
 
     suiteSetup(function(done) {
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
           assert.equal(matches.length, 0);
           done();
@@ -214,7 +214,7 @@ suite('render_cache', function() {
         }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            // This is an attempt at finding a value for "dbuser" which 
+            // This is an attempt at finding a value for "dbuser" which
             // is not the empty string but still works at connecting to
             // the database. Failure to connect would result in the
             // renderer not staying in the cache, as per
@@ -286,7 +286,7 @@ suite('render_cache', function() {
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(err);
             // Need next tick as the renderer is removed from
-            // the cache after the callback is invoked 
+            // the cache after the callback is invoked
             setTimeout(function() {
               err = null;
               try {

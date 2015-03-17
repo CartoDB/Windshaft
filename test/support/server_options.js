@@ -2,7 +2,7 @@ var _ = require('underscore');
 var mapnik = require('mapnik');
 
 module.exports = function(opts) {
-    
+
     var config = {
         base_url: '/database/:dbname/table/:table',
         base_url_notable: '/database/:dbname',
@@ -40,7 +40,7 @@ module.exports = function(opts) {
             req.params =  _.extend({}, req.params);
             _.extend(req.params, req.query);
 
-            // increment number of calls counter 
+            // increment number of calls counter
             // NOTE: "this" would likely point to the server instance
             this.req2params_calls = this.req2params_calls ? this.req2params_calls + 1 : 1;
 
@@ -83,6 +83,6 @@ module.exports = function(opts) {
     };
 
     _.extend(config,  opts || {});
- 
+
     return config;
 }();
