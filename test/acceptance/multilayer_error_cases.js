@@ -72,7 +72,7 @@ suite('multilayer error cases', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, 1 as n, the_geom, !bbox! as b from test_table limit 1',
-               cartocss: '#layer { marker-fill:red }', 
+               cartocss: '#layer { marker-fill:red }',
                cartocss_version: '2.0.1',
                attributes: { id:'cartodb_id', columns:['n'] }
              } }
@@ -198,7 +198,7 @@ suite('multilayer error cases', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0]; 
+          var error = parsed.errors[0];
           assert.ok(error.match(/column "missing" does not exist/m), error);
           // TODO: check which layer introduced the problem ?
           done();
@@ -235,7 +235,7 @@ suite('multilayer error cases', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0]; 
+          var error = parsed.errors[0];
           assert.ok(error.match(/^style1: CartoCSS is empty/), error);
           done();
         } catch (err) { done(err); }
@@ -269,7 +269,7 @@ suite('multilayer error cases', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0]; 
+          var error = parsed.errors[0];
           // carto-0.9.3 used to say "Failed to parse expression",
           // carto-0.9.5 says "not a valid keyword"
           assert.ok(error.match(/^style0:.*(Failed|not a valid)/), error);

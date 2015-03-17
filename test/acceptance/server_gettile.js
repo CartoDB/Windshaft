@@ -815,7 +815,7 @@ suite('server_gettile', function() {
           if ( err ) {
               errors.push(err);
           }
-          try { 
+          try {
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
             errors.push(err);
