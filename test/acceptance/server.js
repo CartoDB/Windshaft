@@ -39,7 +39,7 @@ suite('server', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
 
         if ( err ) { done(err); return; }
@@ -51,7 +51,7 @@ suite('server', function() {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
-            var filename = __dirname + '/../fixtures/markers' + request.url; 
+            var filename = __dirname + '/../fixtures/markers' + request.url;
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -128,7 +128,7 @@ suite('server', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
-    // GET GRID 
+    // GET GRID
     //
     ////////////////////////////////////////////////////////////////////
 
@@ -239,7 +239,7 @@ suite('server', function() {
           if ( err ) {
               errors.push(err);
           }
-          try { 
+          try {
             assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
           } catch (err) {
             errors.push(err);
@@ -247,7 +247,7 @@ suite('server', function() {
 
           var cachedir = global.environment.millstone.cache_basedir;
           rmdir_recursive_sync(cachedir);
-              
+
           redis_client.flushall(function() {
             done(errors.length ? new Error(errors) : null);
           });

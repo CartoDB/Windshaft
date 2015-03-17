@@ -12,7 +12,7 @@ var RedisPool = require('redis-mpool');
 var serverOptions = require('../support/server_options');
 
 suite('render_cache', function() {
- 
+
     var redis_client = redis.createClient(global.environment.redis.port);
     var redisPool = new RedisPool(serverOptions.redis);
 
@@ -291,7 +291,7 @@ suite('render_cache', function() {
         render_cache.getRenderer(req, function(err/*, renderer*/) {
             assert.ok(err);
             // Need next tick as the renderer is removed from
-            // the cache after the callback is invoked 
+            // the cache after the callback is invoked
             setTimeout(function() {
               err = null;
               try {

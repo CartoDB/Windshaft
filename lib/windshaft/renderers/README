@@ -3,14 +3,14 @@ Renderers are expected to expose the following interfaces:
   /// Get a tile given ZXY params
   //
   /// @param z zoom level
-  /// @param x 
-  /// @param y 
+  /// @param x
+  /// @param y
   /// @param callback function(err, tileobj, meta)
   ///   - 'err' will be an instance of Error on any problem, or null.
-  ///   - 'tileobj' will be an opaque object 
+  ///   - 'tileobj' will be an opaque object
   ///   - 'meta' will contain info about 'tileobj', like:
   ///     * 'Content-Type' mime-type of the tile, for example:
-  ///                      'image/png', 'text/javascript; charset=utf-8', 
+  ///                      'image/png', 'text/javascript; charset=utf-8',
   ///
   getTile(z, x, y, callback)
 
@@ -26,7 +26,7 @@ Renderers are expected to expose the following interfaces:
 They are created by renderer factories having the following
 interface:
 
-  /// Create a renderer given a map and data store configuration 
+  /// Create a renderer given a map and data store configuration
   //
   /// @param mapConfig map configuration, see
   ///        http://github.com/CartoDB/Windshaft/wiki/MapConfig-specification
@@ -38,7 +38,7 @@ interface:
   ///
   getRenderer(mapConfig, dbParams, format, layer, callback)
 
-  /// Destroy a renderer 
+  /// Destroy a renderer
   //
   /// Disposed renderers should not be used anymore
   ///

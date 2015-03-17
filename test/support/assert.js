@@ -281,7 +281,7 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
         if ( ncols != ecols.length ) {
           throw new Error( "Obtained grid cols (" + ncols +
                    ") != expected grid cols (" + ecols.length +
-                   ") on row " + i ); 
+                   ") on row " + i );
         }
         for (var j=0; j<ncols; ++j) {
           var ocell = ocols[j];

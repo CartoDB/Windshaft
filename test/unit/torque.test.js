@@ -74,7 +74,7 @@ describe('torque', function() {
   beforeEach(function(){
     sqlApi = dummyPSQL();
     torque = new TorqueFactory({
-      sqlClass: sqlApi 
+      sqlClass: sqlApi
     });
   });
 

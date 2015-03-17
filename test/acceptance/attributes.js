@@ -53,7 +53,7 @@ suite('attributes', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
           if ( err ) { done(err); return; }
           assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
@@ -65,7 +65,7 @@ suite('attributes', function() {
     test("can only be fetched from layer having an attributes spec",
     function(done) {
 
-      var expected_token; 
+      var expected_token;
       Step(
         function do_post()
         {
@@ -194,7 +194,7 @@ suite('attributes', function() {
 
     test("can be used with jsonp", function(done) {
 
-      var expected_token; 
+      var expected_token;
       Step(
         function do_post()
         {
@@ -278,7 +278,7 @@ suite('attributes', function() {
         ", test_table_inserter(st_setsrid(st_point(0,0),4326),'write') as w";
       mapconfig.layers[1].options.attributes.columns.push('w');
 
-      var expected_token; 
+      var expected_token;
       Step(
         function do_post()
         {

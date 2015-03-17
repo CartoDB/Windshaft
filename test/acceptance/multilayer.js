@@ -37,14 +37,14 @@ suite('multilayer', function() {
 
     suiteSetup(function(done) {
 
-      // Check that we start with an empty redis db 
+      // Check that we start with an empty redis db
       redis_client.keys("*", function(err, matches) {
           assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
       });
 
       // Start a server to test external resources
       res_serv = http.createServer( function(request, response) {
-          var filename = __dirname + '/../fixtures/markers' + request.url; 
+          var filename = __dirname + '/../fixtures/markers' + request.url;
           fs.readFile(filename, "binary", function(err, file) {
             if ( err ) {
               response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -68,7 +68,7 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select the_geom from test_table limit 1',
-               cartocss: '#layer { marker-fill:red }', 
+               cartocss: '#layer { marker-fill:red }',
                cartocss_version: '2.0.1'
              } }
         ]
@@ -122,12 +122,12 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom',
-               cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }', 
+               cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }',
                cartocss_version: '2.0.1'
              } }
         ]
       };
-      var expected_token; 
+      var expected_token;
       step(
         function do_post()
         {
@@ -194,20 +194,20 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: [ 'cartodb_id' ]
              } }
         ]
       };
 
-      var expected_token; 
+      var expected_token;
       step(
         function do_post()
         {
@@ -313,20 +313,20 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: [ 'cartodb_id' ]
              } }
         ]
       };
 
-      var expected_token; 
+      var expected_token;
       step(
         function do_get()
         {
@@ -435,13 +435,13 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: [ 'cartodb_id' ]
              } }
@@ -552,14 +552,14 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, cartodb_id*10 as n, ST_Translate(the_geom, -50, 0) as the_geom' +
                    ' from test_table ORDER BY cartodb_id limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: [ 'cartodb_id' ],
                attributes: { id: 'cartodb_id', columns: ['n'] }
@@ -738,7 +738,7 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: 'cartodb_id'
              } }
@@ -750,7 +750,7 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: 'cartodb_id'
              } }
@@ -1213,20 +1213,20 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: [ 'cartodb_id' ]
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: [ 'cartodb_id' ]
              } }
         ]
       };
 
-      var expected_token; 
+      var expected_token;
       step(
         function do_post()
         {
@@ -1280,12 +1280,12 @@ suite('multilayer', function() {
         layers: [
            { options: {
                sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1'
              } }
         ]
       };
-      var token1, token2; 
+      var token1, token2;
       step(
         function do_post_1()
         {
