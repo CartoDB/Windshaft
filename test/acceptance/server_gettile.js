@@ -2,10 +2,8 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var querystring = require('querystring');
 var fs = require('fs');
 var redis = require('redis');
-var step = require('step');
 var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
@@ -98,83 +96,32 @@ suite('server_gettile', function() {
       );
     });
 
-    test.skip("response of get tile can be served by renderer cache",  function(done){
-      var cb = Date.now();
-      step(
-        function get1 () {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster=' + cb,
-              method: 'GET',
-              encoding: 'binary'
-          },{}, function(res, err) { next(err, res); });
-        },
-        function check1(err, res) {
-          if ( err ) {
-              throw err;
-          }
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          var xwc = res.headers['x-windshaft-cache'];
-          assert.ok(!xwc);
-          return null;
-        },
-        function get2() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster=' + cb,
-              method: 'GET',
-              encoding: 'binary'
-          },{}, function(res, err) { next(err, res); });
-        },
-        function check2(err, res) {
-          if ( err ) {
-              throw err;
-          }
-          assert.equal(res.statusCode, 200);
-          var xwc = res.headers['x-windshaft-cache'];
-          assert.ok(xwc);
-          assert.ok(xwc > 0);
-          return null;
-        },
-        function get3() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
-              method: 'GET',
-              encoding: 'binary'
-          },{}, function(res, err) { next(err, res); });
-        },
-        function check3(err, res) {
-          if ( err ) {
-              throw err;
-          }
-          assert.equal(res.statusCode, 200);
-          var xwc = res.headers['x-windshaft-cache'];
-          assert.ok(xwc);
-          assert.ok(xwc > 0);
-          return null;
-        },
-        function get4() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/13/4011/3088.png?cache_buster='+(cb+1),
-              method: 'GET',
-              encoding: 'binary'
-          },{}, function(res, err) { next(err, res); });
-        },
-        function check4(err, res) {
-          if ( err ) {
-              throw err;
-          }
-          assert.equal(res.statusCode, 200);
-          var xwc = res.headers['x-windshaft-cache'];
-          assert.ok(!xwc);
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
+    test("response of get tile can be served by renderer cache",  function(done) {
+        var tileUrl = '/13/4011/3088.png';
+        var lastXwc;
+        var mapConfig = testClient.defaultTableMapConfig('test_table');
+        testClient.withLayergroup(mapConfig, function (err, requestTile, finish) {
+            requestTile(tileUrl, function (err, res) {
+                var xwc = res.headers['x-windshaft-cache'];
+                assert.ok(xwc);
+                assert.ok(xwc > 0);
+                lastXwc = xwc;
+
+                requestTile(tileUrl, function (err, res) {
+                    var xwc = res.headers['x-windshaft-cache'];
+                    assert.ok(xwc);
+                    assert.ok(xwc > 0);
+                    assert.ok(xwc >= lastXwc);
+
+                    requestTile(tileUrl + '?cache_buster=wadus', function (err, res) {
+                        var xwc = res.headers['x-windshaft-cache'];
+                        assert.ok(!xwc);
+
+                        finish(done);
+                    });
+                });
+            });
+        });
     });
 
     test("should not choke when queries end with a semicolon",  function(done){
@@ -287,7 +234,8 @@ suite('server_gettile', function() {
     test('high cpu regression with mapnik <2.3.x', function(done) {
         var sql = [
             "SELECT 'my polygon name here' AS name,",
-            "       st_envelope(st_buffer(st_transform(st_setsrid(st_makepoint(-26.6592894004,49.7990296995),4326),3857),10000000)) AS the_geom",
+            "st_envelope(st_buffer(st_transform(",
+            "st_setsrid(st_makepoint(-26.6592894004,49.7990296995),4326),3857),10000000)) AS the_geom",
             "FROM generate_series(-6,6) x",
             "UNION ALL",
             "SELECT 'my marker name here' AS name,",
