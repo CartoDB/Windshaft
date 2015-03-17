@@ -73,18 +73,19 @@ function createLayergroup(layergroupConfig, statusCode, callback) {
             });
         },
         function validateLayergroup(err, res) {
-            assert.ok(!err, 'Failed to create layergroup');
+            assert.ok(!err, 'Failed to request layergroup');
 
             var parsedBody = JSON.parse(res.body);
             var layergroupid = parsedBody.layergroupid;
 
-            assert.ok(layergroupid);
-
-            var redisKey = 'map_cfg|' + layergroupid;
-
-            redisClient.del(redisKey, function (/*delErr*/) {
-                return callback(err, res);
-            });
+            if (layergroupid) {
+                var redisKey = 'map_cfg|' + layergroupid;
+                redisClient.del(redisKey, function (/*delErr*/) {
+                    return callback(err, res, parsedBody);
+                });
+            } else {
+                return callback(err, res, parsedBody);
+            }
         }
     );
 }
