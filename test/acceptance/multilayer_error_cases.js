@@ -331,6 +331,14 @@ suite('multilayer error cases', function() {
         });
     });
 
+    test("query with no geometry field returns 400 status",  function(done){
+        var noGeometrySqlMapConfig = testClient.singleLayerMapConfig('SELECT 1');
+        testClient.createLayergroup(noGeometrySqlMapConfig, { statusCode: 400 }, function(err, res) {
+            assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
+            done();
+        });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP
