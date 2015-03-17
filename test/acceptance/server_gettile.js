@@ -280,22 +280,6 @@ suite('server_gettile', function() {
         });
     });
 
-    // See https://github.com/Vizzuality/Windshaft/issues/31
-    test.skip("PostgreSQL errors are sent in response body",  function(done) {
-        var sql = querystring.stringify({sql: "BROKEN QUERY"});
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
-            method: 'GET'
-        },{
-        }, function(res) {
-            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          // TODO: actual error may depend on backend language localization
-          assert.ok(res.body.match(new RegExp(/syntax error/)),
-              'Body does not contain the "syntax error" message: ' + res.body);
-          done();
-        });
-    });
-
     test.skip("base and custom style tile referencing external resources do not affect each other",
         function(done){
       var style = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +

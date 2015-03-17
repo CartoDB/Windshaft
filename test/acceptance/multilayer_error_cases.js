@@ -314,6 +314,7 @@ suite('multilayer error cases', function() {
         });
     });
 
+    // See https://github.com/Vizzuality/Windshaft/issues/31
     test('bogus sql raises 400 status code', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
         testClient.createLayergroup(bogusSqlMapConfig, { statusCode: 400 }, function(err, res) {
