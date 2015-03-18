@@ -1,5 +1,15 @@
-# Version 0.40.1
+# Version 0.41.0
 2015-mm-dd
+
+Announcements:
+ - Remove tile / style endpoints AKA old API (#259). Most likely this will evolve into a 1.0.0 release.
+ If you **want to keep using those endpoints** the best option is to **freeze windshaft version @0.40.0**.
+   - Changes includes:
+     * Before/after state change hooks for styles removed
+     * Render cache now based on dbname + token
+     * processRendererCache hook removed
+     * Changes a lot of tests to use layergroup
+     * New features in testClient to support kind of transactions with layergroups
 
 
 # Version 0.40.0
