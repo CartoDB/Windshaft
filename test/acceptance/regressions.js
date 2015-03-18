@@ -83,39 +83,27 @@ suite('regressions', function() {
     // Test that you cannot write to the database from a tile request
     //
     // See http://github.com/CartoDB/Windshaft/issues/130
-    // Needs a fix on the mapnik side:
-    // https://github.com/mapnik/mapnik/pull/2143
+    // [x] Needs a fix on the mapnik side: https://github.com/mapnik/mapnik/pull/2143
     //
-    // TODO: enable based on Mapnik version ?
-    //
-    test.skip("#130 database access is read-only", function(done) {
+    test("#130 database access is read-only", function(done) {
 
-      step(
-        function doGet() {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/0/0/0.png?sql=select+st_point(0,0)+as+the_geom,*+from+test_table_inserter(st_setsrid(st_point(0,0),4326),\'write\')',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check(err, res) {
-          if ( err ) {
-              throw err;
-          }
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + ( res.statusCode !== 200 ? res.body : '..' ));
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.error);
-          var msg = parsed.error;
-          assert.ok(msg.match(/read-only transaction/), msg);
-          return null;
-        },
-        function finish(err) {
-          assert.response(server, {
-              url: '/database/windshaft_test/table/test_table/style',
-              method: 'DELETE' },{}, function() { done(err); });
-        }
-      );
+        var writeSqlMapConfig = testClient.singleLayerMapConfig(
+            'select st_point(0,0) as the_geom, * from test_table_inserter(st_setsrid(st_point(0,0),4326),\'write\')'
+        );
 
+        var expectedResponse = {
+            status: 400,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+
+        testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function(err, res) {
+            var parsedBody = JSON.parse(res.body);
+            assert.ok(parsedBody.error);
+            assert.ok(parsedBody.error.match(/read-only transaction/), 'read-only error message expected');
+            done();
+        });
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/167
