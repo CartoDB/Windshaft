@@ -89,11 +89,16 @@ function createLayergroup(layergroupConfig, options, callback) {
 }
 
 function serverInstance(options) {
-    if (options.newServer) {
-        var otherServer = new Windshaft.Server(options.newServer);
+    if (options.server) {
+        return options.server;
+    }
+
+    if (options.serverOptions) {
+        var otherServer = new Windshaft.Server(options.serverOptions);
         otherServer.setMaxListeners(0);
         return otherServer;
     }
+
     return server;
 }
 

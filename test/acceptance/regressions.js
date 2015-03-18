@@ -4,7 +4,6 @@ var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
 var redis = require('redis');
-var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
@@ -26,8 +25,6 @@ function rmdir_recursive_sync(dirname) {
 
 suite('regressions', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
@@ -107,60 +104,35 @@ suite('regressions', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/167
-    test.skip("#167 does not die on unexistent statsd host",  function(done) {
-      step(
-        function change_config() {
-          var CustomOptions = _.clone(ServerOptions);
-          CustomOptions.statsd = _.clone(CustomOptions.statsd);
-          CustomOptions.statsd.host = 'whoami.vizzuality.com';
-          CustomOptions.statsd.cacheDns = false;
-          server = new Windshaft.Server(CustomOptions);
-          server.setMaxListeners(0);
-          return null;
-        },
-        function do_get(err) {
-          if ( err ) {
-              throw err;
-          }
-          var next = this;
-          var errors = [];
-          // We need multiple requests to make sure
-          // statsd_client eventually tries to send
-          // stats _and_ DNS lookup is given enough
-          // time (an interval is used later for that)
-          var numreq = 10;
-          var pending = numreq;
-          var completed = function(err) {
+    test("#167 does not die on unexistent statsd host",  function(done) {
+        var CustomOptions = _.clone(ServerOptions);
+        CustomOptions.statsd = _.clone(CustomOptions.statsd);
+        CustomOptions.statsd.host = 'whoami.vizzuality.com';
+        CustomOptions.statsd.cacheDns = false;
+        var server = new Windshaft.Server(CustomOptions);
+        server.setMaxListeners(0);
+
+        var errors = [];
+        // We need multiple requests to make sure
+        // statsd_client eventually tries to send
+        // stats _and_ DNS lookup is given enough
+        // time (an interval is used later for that)
+        var numreq = 10;
+        var pending = numreq;
+        var completed = function(err) {
             if ( err ) {
                 errors.push(err);
             }
             if ( ! --pending ) {
-              setTimeout(function() {
-              next(errors.length ? new Error(errors.join(',')) : null);
-              }, 10);
-              return;
+                setTimeout(function() {
+                    done(errors.length ? new Error(errors.join(',')) : null);
+                }, 10);
             }
-          };
-          for (var i=0; i<numreq; ++i) {
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table/6/31/24.png',
-                method: 'GET'
-            },{}, function(res, err) { completed(err); });
-          }
-        },
-        function do_check(err) {
-          if ( err ) {
-              throw err;
-          }
-          // being alive is enough !
-          return null;
-        },
-        function finish(err) {
-          // reset server
-          server = new Windshaft.Server(ServerOptions);
-          done(err);
+        };
+        var mapConfig = testClient.defaultTableMapConfig('test_table');
+        for (var i=0; i<numreq; ++i) {
+            testClient.createLayergroup(mapConfig, { server: server }, completed);
         }
-      );
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/173

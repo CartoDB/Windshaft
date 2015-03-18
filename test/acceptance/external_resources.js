@@ -102,7 +102,7 @@ suite('external resources', function() {
     test("external resources get localized on renderer creation if not locally cached", function(done) {
 
         var options = {
-            newServer: ServerOptions
+            serverOptions: ServerOptions
         };
 
         var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
