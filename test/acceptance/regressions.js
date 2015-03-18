@@ -147,7 +147,7 @@ suite('regressions', function() {
 
         var options = {
             statusCode: 400,
-            newServer: CustomOptions
+            serverOptions: CustomOptions
         };
 
         testClient.createLayergroup(mapConfig, options, function(err, res, parsedBody) {
