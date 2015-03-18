@@ -1,7 +1,8 @@
+require('../support/test_helper');
+
 var assert = require('../support/assert');
 var redis = require('redis');
 var mapnik = require('mapnik');
-var th = require('../support/test_helper');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
@@ -14,7 +15,7 @@ suite('retina support', function() {
     var redis_client = redis.createClient(ServerOptions.redis.port);
 
 
-    before(function(done) {
+    suiteSetup(function(done) {
         // Check that we start with an empty redis db
         redis_client.keys("*", function(err, matches) {
             if ( err ) { done(err); return; }
@@ -132,14 +133,17 @@ suite('retina support', function() {
         });
     });
 
-    after(function(done) {
+    suiteTeardown(function(done) {
         // Check that we left the redis db empty
         redis_client.keys("*", function(err, matches) {
             try {
                 assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
             } catch (err2) {
-                if ( err ) err.message += '\n' + err2.message;
-                else err = err2;
+                if ( err ) {
+                    err.message += '\n' + err2.message;
+                } else {
+                    err = err2;
+                }
             }
             redis_client.flushall(function() {
                 done(err);

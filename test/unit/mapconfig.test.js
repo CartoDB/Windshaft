@@ -1,9 +1,12 @@
 require('../support/test_helper.js');
 
-var assert        = require('assert');
-var MapConfig     = require('../../lib/windshaft/models/mapconfig');
+var assert = require('assert');
+var MapConfig = require('../../lib/windshaft/models/mapconfig');
+var redis = require('redis');
 
 suite('mapconfig', function() {
+
+    var redisClient = redis.createClient(global.environment.redis.port);
 
     test('can not create mapconfig with invalid version', function(done) {
         var version = '0.1.0';
@@ -60,6 +63,12 @@ suite('mapconfig', function() {
         var layer = mapConfig.getLayer(0);
         assert.equal(layer.options.interactivity, 'a,b');
         done();
+    });
+
+    suiteTeardown(function(done) {
+        // Flush redis cache
+        // See https://github.com/Vizzuality/Windshaft/issues/24
+        redisClient.flushall(done);
     });
 
 });

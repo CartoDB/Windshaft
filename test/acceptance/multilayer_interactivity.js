@@ -1,11 +1,12 @@
+require('../support/test_helper');
+
 var assert        = require('../support/assert');
 var _             = require('underscore');
 var redis         = require('redis');
-var th            = require('../support/test_helper');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('multilayer interactivity and layers order', function() {
+describe('multilayer interactivity and layers order', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     var redisClient = redis.createClient(ServerOptions.redis.port);
@@ -23,7 +24,7 @@ suite('multilayer interactivity and layers order', function() {
     }
 
     function testInteractivityLayersOrderScenario(testScenario) {
-        test(testScenario.desc, function(done) {
+        it(testScenario.desc, function(done) {
             var layergroup =  {
                 version: '1.3.0',
                 layers: testScenario.layers
@@ -342,7 +343,7 @@ suite('multilayer interactivity and layers order', function() {
         chaosScenarios.push({
             desc: 'chaos scenario – layer types: ' + randomLayers.map(layerType).join(', '),
             layers: randomLayers
-        })
+        });
     }
 
     testScenarios.forEach(testInteractivityLayersOrderScenario);

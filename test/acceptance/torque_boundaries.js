@@ -1,14 +1,15 @@
-var   assert        = require('../support/assert')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options');
+require('../support/test_helper');
 
-suite('boundary points', function() {
+var assert = require('../support/assert');
+var redis = require('redis');
+var Windshaft = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
+
+describe('torque boundary points', function() {
 
     var layergroupIdToDelete = null;
 
-    suiteSetup(function(done) {
+    before(function(done) {
         // Check that we start with an empty redis db
         redis_client.keys("*", function(err, matches) {
             if ( err ) { done(err); return; }
@@ -450,14 +451,17 @@ suite('boundary points', function() {
         });
     });
 
-    suiteTeardown(function(done) {
+    after(function(done) {
         // Check that we left the redis db empty
         redis_client.keys("*", function(err, matches) {
             try {
                 assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
             } catch (err2) {
-                if ( err ) err.message += '\n' + err2.message;
-                else err = err2;
+                if ( err ) {
+                    err.message += '\n' + err2.message;
+                } else {
+                    err = err2;
+                }
             }
             redis_client.flushall(function() {
                 done(err);
