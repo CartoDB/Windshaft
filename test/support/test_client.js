@@ -66,7 +66,7 @@ function createLayergroup(layergroupConfig, options, callback) {
         function requestLayergroup() {
             var next = this;
             var request = layergroupRequest(layergroupConfig, options.method, options.callbackName, options.params);
-            assert.response(server, request, expectedResponse, function (res, err) {
+            assert.response(serverInstance(options), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
@@ -86,6 +86,15 @@ function createLayergroup(layergroupConfig, options, callback) {
             }
         }
     );
+}
+
+function serverInstance(options) {
+    if (options.newServer) {
+        var otherServer = new Windshaft.Server(ServerOptions);
+        otherServer.setMaxListeners(0);
+        return otherServer;
+    }
+    return server;
 }
 
 function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {
