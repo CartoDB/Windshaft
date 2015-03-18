@@ -19,9 +19,6 @@ test:
 		test/integration/renderers/*.js \
 		test/acceptance/*.js
 
-old-api-tests:
-	sh ./run_tests.sh ${RUNTESTFLAGS} test/acceptance/server.js test/acceptance/server_gettile.js
-
 jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/
