@@ -11,6 +11,4 @@ var _ = require('underscore');
 global.settings     = require(__dirname + '/../../config/settings');
 global.environment  = require(__dirname + '/../../config/environments/test');
 _.extend(global.settings, global.environment);
-process.env['NODE_ENV'] = 'test';
-
-
+process.env.NODE_ENV = 'test';

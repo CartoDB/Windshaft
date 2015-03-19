@@ -21,7 +21,7 @@ test:
 
 jshint:
 	@echo "***jshint***"
-	@./node_modules/.bin/jshint lib/
+	@./node_modules/.bin/jshint lib/ test/
 
 test-all: jshint test
 

@@ -1,4 +1,3 @@
-var assert = require('assert');
 var StatsClient = require('../../lib/windshaft/stats/client');
 
 suite('stats client', function() {

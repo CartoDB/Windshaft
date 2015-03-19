@@ -55,7 +55,10 @@ suite('renderer_http_factory', function() {
         var urlTemplateRequiringEscape =
             'https://{s}.maps.nlp.nokia.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?lg=eng';
         assert.equal(
-            HttpRendererFactory.isValidUrlTemplate(urlTemplateRequiringEscape, regexWhitelistSample.concat([urlTemplateRequiringEscape])),
+            HttpRendererFactory.isValidUrlTemplate(
+                urlTemplateRequiringEscape,
+                regexWhitelistSample.concat([urlTemplateRequiringEscape])
+            ),
             true
         );
         done();

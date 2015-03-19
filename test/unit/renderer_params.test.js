@@ -43,7 +43,11 @@ suite('renderer_params', function() {
     // but different dbhost. Please do not disable unless this is taken into account.
     test('cache key includes dbname and dbuser but not dbhost', function(){
         var req1 = requestStub({dbhost: "1.2.3.4", dbuser: "windshaft_user", layer: 1, scale_factor: 2 });
-        var req2 = { params: _.extend({}, SUITE_COMMON_PARAMS, {dbhost: "1.2.3.5", dbuser: "windshaft_user", layer: 1, scale_factor: 2 }) };
+        var req2 = {
+            params: _.extend({}, SUITE_COMMON_PARAMS, {
+                dbhost: "1.2.3.5", dbuser: "windshaft_user", layer: 1, scale_factor: 2
+            })
+        };
         assert.equal(RendererParams.createKey(req1.params), RendererParams.createKey(req2.params));
     });
 
