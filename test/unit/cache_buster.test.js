@@ -2,14 +2,11 @@ require('../support/test_helper.js');
 
 var assert        = require('assert');
 var CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js');
-var grainstore    = require('grainstore');
 var RenderCache   = require('../../lib/windshaft/renderers/render_cache');
-var serverOptions = require('../support/server_options');
 
 suite('cache_buster', function() {
 
-    var mmlStore  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore),
-        renderCache = new RenderCache({timeout: 10000}, mmlStore),
+    var renderCache = new RenderCache({timeout: 10000}),
         NAN_CACHE_BUSTER_ID = 'foo_id',
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,
