@@ -51,8 +51,7 @@ suite('render_cache', function() {
         ]
     });
 
-    var mapStore = new MapStore({pool: redisPool}),
-        mapnikOpts;
+    var mapStore = new MapStore({pool: redisPool});
 
     function requestParams(params) {
         return _.extend({
@@ -67,7 +66,7 @@ suite('render_cache', function() {
 
     function makeRenderCache(opts) {
         opts = opts || { timeout: 10000 };
-        return new RenderCache(opts, mml_store, mapStore, mapnikOpts, rendererFactory);
+        return new RenderCache(opts, mapStore, rendererFactory);
     }
 
 
@@ -89,7 +88,7 @@ suite('render_cache', function() {
     });
 
     test('has a cache of render objects', function(){
-        var render_cache = new RenderCache({timeout: 10000}, mml_store);
+        var render_cache = makeRenderCache();
         assert.ok(_.isObject(render_cache.renderers));
     });
 
