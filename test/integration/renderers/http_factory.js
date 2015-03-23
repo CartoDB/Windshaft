@@ -55,7 +55,9 @@ suite('renderer_http_factory_getRenderer', function() {
     });
 
     test('getRenderer returns a fallback image renderer for invalid urlTemplate', function(done) {
-        var factoryWithFallbackImage = new HttpRendererFactory(whitelistSample, 2000, undefined, 'http://example.com/fallback.png');
+        var factoryWithFallbackImage = new HttpRendererFactory(
+            whitelistSample, 2000, undefined, 'http://example.com/fallback.png'
+        );
         var mapConfig = MapConfig.create({
             layers: [
                 {

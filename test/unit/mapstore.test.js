@@ -1,14 +1,12 @@
-var   _             = require('underscore')
-    , sys           = require('util')
-    , th            = require('../support/test_helper.js')
-    , RedisPool     = require('redis-mpool')
-    , assert        = require('assert')
-    , redis         = require('redis')
-    , Step          = require('step')
-    , serverOptions = require('../support/server_options')
-    , MapStore      = require('../../lib/windshaft/storages/mapstore')
-    , MapConfig     = require('../../lib/windshaft/models/mapconfig')
-;
+require('../support/test_helper.js');
+
+var RedisPool     = require('redis-mpool');
+var assert        = require('assert');
+var redis         = require('redis');
+var step          = require('step');
+var serverOptions = require('../support/server_options');
+var MapStore      = require('../../lib/windshaft/storages/mapstore');
+var MapConfig     = require('../../lib/windshaft/models/mapconfig');
 
 suite('mapstore', function() {
 
@@ -25,7 +23,7 @@ suite('mapstore', function() {
 
     test('fails loading unexistent map', function(done){
       var map_store = new MapStore({pool:redis_pool, expire_time:50000});
-      Step(
+      step(
         function getMap() {
           map_store.load('unexistent', this);
         },
@@ -52,25 +50,27 @@ suite('mapstore', function() {
         ]
       });
       var mapID;
-      Step(
+      step(
         function saveMap() {
           map_store.save(map, this);
         },
         function checkSaved_reSave(err, id, known) {
-          if ( err ) throw err;
+          assert.ifError(err);
           mapID = id;
           assert.ok(!known);
           map_store.save(map, this);
         },
         function checkReSaved(err, id, known) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.ok(known);
           return null;
         },
         function delMap(err) {
           var next = this;
           map_store.del(mapID, function(e) {
-            if ( e ) console.log("Could not delete map " + mapID + ": " + e);
+            if ( e ) {
+                console.log("Could not delete map " + mapID + ": " + e);
+            }
             next(err);
           });
         },

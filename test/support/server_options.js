@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var mapnik = require('mapnik');
 
-module.exports = function(opts) {
+module.exports = (function(opts) {
 
     var config = {
         base_url: '/database/:dbname/table/:table',
@@ -73,4 +73,4 @@ module.exports = function(opts) {
     _.extend(config,  opts || {});
 
     return config;
-}();
+})();

@@ -232,7 +232,8 @@ describe('torque boundary points', function() {
 
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
-        test('handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n', function (done) {
+        var desc = 'handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n';
+        test(desc, function (done) {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',

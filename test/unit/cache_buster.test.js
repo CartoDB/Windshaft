@@ -1,16 +1,12 @@
-var   _             = require('underscore')
-    , th            = require('../support/test_helper.js')
-    , assert        = require('assert')
-    , CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js')
-    , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
-    , serverOptions = require('../support/server_options')
-    , tests         = module.exports = {};
+require('../support/test_helper.js');
+
+var assert        = require('assert');
+var CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js');
+var RenderCache   = require('../../lib/windshaft/renderers/render_cache');
 
 suite('cache_buster', function() {
 
-    var mmlStore  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore),
-        renderCache = new RenderCache({timeout: 10000}, mmlStore),
+    var renderCache = new RenderCache({timeout: 10000}),
         NAN_CACHE_BUSTER_ID = 'foo_id',
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,
@@ -74,10 +70,8 @@ suite('cache_buster', function() {
     });
 
     test('renderer is (re)created when it is undefined', function () {
-        var cacheEntry = undefined;
-
         assert.equal(
-            renderCache.shouldRecreateRenderer(cacheEntry, CACHE_BUSTER),
+            renderCache.shouldRecreateRenderer(undefined, CACHE_BUSTER),
             true,
             "It SHOULD (re)create the renderer when it is undefined"
         );

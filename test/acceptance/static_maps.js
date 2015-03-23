@@ -2,7 +2,6 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var redis = require('redis');
 var testClient = require('../support/test_client');
-var mapnik = require('mapnik');
 var http = require('http');
 var fs = require('fs');
 

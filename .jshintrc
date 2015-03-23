@@ -89,6 +89,7 @@
         "test": true,
         "suiteTeardown": true,
         "beforeEach": true,
+        "afterEach": true,
         "before": true,
         "after": true,
         "describe": true,

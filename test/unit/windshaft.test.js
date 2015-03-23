@@ -1,10 +1,10 @@
-var   _             = require('underscore')
-    , th            = require('../support/test_helper.js')
-    , assert        = require('assert')
-    , Windshaft     = require('../../lib/windshaft')
-    , serverOptions = require('../support/server_options')
-    , StatsClient = require('../../lib/windshaft/stats/client')
-    , tests         = module.exports = {};
+require('../support/test_helper.js');
+
+var   _             = require('underscore');
+var assert        = require('assert');
+var Windshaft     = require('../../lib/windshaft');
+var serverOptions = require('../support/server_options');
+var StatsClient = require('../../lib/windshaft/stats/client');
 
 suite('windshaft', function() {
 
@@ -15,16 +15,16 @@ suite('windshaft', function() {
         done();
     });
 
-    test('true',  function() {
+    test('should have valid global environment',  function() {
         assert.equal(global.environment.name, 'test');
     });
 
-    test('can instantiate a Windshaft object (configured express instance)',  function(){
+    test('can instantiate a Windshaft object (configured express instance)', function(){
         var ws = new Windshaft.Server(serverOptions);
         assert.ok(ws);
     });
 
-    test('can spawn a new server on the global listen port',  function(done){
+    test('can spawn a new server on the global listen port', function(done){
         var ws = new Windshaft.Server(serverOptions);
         ws.listen(global.environment.windshaft_port, function() {
           assert.ok(ws);
@@ -32,10 +32,11 @@ suite('windshaft', function() {
         });
     });
 
-    test('throws exception if incorrect options passed in',  function(){
+    test('throws exception if incorrect options passed in', function(){
         assert.throws(
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
+                ws.listen();
             }, /Must initialise Windshaft with a base URL and req2params function/
         );
     });
@@ -103,10 +104,10 @@ suite('windshaft', function() {
                 format: validFormat
             }
         };
-        ws.sendError = function(){}
+        ws.sendError = function(){};
         ws.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
 
-        assert.ok(formatMatched, 'Format was never matched in increment method')
+        assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
 

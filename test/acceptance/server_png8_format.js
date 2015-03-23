@@ -1,12 +1,11 @@
-var   assert        = require('../support/assert')
-    , _             = require('underscore')
-    , querystring   = require('querystring')
-    , fs            = require('fs')
-    , path          = require('path')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options');
+require('../support/test_helper');
+
+var assert = require('../support/assert');
+var _ = require('underscore');
+var fs = require('fs');
+var redis = require('redis');
+var Windshaft     = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
 
 function rmdir_recursive_sync(dirname) {
     var files = fs.readdirSync(dirname);
@@ -14,9 +13,10 @@ function rmdir_recursive_sync(dirname) {
         var f = dirname + "/" + files[i];
         var s = fs.lstatSync(f);
         if ( s.isFile() ) {
-            fs.unlinkSync(f)
+            fs.unlinkSync(f);
+        } else {
+            rmdir_recursive_sync(f);
         }
-        else rmdir_recursive_sync(f);
     }
 }
 
@@ -57,8 +57,7 @@ suite('server_png8_format', function() {
             if ( err ) { done(err); return; }
 
             assert.equal(matches.length, 0,
-                    "redis keys present at setup time on port " + ServerOptions.redis.port + ":\n"
-                        + matches.join("\n"));
+                "redis keys present at setup time on port " + ServerOptions.redis.port + ":\n" + matches.join("\n"));
             done();
         });
 
@@ -113,9 +112,11 @@ suite('server_png8_format', function() {
                             assert.equal(responsePng8.headers['content-type'], "image/png");
                             bufferPng8 = responsePng8.body;
                             assert.ok(bufferPng8.length < bufferPng32.length);
-                            assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, imagePaths, similarity) {
-                                callback(err, imagePaths, similarity, done);
-                            });
+                            assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                                function(err, imagePaths, similarity) {
+                                    callback(err, imagePaths, similarity, done);
+                                }
+                            );
                         });
                     });
                 }
@@ -134,7 +135,7 @@ suite('server_png8_format', function() {
                 z: currentLevel,
                 x: i,
                 y: j
-            })
+            });
         }
     }
 
@@ -184,7 +185,7 @@ suite('server_png8_format', function() {
             }
             var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
             fs.writeFileSync('test/results/png/results.js', output);
-            if (err) throw err;
+            assert.ifError(err);
             done();
         });
     });

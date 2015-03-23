@@ -20,7 +20,7 @@ var assert = module.exports = exports = require('assert');
  * @see FUZZY in http://www.imagemagick.org/script/command-line-options.php#metric
  */
 assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
-    if (!callback) callback = function(err) { if (err) throw err; };
+    callback = callback || function(err) { assert.ifError(err); };
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath),
         testImageFilePath = createImageFromBuffer(buffer, 'test');
 
@@ -43,7 +43,7 @@ assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
 function createImageFromBuffer(buffer, nameHint) {
     var imageFilePath = path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
     var err = fs.writeFileSync(imageFilePath, buffer, 'binary');
-    if (err) throw err;
+    assert.ifError(err);
     return imageFilePath;
 }
 
@@ -91,6 +91,7 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
  * @param {Object|Function} res
  * @param {String|Function} msg
  */
+// jshint maxcomplexity:12
 assert.response = function(server, req, res, msg){
     var port = 5555;
     function check(){
@@ -125,14 +126,12 @@ assert.response = function(server, req, res, msg){
     }
 
     // Callback as third or fourth arg
-    var callback = typeof res === 'function'
-        ? res
-        : typeof msg === 'function'
-            ? msg
-            : function(){};
+    var callback = typeof res === 'function' ? res : (typeof msg === 'function' ? msg : function(){});
 
     // Default messate to test title
-    if (typeof msg === 'function') msg = null;
+    if (typeof msg === 'function') {
+        msg = null;
+    }
     msg = msg || assert.testTitle;
     msg += '. ';
 
@@ -147,6 +146,7 @@ assert.response = function(server, req, res, msg){
         issue();
     }
 
+    // jshint maxcomplexity:8
     function issue(){
 
         // Issue request
@@ -181,27 +181,29 @@ assert.response = function(server, req, res, msg){
             }, requestTimeout);
         }
 
-        if (data) request.write(data);
+        if (data) {
+            request.write(data);
+        }
 
         request.on('response', function(response){
             response.body = '';
             response.setEncoding(encoding);
             response.on('data', function(chunk){ response.body += chunk; });
             response.on('end', function(){
-                if (timer) clearTimeout(timer);
+                if (timer) {
+                    clearTimeout(timer);
+                }
 
                 check();
 
                 // Assert response body
                 if (res.body !== undefined) {
-                    var eql = res.body instanceof RegExp
-                      ? res.body.test(response.body)
-                      : res.body === response.body;
+                    var eql = res.body instanceof RegExp ? res.body.test(response.body) : res.body === response.body;
                     assert.ok(
                         eql,
-                        msg + colorize('[red]{Invalid response body.}\n'
-                            + '    Expected: [green]{' + res.body + '}\n'
-                            + '    Got: [red]{' + response.body + '}')
+                        msg + colorize('[red]{Invalid response body.}\n' +
+                            '    Expected: [green]{' + res.body + '}\n' +
+                            '    Got: [red]{' + response.body + '}')
                     );
                 }
 
@@ -210,9 +212,9 @@ assert.response = function(server, req, res, msg){
                     assert.equal(
                         response.statusCode,
                         status,
-                        msg + colorize('[red]{Invalid response status code.}\n'
-                            + '    Expected: [green]{' + status + '}\n'
-                            + '    Got: [red]{' + response.statusCode + '}')
+                        msg + colorize('[red]{Invalid response status code.}\n' +
+                            '    Expected: [green]{' + status + '}\n' +
+                            '    Got: [red]{' + response.statusCode + '}')
                     );
                 }
 
@@ -223,14 +225,12 @@ assert.response = function(server, req, res, msg){
                         var name = keys[i],
                             actual = response.headers[name.toLowerCase()],
                             expected = res.headers[name],
-                            eql = expected instanceof RegExp
-                              ? expected.test(actual)
-                              : expected == actual;
+                            headerEql = expected instanceof RegExp ? expected.test(actual) : expected === actual;
                         assert.ok(
-                            eql,
-                            msg + colorize('Invalid response header [bold]{' + name + '}.\n'
-                                + '    Expected: [green]{' + expected + '}\n'
-                                + '    Got: [red]{' + actual + '}')
+                            headerEql,
+                            msg + colorize('Invalid response header [bold]{' + name + '}.\n' +
+                                '    Expected: [green]{' + expected + '}\n' +
+                                '    Got: [red]{' + actual + '}')
                         );
                     }
                 }
@@ -245,6 +245,7 @@ assert.response = function(server, req, res, msg){
 };
 
 // @param tolerance number of tolerated grid cell differences
+// jshint maxcomplexity:8
 assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
     fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
@@ -268,8 +269,8 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
       // compare grid
       var obtained_grid = obtained_json.grid;
       var expected_grid = expected_json.grid;
-      var nrows = obtained_grid.length
-      if (nrows != expected_grid.length) {
+      var nrows = obtained_grid.length;
+      if (nrows !== expected_grid.length) {
         throw new Error( "Obtained grid rows (" + nrows +
                     ") != expected grid rows (" + expected_grid.length + ")" );
       }
@@ -278,7 +279,7 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
         var ocols = obtained_grid[i];
         var ecols = expected_grid[i];
         var ncols = ocols.length;
-        if ( ncols != ecols.length ) {
+        if ( ncols !== ecols.length ) {
           throw new Error( "Obtained grid cols (" + ncols +
                    ") != expected grid cols (" + ecols.length +
                    ") on row " + i );
