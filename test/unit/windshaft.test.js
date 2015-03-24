@@ -29,7 +29,7 @@ suite('windshaft', function() {
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
                 ws.listen();
-            }, /Must initialise Windshaft with a base URL and req2params function/
+            }, /Must initialise Windshaft with: 'base_url'\/'base_url_mapconfig' URLs and req2params function/
         );
     });
 
