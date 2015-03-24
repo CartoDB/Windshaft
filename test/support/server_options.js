@@ -5,7 +5,7 @@ module.exports = (function(opts) {
 
     var config = {
         base_url: '/database/:dbname/table/:table',
-        base_url_notable: '/database/:dbname',
+        base_url_mapconfig: '/database/:dbname/layergroup',
         grainstore: {
           datasource: global.environment.postgres,
           cachedir: global.environment.millstone.cache_basedir,

@@ -94,7 +94,7 @@ var Windshaft = require('windshaft');
 
 var config = {
         base_url: '/database/:dbname/table/:table',
-        base_url_notable: '/database/:dbname',
+        base_url_mapconfig: '/database/:dbname/layergroup',
         req2params: function(req, callback){
           callback(null,req)
         },
