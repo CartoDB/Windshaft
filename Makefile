@@ -16,6 +16,7 @@ test:
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
 		test/unit/*.js \
 		test/unit/renderers/*.js \
+		test/unit/controllers/*.js \
 		test/integration/renderers/*.js \
 		test/acceptance/*.js
 
