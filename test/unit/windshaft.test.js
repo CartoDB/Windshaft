@@ -1,19 +1,11 @@
 require('../support/test_helper.js');
 
-var   _             = require('underscore');
-var assert        = require('assert');
-var Windshaft     = require('../../lib/windshaft');
+var _ = require('underscore');
+var assert = require('assert');
+var Windshaft = require('../../lib/windshaft');
 var serverOptions = require('../support/server_options');
-var StatsClient = require('../../lib/windshaft/stats/client');
 
 suite('windshaft', function() {
-
-    var statsClientGetInstanceFn = StatsClient.getInstance;
-
-    afterEach(function(done) {
-        StatsClient.getInstance = statsClientGetInstanceFn;
-        done();
-    });
 
     test('should have valid global environment',  function() {
         assert.equal(global.environment.name, 'test');
@@ -37,7 +29,7 @@ suite('windshaft', function() {
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
                 ws.listen();
-            }, /Must initialise Windshaft with a base URL and req2params function/
+            }, /Must initialise Windshaft with: 'base_url'\/'base_url_mapconfig' URLs and req2params function/
         );
     });
 
@@ -62,59 +54,5 @@ suite('windshaft', function() {
             "Error status code for multiline/PSQL does not match"
         );
     });
-
-    test('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
-        var expectedCalls = 1, // it will call increment once for the general error
-            invalidFormat = 'png2',
-            invalidFormatRegexp = new RegExp(invalidFormat);
-        mockStatsClientGetInstance({
-            increment: function(label) {
-                assert.equal(label.match(invalidFormatRegexp), null,
-                    'Invalid format is getting into increment method');
-                expectedCalls--;
-            }
-        });
-        var ws = new Windshaft.Server(serverOptions);
-        var reqMock = {
-            params: {
-                format: invalidFormat
-            }
-        };
-        ws.sendError = function(){};
-        ws.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
-
-        StatsClient.getInstance =
-        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
-    });
-
-    test('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
-        var expectedCalls = 2, // general error + format error
-            validFormat = 'png',
-            validFormatRegexp = new RegExp(validFormat),
-            formatMatched = false;
-        mockStatsClientGetInstance({
-            increment: function(label) {
-                formatMatched = formatMatched || !!label.match(validFormatRegexp);
-                expectedCalls--;
-            }
-        });
-        var ws = new Windshaft.Server(serverOptions);
-        var reqMock = {
-            params: {
-                format: validFormat
-            }
-        };
-        ws.sendError = function(){};
-        ws.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
-
-        assert.ok(formatMatched, 'Format was never matched in increment method');
-        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
-    });
-
-    function mockStatsClientGetInstance(instance) {
-        StatsClient.getInstance = function() {
-            return instance;
-        };
-    }
 
 });
