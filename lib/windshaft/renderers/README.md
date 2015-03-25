@@ -40,17 +40,16 @@ getMetadata(callback)
 
 Renderer factories are expected to expose the following interface:
 
-## getRenderer(mapConfig, params, format, layerNumber, callback)
+## getRenderer(mapConfig, format, options, callback)
 
 Create a renderer given a map and data store configuration
 
 ```javascript
-getRenderer(mapConfig, params, format, layerNumber, callback)
+getRenderer(mapConfig, format, options, callback)
 ```
  - @param `{MapConfig} mapConfig` map configuration, see [specification](../../../doc/MapConfig-specification.md)
- - @param `{Object} params` datastore configuration, with supported members: user, pass, host, port, dbname
  - @param `{String} format` output format for the tile
- - @param `{Number} layer` layer number within the mapConfig
+ - @param `{Object} options` will include extra configuration like db connection params, layer to render, limits
  - @param `{Function} callback` function(err, renderer)
    * `{Error} err` in case of problems, or null
    * `{Renderer} renderer` the renderer

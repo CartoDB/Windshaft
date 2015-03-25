@@ -78,6 +78,14 @@ describe('torque', function() {
     });
   });
 
+  function rendererOptions(layer) {
+    return {
+      params: {},
+      layer: layer
+    };
+  }
+  var layerZeroOptions = rendererOptions(0);
+
 
   describe('getRenderer', function() {
 
@@ -89,7 +97,7 @@ describe('torque', function() {
           ]
         }]
       ];
-      torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function(err, renderer) {
         assert.ok(!err, err);
         assert.ok(!!renderer);
         assert.ok(!!renderer.getTile);
@@ -113,7 +121,7 @@ describe('torque', function() {
               '-torque-resolution: 2'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
+      torque.getRenderer(brokenConfig, 'json.torque', layerZeroOptions, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-frame-count' in torque layer CartoCSS");
@@ -137,7 +145,7 @@ describe('torque', function() {
               '-torque-animation-duration: 15;'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
+      torque.getRenderer(brokenConfig, 'json.torque', layerZeroOptions, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-resolution' in torque layer CartoCSS");
@@ -161,7 +169,7 @@ describe('torque', function() {
               '-torque-resolution: 2'
           ]
       )));
-      torque.getRenderer(brokenConfig, {}, 'json.torque', 0, function(err/*, renderer*/) {
+      torque.getRenderer(brokenConfig, 'json.torque', layerZeroOptions, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.equal(err.message, "Missing required property '-torque-time-attribute' in torque layer CartoCSS");
@@ -170,7 +178,7 @@ describe('torque', function() {
     });
 
     it('should return error when format is unsuported', function(done) {
-      torque.getRenderer(mapConfig, {}, 'dummy', 0, function(err/*, renderer*/) {
+      torque.getRenderer(mapConfig, 'dummy', layerZeroOptions, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.ok(err.message === "format not supported: dummy");
@@ -179,7 +187,7 @@ describe('torque', function() {
     });
 
     it("should raise an error when layer is not set", function(done) {
-      torque.getRenderer(mapConfig_notorque, {}, 'json.torque', function(err/*, renderer*/) {
+      torque.getRenderer(mapConfig_notorque, 'json.torque', {}, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.ok(err.message === "torque renderer only supports a single layer");
@@ -187,7 +195,7 @@ describe('torque', function() {
       });
     });
     it("should raise an error when layer does not exist", function(done) {
-      torque.getRenderer(mapConfig, {}, 'json.torque', 1, function(err/*, renderer*/) {
+      torque.getRenderer(mapConfig, 'json.torque', rendererOptions(1), function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.ok(err.message === "layer index is greater than number of layers");
@@ -206,7 +214,7 @@ describe('torque', function() {
           ]
         }]
       ];
-      torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function(err, renderer) {
         assert.ok(err === null);
         renderer.getMetadata(function(err, m) {
           assert.equal(0, m.start);
@@ -230,7 +238,7 @@ describe('torque', function() {
           ]
         }]
       ];
-      torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+      torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function(err, renderer) {
         renderer.getTile(0, 0, 0, function(err, tile) {
           assert.ok(err === null);
           assert.ok(!!tile);
@@ -270,7 +278,7 @@ describe('torque', function() {
             [null, { fields: { updated_at: { type: "date" } } }],
             [null, { rows: [ { num_steps: 0, max_date: null, min_date: null } ] }]
         ];
-        torque.getRenderer(mapConfig, {}, 'json.torque', 0, function(err, renderer) {
+        torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function(err, renderer) {
             assert.equal(renderer.attrs.step, 1, 'Number of steps cannot be Infinity');
             done();
         });

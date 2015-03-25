@@ -2,6 +2,7 @@
 2015-mm-dd
 
 Announcements:
+ - Renderer factories changed getRenderer signature, check [renderers/README](./lib/windshaft/renderers/README.md)
  - Remove tile / style endpoints AKA old API (#259). Most likely this will evolve into a 1.0.0 release.
  If you **want to keep using those endpoints** the best option is to **freeze windshaft version @0.40.0**.
    - Changes includes:

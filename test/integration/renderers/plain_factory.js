@@ -2,7 +2,13 @@ var assert = require('assert');
 var PlainRendererFactory = require('../../../lib/windshaft/renderers/plain/factory');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-suite('renderer_http_factory_getRenderer', function() {
+suite('renderer_plain_factory_getRenderer', function() {
+
+    function rendererOptions(layer) {
+        return {
+            layer: layer
+        };
+    }
 
     var factory = new PlainRendererFactory();
 
@@ -24,7 +30,7 @@ suite('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, {}, 'png', 1, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(1), function(err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, "Layer is not a 'plain' layer");
@@ -41,7 +47,7 @@ suite('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, {}, 'png', 0, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, "Invalid color for 'plain' layer");

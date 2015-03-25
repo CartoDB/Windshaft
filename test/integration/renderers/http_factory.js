@@ -12,6 +12,10 @@ suite('renderer_http_factory_getRenderer', function() {
 
     var invalidUrlTemplate = 'http://wadus.example.com/{z}/{x}/{y}.png';
 
+    var layerZeroOptions = {
+        layer: 0
+    };
+
     var factory = new HttpRendererFactory(whitelistSample, 2000);
 
     test('getRenderer throws error for empty urlTemplate option', function(done) {
@@ -26,7 +30,7 @@ suite('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, {}, 'png', 0, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, 'Missing mandatory "urlTemplate" option');
@@ -46,7 +50,7 @@ suite('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, {}, 'png', 0, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, 'Invalid "urlTemplate" for http layer');
@@ -69,7 +73,7 @@ suite('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factoryWithFallbackImage.getRenderer(mapConfig, {}, 'png', 0, function(err, renderer) {
+        factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
             assert.ok(!err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, HttpFallbackRenderer);
