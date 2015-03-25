@@ -106,7 +106,7 @@ suite('render_cache', function() {
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert.equal(renderer.get()._uri.query.base.split(':')[0], 'windshaft_test');
+            assert.equal(renderer.get()._uri.protocol, 'mapnik:');
             done();
         });
     });
