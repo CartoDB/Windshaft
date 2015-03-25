@@ -47,7 +47,7 @@ Create a renderer given a map and data store configuration
 ```javascript
 getRenderer(mapConfig, params, format, layerNumber, callback)
 ```
- - @param `{MapConfig} mapConfig` map configuration, see [MapConfig-specification](../../../doc/MapConfig-specification.md)
+ - @param `{MapConfig} mapConfig` map configuration, see [specification](../../../doc/MapConfig-specification.md)
  - @param `{Object} params` datastore configuration, with supported members: user, pass, host, port, dbname
  - @param `{String} format` output format for the tile
  - @param `{Number} layer` layer number within the mapConfig
