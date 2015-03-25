@@ -214,7 +214,8 @@ assert.response = function(server, req, res, msg){
                         status,
                         msg + colorize('[red]{Invalid response status code.}\n' +
                             '    Expected: [green]{' + status + '}\n' +
-                            '    Got: [red]{' + response.statusCode + '}')
+                            '    Got: [red]{' + response.statusCode + '}\n' +
+                            '    Body: ' + response.body)
                     );
                 }
 
