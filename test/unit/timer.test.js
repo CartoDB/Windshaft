@@ -7,11 +7,14 @@ describe('timer', function() {
     var elapsedTimeBetweenDateNowCalls = 5;
 
     var nowFn = Date.now;
-    var nowStartTime = 0;
-    Date.now = function() {
-        nowStartTime += elapsedTimeBetweenDateNowCalls;
-        return nowStartTime;
-    };
+
+    before(function() {
+        var nowStartTime = 0;
+        Date.now = function() {
+            nowStartTime += elapsedTimeBetweenDateNowCalls;
+            return nowStartTime;
+        };
+    });
 
     after(function() {
         Date.now = nowFn;
