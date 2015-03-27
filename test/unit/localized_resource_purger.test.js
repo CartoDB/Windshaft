@@ -1,3 +1,5 @@
+require('../support/test_helper');
+
 var assert = require('assert');
 var LocalizedResourcePurger = require('../../lib/windshaft/cache/localized_resource_purger');
 

@@ -1,5 +1,7 @@
-var assert        = require('assert'),
-    ProfilerProxy      = require('../../lib/windshaft/stats/profiler_proxy');
+require('../support/test_helper');
+
+var assert = require('assert');
+var ProfilerProxy = require('../../lib/windshaft/stats/profiler_proxy');
 
 describe('profiler', function() {
 

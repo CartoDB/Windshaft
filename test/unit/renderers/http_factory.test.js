@@ -1,3 +1,5 @@
+require('../../support/test_helper');
+
 var assert = require('assert');
 var HttpRendererFactory = require('../../../lib/windshaft/renderers/http/factory');
 

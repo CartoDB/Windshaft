@@ -1,3 +1,5 @@
+require('../support/test_helper');
+
 var assert = require('assert');
 var RendererParams = require('../../lib/windshaft/renderers/renderer_params');
 var _ = require('underscore');

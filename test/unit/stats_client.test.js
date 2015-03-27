@@ -1,3 +1,5 @@
+require('../support/test_helper');
+
 var StatsClient = require('../../lib/windshaft/stats/client');
 
 describe('stats client', function() {
