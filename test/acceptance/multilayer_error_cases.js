@@ -1,7 +1,6 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
 var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
@@ -17,7 +16,6 @@ describe('multilayer error cases', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redisClient = redis.createClient(ServerOptions.redis.port);
 
     it("post layergroup with wrong Content-Type", function(done) {
         assert.response(server, {

@@ -2,7 +2,6 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var fs = require('fs');
-var redis = require('redis');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
@@ -31,7 +30,6 @@ describe('server', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
