@@ -1,9 +1,7 @@
-// FLUSHALL Redis before starting
 require('../support/test_helper');
 
 var assert = require('../support/assert');
 var fs = require('fs');
-var redis = require('redis');
 var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
@@ -25,34 +23,17 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-suite('server_gettile', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('server_gettile', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-
-        if ( err ) { done(err); return; }
-
-        assert.equal(matches.length, 0,
-          "redis keys present at setup time on port " +
-          ServerOptions.redis.port + ":\n" + matches.join("\n"));
-
+    before(function(done) {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -69,9 +50,14 @@ suite('server_gettile', function() {
             });
         });
         res_serv.listen(res_serv_port, done);
+    });
 
-      });
 
+    after(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+
+        // Close the resources server
+        res_serv.close(done);
     });
 
     function imageCompareFn(fixture, done) {
@@ -90,13 +76,13 @@ suite('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing a tile with default style should return an expected tile", function(done){
+    it("get'ing a tile with default style should return an expected tile", function(done){
       testClient.getTile(testClient.defaultTableMapConfig('test_table'), 13, 4011, 3088,
           imageCompareFn('test_table_13_4011_3088.png', done)
       );
     });
 
-    test("response of get tile can be served by renderer cache",  function(done) {
+    it("response of get tile can be served by renderer cache",  function(done) {
         var tileUrl = '/13/4011/3088.png';
         var lastXwc;
         var mapConfig = testClient.defaultTableMapConfig('test_table');
@@ -124,21 +110,21 @@ suite('server_gettile', function() {
         });
     });
 
-    test("should not choke when queries end with a semicolon",  function(done){
+    it("should not choke when queries end with a semicolon",  function(done){
         testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2;'), 0, 0, 0, done);
     });
 
-    test("should not choke when sql ends with a semicolon and some blanks",  function(done){
+    it("should not choke when sql ends with a semicolon and some blanks",  function(done){
         testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'), 0, 0, 0, done);
     });
 
-    test("should not strip quoted semicolons within an sql query",  function(done){
+    it("should not strip quoted semicolons within an sql query",  function(done){
         testClient.getTile(
             testClient.singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"), 0, 0, 0, done
         );
     });
 
-    test("getting two tiles with same configuration uses renderer cache",  function(done) {
+    it("getting two tiles with same configuration uses renderer cache",  function(done) {
 
         var imageFixture = './test/fixtures/test_table_13_4011_3088_styled.png';
         var tileUrl = '/13/4011/3088.png';
@@ -171,18 +157,18 @@ suite('server_gettile', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:5}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
 
-    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+    it("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
         testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'),
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
-    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+    it("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
         testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'),
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
-    test("unused directives are tolerated",  function(done){
+    it("unused directives are tolerated",  function(done){
         var style = "#test_table{point-transform: 'scale(100)';}";
         var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
         testClient.getTile(testClient.singleLayerMapConfig(sql, style), 0, 0, 0,
@@ -210,20 +196,20 @@ suite('server_gettile', function() {
       // Strictness handling changed in 2.3.x, possibly a bug:
       // see http://github.com/mapnik/mapnik/issues/2301
       console.warn("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
-      test.skip(test_strict_lbl,  test_strictness);
+      it.skip(test_strict_lbl,  test_strictness);
     }
     else {
-      test(test_strict_lbl,  test_strictness);
+      it(test_strict_lbl,  test_strictness);
     }
 
-    test("beforeTileRender is called when the client request a tile",  function(done) {
+    it("beforeTileRender is called when the client request a tile",  function(done) {
         testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
             assert.equal(res.headers['x-beforetilerender'], 'called');
             done();
         });
     });
 
-    test("afterTileRender is called when the client request a tile",  function(done) {
+    it("afterTileRender is called when the client request a tile",  function(done) {
         testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
             assert.equal(res.headers['x-aftertilerender'], 'called');
             assert.equal(res.headers['x-aftertilerender2'], 'called');
@@ -231,7 +217,7 @@ suite('server_gettile', function() {
         });
     });
 
-    test('high cpu regression with mapnik <2.3.x', function(done) {
+    it('high cpu regression with mapnik <2.3.x', function(done) {
         var sql = [
             "SELECT 'my polygon name here' AS name,",
             "st_envelope(st_buffer(st_transform(",
@@ -272,39 +258,4 @@ suite('server_gettile', function() {
         testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // --}
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Close the resources server
-      res_serv.close();
-
-      var errors = [];
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) {
-              errors.push(err);
-          }
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err) {
-            errors.push(err);
-          }
-
-          var cachedir = global.environment.millstone.cache_basedir;
-          rmdir_recursive_sync(cachedir);
-
-          redis_client.flushall(function() {
-            done(errors.length ? new Error(errors) : null);
-          });
-      });
-
-    });
 });
-

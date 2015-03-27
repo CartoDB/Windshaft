@@ -2,26 +2,16 @@ require('../support/test_helper.js');
 
 var RedisPool     = require('redis-mpool');
 var assert        = require('assert');
-var redis         = require('redis');
 var step          = require('step');
 var serverOptions = require('../support/server_options');
 var MapStore      = require('../../lib/windshaft/storages/mapstore');
 var MapConfig     = require('../../lib/windshaft/models/mapconfig');
 
-suite('mapstore', function() {
+describe('mapstore', function() {
 
-    var redis_client = redis.createClient(serverOptions.redis.port);
     var redis_pool = new RedisPool(serverOptions.redis);
 
-    suiteSetup(function(done) {
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0);
-          done();
-      });
-    });
-
-    test('fails loading unexistent map', function(done){
+    it('fails loading unexistent map', function(done){
       var map_store = new MapStore({pool:redis_pool, expire_time:50000});
       step(
         function getMap() {
@@ -37,7 +27,7 @@ suite('mapstore', function() {
       );
     });
 
-    test('can save a map and tell if it existed already', function(done) {
+    it('can save a map and tell if it existed already', function(done) {
       var map_store = new MapStore({pool:redis_pool, expire_time:50000});
       var map = MapConfig.create({
         version: '1.0.1',
@@ -78,12 +68,6 @@ suite('mapstore', function() {
           done(err);
         }
       );
-    });
-
-    suiteTeardown(function(done) {
-      // Flush redis cache
-      // See https://github.com/Vizzuality/Windshaft/issues/24
-      redis_client.flushall(done);
     });
 
 });

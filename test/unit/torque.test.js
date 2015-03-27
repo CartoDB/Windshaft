@@ -1,3 +1,5 @@
+require('../support/test_helper');
+
 var assert = require('assert');
 var TorqueFactory = require('../../lib/windshaft/renderers/torque').factory;
 var MapConfig = require('../../lib/windshaft/models/mapconfig');

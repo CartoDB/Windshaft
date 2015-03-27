@@ -2,13 +2,10 @@ require('../support/test_helper.js');
 
 var assert = require('assert');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
-var redis = require('redis');
 
-suite('mapconfig', function() {
+describe('mapconfig', function() {
 
-    var redisClient = redis.createClient(global.environment.redis.port);
-
-    test('can not create mapconfig with invalid version', function(done) {
+    it('can not create mapconfig with invalid version', function(done) {
         var version = '0.1.0';
         assert.throws(
             function() {
@@ -24,7 +21,7 @@ suite('mapconfig', function() {
         );
     });
 
-    test('can not create mapconfig with no options in layer', function(done) {
+    it('can not create mapconfig with no options in layer', function(done) {
         assert.throws(
             function() {
                 MapConfig.create({
@@ -44,7 +41,7 @@ suite('mapconfig', function() {
         );
     });
 
-    test('interactivity array gets converted into comma joined string', function(done) {
+    it('interactivity array gets converted into comma joined string', function(done) {
         var mapConfig = MapConfig.create({
             version: '1.3.0',
             layers: [
@@ -63,12 +60,6 @@ suite('mapconfig', function() {
         var layer = mapConfig.getLayer(0);
         assert.equal(layer.options.interactivity, 'a,b');
         done();
-    });
-
-    suiteTeardown(function(done) {
-        // Flush redis cache
-        // See https://github.com/Vizzuality/Windshaft/issues/24
-        redisClient.flushall(done);
     });
 
 });

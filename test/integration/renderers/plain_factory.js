@@ -1,9 +1,10 @@
+require('../../support/test_helper.js');
+
 var assert = require('assert');
 var PlainRendererFactory = require('../../../lib/windshaft/renderers/plain/factory');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-suite('renderer_plain_factory_getRenderer', function() {
-
+describe('renderer_http_factory_getRenderer', function() {
     function rendererOptions(layer) {
         return {
             layer: layer
@@ -12,7 +13,7 @@ suite('renderer_plain_factory_getRenderer', function() {
 
     var factory = new PlainRendererFactory();
 
-    test('getRenderer throws error for non plain layer', function(done) {
+    it('getRenderer throws error for non plain layer', function(done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -38,7 +39,7 @@ suite('renderer_plain_factory_getRenderer', function() {
         });
     });
 
-    test('getRenderer throws error for non plain layer', function(done) {
+    it('getRenderer throws error for non plain layer', function(done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {

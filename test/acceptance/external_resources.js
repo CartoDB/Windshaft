@@ -2,7 +2,6 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var fs = require('fs');
-var redis = require('redis');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
@@ -22,34 +21,17 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-suite('external resources', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('external resources', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-
-        if ( err ) { done(err); return; }
-
-        assert.equal(matches.length, 0,
-          "redis keys present at setup time on port " +
-          ServerOptions.redis.port + ":\n" + matches.join("\n"));
-
+    before(function(done) {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -66,9 +48,6 @@ suite('external resources', function() {
             });
         });
         res_serv.listen(res_serv_port, done);
-
-      });
-
     });
 
     function imageCompareFn(fixture, done) {
@@ -80,7 +59,7 @@ suite('external resources', function() {
         };
     }
 
-    test("basic external resource", function(done) {
+    it("basic external resource", function(done) {
 
         var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
@@ -89,7 +68,7 @@ suite('external resources', function() {
             imageCompareFn('test_table_13_4011_3088_svg1.png', done));
     });
 
-    test("different external resource", function(done) {
+    it("different external resource", function(done) {
 
         var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
@@ -99,7 +78,7 @@ suite('external resources', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/107
-    test("external resources get localized on renderer creation if not locally cached", function(done) {
+    it("external resources get localized on renderer creation if not locally cached", function(done) {
 
         var options = {
             serverOptions: ServerOptions
@@ -128,7 +107,7 @@ suite('external resources', function() {
         });
     });
 
-    test("referencing unexistant external resources returns an error", function(done) {
+    it("referencing unexistant external resources returns an error", function(done) {
         var url = "http://localhost:" + res_serv_port + "/notfound.png";
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
@@ -143,32 +122,11 @@ suite('external resources', function() {
     });
 
 
-    suiteTeardown(function(done) {
+    after(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-      // Close the resources server
-      res_serv.close();
-
-      var errors = [];
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) {
-              errors.push(err);
-          }
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err) {
-            errors.push(err);
-          }
-
-          var cachedir = global.environment.millstone.cache_basedir;
-          rmdir_recursive_sync(cachedir);
-
-          redis_client.flushall(function() {
-            done(errors.length ? new Error(errors) : null);
-          });
-      });
-
+        // Close the resources server
+        res_serv.close(done);
     });
 });
 

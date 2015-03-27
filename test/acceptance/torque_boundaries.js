@@ -9,15 +9,6 @@ describe('torque boundary points', function() {
 
     var layergroupIdToDelete = null;
 
-    before(function(done) {
-        // Check that we start with an empty redis db
-        redis_client.keys("*", function(err, matches) {
-            if ( err ) { done(err); return; }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
-
     beforeEach(function() {
         layergroupIdToDelete = null;
     });
@@ -233,7 +224,7 @@ describe('torque boundary points', function() {
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
         var desc = 'handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n';
-        test(desc, function (done) {
+        it(desc, function (done) {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',
@@ -320,7 +311,7 @@ describe('torque boundary points', function() {
         });
     });
 
-    test('regression london point', function(done) {
+    it('regression london point', function(done) {
         var londonPointMapConfig =  {
             version: '1.1.0',
             layers: [
@@ -374,7 +365,7 @@ describe('torque boundary points', function() {
         });
     });
 
-    test('should consider resolution for least value in query', function(done) {
+    it('should consider resolution for least value in query', function(done) {
         var londonPointMapConfig =  {
             version: '1.1.0',
             layers: [
@@ -449,24 +440,6 @@ describe('torque boundary points', function() {
         var redisKey = 'map_cfg|' + layergroupIdToDelete;
         redis_client.del(redisKey, function () {
             done();
-        });
-    });
-
-    after(function(done) {
-        // Check that we left the redis db empty
-        redis_client.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if ( err ) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redis_client.flushall(function() {
-                done(err);
-            });
         });
     });
 });

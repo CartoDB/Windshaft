@@ -7,13 +7,11 @@ var RenderCache = require('../../lib/windshaft/renderers/render_cache');
 var MapStore = require('../../lib/windshaft/storages/mapstore');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
 var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
-var redis = require('redis');
 var RedisPool = require('redis-mpool');
 var serverOptions = require('../support/server_options');
 
-suite('render_cache', function() {
+describe('render_cache', function() {
 
-    var redis_client = redis.createClient(global.environment.redis.port);
     var redisPool = new RedisPool(serverOptions.redis);
 
     // initialize core mml_store
@@ -70,24 +68,24 @@ suite('render_cache', function() {
     }
 
 
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redis_client.keys("*", function(err, matches) {
+    beforeEach(function(done) {
+        mapStore.save(mapConfig, function(err) {
             if (err) {
                 return done(err);
             }
-            assert.equal(matches.length, 0);
+            mapStore.save(mapConfig2, done);
+        });
+    });
 
-            mapStore.save(mapConfig, function(err) {
-                if (err) {
-                    return done(err);
-                }
-                mapStore.save(mapConfig2, done);
+    afterEach(function(done) {
+        mapStore.del(mapConfig.id(), function() {
+            mapStore.del(mapConfig2.id(), function() {
+                done();
             });
         });
     });
 
-    test('has a cache of render objects', function(){
+    it('has a cache of render objects', function(){
         var render_cache = makeRenderCache();
         assert.ok(_.isObject(render_cache.renderers));
     });
@@ -97,7 +95,7 @@ suite('render_cache', function() {
      * They need a database setup as below with the table test_table defined
      */
 
-    test('can generate a tilelive object', function(done){
+    it('can generate a tilelive object', function(done){
         var render_cache = makeRenderCache();
         var req = {
             params: requestParams()
@@ -112,7 +110,7 @@ suite('render_cache', function() {
     });
 
 
-    test('can generate > 1 tilelive object', function(done){
+    it('can generate > 1 tilelive object', function(done){
         var render_cache = makeRenderCache();
 
         var req = {
@@ -134,7 +132,7 @@ suite('render_cache', function() {
     });
 
 
-    test('can reuse tilelive object', function(done){
+    it('can reuse tilelive object', function(done){
         var render_cache = makeRenderCache();
         var req = {
             params: requestParams()
@@ -149,7 +147,7 @@ suite('render_cache', function() {
         });
     });
 
-    test('can delete all tilelive objects when reset', function(done){
+    it('can delete all tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
         var req = {
@@ -173,7 +171,7 @@ suite('render_cache', function() {
     });
 
 
-    test('can delete only related tilelive objects when reset', function(done){
+    it('can delete only related tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
         var req = {
@@ -202,7 +200,7 @@ suite('render_cache', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/59
-    test('clears both auth and non-auth renderer caches on reset', function(done){
+    it('clears both auth and non-auth renderer caches on reset', function(done){
         var render_cache = makeRenderCache();
 
         var req = {
@@ -234,7 +232,7 @@ suite('render_cache', function() {
     });
 
 
-    test('can purge all tilelive objects', function(done){
+    it('can purge all tilelive objects', function(done){
         var render_cache = makeRenderCache();
 
         var req = {
@@ -263,7 +261,7 @@ suite('render_cache', function() {
         });
     });
 
-    test('automatically deletes tilelive only after timeout', function(done){
+    it('automatically deletes tilelive only after timeout', function(done){
         var render_cache = makeRenderCache({timeout: 100});
         var req = {
             params: requestParams()
@@ -281,7 +279,7 @@ suite('render_cache', function() {
 
     // Remove from cache renderers erroing out
     // See https://github.com/CartoDB/Windshaft/issues/171
-    test('does not keep erroring renderers in cache', function(done){
+    it('does not keep erroring renderers in cache', function(done){
         var render_cache = makeRenderCache();
         assert.equal(_.keys(render_cache.renderers).length, 0);
         var req = {
@@ -302,7 +300,7 @@ suite('render_cache', function() {
         });
     });
 
-    test('does not keep renderers in cache for unexistent tokes', function(done) {
+    it('does not keep renderers in cache for unexistent tokes', function(done) {
         var renderCache = makeRenderCache();
         assert.equal(Object.keys(renderCache.renderers).length, 0);
         var req = {
@@ -315,11 +313,4 @@ suite('render_cache', function() {
         });
     });
 
-    suiteTeardown(function(done) {
-      // Flush redis cache
-      // See https://github.com/Vizzuality/Windshaft/issues/24
-      redis_client.flushall(done);
-    });
-
 });
-

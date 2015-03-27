@@ -1,9 +1,7 @@
-// FLUSHALL Redis before starting
 require('../support/test_helper');
 
 var assert = require('../support/assert');
 var fs = require('fs');
-var redis = require('redis');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
@@ -22,31 +20,15 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-suite('server', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('server', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-
-        if ( err ) { done(err); return; }
-
-        assert.equal(matches.length, 0,
-          "redis keys present at setup time on port " +
-          ServerOptions.redis.port + ":\n" + matches.join("\n"));
+    before(function(done) {
 
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
@@ -65,8 +47,13 @@ suite('server', function() {
         });
         res_serv.listen(res_serv_port, done);
 
-      });
+    });
 
+    after(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+
+        // Close the resources server
+        res_serv.close(done);
     });
 
 
@@ -76,7 +63,7 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("get call to server returns 200",  function(done){
+    it("get call to server returns 200",  function(done){
         assert.response(server, {
             url: '/',
             method: 'GET'
@@ -92,7 +79,7 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("get /version returns versions",  function(done){
+    it("get /version returns versions",  function(done){
         assert.response(server, {
             url: '/version',
             method: 'GET'
@@ -115,7 +102,7 @@ suite('server', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("grid jsonp",  function(done){
+    it("grid jsonp",  function(done){
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', function(err, res) {
             assert.equal(res.statusCode, 200, res.body);
@@ -127,7 +114,7 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and single interactivity should return a grid",  function(done){
+    it("get'ing a json with default style and single interactivity should return a grid",  function(done){
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
             var expected_json = {
@@ -142,7 +129,7 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and no interactivity should return an error",  function(done){
+    it("get'ing a json with default style and no interactivity should return an error",  function(done){
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table');
         var expectedResponse = {
             status: 400,
@@ -156,7 +143,7 @@ suite('server', function() {
         });
     });
 
-    test("get grid jsonp error is returned with 200 status",  function(done){
+    it("get grid jsonp error is returned with 200 status",  function(done){
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table');
         var expectedResponse = {
             status: 200,
@@ -171,7 +158,7 @@ suite('server', function() {
     });
 
     // See http://github.com/Vizzuality/Windshaft/issues/50
-    test("get'ing a json with no data should return an empty grid",  function(done){
+    it("get'ing a json with no data should return an empty grid",  function(done){
         var query = 'select * from test_table limit 0';
         var mapConfig = testClient.singleLayerMapConfig(query, null, null, 'name');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
@@ -180,7 +167,7 @@ suite('server', function() {
     });
 
     // Another test for http://github.com/Vizzuality/Windshaft/issues/50
-    test("get'ing a json with no data but interactivity should return an empty grid",  function(done){
+    it("get'ing a json with no data but interactivity should return an empty grid",  function(done){
         var query = 'SELECT * FROM test_table limit 0';
         var mapConfig = testClient.singleLayerMapConfig(query, null, null, 'cartodb_id');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function(err, res) {
@@ -189,7 +176,7 @@ suite('server', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/67
-    test("get'ing a solid grid while changing interactivity fields",  function(done){
+    it("get'ing a solid grid while changing interactivity fields",  function(done){
         var query = 'SELECT * FROM test_big_poly';
         var style211 = "#test_big_poly{polygon-fill:blue;}"; // for solid
         var mapConfigName = testClient.singleLayerMapConfig(query, style211, null, 'name');
@@ -206,38 +193,4 @@ suite('server', function() {
         });
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Close the resources server
-      res_serv.close();
-
-      var errors = [];
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) {
-              errors.push(err);
-          }
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err) {
-            errors.push(err);
-          }
-
-          var cachedir = global.environment.millstone.cache_basedir;
-          rmdir_recursive_sync(cachedir);
-
-          redis_client.flushall(function() {
-            done(errors.length ? new Error(errors) : null);
-          });
-      });
-
-    });
 });
-

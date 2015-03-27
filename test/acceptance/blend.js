@@ -1,24 +1,11 @@
 require('../support/test_helper');
+
 var assert = require('../support/assert');
-var redis = require('redis');
 var testClient = require('../support/test_client');
 
-suite('blend png renderer', function() {
+describe('blend png renderer', function() {
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
-
-    var redisClient = redis.createClient(global.environment.redis.port);
-
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redisClient.keys("*", function(err, matches) {
-            if (err) {
-                return done(err);
-            }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
 
     function plainTorqueMapConfig(plainColor) {
         return {
@@ -93,30 +80,12 @@ suite('blend png renderer', function() {
     testScenarios.forEach(function(testScenario) {
         var tileRequest = testScenario.tile;
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
-        test('tile all/' + zxy.join('/') + '.png', function (done) {
+        it('tile all/' + zxy.join('/') + '.png', function (done) {
             testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
                 assert.imageEqualsFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     done();
                 });
-            });
-        });
-    });
-
-    suiteTeardown(function(done) {
-        // Check that we left the redis db empty
-        redisClient.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if (err) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redisClient.flushall(function() {
-                return done(err);
             });
         });
     });
