@@ -13,12 +13,6 @@ var http = require('http');
 
 describe('multilayer', function() {
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);

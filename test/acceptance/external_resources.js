@@ -23,12 +23,6 @@ function rmdir_recursive_sync(dirname) {
 
 describe('external resources', function() {
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var res_serv; // resources server

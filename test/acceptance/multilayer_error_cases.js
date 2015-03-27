@@ -8,12 +8,6 @@ var testClient = require('../support/test_client');
 
 describe('multilayer error cases', function() {
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
 

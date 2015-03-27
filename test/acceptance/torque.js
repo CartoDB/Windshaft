@@ -9,12 +9,6 @@ var ServerOptions = require('../support/server_options');
 
 describe('torque', function() {
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);

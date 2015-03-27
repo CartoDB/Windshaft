@@ -8,12 +8,6 @@ var ServerOptions = require('../support/server_options');
 
 describe('raster', function() {
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
