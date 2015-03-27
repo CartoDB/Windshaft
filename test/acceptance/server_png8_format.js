@@ -7,22 +7,9 @@ var redis = require('redis');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-function rmdir_recursive_sync(dirname) {
-    var files = fs.readdirSync(dirname);
-    for (var i=0; i<files.length; ++i) {
-        var f = dirname + "/" + files[i];
-        var s = fs.lstatSync(f);
-        if ( s.isFile() ) {
-            fs.unlinkSync(f);
-        } else {
-            rmdir_recursive_sync(f);
-        }
-    }
-}
-
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
-suite('server_png8_format', function() {
+describe('server_png8_format', function() {
 
     var serverOptionsPng32 = ServerOptions;
     serverOptionsPng32.grainstore = _.clone(ServerOptions.grainstore);
@@ -41,7 +28,7 @@ suite('server_png8_format', function() {
 
     var layergroupId;
 
-    suiteSetup(function(done) {
+    before(function(done) {
         var testPngFilesDir = __dirname + '/../results/png';
         fs.readdirSync(testPngFilesDir)
             .filter(function(fileName) {
@@ -52,24 +39,15 @@ suite('server_png8_format', function() {
             })
             .forEach(fs.unlinkSync);
 
-        // Check that we start with an empty redis db
-        redisClient.keys("*", function(err, matches) {
-            if ( err ) { done(err); return; }
-
-            assert.equal(matches.length, 0,
-                "redis keys present at setup time on port " + ServerOptions.redis.port + ":\n" + matches.join("\n"));
-            done();
-        });
-
+        done();
     });
-
 
     function testOutputForPng32AndPng8(desc, tile, callback) {
 
         var bufferPng32,
             bufferPng8;
 
-        test(desc + '; tile: ' + JSON.stringify(tile),  function(done){
+        it(desc + '; tile: ' + JSON.stringify(tile),  function(done){
             assert.response(
                 serverPng32,
                 {
@@ -114,7 +92,9 @@ suite('server_png8_format', function() {
                             assert.ok(bufferPng8.length < bufferPng32.length);
                             assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                                 function(err, imagePaths, similarity) {
-                                    callback(err, imagePaths, similarity, done);
+                                    redisClient.del('map_cfg|' + layergroupId, function() {
+                                        callback(err, imagePaths, similarity, done);
+                                    });
                                 }
                             );
                         });
@@ -187,35 +167,6 @@ suite('server_png8_format', function() {
             fs.writeFileSync('test/results/png/results.js', output);
             assert.ifError(err);
             done();
-        });
-    });
-
-
-    suiteTeardown(function(done) {
-        var errors = [];
-
-        redisClient.del(['map_cfg|' + layergroupId], function(err) {
-            if (err) {
-                errors.push(err);
-            }
-            // Check that we left the redis db empty
-            redisClient.keys("*", function(err, matches) {
-                if ( err ) {
-                    errors.push(err);
-                }
-                try {
-                    assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-                } catch (err) {
-                    errors.push(err);
-                }
-
-                var cachedir = global.environment.millstone.cache_basedir;
-                rmdir_recursive_sync(cachedir);
-
-                redisClient.flushall(function() {
-                    done(errors.length ? new Error(errors) : null);
-                });
-            });
         });
     });
 });

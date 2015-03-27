@@ -6,12 +6,16 @@ var MapController = require('../../../lib/windshaft/controllers/map');
 var serverOptions = require('../../support/server_options');
 var StatsClient = require('../../../lib/windshaft/stats/client');
 
-suite('windshaft', function() {
+describe('windshaft', function() {
 
     var statsClientGetInstanceFn = StatsClient.getInstance;
 
+    after(function() {
+        StatsClient.getInstance = statsClientGetInstanceFn;
+    });
 
-    test('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
+
+    it('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
         var expectedCalls = 2, // it will call increment once for the general error
             invalidFormat = 'png2',
             invalidFormatRegexp = new RegExp('invalid'),
@@ -39,7 +43,7 @@ suite('windshaft', function() {
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
 
-    test('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
+    it('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
         var expectedCalls = 2, // general error + format error
             validFormat = 'png',
             validFormatRegexp = new RegExp(validFormat),
@@ -72,10 +76,5 @@ suite('windshaft', function() {
             return instance;
         };
     }
-
-    suiteTeardown(function(done) {
-        StatsClient.getInstance = statsClientGetInstanceFn;
-        done();
-    });
 
 });

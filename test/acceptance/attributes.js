@@ -6,13 +6,7 @@ var step          = require('step');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('attributes', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('attributes', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
@@ -40,18 +34,7 @@ suite('attributes', function() {
       assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) { done(err); return; }
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-          done();
-      });
-
-    });
-
-    test("can only be fetched from layer having an attributes spec",
+    it("can only be fetched from layer having an attributes spec",
     function(done) {
 
       var expected_token;
@@ -156,7 +139,7 @@ suite('attributes', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
-    test("are checked at map creation time",
+    it("are checked at map creation time",
     function(done) {
 
       // clone the mapconfig test
@@ -193,7 +176,7 @@ suite('attributes', function() {
       );
     });
 
-    test("can be used with jsonp", function(done) {
+    it("can be used with jsonp", function(done) {
 
       var expected_token;
       step(
@@ -283,7 +266,7 @@ suite('attributes', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    test("database access is read-only", function(done) {
+    it("database access is read-only", function(done) {
 
       // clone the mapconfig test
       var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
@@ -319,31 +302,4 @@ suite('attributes', function() {
       );
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) {
-                err.message += '\n' + err2.message;
-            } else {
-                err = err2;
-            }
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
-    });
-
 });
-

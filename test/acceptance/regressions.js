@@ -3,7 +3,6 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
-var redis = require('redis');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
@@ -23,24 +22,13 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-suite('regressions', function() {
+describe('regressions', function() {
 
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-
-        if ( err ) { done(err); return; }
-
-        assert.equal(matches.length, 0,
-          "redis keys present at setup time on port " +
-          ServerOptions.redis.port + ":\n" + matches.join("\n"));
-
+    before(function(done) {
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -57,13 +45,18 @@ suite('regressions', function() {
             });
         });
         res_serv.listen(res_serv_port, done);
+    });
 
-      });
 
+    after(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+
+        // Close the resources server
+        res_serv.close(done);
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/65
-    test("#65 catching non-Error exception doesn't kill the backend", function(done) {
+    it("#65 catching non-Error exception doesn't kill the backend", function(done) {
         var mapConfig = testClient.defaultTableMapConfig('test_table');
         testClient.withLayergroup(mapConfig, function(err, requestTile, finish) {
             var options = {
@@ -82,7 +75,7 @@ suite('regressions', function() {
     // See http://github.com/CartoDB/Windshaft/issues/130
     // [x] Needs a fix on the mapnik side: https://github.com/mapnik/mapnik/pull/2143
     //
-    test("#130 database access is read-only", function(done) {
+    it("#130 database access is read-only", function(done) {
 
         var writeSqlMapConfig = testClient.singleLayerMapConfig(
             'select st_point(0,0) as the_geom, * from test_table_inserter(st_setsrid(st_point(0,0),4326),\'write\')'
@@ -104,7 +97,7 @@ suite('regressions', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/167
-    test("#167 does not die on unexistent statsd host",  function(done) {
+    it("#167 does not die on unexistent statsd host",  function(done) {
         var CustomOptions = _.clone(ServerOptions);
         CustomOptions.statsd = _.clone(CustomOptions.statsd);
         CustomOptions.statsd.host = 'whoami.vizzuality.com';
@@ -136,7 +129,7 @@ suite('regressions', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/173
-    test("#173 does not send db details in connection error response", function(done) {
+    it("#173 does not send db details in connection error response", function(done) {
 
         var mapConfig = testClient.defaultTableMapConfig('test_table');
 
@@ -161,33 +154,4 @@ suite('regressions', function() {
 
     });
 
-
-    suiteTeardown(function(done) {
-
-      // Close the resources server
-      res_serv.close();
-
-      var errors = [];
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) {
-              errors.push(err);
-          }
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err) {
-            errors.push(err);
-          }
-
-          var cachedir = global.environment.millstone.cache_basedir;
-          rmdir_recursive_sync(cachedir);
-
-          redis_client.flushall(function() {
-            done(errors.length ? new Error(errors) : null);
-          });
-      });
-
-    });
 });
-

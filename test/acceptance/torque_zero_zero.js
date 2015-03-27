@@ -1,7 +1,6 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var testClient = require('../support/test_client');
@@ -10,16 +9,6 @@ describe('torque tiles at 0,0 point', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
-
-    before(function(done) {
-        // Check that we start with an empty redis db
-        redis_client.keys("*", function(err, matches) {
-            if ( err ) { done(err); return; }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
 
 /*
     Tiles are represented as in:
@@ -59,7 +48,7 @@ describe('torque tiles at 0,0 point', function() {
     ];
 
     tiles.forEach(function(tile) {
-        test(tile.what, function(done) {
+        it(tile.what, function(done) {
 
             var query = 'select 1 cartodb_id,' +
                 ' ST_Transform(ST_SetSRID(ST_MakePoint(0, 0), 4326), 3857) the_geom_webmercator';
@@ -97,21 +86,4 @@ describe('torque tiles at 0,0 point', function() {
         });
     });
 
-    after(function(done) {
-        // Check that we left the redis db empty
-        redis_client.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if ( err ) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redis_client.flushall(function() {
-                done(err);
-            });
-        });
-    });
 });
