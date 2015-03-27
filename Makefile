@@ -20,6 +20,23 @@ test:
 		test/integration/renderers/*.js \
 		test/acceptance/*.js
 
+test-acceptance:
+	@echo "***acceptance tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/acceptance/*.js
+
+test-integration:
+	@echo "***integration tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/integration/renderers/*.js
+
+test-unit:
+	@echo "***unit tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/unit/*.js \
+		test/unit/renderers/*.js \
+		test/unit/controllers/*.js
+
 jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/ test/
