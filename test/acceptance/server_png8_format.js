@@ -114,7 +114,9 @@ suite('server_png8_format', function() {
                             assert.ok(bufferPng8.length < bufferPng32.length);
                             assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                                 function(err, imagePaths, similarity) {
-                                    callback(err, imagePaths, similarity, done);
+                                    redisClient.del('map_cfg|' + layergroupId, function() {
+                                        callback(err, imagePaths, similarity, done);
+                                    });
                                 }
                             );
                         });
