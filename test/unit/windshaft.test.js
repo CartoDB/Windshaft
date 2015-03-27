@@ -5,18 +5,18 @@ var assert = require('assert');
 var Windshaft = require('../../lib/windshaft');
 var serverOptions = require('../support/server_options');
 
-suite('windshaft', function() {
+describe('windshaft', function() {
 
-    test('should have valid global environment',  function() {
+    it('should have valid global environment',  function() {
         assert.equal(global.environment.name, 'test');
     });
 
-    test('can instantiate a Windshaft object (configured express instance)', function(){
+    it('can instantiate a Windshaft object (configured express instance)', function(){
         var ws = new Windshaft.Server(serverOptions);
         assert.ok(ws);
     });
 
-    test('can spawn a new server on the global listen port', function(done){
+    it('can spawn a new server on the global listen port', function(done){
         var ws = new Windshaft.Server(serverOptions);
         ws.listen(global.environment.windshaft_port, function() {
           assert.ok(ws);
@@ -24,7 +24,7 @@ suite('windshaft', function() {
         });
     });
 
-    test('throws exception if incorrect options passed in', function(){
+    it('throws exception if incorrect options passed in', function(){
         assert.throws(
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
@@ -33,13 +33,13 @@ suite('windshaft', function() {
         );
     });
 
-    test('options are set on main windshaft object',  function(){
+    it('options are set on main windshaft object',  function(){
         var ws = new Windshaft.Server(serverOptions);
         assert.ok(_.isFunction(ws.req2params));
         assert.equal(ws.base_url, '/database/:dbname/table/:table');
     });
 
-    test('different formats for postgis plugin error returns 400 as status code', function() {
+    it('different formats for postgis plugin error returns 400 as status code', function() {
         var ws = new Windshaft.Server(serverOptions);
         var expectedStatusCode = 400;
         assert.equal(

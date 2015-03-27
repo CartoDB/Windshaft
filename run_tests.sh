@@ -86,10 +86,10 @@ PATH=node_modules/.bin/:$PATH
 
 if test x"$OPT_COVERAGE" = xyes; then
   echo "Running tests with coverage"
-  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u tdd -t 5000 ${TESTS}
+  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u bdd -t 5000 ${TESTS}
 else
   echo "Running tests"
-  mocha -u tdd -t 5000 ${TESTS}
+  mocha -u bdd -t 5000 ${TESTS}
 fi
 ret=$?
 

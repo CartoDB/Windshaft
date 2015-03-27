@@ -1,14 +1,14 @@
 var StatsClient = require('../../lib/windshaft/stats/client');
 
-suite('stats client', function() {
+describe('stats client', function() {
     var statsInstance;
 
-    suiteSetup(function() {
+    before(function() {
         statsInstance = StatsClient.instance;
         StatsClient.instance = null;
     });
 
-    test('reports errors when they repeat', function(done) {
+    it('reports errors when they repeat', function(done) {
         var statsClient = StatsClient.getInstance({ host: '127.0.0.1', port: 8033 });
         statsClient.increment('foo');
         console.log(statsClient.socket.emit('error', 'wadus_error'));
@@ -16,7 +16,7 @@ suite('stats client', function() {
         setTimeout(done, 2000);
     });
 
-    suiteTeardown(function() {
+    after(function() {
         StatsClient.instance = statsInstance;
     });
 });

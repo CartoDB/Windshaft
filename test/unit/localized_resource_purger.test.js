@@ -1,11 +1,11 @@
 var assert = require('assert');
 var LocalizedResourcePurger = require('../../lib/windshaft/cache/localized_resource_purger');
 
-suite('LocalizedResourcePurger', function() {
+describe('LocalizedResourcePurger', function() {
     var intervalInSeconds = 0.010,
         checkHit = intervalInSeconds * 1000 + 5;
 
-    test('reports errors when they repeat', function(done) {
+    it('reports errors when they repeat', function(done) {
         var hit = false;
         var mmlStore = {
             purgeLocalizedResources: function(ttl, callback) {
