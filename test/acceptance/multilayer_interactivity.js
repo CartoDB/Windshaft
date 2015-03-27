@@ -11,14 +11,6 @@ describe('multilayer interactivity and layers order', function() {
     var server = new Windshaft.Server(ServerOptions);
     var redisClient = redis.createClient(ServerOptions.redis.port);
 
-    before(function(done) {
-        // Check that we start with an empty redis db
-        redisClient.keys("*", function(err, matches) {
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
-
     function layerType(layer) {
         return layer.type || 'undefined';
     }
@@ -348,26 +340,6 @@ describe('multilayer interactivity and layers order', function() {
 
     testScenarios.forEach(testInteractivityLayersOrderScenario);
     chaosScenarios.forEach(testInteractivityLayersOrderScenario);
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    after(function(done) {
-        // Check that we left the redis db empty
-        redisClient.keys("*", function(err, keys) {
-            if (err) {
-                return done(err);
-            }
-
-            assert.equal(keys.length, 0, "Left over redis keys:\n" + keys.join("\n"));
-
-            done();
-        });
-
-    });
 
 });
 

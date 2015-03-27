@@ -1,4 +1,3 @@
-// FLUSHALL Redis before starting
 require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -12,7 +11,7 @@ var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
 
-suite('multilayer', function() {
+describe('multilayer', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -35,13 +34,7 @@ suite('multilayer', function() {
       assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-      });
-
+    before(function(done) {
       // Start a server to test external resources
       res_serv = http.createServer( function(request, response) {
           var filename = __dirname + '/../fixtures/markers' + request.url;
@@ -58,11 +51,15 @@ suite('multilayer', function() {
           });
       });
       res_serv.listen(res_serv_port, done);
+    });
 
+    after(function(done) {
+        // Close the resources server
+        res_serv.close(done);
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/70
-    test("post layergroup with encoding in content-type", function(done) {
+    it("post layergroup with encoding in content-type", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -116,7 +113,7 @@ suite('multilayer', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/71
-    test("single layer with multiple css sections", function(done) {
+    it("single layer with multiple css sections", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -187,7 +184,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 2 layers, each with its style", function(done) {
+    it("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -306,7 +303,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 2 layers, each with its style, GET method", function(done) {
+    it("layergroup with 2 layers, each with its style, GET method", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -428,7 +425,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 2 layers, GET method, JSONP", function(done) {
+    it("layergroup with 2 layers, GET method, JSONP", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -545,7 +542,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layergroup with 3 mixed layers, mapnik torque and attributes", function(done) {
+    it("layergroup with 3 mixed layers, mapnik torque and attributes", function(done) {
 
       var layergroup =  {
         version: '1.1.0',
@@ -731,7 +728,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("check that distinct maps result in distinct tiles", function(done) {
+    it("check that distinct maps result in distinct tiles", function(done) {
 
       var layergroup1 =  {
         version: '1.0.0',
@@ -887,7 +884,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("layers are rendered in definition order", function(done) {
+    it("layers are rendered in definition order", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -975,7 +972,7 @@ suite('multilayer', function() {
       );
     });
 
-    test("quotes in CartoCSS", function(done) {
+    it("quotes in CartoCSS", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1009,7 +1006,7 @@ suite('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/90
-    test("exponential notation in CartoCSS filter", function(done) {
+    it("exponential notation in CartoCSS filter", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1037,7 +1034,7 @@ suite('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/94
-    test("unknown text-face-name", function(done) {
+    it("unknown text-face-name", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1103,7 +1100,7 @@ suite('multilayer', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("get'ing options on layergroup should return CORS headers",  function(done){
+    it("get'ing options on layergroup should return CORS headers",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'OPTIONS'
@@ -1121,7 +1118,7 @@ suite('multilayer', function() {
     //  - https://github.com/CartoDB/Windshaft/issues/103
     //  - https://github.com/mapnik/mapnik/issues/2121
     //  - https://github.com/mapnik/mapnik/issues/764
-    test.skip("layergroup with datetime interactivity", function(done) {
+    it.skip("layergroup with datetime interactivity", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1205,7 +1202,7 @@ suite('multilayer', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/157
-    test("req2params is called only once for a multilayer post",
+    it("req2params is called only once for a multilayer post",
     function(done) {
 
       var layergroup =  {
@@ -1273,7 +1270,7 @@ suite('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/163
-    test("has different token for different database",
+    it("has different token for different database",
     function(done) {
       var layergroup =  {
         version: '1.0.1',
@@ -1353,7 +1350,7 @@ suite('multilayer', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/191
-    test("mapnik layer with custom geom_column",
+    it("mapnik layer with custom geom_column",
     function(done) {
       var layergroup =  {
         version: '1.0.1',
@@ -1433,37 +1430,6 @@ suite('multilayer', function() {
           });
         }
       );
-    });
-
-    // TODO: check lifetime of layergroup!
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Close the resources server
-      res_serv.close();
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) {
-                err.message += '\n' + err2.message;
-            } else {
-                err = err2;
-            }
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
     });
 
 });

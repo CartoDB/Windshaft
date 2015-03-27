@@ -7,7 +7,7 @@ var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('torque', function() {
+describe('torque', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -24,18 +24,7 @@ suite('torque', function() {
       assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) { done(err); return; }
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-          done();
-      });
-
-    });
-
-    test("missing required property from torque layer", function(done) {
+    it("missing required property from torque layer", function(done) {
 
       var layergroup =  {
         version: '1.1.0',
@@ -123,7 +112,7 @@ suite('torque', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/150
-    test.skip("unquoted property in torque layer", function(done) {
+    it.skip("unquoted property in torque layer", function(done) {
 
       var layergroup =  {
         version: '1.1.0',
@@ -163,7 +152,7 @@ suite('torque', function() {
       );
     });
 
-    test("can render tile for valid mapconfig", function(done) {
+    it("can render tile for valid mapconfig", function(done) {
 
       var mapconfig =  {
         version: '1.1.0',
@@ -313,7 +302,7 @@ suite('torque', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    test("database access is read-only", function(done) {
+    it("database access is read-only", function(done) {
       var mapconfig =  {
         version: '1.1.0',
         layers: [
@@ -357,7 +346,7 @@ suite('torque', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/164
-    test("gives a 500 on database connection refused", function(done) {
+    it("gives a 500 on database connection refused", function(done) {
 
       var mapconfig =  {
         version: '1.1.0',
@@ -399,31 +388,4 @@ suite('torque', function() {
       );
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) {
-                err.message += '\n' + err2.message;
-            } else {
-                err = err2;
-            }
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
-    });
-
 });
-

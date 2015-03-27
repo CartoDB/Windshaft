@@ -1,4 +1,3 @@
-// FLUSHALL Redis before starting
 require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -8,7 +7,7 @@ var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var testClient = require('../support/test_client');
 
-suite('multilayer error cases', function() {
+describe('multilayer error cases', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -20,15 +19,7 @@ suite('multilayer error cases', function() {
     server.setMaxListeners(0);
     var redisClient = redis.createClient(ServerOptions.redis.port);
 
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redisClient.keys("*", function(err, matches) {
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
-
-    test("post layergroup with wrong Content-Type", function(done) {
+    it("post layergroup with wrong Content-Type", function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
@@ -41,7 +32,7 @@ suite('multilayer error cases', function() {
         });
     });
 
-    test("post layergroup with no layers", function(done) {
+    it("post layergroup with no layers", function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
@@ -54,7 +45,7 @@ suite('multilayer error cases', function() {
         });
     });
 
-    test("post layergroup jsonp errors are returned with 200 status", function(done) {
+    it("post layergroup jsonp errors are returned with 200 status", function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup?callback=test',
             method: 'POST',
@@ -67,7 +58,7 @@ suite('multilayer error cases', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/154
-    test("mapnik tokens cannot be used with attributes service", function(done) {
+    it("mapnik tokens cannot be used with attributes service", function(done) {
       var layergroup =  {
         version: '1.1.0',
         layers: [
@@ -105,7 +96,7 @@ suite('multilayer error cases', function() {
       );
     });
 
-    test("layergroup with no cartocss_version", function(done) {
+    it("layergroup with no cartocss_version", function(done) {
       var layergroup =  {
         version: '1.0.0',
         layers: [
@@ -128,7 +119,7 @@ suite('multilayer error cases', function() {
       });
     });
 
-    test("sql/cartocss combination errors", function(done) {
+    it("sql/cartocss combination errors", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [{ options: {
@@ -162,7 +153,7 @@ suite('multilayer error cases', function() {
       });
     });
 
-    test("sql/interactivity combination error", function(done) {
+    it("sql/interactivity combination error", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -207,7 +198,7 @@ suite('multilayer error cases', function() {
       });
     });
 
-    test("blank CartoCSS error", function(done) {
+    it("blank CartoCSS error", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -243,7 +234,7 @@ suite('multilayer error cases', function() {
       });
     });
 
-    test("Invalid mapnik-geometry-type CartoCSS error", function(done) {
+    it("Invalid mapnik-geometry-type CartoCSS error", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -280,7 +271,7 @@ suite('multilayer error cases', function() {
       });
     });
 
-    test("post'ing style with non existent column in filter returns 400 with error", function(done) {
+    it("post'ing style with non existent column in filter returns 400 with error", function(done) {
         var layergroup =  {
             version: '1.0.1',
             layers: [
@@ -315,7 +306,7 @@ suite('multilayer error cases', function() {
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/31
-    test('bogus sql raises 400 status code', function(done) {
+    it('bogus sql raises 400 status code', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
         testClient.createLayergroup(bogusSqlMapConfig, { statusCode: 400 }, function(err, res) {
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
@@ -324,7 +315,7 @@ suite('multilayer error cases', function() {
     });
 
     // should be fixed in #302
-    test.skip('bogus sql raises 200 status code for jsonp', function(done) {
+    it.skip('bogus sql raises 200 status code for jsonp', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('bogus');
         testClient.createLayergroup(bogusSqlMapConfig, { method: 'GET', callbackName: 'test' }, function(err, res) {
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
@@ -332,7 +323,7 @@ suite('multilayer error cases', function() {
         });
     });
 
-    test("query with no geometry field returns 400 status",  function(done){
+    it("query with no geometry field returns 400 status",  function(done){
         var noGeometrySqlMapConfig = testClient.singleLayerMapConfig('SELECT 1');
         testClient.createLayergroup(noGeometrySqlMapConfig, { statusCode: 400 }, function(err, res) {
             assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
@@ -340,7 +331,7 @@ suite('multilayer error cases', function() {
         });
     });
 
-    test("bogus style should raise 400 status",  function(done){
+    it("bogus style should raise 400 status",  function(done){
         var bogusStyleMapConfig = testClient.defaultTableMapConfig('test_table', '#test_table{xxxxx;}');
         testClient.createLayergroup(bogusStyleMapConfig, { method: 'GET', statusCode: 400 }, done);
     });
@@ -351,7 +342,7 @@ suite('multilayer error cases', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    test("nonexistent layergroup token error", function(done) {
+    it("nonexistent layergroup token error", function(done) {
       step(
         function do_get_tile(err)
         {
@@ -377,7 +368,7 @@ suite('multilayer error cases', function() {
       );
     });
 
-    test('error 400 on json syntax error', function(done) {
+    it('error 400 on json syntax error', function(done) {
         var layergroup =  {
             version: '1.0.1',
             layers: [
@@ -408,29 +399,4 @@ suite('multilayer error cases', function() {
         );
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-        // Check that we left the redis db empty
-        redisClient.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if ( err ) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redisClient.flushall(function() {
-                done(err);
-            });
-        });
-    });
-
 });
-

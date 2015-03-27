@@ -6,7 +6,7 @@ var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('raster', function() {
+describe('raster', function() {
 
     ////////////////////////////////////////////////////////////////////
     //
@@ -25,18 +25,7 @@ suite('raster', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) { done(err); return; }
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-          done();
-      });
-
-    });
-
-    test("can render raster for valid mapconfig", function(done) {
+    it("can render raster for valid mapconfig", function(done) {
 
       var mapconfig =  {
         version: '1.2.0',
@@ -127,7 +116,7 @@ suite('raster', function() {
       );
     });
 
-    test("raster geom type does not allow interactivity", function(done) {
+    it("raster geom type does not allow interactivity", function(done) {
 
         var mapconfig =  {
             version: '1.2.0',
@@ -169,32 +158,6 @@ suite('raster', function() {
                 done();
             }
         );
-    });
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) {
-                err.message += '\n' + err2.message;
-            } else {
-                err = err2;
-            }
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
     });
 
 });

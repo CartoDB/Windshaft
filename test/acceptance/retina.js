@@ -6,7 +6,7 @@ var mapnik = require('mapnik');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-suite('retina support', function() {
+describe('retina support', function() {
 
     var layergroupId = null;
 
@@ -14,17 +14,7 @@ suite('retina support', function() {
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
 
-
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redis_client.keys("*", function(err, matches) {
-            if ( err ) { done(err); return; }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
-
-    suiteSetup(function(done) {
+    beforeEach(function(done) {
         var retinaSampleMapConfig =  {
             version: '1.2.0',
             layers: [
@@ -93,19 +83,19 @@ suite('retina support', function() {
         );
     }
 
-    test('image dimensions when scale factor is not defined', function(done) {
+    it('image dimensions when scale factor is not defined', function(done) {
         testValidImageDimmensions('', 256, done);
     });
 
-    test('image dimensions when scale factor = @1x', function(done) {
+    it('image dimensions when scale factor = @1x', function(done) {
         testValidImageDimmensions('@1x', 256, done);
     });
 
-    test('image dimensions when scale factor = @2x', function(done) {
+    it('image dimensions when scale factor = @2x', function(done) {
         testValidImageDimmensions('@2x', 512, done);
     });
 
-    test('error when scale factor is not enabled', function(done) {
+    it('error when scale factor is not enabled', function(done) {
 
         var scaleFactor = '@4x';
 
@@ -125,29 +115,10 @@ suite('retina support', function() {
         );
     });
 
-
-    suiteTeardown(function(done) {
+    afterEach(function(done) {
         var redisKey = 'map_cfg|' + layergroupId;
         redis_client.del(redisKey, function () {
             done();
-        });
-    });
-
-    suiteTeardown(function(done) {
-        // Check that we left the redis db empty
-        redis_client.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if ( err ) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redis_client.flushall(function() {
-                done(err);
-            });
         });
     });
 });
