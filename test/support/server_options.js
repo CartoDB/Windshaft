@@ -12,16 +12,7 @@ module.exports = (function(opts) {
           mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik,
           gc_prob: 0 // run the garbage collector at each invocation
         },
-        renderer: {
-            http: {
-                timeout: 5000,
-                whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
-                fallbackImage: {
-                    type: 'fs',
-                    src: __dirname + '/../fixtures/http/basemap.png'
-                }
-            }
-        },
+        renderer: global.environment.renderer,
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
