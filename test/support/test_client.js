@@ -57,7 +57,7 @@ function createLayergroup(layergroupConfig, options, callback) {
 
     var expectedResponse = {
         status: options.statusCode || 200,
-        headers: {
+        headers: options.headers || {
             'Content-Type': 'application/json; charset=utf-8'
         }
     };
@@ -73,8 +73,12 @@ function createLayergroup(layergroupConfig, options, callback) {
         function validateLayergroup(err, res) {
             assert.ok(!err, 'Failed to request layergroup');
 
-            var parsedBody = JSON.parse(res.body);
-            var layergroupid = parsedBody.layergroupid;
+            var parsedBody;
+            var layergroupid;
+            if (!options.callbackName) {
+                parsedBody = JSON.parse(res.body);
+                layergroupid = parsedBody.layergroupid;
+            }
 
             if (layergroupid) {
                 var redisKey = 'map_cfg|' + layergroupid;

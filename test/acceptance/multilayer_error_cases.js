@@ -307,9 +307,17 @@ describe('multilayer error cases', function() {
     });
 
     // should be fixed in #302
-    it.skip('bogus sql raises 200 status code for jsonp', function(done) {
+    it('bogus sql raises 200 status code for jsonp', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('bogus');
-        testClient.createLayergroup(bogusSqlMapConfig, { method: 'GET', callbackName: 'test' }, function(err, res) {
+        var options = {
+            method: 'GET',
+            callbackName: 'test',
+            headers: {
+                'Content-Type': 'text/javascript; charset=utf-8'
+            }
+        };
+        testClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
+            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
             done();
         });

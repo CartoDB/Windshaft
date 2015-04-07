@@ -11,6 +11,9 @@ Announcements:
      * Changes a lot of tests to use layergroup
      * New features in testClient to support kind of transactions with layergroups
 
+Bug fixes:
+ - Layergroup creation via GET returns with status 200 for JSONP (#302)
+
 
 # Version 0.40.0
 2015-03-11
