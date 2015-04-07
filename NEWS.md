@@ -1,7 +1,12 @@
 # Version 0.41.0
 2015-mm-dd
 
+New features:
+ - onTileErrorStrategy can be injected into adaptors to intercept tile errors and change behaviour
+ - beforeRendererCreate hook in RenderCache to add options when creating a new Renderer
+
 Announcements:
+ - Renderer factories changed getRenderer signature, check [renderers/README](./lib/windshaft/renderers/README.md)
  - Remove tile / style endpoints AKA old API (#259). Most likely this will evolve into a 1.0.0 release.
  If you **want to keep using those endpoints** the best option is to **freeze windshaft version @0.40.0**.
    - Changes includes:

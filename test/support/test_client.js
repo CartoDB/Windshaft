@@ -381,10 +381,16 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
     );
 }
 
-function withLayergroup(layergroupConfig, validationLayergroupFn, callback) {
+function withLayergroup(layergroupConfig, options, callback) {
+    var validationLayergroupFn = function() {};
     if (!callback) {
-        callback = validationLayergroupFn;
-        validationLayergroupFn = function() {};
+        callback = options;
+        options = {};
+    }
+
+    if (_.isFunction(options)) {
+        validationLayergroupFn = options;
+        options = {};
     }
 
     var layergroupExpectedResponse = {
@@ -398,7 +404,7 @@ function withLayergroup(layergroupConfig, validationLayergroupFn, callback) {
         function requestLayergroup() {
             var next = this;
             var request = layergroupRequest(layergroupConfig, 'POST');
-            assert.response(server, request, layergroupExpectedResponse, function (res, err) {
+            assert.response(serverInstance(options), request, layergroupExpectedResponse, function (res, err) {
                 next(err, res);
             });
         },
@@ -440,7 +446,7 @@ function withLayergroup(layergroupConfig, validationLayergroupFn, callback) {
                     }
                 };
 
-                assert.response(server, request, tileExpectedResponse, function (res, err) {
+                assert.response(serverInstance(options), request, tileExpectedResponse, function (res, err) {
                     callback(err, res);
                 });
             }
