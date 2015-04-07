@@ -1,5 +1,5 @@
 # Version 0.41.0
-2015-mm-dd
+2015-04-07
 
 New features:
  - onTileErrorStrategy can be injected into adaptors to intercept tile errors and change behaviour
