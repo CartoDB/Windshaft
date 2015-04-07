@@ -2,7 +2,7 @@
 2015-mm-dd
 
 New features:
- - onTileErrorStrategy can be injected into adaptors to intercept tile erros and change behaviour
+ - onTileErrorStrategy can be injected into adaptors to intercept tile errors and change behaviour
  - beforeRendererCreate hook in RenderCache to add options when creating a new Renderer
 
 Announcements:
