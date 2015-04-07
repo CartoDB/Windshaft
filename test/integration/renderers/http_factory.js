@@ -3,6 +3,7 @@ require('../../support/test_helper.js');
 var assert = require('assert');
 var HttpRendererFactory = require('../../../lib/windshaft/renderers/http/factory');
 var HttpFallbackRenderer = require('../../../lib/windshaft/renderers/http/fallback_renderer');
+var Renderer = require('../../../lib/windshaft/renderers/http/renderer');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
 describe('renderer_http_factory_getRenderer', function() {
@@ -75,6 +76,31 @@ describe('renderer_http_factory_getRenderer', function() {
             assert.ok(!err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, HttpFallbackRenderer);
+            done();
+        });
+    });
+
+
+    it('returns a renderer for invalid urlTemplate if whitelist is _open-minded_', function(done) {
+        var whitelistAnyUrl = ['.*'];
+        var factoryWithFallbackImage = new HttpRendererFactory(
+            whitelistAnyUrl, 2000, undefined, 'http://example.com/fallback.png'
+        );
+        var mapConfig = MapConfig.create({
+            layers: [
+                {
+                    type: 'http',
+                    options: {
+                        urlTemplate: invalidUrlTemplate,
+                        subdomains: ['abcd']
+                    }
+                }
+            ]
+        });
+        factoryWithFallbackImage.getRenderer(mapConfig, {}, 'png', 0, function(err, renderer) {
+            assert.ok(!err);
+            assert.ok(renderer);
+            assert.equal(renderer.constructor, Renderer);
             done();
         });
     });
