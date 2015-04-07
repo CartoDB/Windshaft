@@ -306,7 +306,6 @@ describe('multilayer error cases', function() {
         });
     });
 
-    // should be fixed in #302
     it('bogus sql raises 200 status code for jsonp', function(done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('bogus');
         var options = {
@@ -319,6 +318,22 @@ describe('multilayer error cases', function() {
         testClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
             assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
+            done();
+        });
+    });
+
+    it('query not selecting the_geom raises 200 status code for jsonp instead of 404', function(done) {
+        var noGeomMapConfig = testClient.singleLayerMapConfig('select null::geometry the_geom_wadus');
+        var options = {
+            method: 'GET',
+            callbackName: 'test',
+            headers: {
+                'Content-Type': 'text/javascript; charset=utf-8'
+            }
+        };
+        testClient.createLayergroup(noGeomMapConfig, options, function(err, res) {
+            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
+            assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
             done();
         });
     });
