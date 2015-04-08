@@ -213,8 +213,13 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // {Array<String>} it will be used to retrieve from different subdomains.
     // It will consistently replace {s} from `urlTemplate`.
     // Defaults to ['a', 'b', 'c'] when {s} is present in `urlTemplate`, [] otherwise.
-    // It only applies to `http` type
-    subdomains: ['a', 'b', 'c']
+    subdomains: ['a', 'b', 'c'],
+
+    // OPTIONAL
+    // {Boolean} will indicate either the tile is in TMS service format or not
+    // If true, it inverses Y axis numbering for tiles
+    // Defaults to `false`
+    tms: false
 }
 ```
 
