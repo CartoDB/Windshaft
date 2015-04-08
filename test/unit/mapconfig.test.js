@@ -1,11 +1,11 @@
 require('../support/test_helper.js');
 
-var assert        = require('assert');
-var MapConfig     = require('../../lib/windshaft/models/mapconfig');
+var assert = require('assert');
+var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
-suite('mapconfig', function() {
+describe('mapconfig', function() {
 
-    test('can not create mapconfig with invalid version', function(done) {
+    it('can not create mapconfig with invalid version', function(done) {
         var version = '0.1.0';
         assert.throws(
             function() {
@@ -21,7 +21,7 @@ suite('mapconfig', function() {
         );
     });
 
-    test('can not create mapconfig with no options in layer', function(done) {
+    it('can not create mapconfig with no options in layer', function(done) {
         assert.throws(
             function() {
                 MapConfig.create({
@@ -41,7 +41,7 @@ suite('mapconfig', function() {
         );
     });
 
-    test('interactivity array gets converted into comma joined string', function(done) {
+    it('interactivity array gets converted into comma joined string', function(done) {
         var mapConfig = MapConfig.create({
             version: '1.3.0',
             layers: [

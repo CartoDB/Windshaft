@@ -1,25 +1,11 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
 var testClient = require('../support/test_client');
 
-suite('torque png renderer', function() {
+describe('torque png renderer', function() {
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
-
-    var redisClient = redis.createClient(global.environment.redis.port);
-
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redisClient.keys("*", function(err, matches) {
-            if (err) {
-                return done(err);
-            }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
 
     var torquePngPointsMapConfig =  {
         version: '1.2.0',
@@ -82,7 +68,7 @@ suite('torque png renderer', function() {
             x = tileRequest.x,
             y = tileRequest.y;
         var zxy = [z, x, y];
-        test('tile ' + zxy.join('/') + '.torque.png', function (done) {
+        it('tile ' + zxy.join('/') + '.torque.png', function (done) {
             testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function(err, res) {
                 assert.imageEqualsFile(res.body, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
@@ -136,7 +122,7 @@ suite('torque png renderer', function() {
         ]
     };
 
-    test('torque static map with offset', function(done) {
+    it('torque static map with offset', function(done) {
         var w = 600,
             h = 400;
 
@@ -153,21 +139,4 @@ suite('torque png renderer', function() {
 
     });
 
-    suiteTeardown(function(done) {
-        // Check that we left the redis db empty
-        redisClient.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if (err) {
-                    err.message += '\n' + err2.message;
-                } else {
-                    err = err2;
-                }
-            }
-            redisClient.flushall(function() {
-                return done(err);
-            });
-        });
-    });
 });

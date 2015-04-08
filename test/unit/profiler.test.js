@@ -1,14 +1,16 @@
-var assert        = require('assert'),
-    ProfilerProxy      = require('../../lib/windshaft/stats/profiler_proxy');
+require('../support/test_helper');
 
-suite('profiler', function() {
+var assert = require('assert');
+var ProfilerProxy = require('../../lib/windshaft/stats/profiler_proxy');
 
-    test('Profiler is null in ProfilerProxy when profiling is not enabled', function() {
+describe('profiler', function() {
+
+    it('Profiler is null in ProfilerProxy when profiling is not enabled', function() {
         var profilerProxy = new ProfilerProxy({profile: false});
         assert.equal(profilerProxy.profiler, null);
     });
 
-    test('Profiler is NOT null in ProfilerProxy when profiling is enabled', function() {
+    it('Profiler is NOT null in ProfilerProxy when profiling is enabled', function() {
         var profilerProxy = new ProfilerProxy({profile: true});
         assert.notEqual(profilerProxy.profiler, null);
     });

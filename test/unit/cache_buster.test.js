@@ -1,16 +1,12 @@
-var   _             = require('underscore')
-    , th            = require('../support/test_helper.js')
-    , assert        = require('assert')
-    , CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js')
-    , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/renderers/render_cache')
-    , serverOptions = require('../support/server_options')
-    , tests         = module.exports = {};
+require('../support/test_helper.js');
 
-suite('cache_buster', function() {
+var assert        = require('assert');
+var CacheEntry   = require('../../lib/windshaft/cache/cache_entry.js');
+var RenderCache   = require('../../lib/windshaft/renderers/render_cache');
 
-    var mmlStore  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore),
-        renderCache = new RenderCache({timeout: 10000}, mmlStore),
+describe('cache_buster', function() {
+
+    var renderCache = new RenderCache({timeout: 10000}),
         NAN_CACHE_BUSTER_ID = 'foo_id',
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,
@@ -18,7 +14,7 @@ suite('cache_buster', function() {
         CACHE_BUSTER_NEWER = 9999999,
         ONE_DAY_IN_MILISECONDS = 86400 * 1000;
 
-    test('renderer is recreated when buster is NaN and not equal to cached one', function () {
+    it('renderer is recreated when buster is NaN and not equal to cached one', function () {
         var cacheEntry = new CacheEntry();
         cacheEntry.cache_buster = NAN_CACHE_BUSTER_ID;
 
@@ -29,7 +25,7 @@ suite('cache_buster', function() {
         );
     });
 
-    test('renderer is NOT recreated when buster is NaN and equals to cached one', function () {
+    it('renderer is NOT recreated when buster is NaN and equals to cached one', function () {
         var cacheEntry = new CacheEntry();
         cacheEntry.cache_buster = NAN_CACHE_BUSTER_ID;
 
@@ -40,7 +36,7 @@ suite('cache_buster', function() {
         );
     });
 
-    test('renderer is recreated when buster is a number and bigger than cached one', function () {
+    it('renderer is recreated when buster is a number and bigger than cached one', function () {
         var cacheEntry = new CacheEntry();
         cacheEntry.cache_buster = CACHE_BUSTER;
 
@@ -51,7 +47,7 @@ suite('cache_buster', function() {
         );
     });
 
-    test('renderer is NOT recreated when buster is a number and equal than cached one', function () {
+    it('renderer is NOT recreated when buster is a number and equal than cached one', function () {
         var cacheEntry = new CacheEntry();
         cacheEntry.cache_buster = CACHE_BUSTER;
 
@@ -62,7 +58,7 @@ suite('cache_buster', function() {
         );
     });
 
-    test('renderer is NOT recreated when buster is a number and equal than cached one', function () {
+    it('renderer is NOT recreated when buster is a number and equal than cached one', function () {
         var cacheEntry = new CacheEntry();
         cacheEntry.cache_buster = CACHE_BUSTER;
 
@@ -73,17 +69,15 @@ suite('cache_buster', function() {
         );
     });
 
-    test('renderer is (re)created when it is undefined', function () {
-        var cacheEntry = undefined;
-
+    it('renderer is (re)created when it is undefined', function () {
         assert.equal(
-            renderCache.shouldRecreateRenderer(cacheEntry, CACHE_BUSTER),
+            renderCache.shouldRecreateRenderer(undefined, CACHE_BUSTER),
             true,
             "It SHOULD (re)create the renderer when it is undefined"
         );
     });
 
-    test('renderer cache is set to param one if is numeric and not too far in the future', function() {
+    it('renderer cache is set to param one if is numeric and not too far in the future', function() {
         var now = Date.now();
         renderCache._getMaxCacheBusterValue = function() {
             return now;
@@ -95,7 +89,7 @@ suite('cache_buster', function() {
         assert.equal(cacheBuster, inThePastCacheBuster);
     });
 
-    test('renderer cache is not set far in the future when using number cache buster', function() {
+    it('renderer cache is not set far in the future when using number cache buster', function() {
         var now = Date.now();
         renderCache._getMaxCacheBusterValue = function() {
             return now;
@@ -107,7 +101,7 @@ suite('cache_buster', function() {
         assert.equal(cacheBuster, now);
     });
 
-    test('value for cache buster is original when is not number', function() {
+    it('value for cache buster is original when is not number', function() {
         var cacheBusterParamValue = 'test';
         var cacheBuster = renderCache.getCacheBusterValue(cacheBusterParamValue);
 

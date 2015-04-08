@@ -1,27 +1,18 @@
 var _ = require('underscore');
 var mapnik = require('mapnik');
 
-module.exports = function(opts) {
-    
+module.exports = (function(opts) {
+
     var config = {
         base_url: '/database/:dbname/table/:table',
-        base_url_notable: '/database/:dbname',
+        base_url_mapconfig: '/database/:dbname/layergroup',
         grainstore: {
           datasource: global.environment.postgres,
           cachedir: global.environment.millstone.cache_basedir,
           mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik,
           gc_prob: 0 // run the garbage collector at each invocation
         },
-        renderer: {
-            http: {
-                timeout: 5000,
-                whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
-                fallbackImage: {
-                    type: 'fs',
-                    src: __dirname + '/../fixtures/http/basemap.png'
-                }
-            }
-        },
+        renderer: global.environment.renderer,
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
@@ -33,14 +24,11 @@ module.exports = function(opts) {
               return;
             }
 
-            // no default interactivity. to enable specify the database column you'd like to interact with
-            req.params.interactivity = null;
-
             // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
             req.params =  _.extend({}, req.params);
             _.extend(req.params, req.query);
 
-            // increment number of calls counter 
+            // increment number of calls counter
             // NOTE: "this" would likely point to the server instance
             this.req2params_calls = this.req2params_calls ? this.req2params_calls + 1 : 1;
 
@@ -55,18 +43,6 @@ module.exports = function(opts) {
             res.header('X-AfterTileRender','called');
             headers['X-AfterTileRender2'] = 'called';
             callback(null, tile, headers);
-        },
-        beforeStateChange: function(req, callback) {
-            this.beforeStateChangeCalls = this.beforeStateChangeCalls ? this.beforeStateChangeCalls + 1 : 1;
-            callback(null, req);
-        },
-        afterStyleChange: function(req, data, callback) {
-            this.afterStyleChangeCalls = this.afterStyleChangeCalls ? this.afterStyleChangeCalls + 1 : 1;
-            callback(null, data);
-        },
-        afterStyleDelete: function(req, data, callback) {
-            this.afterStyleDeleteCalls = this.afterStyleDeleteCalls ? this.afterStyleDeleteCalls + 1 : 1;
-            callback(null, data);
         },
         afterLayergroupCreate: function(req, cfg, res, callback) {
             res.layercount = cfg.layers.length;
@@ -83,6 +59,6 @@ module.exports = function(opts) {
     };
 
     _.extend(config,  opts || {});
- 
+
     return config;
-}();
+})();

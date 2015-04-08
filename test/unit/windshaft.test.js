@@ -1,30 +1,22 @@
-var   _             = require('underscore')
-    , th            = require('../support/test_helper.js')
-    , assert        = require('assert')
-    , Windshaft     = require('../../lib/windshaft')
-    , serverOptions = require('../support/server_options')
-    , StatsClient = require('../../lib/windshaft/stats/client')
-    , tests         = module.exports = {};
+require('../support/test_helper.js');
 
-suite('windshaft', function() {
+var _ = require('underscore');
+var assert = require('assert');
+var Windshaft = require('../../lib/windshaft');
+var serverOptions = require('../support/server_options');
 
-    var statsClientGetInstanceFn = StatsClient.getInstance;
+describe('windshaft', function() {
 
-    afterEach(function(done) {
-        StatsClient.getInstance = statsClientGetInstanceFn;
-        done();
-    });
-
-    test('true',  function() {
+    it('should have valid global environment',  function() {
         assert.equal(global.environment.name, 'test');
     });
 
-    test('can instantiate a Windshaft object (configured express instance)',  function(){
+    it('can instantiate a Windshaft object (configured express instance)', function(){
         var ws = new Windshaft.Server(serverOptions);
         assert.ok(ws);
     });
 
-    test('can spawn a new server on the global listen port',  function(done){
+    it('can spawn a new server on the global listen port', function(done){
         var ws = new Windshaft.Server(serverOptions);
         ws.listen(global.environment.windshaft_port, function() {
           assert.ok(ws);
@@ -32,21 +24,22 @@ suite('windshaft', function() {
         });
     });
 
-    test('throws exception if incorrect options passed in',  function(){
+    it('throws exception if incorrect options passed in', function(){
         assert.throws(
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
-            }, /Must initialise Windshaft with a base URL and req2params function/
+                ws.listen();
+            }, /Must initialise Windshaft with: 'base_url'\/'base_url_mapconfig' URLs and req2params function/
         );
     });
 
-    test('options are set on main windshaft object',  function(){
+    it('options are set on main windshaft object',  function(){
         var ws = new Windshaft.Server(serverOptions);
         assert.ok(_.isFunction(ws.req2params));
         assert.equal(ws.base_url, '/database/:dbname/table/:table');
     });
 
-    test('different formats for postgis plugin error returns 400 as status code', function() {
+    it('different formats for postgis plugin error returns 400 as status code', function() {
         var ws = new Windshaft.Server(serverOptions);
         var expectedStatusCode = 400;
         assert.equal(
@@ -61,59 +54,5 @@ suite('windshaft', function() {
             "Error status code for multiline/PSQL does not match"
         );
     });
-
-    test('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
-        var expectedCalls = 1, // it will call increment once for the general error
-            invalidFormat = 'png2',
-            invalidFormatRegexp = new RegExp(invalidFormat);
-        mockStatsClientGetInstance({
-            increment: function(label) {
-                assert.equal(label.match(invalidFormatRegexp), null,
-                    'Invalid format is getting into increment method');
-                expectedCalls--;
-            }
-        });
-        var ws = new Windshaft.Server(serverOptions);
-        var reqMock = {
-            params: {
-                format: invalidFormat
-            }
-        };
-        ws.sendError = function(){};
-        ws.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
-
-        StatsClient.getInstance =
-        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
-    });
-
-    test('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
-        var expectedCalls = 2, // general error + format error
-            validFormat = 'png',
-            validFormatRegexp = new RegExp(validFormat),
-            formatMatched = false;
-        mockStatsClientGetInstance({
-            increment: function(label) {
-                formatMatched = formatMatched || !!label.match(validFormatRegexp);
-                expectedCalls--;
-            }
-        });
-        var ws = new Windshaft.Server(serverOptions);
-        var reqMock = {
-            params: {
-                format: validFormat
-            }
-        };
-        ws.sendError = function(){}
-        ws.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
-
-        assert.ok(formatMatched, 'Format was never matched in increment method')
-        assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
-    });
-
-    function mockStatsClientGetInstance(instance) {
-        StatsClient.getInstance = function() {
-            return instance;
-        };
-    }
 
 });

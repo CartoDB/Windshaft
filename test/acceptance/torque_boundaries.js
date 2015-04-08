@@ -1,21 +1,13 @@
-var   assert        = require('../support/assert')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options');
+require('../support/test_helper');
 
-suite('boundary points', function() {
+var assert = require('../support/assert');
+var redis = require('redis');
+var Windshaft = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
+
+describe('torque boundary points', function() {
 
     var layergroupIdToDelete = null;
-
-    suiteSetup(function(done) {
-        // Check that we start with an empty redis db
-        redis_client.keys("*", function(err, matches) {
-            if ( err ) { done(err); return; }
-            assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-            done();
-        });
-    });
 
     beforeEach(function() {
         layergroupIdToDelete = null;
@@ -231,7 +223,8 @@ suite('boundary points', function() {
 
     tileRequests.forEach(function(tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
-        test('handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n', function (done) {
+        var desc = 'handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n';
+        it(desc, function (done) {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',
@@ -318,7 +311,7 @@ suite('boundary points', function() {
         });
     });
 
-    test('regression london point', function(done) {
+    it('regression london point', function(done) {
         var londonPointMapConfig =  {
             version: '1.1.0',
             layers: [
@@ -372,7 +365,7 @@ suite('boundary points', function() {
         });
     });
 
-    test('should consider resolution for least value in query', function(done) {
+    it('should consider resolution for least value in query', function(done) {
         var londonPointMapConfig =  {
             version: '1.1.0',
             layers: [
@@ -447,21 +440,6 @@ suite('boundary points', function() {
         var redisKey = 'map_cfg|' + layergroupIdToDelete;
         redis_client.del(redisKey, function () {
             done();
-        });
-    });
-
-    suiteTeardown(function(done) {
-        // Check that we left the redis db empty
-        redis_client.keys("*", function(err, matches) {
-            try {
-                assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-            } catch (err2) {
-                if ( err ) err.message += '\n' + err2.message;
-                else err = err2;
-            }
-            redis_client.flushall(function() {
-                done(err);
-            });
         });
     });
 });

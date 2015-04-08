@@ -1,25 +1,12 @@
-// FLUSHALL Redis before starting
+require('../support/test_helper');
 
-var   assert        = require('../support/assert')
-    , tests         = module.exports = {}
-    , _             = require('underscore')
-    , querystring   = require('querystring')
-    , fs            = require('fs')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Step          = require('step')
-    , mapnik        = require('mapnik')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options')
-    , http          = require('http');
+var assert        = require('../support/assert');
+var redis         = require('redis');
+var step          = require('step');
+var Windshaft     = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
 
-suite('attributes', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('attributes', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
@@ -42,31 +29,16 @@ suite('attributes', function() {
       ]
     };
 
-    checkCORSHeaders = function(res) {
-      var h = res.headers['access-control-allow-headers'];
-      assert.ok(h);
-      assert.equal(h, 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      var h = res.headers['access-control-allow-origin'];
-      assert.ok(h);
-      assert.equal(h, '*');
-    };
+    function checkCORSHeaders(res) {
+      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
+      assert.equal(res.headers['access-control-allow-origin'], '*');
+    }
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db 
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) { done(err); return; }
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-          done();
-      });
-
-    });
-
-    test("can only be fetched from layer having an attributes spec",
+    it("can only be fetched from layer having an attributes spec",
     function(done) {
 
-      var expected_token; 
-      Step(
+      var expected_token;
+      step(
         function do_post()
         {
           var next = this;
@@ -78,19 +50,22 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // CORS headers should be sent with response
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          else expected_token = parsedBody.layergroupid;
+          if ( expected_token ) {
+              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+          } else {
+              expected_token = parsedBody.layergroupid;
+          }
           return null;
         },
         function do_get_attr_0(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/attributes/1',
@@ -98,15 +73,15 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_error_0(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode != 200 ? (': ' + res.body) : '' ));
+          assert.ifError(err);
+          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
           var parsed = JSON.parse(res.body);
           assert.equal(parsed.error, "Layer 0 has no exposed attributes");
           return null;
         },
         function do_get_attr_1(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
@@ -114,7 +89,7 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_attr_1(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.deepEqual(parsed, {"n":6});
@@ -122,7 +97,7 @@ suite('attributes', function() {
         },
         function do_get_attr_1_404(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/-666',
@@ -130,7 +105,7 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_attr_1_404(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.error);
@@ -140,14 +115,23 @@ suite('attributes', function() {
         },
         function finish(err) {
           var errors = [];
-          if ( err ) errors.push(''+err);
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) errors.push(err.message);
+          if ( err ) {
+              errors.push(''+err);
+          }
+          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
+              if ( err ) {
+                  errors.push(err.message);
+              }
               //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
               redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                } else {
+                    done(null);
+                }
               });
           });
         }
@@ -155,7 +139,7 @@ suite('attributes', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
-    test("are checked at map creation time",
+    it("are checked at map creation time",
     function(done) {
 
       // clone the mapconfig test
@@ -165,7 +149,7 @@ suite('attributes', function() {
       mapconfig.layers[1].options.attributes.id = 'unexistant';
       mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
 
-      Step(
+      step(
         function do_post()
         {
           var next = this;
@@ -177,8 +161,8 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+          assert.ifError(err);
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors);
           assert.equal(parsed.errors.length, 1);
@@ -192,10 +176,10 @@ suite('attributes', function() {
       );
     });
 
-    test("can be used with jsonp", function(done) {
+    it("can be used with jsonp", function(done) {
 
-      var expected_token; 
-      Step(
+      var expected_token;
+      step(
         function do_post()
         {
           var next = this;
@@ -207,19 +191,22 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // CORS headers should be sent with response
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          else expected_token = parsedBody.layergroupid;
+          if ( expected_token ) {
+              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+          } else {
+              expected_token = parsedBody.layergroupid;
+          }
           return null;
         },
         function do_get_attr_0(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
@@ -228,7 +215,7 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_error_0(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           // jsonp errors should be returned with HTTP status 200
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           assert.equal(res.body, 'test({"error":"Layer 0 has no exposed attributes"});');
@@ -236,7 +223,7 @@ suite('attributes', function() {
         },
         function do_get_attr_1(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
@@ -244,7 +231,7 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_attr_1(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.deepEqual(parsed, {"n":6});
@@ -252,14 +239,23 @@ suite('attributes', function() {
         },
         function finish(err) {
           var errors = [];
-          if ( err ) errors.push(''+err);
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) errors.push(err.message);
+          if ( err ) {
+              errors.push(''+err);
+          }
+          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
+              if ( err ) {
+                  errors.push(err.message);
+              }
               //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
               redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                } else {
+                    done(null);
+                }
               });
           });
         }
@@ -270,7 +266,7 @@ suite('attributes', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    test("database access is read-only", function(done) {
+    it("database access is read-only", function(done) {
 
       // clone the mapconfig test
       var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
@@ -278,8 +274,7 @@ suite('attributes', function() {
         ", test_table_inserter(st_setsrid(st_point(0,0),4326),'write') as w";
       mapconfig.layers[1].options.attributes.columns.push('w');
 
-      var expected_token; 
-      Step(
+      step(
         function do_post()
         {
           var next = this;
@@ -291,9 +286,9 @@ suite('attributes', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           // TODO: should be 403 Forbidden
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode==200?'...':res.body));
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors);
           assert.equal(parsed.errors.length, 1);
@@ -307,28 +302,4 @@ suite('attributes', function() {
       );
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) err.message += '\n' + err2.message;
-            else err = err2;
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
-    });
-
 });
-

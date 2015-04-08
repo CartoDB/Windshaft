@@ -1,17 +1,18 @@
-var th = require('../support/test_helper.js');
+require('../support/test_helper.js');
+
 var assert = require('assert');
 var Datasource = require('../../lib/windshaft/models/datasource');
-var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
-suite('datasource', function() {
 
-    test('empty datasource reports isEmpty', function(done) {
+describe('datasource', function() {
+
+    it('empty datasource reports isEmpty', function(done) {
         var emptyDatasource = Datasource.EmptyDatasource();
         assert.ok(emptyDatasource.isEmpty());
         done();
     });
 
-    test('all layers as undefined should report an empty datasource', function(done) {
+    it('all layers as undefined should report an empty datasource', function(done) {
         var datasourceBuilder = new Datasource.Builder();
         datasourceBuilder.withLayerDatasource(0, undefined);
         var emptyDatasource = datasourceBuilder.build();
@@ -19,7 +20,7 @@ suite('datasource', function() {
         done();
     });
 
-    test('at least one non-undefined should NOT report an empty datasource', function(done) {
+    it('at least one non-undefined should NOT report an empty datasource', function(done) {
         var datasourceBuilder = new Datasource.Builder();
         datasourceBuilder.withLayerDatasource(0, {user: 'foo'});
         var emptyDatasource = datasourceBuilder.build();
@@ -27,7 +28,7 @@ suite('datasource', function() {
         done();
     });
 
-    test('at least one non-undefined (in the middle) should NOT report an empty datasource', function(done) {
+    it('at least one non-undefined (in the middle) should NOT report an empty datasource', function(done) {
         var datasourceBuilder = new Datasource.Builder();
         datasourceBuilder.withLayerDatasource(4, {user: 'foo'});
         var emptyDatasource = datasourceBuilder.build();

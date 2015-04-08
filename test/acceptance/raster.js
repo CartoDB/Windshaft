@@ -1,53 +1,25 @@
-// FLUSHALL Redis before starting
+require('../support/test_helper');
 
-var   assert        = require('../support/assert')
-    , tests         = module.exports = {}
-    , _             = require('underscore')
-    , querystring   = require('querystring')
-    , fs            = require('fs')
-    , redis         = require('redis')
-    , th            = require('../support/test_helper')
-    , Step          = require('step')
-    , mapnik        = require('mapnik')
-    , Windshaft     = require('../../lib/windshaft')
-    , ServerOptions = require('../support/server_options')
-    , http          = require('http');
+var assert = require('../support/assert');
+var redis = require('redis');
+var step = require('step');
+var Windshaft = require('../../lib/windshaft');
+var ServerOptions = require('../support/server_options');
 
-suite('raster', function() {
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // SETUP
-    //
-    ////////////////////////////////////////////////////////////////////
+describe('raster', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
 
-    checkCORSHeaders = function(res) {
-      var h = res.headers['access-control-allow-headers'];
-      assert.ok(h);
-      assert.equal(h, 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      var h = res.headers['access-control-allow-origin'];
-      assert.ok(h);
-      assert.equal(h, '*');
-    };
+    function checkCORSHeaders(res) {
+      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
+      assert.equal(res.headers['access-control-allow-origin'], '*');
+    }
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
-    suiteSetup(function(done) {
-
-      // Check that we start with an empty redis db 
-      redis_client.keys("*", function(err, matches) {
-          if ( err ) { done(err); return; }
-          assert.equal(matches.length, 0, "redis keys present at setup time:\n" + matches.join("\n"));
-          done();
-      });
-
-    });
-
-    test("can render raster for valid mapconfig", function(done) {
+    it("can render raster for valid mapconfig", function(done) {
 
       var mapconfig =  {
         version: '1.2.0',
@@ -63,8 +35,8 @@ suite('raster', function() {
              } }
         ]
       };
-      var expected_token; 
-      Step(
+      var expected_token;
+      step(
         function do_post()
         {
           var next = this;
@@ -76,19 +48,22 @@ suite('raster', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // CORS headers should be sent with response
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          else expected_token = parsedBody.layergroupid;
+          if ( expected_token ) {
+              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+          } else {
+              expected_token = parsedBody.layergroupid;
+          }
           return null;
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+          assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
@@ -97,7 +72,7 @@ suite('raster', function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_response(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           assert.deepEqual(res.headers['content-type'], "image/png");
           var next = this;
@@ -105,28 +80,37 @@ suite('raster', function() {
             './test/fixtures/raster_gray_rect.png',
             IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
               try {
-                if (err) throw err;
+                assert.ifError(err);
                 next();
               } catch (err) { next(err); }
             });
         },
         function finish(err) {
           var errors = [];
-          if ( err ) errors.push(''+err);
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) errors.push(err.message);
+          if ( err ) {
+              errors.push(''+err);
+          }
+          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
+              if ( err ) {
+                  errors.push(err.message);
+              }
               //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
               redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                } else {
+                    done(null);
+                }
               });
           });
         }
       );
     });
 
-    test("raster geom type does not allow interactivity", function(done) {
+    it("raster geom type does not allow interactivity", function(done) {
 
         var mapconfig =  {
             version: '1.2.0',
@@ -164,33 +148,10 @@ suite('raster', function() {
                 assert.ok(!err);
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, { errors: [ 'Mapnik raster layers do not support interactivity' ] })
+                assert.deepEqual(parsedBody, { errors: [ 'Mapnik raster layers do not support interactivity' ] });
                 done();
             }
         );
-    });
-
-    ////////////////////////////////////////////////////////////////////
-    //
-    // TEARDOWN
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-
-      // Check that we left the redis db empty
-      redis_client.keys("*", function(err, matches) {
-          try {
-            assert.equal(matches.length, 0, "Left over redis keys:\n" + matches.join("\n"));
-          } catch (err2) {
-            if ( err ) err.message += '\n' + err2.message;
-            else err = err2;
-          }
-          redis_client.flushall(function() {
-            done(err);
-          });
-      });
-
     });
 
 });
