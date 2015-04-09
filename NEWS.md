@@ -1,5 +1,5 @@
 # Version 0.42.0
-2015-mm-dd
+2015-04-09
 
 New features:
  - `tms` option for `http` layers to invert Y axis in TMS services
