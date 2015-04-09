@@ -1,5 +1,12 @@
-# Version 0.41.1
+# Version 0.42.0
 2015-mm-dd
+
+New features:
+ - `tms` option for `http` layers to invert Y axis in TMS services
+
+Bug fixes:
+ - Proper stats client instead of stubbed one
+
 
 # Version 0.41.0
 2015-04-07
