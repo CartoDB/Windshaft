@@ -1,6 +1,9 @@
 # Version 0.42.1
 2015-mm-dd
 
+Enhancement:
+ - Wrap x coordinate based on zoom level to avoid negative x coordinates
+
 
 # Version 0.42.0
 2015-04-09
