@@ -1,5 +1,5 @@
 # Version 0.42.1
-2015-mm-dd
+2015-04-15
 
 Bug fixes:
  - Do not profile during map validation (#318)
