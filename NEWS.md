@@ -1,5 +1,5 @@
 # Version 0.42.2
-2015-mm-dd
+2015-04-16
 
 Enhancements:
  - Improve mapnik renderer stats
