@@ -108,4 +108,57 @@ describe('renderer_http_factory_getRenderer', function() {
             done();
         });
     });
+
+    describe('when subdomains are not provided', function() {
+
+        var noSubdomainsUrlTemplate = 'http://wadus.example.com/{z}/{x}/{y}.png';
+        var subdomainsUrlTemplate = 'http://{s}.wadus.example.com/{z}/{x}/{y}.png';
+
+        it('returns a renderer with valid subdomains for a subdomain template', function(done) {
+            var whitelistAnyUrl = ['.*'];
+            var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
+            var mapConfig = MapConfig.create({
+                layers: [
+                    {
+                        type: 'http',
+                        options: {
+                            urlTemplate: subdomainsUrlTemplate
+                        }
+                    }
+                ]
+            });
+            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+                assert.ok(!err);
+                assert.ok(renderer);
+                assert.equal(renderer.constructor, Renderer);
+                assert.equal(renderer.subdomains.length, 3);
+                assert.deepEqual(renderer.subdomains, ['a', 'b', 'c']);
+                done();
+            });
+        });
+
+        it('returns a renderer with valid subdomains for a NON subdomain template', function(done) {
+            var whitelistAnyUrl = ['.*'];
+            var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
+            var mapConfig = MapConfig.create({
+                layers: [
+                    {
+                        type: 'http',
+                        options: {
+                            urlTemplate: noSubdomainsUrlTemplate
+                        }
+                    }
+                ]
+            });
+            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+                assert.ok(!err);
+                assert.ok(renderer);
+                assert.equal(renderer.constructor, Renderer);
+                assert.equal(renderer.subdomains.length, 0);
+                assert.deepEqual(renderer.subdomains, []);
+                done();
+            });
+        });
+
+    });
 });
