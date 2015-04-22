@@ -212,7 +212,10 @@ describe('render_cache', function() {
             // the database. Failure to connect would result in the
             // renderer not staying in the cache, as per
             // http://github.com/CartoDB/Windshaft/issues/171
-            req.params = requestParams({ dbuser: 'test_ws_publicuser' });
+            req.params = requestParams({
+                dbuser: 'test_ws_publicuser',
+                dbpassword: 'public'
+            });
 
             render_cache.getRenderer(req, function(/*err, renderer*/) {
                 req.params = requestParams({ token: mapConfig2.id() });
