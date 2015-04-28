@@ -1,5 +1,13 @@
-# Version 0.42.3
+# Version 0.43.0
 2015-mm-dd
+
+New features
+ - Static map backend to retrieve preview images.
+   Implementation extracted from static maps controller.
+
+Bug fixes:
+ - Do not use headers from abaculus in combination with sendWithHeaders
+   That was overriding Cache-Control header in static images
 
 
 # Version 0.42.2
