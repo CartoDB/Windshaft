@@ -1,5 +1,5 @@
 # Version 0.43.0
-2015-mm-dd
+2015-04-29
 
 New features
  - Static map backend to retrieve preview images.
