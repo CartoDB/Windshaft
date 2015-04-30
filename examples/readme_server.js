@@ -6,8 +6,9 @@
 var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 
-// Force 'test' environment
-var ENV = 'test';
+// Force 'development' environment
+var ENV = 'development';
+var PORT = 4000;
 
 // set environment specific variables
 global.settings     = require('../config/settings');
@@ -36,8 +37,8 @@ var config = {
     }
 };
 
-// Initialize tile server on port 4000
+// Initialize tile server
 var ws = new Windshaft.Server(config);
-ws.listen(4000);
+ws.listen(PORT);
 
-console.log("map tiles are now being served out of: http://localhost:4000" + config.base_url_mapconfig);
+console.log("map tiles are now being served out of: http://localhost:" + PORT + config.base_url_mapconfig);
