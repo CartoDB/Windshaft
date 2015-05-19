@@ -189,7 +189,7 @@ describe('torque', function() {
     });
 
     it("should raise an error when layer is not set", function(done) {
-      torque.getRenderer(mapConfig_notorque, 'json.torque', {}, function(err/*, renderer*/) {
+      torque.getRenderer(mapConfig_notorque, 'json.torque', { params: {} }, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
         assert.ok(err.message === "torque renderer only supports a single layer");
