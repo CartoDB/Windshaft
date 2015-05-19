@@ -6,7 +6,7 @@ var redis         = require('redis');
 var Windshaft     = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 
-describe('multilayer interactivity and layers order', function() {
+describe.skip('multilayer interactivity and layers order', function() {
 
     var server = new Windshaft.Server(ServerOptions);
     var redisClient = redis.createClient(ServerOptions.redis.port);
