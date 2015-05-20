@@ -1,5 +1,11 @@
-# Version 0.43.1
+# Version 0.44.0
 2015-mm-dd
+
+New features
+ - Renderer selection based on layer (#336)
+   Before the renderer selection was based on the format
+   For instance that meant it wasn't possible to request layer in png because that was returning just mapnik layers
+
 
 # Version 0.43.0
 2015-04-29
