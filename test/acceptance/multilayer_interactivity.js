@@ -57,6 +57,14 @@ describe('multilayer interactivity and layers order', function() {
                     assert.ok(layergroupId);
                     assert.equal(layergroupResponse.layercount, layergroup.layers.length);
 
+                    // check layers metadata at least match in number
+                    assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
+                    // check torque metadata at least match in number
+                    var torqueLayers = layergroup.layers.filter(function(layer) { return layer.type === 'torque'; });
+                    if (torqueLayers.length) {
+                        assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
+                    }
+
                     redisClient.exists("map_cfg|" +  layergroupId, function(err, exists) {
                         if (err) {
                             return done(err);
