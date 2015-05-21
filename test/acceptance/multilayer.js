@@ -693,7 +693,7 @@ describe('multilayer', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.error, res.body);
           var msg = parsed.error;
-          assert.ok(msg.match(/not a torque layer/), msg);
+          assert.ok(msg.match(/Unsupported format json.torque/i), msg);
           return null;
         },
         function finish(err) {

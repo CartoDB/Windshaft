@@ -351,6 +351,22 @@ describe('multilayer error cases', function() {
         testClient.createLayergroup(bogusStyleMapConfig, { method: 'GET', statusCode: 400 }, done);
     });
 
+    var defaultErrorExpectedResponse = {
+        status: 400,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    it('should raise 400 error for out of bounds layer index',  function(done){
+        var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+
+        testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function(err, res) {
+            assert.deepEqual(JSON.parse(res.body), { error: "Layer '1' not found in layergroup" });
+            done();
+        });
+    });
+
     ////////////////////////////////////////////////////////////////////
     //
     // OPTIONS LAYERGROUP

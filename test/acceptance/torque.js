@@ -228,7 +228,7 @@ describe('torque', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
           var parsed = JSON.parse(res.body);
-          assert.equal(parsed.error, "No 'mapnik' layers in MapConfig");
+          assert.equal(parsed.error, "Unsupported format grid.json");
           return null;
         },
         function do_get_torque0(err)

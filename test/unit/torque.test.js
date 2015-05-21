@@ -183,16 +183,16 @@ describe('torque', function() {
       torque.getRenderer(mapConfig, 'dummy', layerZeroOptions, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message === "format not supported: dummy");
+        assert.equal(err.message, "format not supported: dummy");
         done();
       });
     });
 
     it("should raise an error when layer is not set", function(done) {
-      torque.getRenderer(mapConfig_notorque, 'json.torque', {}, function(err/*, renderer*/) {
+      torque.getRenderer(mapConfig_notorque, 'json.torque', { params: {} }, function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message === "torque renderer only supports a single layer");
+        assert.equal(err.message, "torque renderer only supports a single layer");
         done();
       });
     });
@@ -200,7 +200,7 @@ describe('torque', function() {
       torque.getRenderer(mapConfig, 'json.torque', rendererOptions(1), function(err/*, renderer*/) {
         assert.ok(err !== null);
         assert.ok(err instanceof Error);
-        assert.ok(err.message === "layer index is greater than number of layers");
+        assert.equal(err.message, "layer index is greater than number of layers");
         done();
       });
     });

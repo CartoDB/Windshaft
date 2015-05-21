@@ -53,3 +53,34 @@ getRenderer(mapConfig, format, options, callback)
  - @param `{Function} callback` function(err, renderer)
    * `{Error} err` in case of problems, or null
    * `{Renderer} renderer` the renderer
+
+## supportsFormat(format)
+
+Returns an array of formats supported by the factory/renderer
+
+```javascript
+getSupportedFormats()
+```
+ - @param `{String} format` The format extension
+ - @return `{Boolean}` Whether the factory supports the format to create a renderer
+
+## getName()
+
+Returns a string with the name for the factory
+
+```javascript
+getName()
+```
+ - @return `{String}` the name of the factory
+
+## getAdaptor(renderer, format, onTileErrorStrategy)
+
+Returns an renderer adaptor
+
+```javascript
+getAdaptor(renderer, format, onTileErrorStrategy)
+```
+ - @param `{Renderer} renderer` A raw renderer
+ - @param `{String} format` The format extension
+ - @param `{Function} onTileErrorStrategy` An optional function that will handle the error case
+ - @return `{Adaptor}` An adapted renderer
