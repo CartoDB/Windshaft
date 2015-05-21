@@ -90,7 +90,7 @@ OPTIONS :base_url_mapconfig
 
 Should be a POST to `:base_url_mapconfig` with the layergroup definition in the
 body (content-type application/json) or a GET from `:base_url_mapconfig` with
-the [layergroup definition](MapConfig-specification) in a `config` parameter.
+the [layergroup definition](MapConfig-specification.md) in a `config` parameter.
 
 For example:
 
@@ -123,8 +123,37 @@ The response should be like:
 
 ```
 {
+    // {String} The layergroup identifier that allows to request resources
     "layergroupid": ":TOKEN",
-    "last_updated": "1970-01-01T00:00:00.000Z",
+    // {Object} Metadata associated to the layergroup
+    "metadata": {
+        // {Array} a list of metadata for each layer
+        "layers": [
+            // mandatory
+            // {String} the type of the renderer, as in a layergroup
+            "type": "mapnik",
+            // mandatory
+            // {Object} it will be always present, even if empty
+            "meta": {
+                // as many JSON valid key => value pairs
+                // what you might find here is renderer-specific
+            }
+        ],
+        // torque metadata in case there is at least one torque layer
+        "torque": {
+            // the index of the torque layer inside the layergroup
+            "1": {
+                // {Number} min value for time column (in millis for time columns of date type)
+                "start": 1325372640000,
+                // {Number} max value for time column (in millis). Must be greater or equal than start
+                "end": 1356994560000,
+                // {Number} number of aggregated data steps
+                "data_steps": 145571,
+                // {String} time column type, can be "date" or "number"
+                "column_type": "date"
+            }
+        }
+    }
 }
 ```
 
