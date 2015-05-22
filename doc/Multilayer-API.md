@@ -131,6 +131,7 @@ The response should be like:
         "layers": [
             // mandatory
             // {String} the type of the renderer, as in a layergroup
+            // Valid types in Windshaft: "mapnik", "torque", "http", "plain"
             "type": "mapnik",
             // mandatory
             // {Object} it will be always present, even if empty
