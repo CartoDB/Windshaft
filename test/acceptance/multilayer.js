@@ -456,7 +456,6 @@ describe('multilayer', function() {
         function do_check_token(err, res) {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
-          console.log(res.body);
           assert.equal(res.body, 'jsonp_test(' + JSON.stringify({
               layergroupid: expected_token,
               metadata: {
