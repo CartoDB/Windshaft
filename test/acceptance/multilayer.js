@@ -456,7 +456,17 @@ describe('multilayer', function() {
         function do_check_token(err, res) {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
-          assert.equal(res.body, 'jsonp_test(' + JSON.stringify({layergroupid: expected_token, layercount: 2}) + ');');
+          assert.equal(res.body, 'jsonp_test(' + JSON.stringify({
+              layergroupid: expected_token,
+              metadata: {
+                  layers: [
+                      { type: "mapnik", "meta":{} },
+                      { type: "mapnik", "meta":{} }
+                  ]
+              },
+              layercount: 2
+          }) + ');');
+
           // TODO: check caching headers !
           return null;
         },

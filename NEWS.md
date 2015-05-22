@@ -2,6 +2,8 @@
 2015-mm-dd
 
 New features
+ - Layergroup creation returns metadata for all layers (#338)
+   Keeps backwards compatibility for torque metadata
  - Renderer selection based on layer (#336)
    Before the renderer selection was based on the format
    For instance that meant it wasn't possible to request layer in png because that was returning just mapnik layers

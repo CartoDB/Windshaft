@@ -4,6 +4,7 @@ var assert        = require('../support/assert');
 var _             = require('underscore');
 var redis         = require('redis');
 var Windshaft     = require('../../lib/windshaft');
+var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
 var ServerOptions = require('../support/server_options');
 
 describe('multilayer interactivity and layers order', function() {
@@ -56,6 +57,21 @@ describe('multilayer interactivity and layers order', function() {
                     var layergroupId = layergroupResponse.layergroupid;
                     assert.ok(layergroupId);
                     assert.equal(layergroupResponse.layercount, layergroup.layers.length);
+
+                    // check layers metadata at least match in number
+                    var layersMetadata = layergroupResponse.metadata.layers;
+                    assert.equal(layersMetadata.length, layergroup.layers.length);
+                    for (var i = 0, len = layersMetadata.length; i < len; i++) {
+                        assert.equal(
+                            getLayerTypeFn(layersMetadata[i].type),
+                            getLayerTypeFn(layergroup.layers[i].type)
+                        );
+                    }
+                    // check torque metadata at least match in number
+                    var torqueLayers = layergroup.layers.filter(function(layer) { return layer.type === 'torque'; });
+                    if (torqueLayers.length) {
+                        assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
+                    }
 
                     redisClient.exists("map_cfg|" +  layergroupId, function(err, exists) {
                         if (err) {
