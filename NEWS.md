@@ -2,6 +2,10 @@
 2015-mm-dd
 
 New features
+ - Blend rendering now allows to filter the layers to render
+   Layer argument in URL accepts comma separated layer indexes, so now it's possible to do requests like:
+   `GET /{layergroupid}/0,3,4/{z}/{x}/{y}.png` and will blend just layers 0, 3 and 4, skipping 1 and 2.
+   See [Multilayer-API.md](doc/Multilayer-API.md) for more details.
  - Layergroup creation returns metadata for all layers (#338)
    Keeps backwards compatibility for torque metadata
  - Renderer selection based on layer (#336)
