@@ -1,5 +1,5 @@
 # Version 0.44.0
-2015-mm-dd
+2015-05-26
 
 New features
  - Blend rendering now allows to filter the layers to render
