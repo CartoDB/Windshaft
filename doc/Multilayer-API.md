@@ -129,15 +129,17 @@ The response should be like:
     "metadata": {
         // {Array} a list of metadata for each layer
         "layers": [
-            // mandatory
-            // {String} the type of the renderer, as in a layergroup
-            // Valid types in Windshaft: "mapnik", "torque", "http", "plain"
-            "type": "mapnik",
-            // mandatory
-            // {Object} it will be always present, even if empty
-            "meta": {
-                // as many JSON valid key => value pairs
-                // what you might find here is renderer-specific
+            {
+                // mandatory
+                // {String} the type of the renderer, as in a layergroup
+                // Valid types in Windshaft: "mapnik", "torque", "http", "plain"
+                "type": "mapnik",
+                // mandatory
+                // {Object} it will be always present, even if empty
+                "meta": {
+                    // as many JSON valid key => value pairs
+                    // what you might find here is renderer-specific
+                }
             }
         ],
         // torque metadata in case there is at least one torque layer
