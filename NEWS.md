@@ -1,6 +1,10 @@
 # Version 0.44.1
 2015-mm-dd
 
+Enhancements:
+ - Performance improvement while retrieving metadata for layergroups
+   Does not create renderers for layers with no metadata
+
 
 # Version 0.44.0
 2015-05-26
