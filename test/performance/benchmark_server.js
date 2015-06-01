@@ -1,13 +1,22 @@
+var _ = require('underscore');
+var Windshaft = require('../../lib/windshaft');
 
 
-var th          = require(__dirname + '/test_helper')
-var Windshaft = require(__dirname + '/../lib/windshaft')
-var ServerOptions = require('./../support/server_options')
-if(process.argv[2] === 'cache') {
-	console.log("LRU cache enabled");
-	var cached_server = new Windshaft.Server(ServerOptions({lru_cache: true, lru_cache_size: 500}));
+// sanity check
+var ENV = process.argv[2]
+if (ENV != 'development' && ENV != 'production'){
+    console.error("\nnode app.js [environment]");
+    console.error("environments: [development, production]\n");
+    process.exit(1);
 }
-else {
-	var cached_server = new Windshaft.Server(ServerOptions());
-}
-cached_server.listen(9090)
+
+// set environment specific variables
+global.settings     = require('../../config/settings');
+global.environment  = require('../../config/environments/' + ENV);
+_.extend(global.settings, global.environment);
+
+var ServerOptions = require('../support/server_options.js');
+var server = new Windshaft.Server(ServerOptions);
+
+server.listen(global.environment.windshaft_port);
+console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
