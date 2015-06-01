@@ -10,10 +10,19 @@ var   assert        = require('../support/assert')
     , ServerOptions = require('../support/server_options')
     , http          = require('http');
 
+
+var server;
+
 suite('server', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
+	suiteSetup(function() {
+		server = new Windshaft.Server(ServerOptions);
+		server.setMaxListeners(0);
+	});
+
+	suiteTeardown(function() {
+		server.close();
+	});
 
     test("get call to server returns 200",  function(done){
         assert.response(server, {
@@ -150,7 +159,7 @@ suite('server', function() {
 
 
     });
-
+	/*
     test("get'ing a tile with default style should return an expected tile",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
@@ -232,6 +241,9 @@ suite('server', function() {
             status: 200,
             headers: { 'Content-Type': 'image/png' }
         }, function(res){
+        
+			//fs.writeFile("/tmp/1.png", res.body, function(err) { if(err) { return console.log(err); }});
+
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
                 if (err) throw err;
                 assert.deepEqual(res.headers['content-type'], "image/png");
@@ -270,8 +282,11 @@ suite('server', function() {
             });
         });
     });
-
-    test("get'ing a json with default style should return an grid",  function(done){
+	*/
+	
+	/*
+	Implement this someday
+    test.("get'ing a json with default style should return an grid",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
@@ -284,7 +299,22 @@ suite('server', function() {
             done();
         });
     });
+	*/
 
+    test("get'ing a json with default style and nointeractivity should return a grid but with err 500",  function(done){
+        assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            method: 'GET'
+        },{
+            status: 500,
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        }, function(res){
+            var expected_json = {};
+            assert.deepEqual(JSON.parse(res.body), expected_json);
+            done();
+        });
+    });
+    
 
     test("get'ing a json with default style and single interactivity should return a grid",  function(done){
         assert.response(server, {
@@ -292,7 +322,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             var expected_json = {
                 "1":{"name":"Hawai"},
@@ -312,7 +342,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             var expected_json = {
                 "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
@@ -326,30 +356,16 @@ suite('server', function() {
         });
     });
 
-    test("get'ing a json with default style and nointeractivity should return a grid",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            var expected_json = {};
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
-            done();
-        });
-    });
-
 
 
     test("get'ing a json with default style and sql should return a constrained grid",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?' + sql,
+		assert.response(server, {
+            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
             var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088_limit_2.grid.json','utf8'));
             assert.deepEqual(JSON.parse(res.body), expected_json);
