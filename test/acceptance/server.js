@@ -82,14 +82,14 @@ suite('server', function() {
             url: '/database/windshaft_test/table/test_table_3/style',
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#test_table_3{background-color:#fff;}'})
+            data: querystring.stringify({style: '#Map {background-color:#fff;}'})
         },{
             status: 200
         }, function() { done(); } );
     });
 
     test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = '#test_table_3{background-color:#fff;}';
+        var style = '#Map {background-color:#fff;}';
 
         // TODO: use Step ?
 
@@ -115,7 +115,7 @@ suite('server', function() {
     });
 
     test("deleting a style returns 200 and returns default therafter",  function(done){
-        var style = '#test_table_3{background-color:#fff;}';
+        var style = '#Map {background-color:#fff;}';
         var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
 
         // TODO: use Step ?
