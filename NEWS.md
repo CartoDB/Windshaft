@@ -1,5 +1,5 @@
 # Version 0.44.1
-2015-mm-dd
+2015-06-01
 
 Enhancements:
  - Performance improvement while retrieving metadata for layergroups
