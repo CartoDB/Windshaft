@@ -1,5 +1,9 @@
-# Version 0.44.2
+# Version 0.45.0
 2015-mm-dd
+
+Announcements:
+ - Removes LocalizedResourcePurger to avoid issues with cached assets
+   See https://github.com/CartoDB/Windshaft/issues/339#issuecomment-104684003
 
 
 # Version 0.44.1
