@@ -64,7 +64,7 @@ describe('regressions', function() {
                 contentType: 'application/json; charset=utf-8'
             };
             requestTile('/0/0/0.png?testUnexpectedError=1', options, function(err, res) {
-                assert.deepEqual(JSON.parse(res.body),  {"error":"test unexpected error"});
+                assert.deepEqual(JSON.parse(res.body), { "errors": ["test unexpected error"] });
                 finish(done);
             });
         });
@@ -90,8 +90,9 @@ describe('regressions', function() {
 
         testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function(err, res) {
             var parsedBody = JSON.parse(res.body);
-            assert.ok(parsedBody.error);
-            assert.ok(parsedBody.error.match(/read-only transaction/), 'read-only error message expected');
+            assert.ok(parsedBody.errors);
+            assert.equal(parsedBody.errors.length, 1);
+            assert.ok(parsedBody.errors[0].match(/read-only transaction/), 'read-only error message expected');
             done();
         });
     });

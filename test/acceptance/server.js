@@ -152,7 +152,7 @@ describe('server', function() {
             }
         };
         testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', expectedResponse, function(err, res) {
-            assert.ok(res.body.match(/"error":/), 'missing error in response: ' + res.body);
+            assert.ok(res.body.match(/"errors":/), 'missing error in response: ' + res.body);
             done();
         });
     });

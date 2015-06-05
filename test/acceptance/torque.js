@@ -214,7 +214,8 @@ describe('torque', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
           var parsed = JSON.parse(res.body);
-          assert.equal(parsed.error, "No 'mapnik' layers in MapConfig");
+          assert.equal(parsed.errors.length, 1);
+          assert.equal(parsed.errors[0], "No 'mapnik' layers in MapConfig");
           return null;
         },
         function do_get_grid0(err)
@@ -230,7 +231,8 @@ describe('torque', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
           var parsed = JSON.parse(res.body);
-          assert.equal(parsed.error, "Unsupported format grid.json");
+          assert.equal(parsed.errors.length, 1);
+          assert.equal(parsed.errors[0], "Unsupported format grid.json");
           return null;
         },
         function do_get_torque0(err)
