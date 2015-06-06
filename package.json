@@ -33,6 +33,7 @@
         "express": "~2.5.11",
         "tilelive": "~4.5.3",
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+        "tilelive-bridge": "https://github.com/CartoDB/tilelive-bridge/tarball/cdb",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
         "canvas": "1.2.1",
         "semver": "~1.1.4",
