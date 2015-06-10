@@ -1,6 +1,9 @@
 # Version 0.45.0
 2015-mm-dd
 
+Enhancements:
+ - Unifies error response format to `{ "errors": ["messages"] }`
+
 Announcements:
  - Removes LocalizedResourcePurger to avoid issues with cached assets
    See https://github.com/CartoDB/Windshaft/issues/339#issuecomment-104684003

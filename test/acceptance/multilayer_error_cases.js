@@ -362,7 +362,7 @@ describe('multilayer error cases', function() {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
 
         testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function(err, res) {
-            assert.deepEqual(JSON.parse(res.body), { error: "Layer '1' not found in layergroup" });
+            assert.deepEqual(JSON.parse(res.body), { errors: ["Layer '1' not found in layergroup"] });
             done();
         });
     });
@@ -390,7 +390,7 @@ describe('multilayer error cases', function() {
           // FIXME: should be 404
           assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"error": "Invalid or nonexistent map configuration token 'deadbeef'"});
+          assert.deepEqual(parsed, {"errors": ["Invalid or nonexistent map configuration token 'deadbeef'"]});
           return null;
         },
         function finish(err) {
@@ -423,8 +423,7 @@ describe('multilayer error cases', function() {
             },
             function(res) {
                 var parsedBody = JSON.parse(res.body);
-                assert.equal(parsedBody.error, 'SyntaxError');
-                assert.equal(parsedBody.msg, 'Unexpected token {');
+                assert.deepEqual(parsedBody, { errors: ['SyntaxError: Unexpected token {'] });
                 done();
             }
         );

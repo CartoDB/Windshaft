@@ -701,8 +701,9 @@ describe('multilayer', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.error, res.body);
-          var msg = parsed.error;
+          assert.ok(parsed.errors, res.body);
+          assert.equal(parsed.errors.length, 1);
+          var msg = parsed.errors[0];
           assert.ok(msg.match(/Unsupported format json.torque/i), msg);
           return null;
         },
