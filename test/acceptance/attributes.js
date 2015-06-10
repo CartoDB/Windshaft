@@ -162,7 +162,6 @@ describe('attributes', function() {
         },
         function checkPost(err, res) {
           assert.ifError(err);
-            console.log('rochoa', res.statusCode, res.body);
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors);
