@@ -382,4 +382,48 @@ describe('torque', function() {
       );
     });
 
+    it("checks types for torque-specific styles", function(done) {
+      var wrongStyle = ["Map {",
+                       "-torque-frame-count:512;",
+                       "-torque-animation-duration:30;",
+                       "-torque-time-attribute:'cartodb_id';",
+                       "-torque-aggregation-function:count(cartodb_id);", //unquoted aggregation function
+                       "-torque-resolution:4;",
+                       "-torque-data-aggregation:linear;",
+                       "}"].join(" ");
+      var layergroup =  {
+        version: '1.1.0',
+        layers: [
+           { type: 'torque', options: {
+               sql: 'select cartodb_id, the_geom from test_table',
+               geom_column: 'the_geom',
+               srid: 4326,
+               cartocss: wrongStyle
+             } }
+        ]
+      };
+
+      step(
+        function request(){
+          var next = this;
+          assert.response(server, {
+              url: '/database/windshaft_test/layergroup',
+              method: 'POST',
+              headers: {'Content-Type': 'application/json' }, 
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function checkResponse(err, res) {
+          assert.ifError(err);
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, parsed);
+          var error = parsed.errors[0];
+          assert.equal(error,
+            "Unexpected type for property '-torque-aggregation-function', expected string");
+          done();
+          return null;
+        }
+      );
+  });
 });
