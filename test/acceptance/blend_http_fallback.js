@@ -130,7 +130,7 @@ describe('blend http fallback', function() {
             var parsedBody = JSON.parse(res.body);
             assert.deepEqual(parsedBody, {
                 errors: [
-                    "[object Object]"
+                    "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]"
                 ]
             });
             done();
