@@ -1,5 +1,5 @@
 # Version 0.45.0
-2015-mm-dd
+2015-06-18
 
 Enhancements:
  - Handles coordinates out of range errors returning an empty image
