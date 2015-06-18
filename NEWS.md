@@ -2,6 +2,7 @@
 2015-mm-dd
 
 Enhancements:
+ - Checks the type of torque-specific CSS rules
  - Unifies error response format to `{ "errors": ["messages"] }`
 
 Announcements:
