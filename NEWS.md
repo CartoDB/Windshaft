@@ -2,6 +2,8 @@
 2015-mm-dd
 
 Enhancements:
+ - Handles coordinates out of range errors returning an empty image
+ - Blend rendering fallback to empty image when http layer request fails
  - Checks the type of torque-specific CSS rules
  - Unifies error response format to `{ "errors": ["messages"] }`
 
