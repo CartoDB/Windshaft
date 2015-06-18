@@ -1,6 +1,10 @@
 # Version 0.45.1
 2015-mm-dd
 
+Enhancements:
+ - Checks for ETIMEDOUT error code so timeouts do not turn into empty image in http layers (#360)
+
+
 # Version 0.45.0
 2015-06-18
 
