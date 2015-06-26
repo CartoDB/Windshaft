@@ -1,5 +1,8 @@
-# Version 0.45.1
+# Version 0.46.0
 2015-mm-dd
+
+Announcements:
+ - Removes `beforeTileRender` and `afterTileRender` triggers, use version `~0.45.0` to keep them
 
 Enhancements:
  - Checks for ETIMEDOUT error code so timeouts do not turn into empty image in http layers (#360)

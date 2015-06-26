@@ -202,21 +202,6 @@ describe('server_gettile', function() {
       it(test_strict_lbl,  test_strictness);
     }
 
-    it("beforeTileRender is called when the client request a tile",  function(done) {
-        testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
-            assert.equal(res.headers['x-beforetilerender'], 'called');
-            done();
-        });
-    });
-
-    it("afterTileRender is called when the client request a tile",  function(done) {
-        testClient.getTile(testClient.defaultTableMapConfig('test_table'), 6, 31, 24, function(err, res) {
-            assert.equal(res.headers['x-aftertilerender'], 'called');
-            assert.equal(res.headers['x-aftertilerender2'], 'called');
-            done();
-        });
-    });
-
     it('high cpu regression with mapnik <2.3.x', function(done) {
         var sql = [
             "SELECT 'my polygon name here' AS name,",

@@ -30,8 +30,6 @@ Again, each inner timer may have several inner timers, some of them are displaye
     + mapSave
     + req2params
 - **getTileOrGrid**: time to retrieve a tile or grid
-    + afterTileRender
-    + beforeTileRender
     + getRenderer
     + makeRenderer-*{format}* \*
     + render-*{format}* \*
