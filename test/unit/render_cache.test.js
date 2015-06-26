@@ -2,7 +2,6 @@ require('../support/test_helper.js');
 
 var _ = require('underscore');
 var assert = require('assert');
-var grainstore = require('grainstore');
 var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
 var MapStore = require('../../lib/windshaft/storages/mapstore');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
@@ -14,12 +13,10 @@ describe('render_cache', function() {
 
     var redisPool = new RedisPool(serverOptions.redis);
 
-    // initialize core mml_store
-    var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
-
     var rendererFactory = new RendererFactory({
         mapnik: {
-            mmlStore: mml_store
+            redisPool: redisPool,
+            grainstore: serverOptions.grainstore
         }
     });
 
