@@ -3,7 +3,7 @@ require('../support/test_helper.js');
 var _ = require('underscore');
 var assert = require('assert');
 var grainstore = require('grainstore');
-var RenderCache = require('../../lib/windshaft/renderers/render_cache');
+var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
 var MapStore = require('../../lib/windshaft/storages/mapstore');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
 var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
@@ -64,7 +64,7 @@ describe('render_cache', function() {
 
     function makeRenderCache(opts) {
         opts = opts || { timeout: 10000 };
-        return new RenderCache(opts, mapStore, rendererFactory);
+        return new RendererCache(opts, mapStore, rendererFactory);
     }
 
 
