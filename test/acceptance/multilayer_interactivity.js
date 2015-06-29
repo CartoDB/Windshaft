@@ -23,7 +23,7 @@ describe('multilayer interactivity and layers order', function() {
                 layers: testScenario.layers
             };
 
-            server.afterLayergroupCreateCalls = 0;
+            server.mapBackend.afterLayergroupCreateCalls = 0;
 
             assert.response(server,
                 {
@@ -49,7 +49,7 @@ describe('multilayer interactivity and layers order', function() {
                             '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
                     );
 
-                    assert.equal(server.afterLayergroupCreateCalls, 1);
+                    assert.equal(server.mapBackend.afterLayergroupCreateCalls, 1);
 
                     var layergroupResponse = JSON.parse(response.body);
                     assert.ok(layergroupResponse);
