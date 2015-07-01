@@ -15,8 +15,7 @@ describe('cache_buster', function() {
         ONE_DAY_IN_MILISECONDS = 86400 * 1000;
 
     it('renderer is recreated when buster is NaN and not equal to cached one', function () {
-        var cacheEntry = new CacheEntry();
-        cacheEntry.cache_buster = NAN_CACHE_BUSTER_ID;
+        var cacheEntry = new CacheEntry(NAN_CACHE_BUSTER_ID);
 
         assert.equal(
             rendererCache.shouldRecreateRenderer(cacheEntry, NAN_CACHE_BUSTER_OTHER_ID),
@@ -26,8 +25,7 @@ describe('cache_buster', function() {
     });
 
     it('renderer is NOT recreated when buster is NaN and equals to cached one', function () {
-        var cacheEntry = new CacheEntry();
-        cacheEntry.cache_buster = NAN_CACHE_BUSTER_ID;
+        var cacheEntry = new CacheEntry(NAN_CACHE_BUSTER_ID);
 
         assert.equal(
             rendererCache.shouldRecreateRenderer(cacheEntry, NAN_CACHE_BUSTER_ID),
@@ -37,8 +35,7 @@ describe('cache_buster', function() {
     });
 
     it('renderer is recreated when buster is a number and bigger than cached one', function () {
-        var cacheEntry = new CacheEntry();
-        cacheEntry.cache_buster = CACHE_BUSTER;
+        var cacheEntry = new CacheEntry(CACHE_BUSTER);
 
         assert.equal(
             rendererCache.shouldRecreateRenderer(cacheEntry, CACHE_BUSTER_NEWER),
@@ -48,8 +45,7 @@ describe('cache_buster', function() {
     });
 
     it('renderer is NOT recreated when buster is a number and equal than cached one', function () {
-        var cacheEntry = new CacheEntry();
-        cacheEntry.cache_buster = CACHE_BUSTER;
+        var cacheEntry = new CacheEntry(CACHE_BUSTER);
 
         assert.equal(
             rendererCache.shouldRecreateRenderer(cacheEntry, CACHE_BUSTER),
@@ -59,8 +55,7 @@ describe('cache_buster', function() {
     });
 
     it('renderer is NOT recreated when buster is a number and equal than cached one', function () {
-        var cacheEntry = new CacheEntry();
-        cacheEntry.cache_buster = CACHE_BUSTER;
+        var cacheEntry = new CacheEntry(CACHE_BUSTER);
 
         assert.equal(
             rendererCache.shouldRecreateRenderer(cacheEntry, CACHE_BUSTER_OLDER),
