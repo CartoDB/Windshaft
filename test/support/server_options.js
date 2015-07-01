@@ -17,6 +17,7 @@ module.exports = (function(opts) {
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
         log_format: null, // do not log anything
+        afterLayergroupCreateCalls: 0,
         req2params: function(req, callback){
 
             if ( req.query.testUnexpectedError ) {
@@ -37,7 +38,7 @@ module.exports = (function(opts) {
         },
         afterLayergroupCreate: function(req, cfg, res, callback) {
             res.layercount = cfg.layers.length;
-            this.afterLayergroupCreateCalls = this.afterLayergroupCreateCalls ? this.afterLayergroupCreateCalls + 1 : 1;
+            config.afterLayergroupCreateCalls++;
             callback(null);
         },
         useProfiler: true,
