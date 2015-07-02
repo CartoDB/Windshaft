@@ -1,5 +1,5 @@
 # Version 0.46.0
-2015-mm-dd
+2015-07-02
 
 Announcements:
  - Removes `beforeTileRender` and `afterTileRender` triggers, use version `~0.45.0` to keep them
