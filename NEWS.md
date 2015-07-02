@@ -1,5 +1,5 @@
 # Version 0.46.1
-2015-mm-dd
+2015-07-02
 
 Enhancements:
  - Blend renderer doesn't blend if there is only one tile to blend
