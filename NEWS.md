@@ -1,11 +1,23 @@
-# Version 0.46.0
+# Version 0.46.2
 2015-mm-dd
+
+
+# Version 0.46.1
+2015-07-02
+
+Enhancements:
+ - Blend renderer doesn't blend if there is only one tile to blend
+
+
+# Version 0.46.0
+2015-07-02
 
 Announcements:
  - Removes `beforeTileRender` and `afterTileRender` triggers, use version `~0.45.0` to keep them
 
 Enhancements:
  - Checks for ETIMEDOUT error code so timeouts do not turn into empty image in http layers (#360)
+ - Allows to set metatile based on the format
 
 
 # Version 0.45.0

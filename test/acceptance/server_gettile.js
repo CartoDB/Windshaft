@@ -243,4 +243,52 @@ describe('server_gettile', function() {
         testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
     });
 
+    // https://github.com/CartoDB/Windshaft-cartodb/issues/316
+    it('should return errors with better formatting', function(done) {
+        var mapConfig = {
+            "version": "1.0.1",
+            "minzoom": 0,
+            "maxzoom": 20,
+            "layers": [
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.1.1',
+                        "sql": "SELECT null::geometry AS the_geom",
+                        "cartocss": [
+                            '@water: #cdd2d4;',
+                            'Map {',
+                            '\tbackground-color: @water;',
+                            '\tbufferz-size: 256;',
+                            '}',
+                            '@landmass_fill: lighten(#e3e3dc, 8%);'
+                        ].join('\n')
+                    }
+                },
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.1.1',
+                        "sql": "SELECT the_geom FROM false_background_zoomed('!scale_denominator!', !bbox!) AS _",
+                        "cartocss": [
+                            '#false_background {',
+                            '\tpolygon-fill: @landmass_fill;',
+                            '}'
+                        ].join('\n')
+                    }
+                }
+            ]
+        };
+
+        var options = {
+            statusCode: 400
+        };
+
+        testClient.createLayergroup(mapConfig, options, function(err, res, parsedBody) {
+            assert.ok(parsedBody.errors);
+            // more assertions when errors is populated with better format
+            done();
+        });
+    });
+
 });
