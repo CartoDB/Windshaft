@@ -6,6 +6,7 @@ Announcements:
 
 Enhancements:
  - Checks for ETIMEDOUT error code so timeouts do not turn into empty image in http layers (#360)
+ - Allows to set metatile based on the format
 
 
 # Version 0.45.0
