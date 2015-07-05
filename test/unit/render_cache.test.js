@@ -15,7 +15,6 @@ describe('render_cache', function() {
 
     var rendererFactory = new RendererFactory({
         mapnik: {
-            redisPool: redisPool,
             grainstore: serverOptions.grainstore
         }
     });
