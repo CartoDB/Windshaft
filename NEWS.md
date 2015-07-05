@@ -1,5 +1,5 @@
 # Version 0.47.0
-2015-mm-dd
+2015-07-05
 
 Enhancements:
  - Upgrades grainstore to [1.0.0](https://github.com/CartoDB/grainstore/releases/tag/1.0.0)
