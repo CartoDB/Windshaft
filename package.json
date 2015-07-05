@@ -36,7 +36,7 @@
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
         "canvas": "1.2.1",
         "semver": "~1.1.4",
-        "redis-mpool": "~0.3.0",
+        "redis-mpool": "~0.4.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "step-profiler": "~0.2.1",
         "cartodb-psql": "~0.4.0",

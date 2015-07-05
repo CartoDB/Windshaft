@@ -3,6 +3,7 @@
 
 Enhancements:
  - Upgrades grainstore to [1.0.0](https://github.com/CartoDB/grainstore/releases/tag/1.0.0)
+ - Upgrades redis-mpool to [0.4.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.4.0)
 
 
 # Version 0.46.1
