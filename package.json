@@ -29,7 +29,7 @@
         "underscore": "~1.6.0",
         "step": "~0.0.5",
         "queue-async": "~1.0.7",
-        "grainstore": "~0.23.0",
+        "grainstore": "~1.0.0",
         "express": "~2.5.11",
         "tilelive": "~4.5.3",
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
