@@ -5,6 +5,7 @@ var assert = require('assert');
 var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
 var MapStore = require('../../lib/windshaft/storages/mapstore');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
+var MapStoreMapConfigProvider = require('../../lib/windshaft/models/mapstore_mapconfig_provider');
 var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
 var RedisPool = require('redis-mpool');
 var serverOptions = require('../support/server_options');
@@ -58,6 +59,10 @@ describe('render_cache', function() {
         }, params);
     }
 
+    function createMapConfigProvider(params) {
+        return new MapStoreMapConfigProvider(mapStore, params);
+    }
+
     function makeRenderCache(opts) {
         opts = opts || { timeout: 10000 };
         return new RendererCache(opts, mapStore, rendererFactory);
@@ -94,7 +99,8 @@ describe('render_cache', function() {
     it('can generate a tilelive object', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        render_cache.getRenderer(createMapConfigProvider(params), params, function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
             assert.equal(renderer.get()._uri.protocol, 'mapnik:');
@@ -106,9 +112,11 @@ describe('render_cache', function() {
     it('can generate > 1 tilelive object', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        render_cache.getRenderer(createMapConfigProvider(params), params, function(err, renderer){
             assert.ok(renderer, err);
-            render_cache.getRenderer(requestParams({ token: mapConfig2.id() }), function(/*err, renderer2*/) {
+            params = requestParams({ token: mapConfig2.id() });
+            render_cache.getRenderer(createMapConfigProvider(params), params, function(/*err, renderer2*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 2);
                 done();
             });
@@ -119,9 +127,11 @@ describe('render_cache', function() {
     it('can reuse tilelive object', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
-            render_cache.getRenderer(requestParams(), function(/*err, renderer*/) {
+            render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 1);
                 done();
             });
@@ -131,13 +141,15 @@ describe('render_cache', function() {
     it('can delete all tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
-
-            render_cache.getRenderer(requestParams({ scale_factor: 2}), function(/*err, renderer*/) {
+            params = requestParams({ scale_factor: 2});
+            render_cache.getRenderer(createMapConfigProvider(params), params, function(/*err, renderer*/) {
                 assert.equal(_.keys(render_cache.renderers).length, 2);
-                render_cache.reset(requestParams());
+                render_cache.reset(provider);
                 assert.equal(_.keys(render_cache.renderers).length, 0);
                 done();
             });
@@ -148,19 +160,23 @@ describe('render_cache', function() {
     it('can delete only related tilelive objects when reset', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
-            var params = requestParams({ scale_factor: 2 });
-
-            render_cache.getRenderer(params, function(/*err, renderer*/) {
+            params = requestParams({ scale_factor: 2 });
+            provider = createMapConfigProvider(params);
+            render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                 delete params.scale_factor;
                 params.token = mapConfig2.id();
 
-                render_cache.getRenderer(params, function(/*err, renderer*/) {
+                provider = createMapConfigProvider(params);
+                render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
                     params.token = mapConfig.id();
-                    render_cache.reset(params);
+                    provider = createMapConfigProvider(params);
+                    render_cache.reset(provider);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1);
 
@@ -174,7 +190,9 @@ describe('render_cache', function() {
     it('clears both auth and non-auth renderer caches on reset', function(done){
         var render_cache = makeRenderCache();
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
             // This needs an existing pg user that can connect to
             // the database. Failure to connect would result in the
@@ -184,14 +202,15 @@ describe('render_cache', function() {
                 dbuser: 'test_ws_publicuser',
                 dbpassword: 'public'
             });
+            provider = createMapConfigProvider(params);
 
-            render_cache.getRenderer(params, function(/*err, renderer*/) {
+            render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                 params = requestParams({ token: mapConfig2.id() });
 
-                render_cache.getRenderer(params, function(/*err, renderer*/) {
+                render_cache.getRenderer(createMapConfigProvider(params), params, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    render_cache.reset(requestParams());
+                    render_cache.reset(provider);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1, _.keys(render_cache.renderers).join('\n'));
 
@@ -206,19 +225,20 @@ describe('render_cache', function() {
         var render_cache = makeRenderCache();
 
         var params = requestParams();
-
-        render_cache.getRenderer(params, function(err, renderer){
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
             params.scale_factor = 2;
+            provider = createMapConfigProvider(params);
 
-            render_cache.getRenderer(params, function(/*err, renderer*/) {
+            render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                 delete params.scale_factor;
                 params.token = mapConfig2.id();
+                provider = createMapConfigProvider(params);
 
-                render_cache.getRenderer(params, function(/*err, renderer*/) {
+                render_cache.getRenderer(provider, params, function(/*err, renderer*/) {
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    params.token = mapConfig.id();
                     render_cache.purge();
 
                     assert.equal(_.keys(render_cache.renderers).length, 0);
@@ -232,7 +252,9 @@ describe('render_cache', function() {
     it('automatically deletes tilelive only after timeout', function(done){
         var render_cache = makeRenderCache({timeout: 100});
 
-        render_cache.getRenderer(requestParams(), function(err, renderer){
+        var params = requestParams();
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err, renderer){
             assert.ok(renderer, err);
             assert.equal(_.keys(render_cache.renderers).length, 1);
 
@@ -248,10 +270,9 @@ describe('render_cache', function() {
     it('does not keep erroring renderers in cache', function(done){
         var render_cache = makeRenderCache();
         assert.equal(_.keys(render_cache.renderers).length, 0);
-        var req = {
-            params: requestParams({ token: 'nonexistant' })
-        };
-        render_cache.getRenderer(req, function(err/*, renderer*/) {
+        var params = requestParams({ token: 'nonexistant' });
+        var provider = createMapConfigProvider(params);
+        render_cache.getRenderer(provider, params, function(err/*, renderer*/) {
             assert.ok(err);
             // Need next tick as the renderer is removed from
             // the cache after the callback is invoked
@@ -269,10 +290,9 @@ describe('render_cache', function() {
     it('does not keep renderers in cache for unexistent tokes', function(done) {
         var renderCache = makeRenderCache();
         assert.equal(Object.keys(renderCache.renderers).length, 0);
-        var req = {
-            params: requestParams({ token: "wadus" })
-        };
-        renderCache.getRenderer(req, function(err/*, renderer*/) {
+        var params = requestParams({ token: "wadus" });
+        var provider = createMapConfigProvider(params);
+        renderCache.getRenderer(provider, params, function(err/*, renderer*/) {
             assert.ok(err);
             assert.equal(Object.keys(renderCache.renderers).length, 0);
             done();
