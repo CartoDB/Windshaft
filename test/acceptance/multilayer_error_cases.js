@@ -120,7 +120,6 @@ describe('multilayer error cases', function() {
            cartocss: '#layer [missing=1] { line-width:16; }'
         }}]
       };
-      ServerOptions.afterLayergroupCreateCalls = 0;
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
@@ -129,8 +128,6 @@ describe('multilayer error cases', function() {
       }, {}, function(res) {
         try {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          // See http://github.com/CartoDB/Windshaft/issues/159
-          assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
@@ -168,7 +165,6 @@ describe('multilayer error cases', function() {
           }}
         ]
       };
-      ServerOptions.afterLayergroupCreateCalls = 0;
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
@@ -177,8 +173,6 @@ describe('multilayer error cases', function() {
       }, {}, function(res) {
         try {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          // See http://github.com/CartoDB/Windshaft/issues/159
-          assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);

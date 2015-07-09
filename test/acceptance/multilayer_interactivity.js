@@ -23,8 +23,6 @@ describe('multilayer interactivity and layers order', function() {
                 layers: testScenario.layers
             };
 
-            ServerOptions.afterLayergroupCreateCalls = 0;
-
             assert.response(server,
                 {
                     url: '/database/windshaft_test/layergroup',
@@ -49,14 +47,12 @@ describe('multilayer interactivity and layers order', function() {
                             '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
                     );
 
-                    assert.equal(ServerOptions.afterLayergroupCreateCalls, 1);
-
                     var layergroupResponse = JSON.parse(response.body);
                     assert.ok(layergroupResponse);
 
                     var layergroupId = layergroupResponse.layergroupid;
                     assert.ok(layergroupId);
-                    assert.equal(layergroupResponse.layercount, layergroup.layers.length);
+                    assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
 
                     // check layers metadata at least match in number
                     var layersMetadata = layergroupResponse.metadata.layers;

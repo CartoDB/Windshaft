@@ -214,11 +214,8 @@ describe('multilayer', function() {
               // from layergroup creation via POST
               checkCORSHeaders(res);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) {
-                  assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-              } else {
-                  expected_token = parsedBody.layergroupid;
-              }
+              assert.equal(parsedBody.metadata.layers.length, 2);
+              expected_token = parsedBody.layergroupid;
               next(null, res);
           });
         },
@@ -335,11 +332,8 @@ describe('multilayer', function() {
               // see https://github.com/CartoDB/Windshaft/issues/92
               checkCORSHeaders(res);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) {
-                  assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-              } else {
-                  expected_token = parsedBody.layergroupid;
-              }
+              assert.equal(parsedBody.metadata.layers.length, 2);
+              expected_token = parsedBody.layergroupid;
               next(null, res);
           });
         },
@@ -463,8 +457,7 @@ describe('multilayer', function() {
                       { type: "mapnik", "meta":{} },
                       { type: "mapnik", "meta":{} }
                   ]
-              },
-              layercount: 2
+              }
           }) + ');');
 
           // TODO: check caching headers !
@@ -926,11 +919,8 @@ describe('multilayer', function() {
             try {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) {
-                  assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 3});
-              } else {
-                  expected_token = parsedBody.layergroupid;
-              }
+              assert.equal(parsedBody.metadata.layers.length, 3);
+              expected_token = parsedBody.layergroupid;
               next(null, res);
             } catch (err) { next(err); }
           });
@@ -1151,11 +1141,8 @@ describe('multilayer', function() {
             try {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) {
-                  assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 3});
-              } else {
-                  expected_token = parsedBody.layergroupid;
-              }
+              assert.equal(parsedBody.metadata.layers.length, 3);
+              expected_token = parsedBody.layergroupid;
               next(null, res);
             } catch (err) { next(err); }
           });

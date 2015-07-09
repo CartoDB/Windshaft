@@ -56,11 +56,8 @@ describe('attributes', function() {
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) {
-              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          } else {
-              expected_token = parsedBody.layergroupid;
-          }
+          assert.equal(parsedBody.metadata.layers.length, 2);
+          expected_token = parsedBody.layergroupid;
           return null;
         },
         function do_get_attr_0(err)
@@ -197,11 +194,8 @@ describe('attributes', function() {
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) {
-              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          } else {
-              expected_token = parsedBody.layergroupid;
-          }
+          assert.equal(parsedBody.metadata.layers.length, 2);
+          expected_token = parsedBody.layergroupid;
           return null;
         },
         function do_get_attr_0(err)

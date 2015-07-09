@@ -181,11 +181,8 @@ describe('torque', function() {
           // from layergroup creation via POST
           checkCORSHeaders(res);
           var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) {
-              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          } else {
-              expected_token = parsedBody.layergroupid;
-          }
+          assert.equal(parsedBody.metadata.layers.length, 1);
+          expected_token = parsedBody.layergroupid;
           var meta = parsedBody.metadata;
           assert.ok(!_.isUndefined(meta),
             'No metadata in torque MapConfig creation response: ' + res.body);
