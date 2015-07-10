@@ -6,7 +6,7 @@ var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
 
 describe('cache_buster', function() {
 
-    var rendererCache = new RendererCache({timeout: 10000}),
+    var rendererCache = new RendererCache(),
         NAN_CACHE_BUSTER_ID = 'foo_id',
         NAN_CACHE_BUSTER_OTHER_ID = 'bar_id',
         CACHE_BUSTER_OLDER = 1111111,

@@ -65,7 +65,7 @@ describe('render_cache', function() {
 
     function makeRenderCache(opts) {
         opts = opts || { timeout: 10000 };
-        return new RendererCache(opts, mapStore, rendererFactory);
+        return new RendererCache(rendererFactory, opts);
     }
 
 
