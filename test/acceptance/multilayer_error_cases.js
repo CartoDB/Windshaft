@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
-var testClient = require('../support/test_client');
+var testClient = require('../support/test_client_old');
 
 describe('multilayer error cases', function() {
 

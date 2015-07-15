@@ -3,7 +3,7 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
-var testClient = require('../support/test_client');
+var testClient = require('../support/test_client_old');
 
 describe('torque tiles at 0,0 point', function() {
 

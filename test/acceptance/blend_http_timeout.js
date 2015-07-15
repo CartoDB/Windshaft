@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client');
+var testClient = require('../support/test_client_old');
 var serverOptions = require('../support/server_options');
 var fs = require('fs');
 var http = require('http');

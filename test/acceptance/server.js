@@ -5,7 +5,7 @@ var fs = require('fs');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
-var testClient = require('../support/test_client');
+var testClient = require('../support/test_client_old');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
