@@ -1,5 +1,13 @@
-# Version 0.47.1
+# Version 0.48.1
 2015-mm-dd
+
+
+# Version 0.48.0
+2015-07-15
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb2](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb2)
+ - Upgrades abaculus and tilelive-mapnik to also use node-mapnik@1.4.15-cdb2
 
 
 # Version 0.47.0

@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.47.1",
+    "version": "0.48.1",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
     "keywords": [
@@ -32,8 +32,8 @@
         "grainstore": "~1.0.0",
         "express": "~2.5.11",
         "tilelive": "~4.5.3",
-        "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-        "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb1",
+        "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/upgrade-mapnik",
+        "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb2",
         "canvas": "1.2.1",
         "semver": "~1.1.4",
         "redis-mpool": "~0.4.0",
@@ -42,7 +42,7 @@
         "cartodb-psql": "~0.4.0",
         "torque.js": "~2.11.0",
         "request": "2.48.0",
-        "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
+        "abaculus": "https://github.com/CartoDB/abaculus/tarball/upgrade-mapnik",
         "sphericalmercator": "1.0.2",
         "node-statsd": "~0.0.7"
     },
