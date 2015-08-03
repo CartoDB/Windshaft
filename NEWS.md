@@ -1,6 +1,9 @@
 # Version 0.48.1
 2015-mm-dd
 
+Announcements:
+ - Changes abaculus and tilelive-mapnik to use `cdb` branch
+
 
 # Version 0.48.0
 2015-07-15
