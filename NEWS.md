@@ -1,5 +1,5 @@
 # Version 0.49.0
-2015-mm-dd
+2015-08-18
 
 New features:
  - Exposes tilelive-mapnik internal metatile cache configuration
