@@ -1,6 +1,9 @@
 # Version 0.48.1
 2015-mm-dd
 
+Bug fixes:
+ - Renderer stats for pool and cache now reports from all renderers
+
 Announcements:
  - Changes abaculus and tilelive-mapnik to use `cdb` branch
 
