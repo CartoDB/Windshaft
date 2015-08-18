@@ -1,5 +1,8 @@
-# Version 0.48.1
+# Version 0.49.0
 2015-mm-dd
+
+New features:
+ - Exposes tilelive-mapnik internal metatile cache configuration
 
 Bug fixes:
  - Renderer stats for pool and cache now reports from all renderers
