@@ -1,6 +1,9 @@
 # Version 0.49.1
 2015-mm-dd
 
+Announcements:
+ - Do not report png cache size on renderers
+
 
 # Version 0.49.0
 2015-08-18
