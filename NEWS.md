@@ -1,6 +1,9 @@
 # Version 0.49.1
 2015-mm-dd
 
+Bug fixes:
+ - Honor RenderCache ttl option
+
 Announcements:
  - Do not report png cache size on renderers
 
