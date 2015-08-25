@@ -1,11 +1,17 @@
 # Version 0.49.1
 2015-mm-dd
 
+Enhancements:
+ - Implements close mechanism for torque renderer to free canvas' images
+ - Base adaptor exposes and calls renderers' close if available
+ - Blend renderer calls close on all renderers
+
 Bug fixes:
  - Honor RenderCache ttl option
 
 Announcements:
  - Do not report png cache size on renderers
+ - Uses [cartodb/node-canvas@1.2.7-cdb1](https://github.com/CartoDB/node-canvas/releases/tag/1.2.7-cdb1)
 
 
 # Version 0.49.0
