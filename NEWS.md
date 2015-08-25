@@ -1,5 +1,5 @@
 # Version 0.50.0
-2015-mm-dd
+2015-08-25
 
 Enhancements:
  - Implements close mechanism for torque renderer to free canvas' images
