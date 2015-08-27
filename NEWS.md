@@ -1,5 +1,8 @@
-# Version 0.50.1
+# Version 0.51.0
 2015-mm-dd
+
+New features:
+ - When gc extension is enabled with `--expose_gc` flag, RendererCache will invoke gc 1 out of 10 times it runs.
 
 
 # Version 0.50.0
