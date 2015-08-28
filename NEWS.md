@@ -1,5 +1,38 @@
-# Version 0.48.1
+# Version 0.51.1
 2015-mm-dd
+
+
+# Version 0.51.0
+2015-08-27
+
+New features:
+ - When gc extension is enabled with `--expose_gc` flag, RendererCache will invoke gc 1 out of 10 times it runs.
+
+
+# Version 0.50.0
+2015-08-25
+
+Enhancements:
+ - Implements close mechanism for torque renderer to free canvas' images
+ - Base adaptor exposes and calls renderers' close if available
+ - Blend renderer calls close on all renderers
+
+Bug fixes:
+ - Honor RenderCache ttl option
+
+Announcements:
+ - Do not report png cache size on renderers
+ - Uses [cartodb/node-canvas@1.2.7-cdb1](https://github.com/CartoDB/node-canvas/releases/tag/1.2.7-cdb1)
+
+
+# Version 0.49.0
+2015-08-18
+
+New features:
+ - Exposes tilelive-mapnik internal metatile cache configuration
+
+Bug fixes:
+ - Renderer stats for pool and cache now reports from all renderers
 
 Announcements:
  - Changes abaculus and tilelive-mapnik to use `cdb` branch
