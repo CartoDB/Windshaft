@@ -237,7 +237,7 @@ At least one of the options, `color` or `imageUrl`, must be provided.
     //  - The string may be a CSS color name (e.g. `'blue'`) or a hex color string (e.g. `'#0000ff'`).
     //  - Integer array with r,g,b values (e.g. `[255,0,0]`)
     //  - Integer array with r,g,b,a values (e.g. `[255,0,0,128]`)
-    color: null,
+    color: 'blue',
 
     // OPTIONAL/REQUIRED
     // {String} end URL to retrieve the image from.
