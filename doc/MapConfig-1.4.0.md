@@ -226,7 +226,9 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
 ## 2.4 Plain layers options
 
-At least one of the options, `color` or `imageUrl`, must be provided.
+Some notes:
+ - At least one of the options, `color` or `imageUrl`, must be provided.
+ - If both options are provided `color` will be the only one used.
 
 ```javascript
 {
