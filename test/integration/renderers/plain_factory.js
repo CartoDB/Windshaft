@@ -5,7 +5,7 @@ var fs = require('fs');
 var http = require('http');
 
 var PlainRendererFactory = require('../../../lib/windshaft/renderers/plain/factory');
-var ColorRenderer = require('../../../lib/windshaft/renderers/plain/renderer');
+var ColorRenderer = require('../../../lib/windshaft/renderers/plain/color_renderer');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
 describe('renderer_plain_factory_getRenderer', function() {
