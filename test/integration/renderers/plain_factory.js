@@ -147,6 +147,7 @@ describe('renderer_plain_factory_getRenderer', function() {
     invalidColors.forEach(function(invalidColor) {
         it('getRenderer fails for invalid color: ' + JSON.stringify(invalidColor.color), function(done) {
             var mapConfig = MapConfig.create({
+                version: '1.4.0',
                 layers: [
                     {
                         type: 'plain',
