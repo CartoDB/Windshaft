@@ -1,5 +1,9 @@
-# Version 0.51.1
+# Version 0.52.0
 2015-mm-dd
+
+New features:
+ - Official support for `plain` layer type: options include `color` and `imageUrl`.
+   * Check [doc/MapConfig-1.4.0.md](doc/MapConfig-1.4.0.md#24-plain-layers-options) for more details.
 
 
 # Version 0.51.0
