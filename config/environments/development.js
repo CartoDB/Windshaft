@@ -25,6 +25,13 @@ module.exports.renderer = {
             render: 0,
             cacheOnTimeout: true
         }
+    },
+    torque: {
+        dbPoolParams: {
+            size: 16,
+            idleTimeout: 3000,
+            reapInterval: 1000
+        }
     }
 };
 module.exports.mapnik_version = undefined; // will be looked up at runtime if undefined
