@@ -34,6 +34,13 @@ module.exports.renderer = {
             type: 'fs',
             src: __dirname + '/../../test/fixtures/http/basemap.png'
         }
+    },
+    torque: {
+        dbPoolParams: {
+            size: 16,
+            idleTimeout: 3000,
+            reapInterval: 1000
+        }
     }
 };
 module.exports.mapnik_version = undefined; // will be looked up at runtime if undefined

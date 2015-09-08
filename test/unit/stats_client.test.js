@@ -13,8 +13,8 @@ describe('stats client', function() {
     it('reports errors when they repeat', function(done) {
         var statsClient = StatsClient.getInstance({ host: '127.0.0.1', port: 8033 });
         statsClient.increment('foo');
-        console.log(statsClient.socket.emit('error', 'wadus_error'));
-        console.log(statsClient.socket.emit('error', 'wadus_error'));
+        statsClient.socket.emit('error', 'wadus_error');
+        statsClient.socket.emit('error', 'wadus_error');
         setTimeout(done, 2000);
     });
 
