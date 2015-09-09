@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('blend http client timeout', function() {
+describe.skip('blend http client timeout', function() {
 
     var mapConfig = {
         version: '1.3.0',
