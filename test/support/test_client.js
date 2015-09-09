@@ -1,6 +1,8 @@
 var _ = require('underscore');
-var windshaft = require('../../lib/windshaft');
 var mapnik = require('mapnik');
+
+var windshaft = require('../../lib/windshaft');
+var OldTestClient = require('./test_client_old');
 
 var rendererOptions = global.environment.renderer;
 var grainstoreOptions = {
@@ -56,3 +58,5 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
     });
 };
 
+module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
+module.exports.defaultTableMapConfig = OldTestClient.defaultTableMapConfig;
