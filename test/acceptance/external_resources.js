@@ -68,7 +68,7 @@ describe('external resources', function() {
 
         var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
-        var testClient = new TestClient(OldTestClient.defaultTableMapConfig('test_table_3', circleStyle));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', circleStyle));
         testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg1.png', done));
     });
 
@@ -77,7 +77,7 @@ describe('external resources', function() {
         var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
-        var testClient = new TestClient(OldTestClient.defaultTableMapConfig('test_table_3', squareStyle));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', squareStyle));
         testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg2.png', done));
     });
 
