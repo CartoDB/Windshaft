@@ -16,7 +16,12 @@ var rendererFactoryOptions = {
     http: rendererOptions.http
 };
 
-function TestClient(mapConfig) {
+function TestClient(mapConfig, overrideOptions) {
+    var options = _.extend({}, rendererFactoryOptions);
+    overrideOptions = overrideOptions || {};
+    _.each(overrideOptions, function(overrideConfig, key) {
+        options[key] = _.extend(options[key], overrideConfig);
+    });
     this.rendererFactory = new windshaft.renderer.Factory(rendererFactoryOptions);
     this.config = windshaft.model.MapConfig.create(mapConfig);
 }
