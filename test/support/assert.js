@@ -99,6 +99,8 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
  */
 // jshint maxcomplexity:12
 assert.response = function(server, req, res, msg){
+    debug('assert.response is deprecated');
+
     var port = 5555;
     function check(){
         try {
