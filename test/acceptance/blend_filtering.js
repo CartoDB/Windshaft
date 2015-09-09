@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client_old');
+var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
@@ -10,8 +10,10 @@ describe('blend layer filtering', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
+    var testClient;
 
     before(function(done) {
+        testClient = new TestClient(mapConfig);
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer( function(request, response) {
             var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
@@ -137,17 +139,10 @@ describe('blend layer filtering', function() {
 
     filteredLayersSuite.forEach(function(filteredLayers) {
         var layerFilter = filteredLayers.join(',');
-        var tileRequest = {
-            z: 1,
-            x: 0,
-            y: 0,
-            layer: layerFilter,
-            format: 'png'
-        };
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
-            testClient.getTileLayer(mapConfig, tileRequest, function(err, res) {
-                assert.imageEqualsFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
+            testClient.getTile(1, 0, 0, {layer: layerFilter}, function(err, tile) {
+                assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     done();
                 });
