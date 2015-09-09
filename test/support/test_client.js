@@ -1,11 +1,12 @@
 var _ = require('underscore');
 var windshaft = require('../../lib/windshaft');
+var mapnik = require('mapnik');
 
 var rendererOptions = global.environment.renderer;
 var grainstoreOptions = {
     datasource: global.environment.postgres,
     cachedir: global.environment.millstone.cache_basedir,
-    mapnik_version: global.environment.mapnik_version || windshaft.mapnik.versions.mapnik
+    mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik
 };
 var rendererFactoryOptions = {
     mapnik: {
@@ -45,7 +46,13 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
         if (err) {
             return callback(err);
         }
-        renderer.getTile(z, x, y, callback);
+        renderer.getTile(z, x, y, function(err, tile) {
+            var img;
+            if (!err) {
+                img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
+            }
+            return callback(err, tile, img);
+        });
     });
 };
 
