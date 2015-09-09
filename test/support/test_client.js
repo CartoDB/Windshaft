@@ -50,7 +50,7 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
         }
         renderer.getTile(z, x, y, function(err, tile) {
             var img;
-            if (!err) {
+            if (!err && tile && params.format === 'png') {
                 img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
             }
             return callback(err, tile, img);
