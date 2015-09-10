@@ -16,29 +16,29 @@ describe('multilayer interactivity and layers order', function() {
 
     function testInteractivityLayersOrderScenario(testScenario) {
         it(testScenario.desc, function(done) {
-            var layergroup =  {
+            var mapConfig =  {
                 version: '1.3.0',
                 layers: testScenario.layers
             };
-            var testClient = new TestClient(layergroup);
-            testClient.createLayergroup(function(err, layergroupResponse) {
-                var layergroupId = layergroupResponse.layergroupid;
+            var testClient = new TestClient(mapConfig);
+            testClient.createLayergroup(function(err, layergroup) {
+                var layergroupId = layergroup.layergroupid;
                 assert.ok(layergroupId);
-                assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
+                assert.equal(layergroup.metadata.layers.length, mapConfig.layers.length);
 
                 // check layers metadata at least match in number
-                var layersMetadata = layergroupResponse.metadata.layers;
-                assert.equal(layersMetadata.length, layergroup.layers.length);
+                var layersMetadata = layergroup.metadata.layers;
+                assert.equal(layersMetadata.length, mapConfig.layers.length);
                 for (var i = 0, len = layersMetadata.length; i < len; i++) {
                     assert.equal(
                         getLayerTypeFn(layersMetadata[i].type),
-                        getLayerTypeFn(layergroup.layers[i].type)
+                        getLayerTypeFn(mapConfig.layers[i].type)
                     );
                 }
                 // check torque metadata at least match in number
-                var torqueLayers = layergroup.layers.filter(function(layer) { return layer.type === 'torque'; });
+                var torqueLayers = mapConfig.layers.filter(function(layer) { return layer.type === 'torque'; });
                 if (torqueLayers.length) {
-                    assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
+                    assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
                 }
 
                 redisClient.exists("map_cfg|" +  layergroupId, function(err, exists) {
