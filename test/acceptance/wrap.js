@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client_old');
+var TestClient = require('../support/test_client');
 
 describe('wrap x coordinate', function() {
 
@@ -56,9 +56,7 @@ describe('wrap x coordinate', function() {
                 tile: {
                     z: 2,
                     x: -2,
-                    y: 1,
-                    layer: 'all',
-                    format: 'png'
+                    y: 1
                 },
                 fixture: {
                     z: 2,
@@ -71,9 +69,7 @@ describe('wrap x coordinate', function() {
                 tile: {
                     z: 2,
                     x: -3,
-                    y: 1,
-                    layer: 'all',
-                    format: 'png'
+                    y: 1
                 },
                 fixture: {
                     z: 2,
@@ -93,8 +89,9 @@ describe('wrap x coordinate', function() {
             var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
             var fixtureZxy = [testScenario.fixture.z, testScenario.fixture.x, testScenario.fixture.y];
             it('tile all/' + zxy.join('/') + '.png', function (done) {
-                testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
-                    assert.imageEqualsFile(res.body, blendPngFixture(fixtureZxy), IMG_TOLERANCE_PER_MIL, function(err) {
+                var testClient = new TestClient(plainTorqueMapConfig(testScenario.plainColor));
+                testClient.getTile(tileRequest.z, tileRequest.x, tileRequest.y, function(err, tile) {
+                    assert.imageEqualsFile(tile, blendPngFixture(fixtureZxy), IMG_TOLERANCE_PER_MIL, function(err) {
                         assert.ok(!err);
                         done();
                     });
@@ -105,7 +102,8 @@ describe('wrap x coordinate', function() {
 
     describe('mapnik', function() {
         it("can get a tile with negative x coordinate",  function(done){
-            testClient.getTile(testClient.defaultTableMapConfig('test_table'), 2, -2, 1, function(err, res, img) {
+            var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table'));
+            testClient.getTile(2, -2, 1, function(err, res, img) {
                 assert.ok(!err);
                 assert.ok(img);
                 assert.equal(img.width(), 256);

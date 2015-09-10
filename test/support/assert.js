@@ -1,11 +1,13 @@
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
-var exec = require('child_process').exec,
-    fs = require('fs'),
-    http = require('http'),
-    path = require('path'),
-    util = require('util');
+var exec = require('child_process').exec;
+var fs = require('fs');
+var http = require('http');
+var path = require('path');
+var util = require('util');
+
+var debug = require('debug')('windshaft:assert');
 
 var assert = module.exports = exports = require('assert');
 
@@ -25,7 +27,11 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
         testImageFilePath = createImageFromBuffer(buffer, 'test');
 
     imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, function(err) {
-        fs.unlinkSync(testImageFilePath);
+        if (err) {
+            debug("Images didn't match, test image is %s, expected is %s", testImageFilePath, referenceImageFilePath);
+        } else {
+            fs.unlinkSync(testImageFilePath);
+        }
         callback(err);
     });
 };
@@ -93,6 +99,8 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
  */
 // jshint maxcomplexity:12
 assert.response = function(server, req, res, msg){
+    debug('assert.response is deprecated');
+
     var port = 5555;
     function check(){
         try {

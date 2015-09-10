@@ -1,8 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client_old');
-var serverOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
@@ -29,14 +28,17 @@ describe.skip('blend http client timeout', function() {
         ]
     };
 
-    var oldHttpRendererTimeout;
     var httpRendererTimeout = 100;
 
     var slowHttpRendererResourcesServer;
+    var testClient;
 
     before(function(done) {
-        oldHttpRendererTimeout = serverOptions.renderer.http.timeout;
-        serverOptions.renderer.http.timeout = httpRendererTimeout;
+        testClient = new TestClient(mapConfig, {
+            http: {
+                timeout: httpRendererTimeout
+            }
+        });
 
         // Start a server to test external resources
         slowHttpRendererResourcesServer = http.createServer( function(request, response) {
@@ -53,28 +55,15 @@ describe.skip('blend http client timeout', function() {
     });
 
     after(function(done) {
-        serverOptions.renderer.http.timeout = oldHttpRendererTimeout;
         slowHttpRendererResourcesServer.close(done);
     });
 
     it('should fail to render when http layer times out', function(done) {
-        var options = {
-            statusCode: 400,
-            contentType: 'application/json; charset=utf-8',
-            serverOptions: serverOptions
-        };
-        testClient.withLayergroup(mapConfig, options, function(err, requestTile, finish) {
-            var tileUrl = '/all/0/0/0.png';
-            requestTile(tileUrl, options, function(err, res) {
-                assert.ok(!err);
-                var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.errors);
-                assert.ok(parsedBody.errors.length);
-                assert.equal(parsedBody.errors[0], 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
-                finish(function(finishErr) {
-                    done(err || finishErr);
-                });
-            });
+        testClient.getTile(0, 0, 0, {layer: 'all'}, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
+            assert.equal(err.code, 'ETIMEDOUT');
+            done();
         });
     });
 

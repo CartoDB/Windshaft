@@ -2,10 +2,10 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var fs = require('fs');
-var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var http = require('http');
-var testClient = require('../support/test_client_old');
+var OldTestClient = require('../support/test_client_old');
+var TestClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -23,8 +23,6 @@ function rmdir_recursive_sync(dirname) {
 
 describe('external resources', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
@@ -50,12 +48,19 @@ describe('external resources', function() {
         res_serv.listen(res_serv_port, done);
     });
 
+    after(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+
+        // Close the resources server
+        res_serv.close(done);
+    });
+
     function imageCompareFn(fixture, done) {
-        return function(err, res) {
+        return function(err, tile) {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            assert.imageEqualsFile(tile, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         };
     }
 
@@ -63,9 +68,8 @@ describe('external resources', function() {
 
         var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
-
-        testClient.getTile(testClient.defaultTableMapConfig('test_table_3', circleStyle), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_svg1.png', done));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', circleStyle));
+        testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg1.png', done));
     });
 
     it("different external resource", function(done) {
@@ -73,8 +77,8 @@ describe('external resources', function() {
         var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
-        testClient.getTile(testClient.defaultTableMapConfig('test_table_3', squareStyle), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_svg2.png', done));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', squareStyle));
+        testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg2.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/107
@@ -87,18 +91,18 @@ describe('external resources', function() {
         var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
           "/square.svg'); marker-transform:'scale(0.2)'; }";
 
-        var externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
+        var externalResourceMapConfig = OldTestClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
 
-        testClient.createLayergroup(externalResourceMapConfig, options, function() {
+        OldTestClient.createLayergroup(externalResourceMapConfig, options, function() {
             var externalResourceRequestsCount = res_serv_status.numrequests;
 
-            testClient.createLayergroup(externalResourceMapConfig, options, function() {
+            OldTestClient.createLayergroup(externalResourceMapConfig, options, function() {
                 assert.equal(res_serv_status.numrequests, externalResourceRequestsCount);
 
                 // reset resources cache
                 rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-                testClient.createLayergroup(externalResourceMapConfig, options, function() {
+                OldTestClient.createLayergroup(externalResourceMapConfig, options, function() {
                     assert.equal(res_serv_status.numrequests, externalResourceRequestsCount + 1);
 
                     done();
@@ -111,9 +115,9 @@ describe('external resources', function() {
         var url = "http://localhost:" + res_serv_port + "/notfound.png";
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
-        var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
+        var mapConfig = OldTestClient.defaultTableMapConfig('test_table_3', style);
 
-        testClient.createLayergroup(mapConfig, { statusCode: 400 }, function(err, res) {
+        OldTestClient.createLayergroup(mapConfig, { statusCode: 400 }, function(err, res) {
             assert.deepEqual(JSON.parse(res.body), {
                 errors: ["Unable to download '" + url + "' for 'style0' (server returned 404)"]
             });
@@ -121,12 +125,5 @@ describe('external resources', function() {
         });
     });
 
-
-    after(function(done) {
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
-
-        // Close the resources server
-        res_serv.close(done);
-    });
 });
 
