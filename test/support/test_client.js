@@ -2,6 +2,7 @@ var _ = require('underscore');
 var mapnik = require('mapnik');
 
 var windshaft = require('../../lib/windshaft');
+var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig_provider');
 var OldTestClient = require('./test_client_old');
 
 var rendererOptions = global.environment.renderer;
@@ -27,6 +28,8 @@ function TestClient(mapConfig, overrideOptions) {
     });
     this.rendererFactory = new windshaft.renderer.Factory(rendererFactoryOptions);
     this.config = windshaft.model.MapConfig.create(mapConfig);
+
+    this.attributesBackend = new windshaft.backend.Attributes();
 }
 
 module.exports = TestClient;
@@ -55,6 +58,18 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
             }
             return callback(err, tile, img);
         });
+    });
+};
+
+TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback) {
+    var params = {
+        dbname: 'windshaft_test',
+        layer: layer,
+        fid: featureId
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    this.attributesBackend.getFeatureAttributes(provider, params, false, function(err, attributes, stats) {
+        return callback(err, attributes, stats);
     });
 };
 
