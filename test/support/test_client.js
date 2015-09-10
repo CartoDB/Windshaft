@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var mapnik = require('mapnik');
+var RedisPool = require('redis-mpool');
 
 var windshaft = require('../../lib/windshaft');
 var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig_provider');
@@ -26,10 +27,20 @@ function TestClient(mapConfig, overrideOptions) {
     _.each(overrideOptions, function(overrideConfig, key) {
         options[key] = _.extend(options[key], overrideConfig);
     });
-    this.rendererFactory = new windshaft.renderer.Factory(rendererFactoryOptions);
+
     this.config = windshaft.model.MapConfig.create(mapConfig);
 
+    this.rendererFactory = new windshaft.renderer.Factory(rendererFactoryOptions);
+    this.rendererCache = new windshaft.cache.RendererCache(this.rendererFactory);
+
+    this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
     this.attributesBackend = new windshaft.backend.Attributes();
+
+    var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
+    var mapStore = new windshaft.storage.MapStore({
+        pool: new RedisPool(global.settings.redis)
+    });
+    this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
 }
 
 module.exports = TestClient;
@@ -71,6 +82,14 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
     this.attributesBackend.getFeatureAttributes(provider, params, false, function(err, attributes, stats) {
         return callback(err, attributes, stats);
     });
+};
+
+TestClient.prototype.createLayergroup = function(callback) {
+    var params = {
+        dbname: 'windshaft_test'
+    };
+    var validatorProvider = new DummyMapConfigProvider(this.config, params);
+    this.mapBackend.createLayergroup(this.config, params, validatorProvider, callback);
 };
 
 module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
