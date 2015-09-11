@@ -84,119 +84,14 @@ describe('attributes', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
-    it("are checked at map creation time",
-    function(done) {
-
-      var mapconfig = createMapConfig('SELECT * FROM test_table', 'unexistant', ['cartodb_id']);
-
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(mapconfig)
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkPost(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors);
-          assert.equal(parsed.errors.length, 1);
-          var msg = parsed.errors[0];
-          assert.equal(msg, 'column "unexistant" does not exist');
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
-    });
-
-    it("can be used with jsonp", function(done) {
-
-      var expected_token;
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(createMapConfig())
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkPost(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          // CORS headers should be sent with response
-          // from layergroup creation via POST
-          checkCORSHeaders(res);
-          var parsedBody = JSON.parse(res.body);
-          assert.equal(parsedBody.metadata.layers.length, 2);
-          expected_token = parsedBody.layergroupid;
-          return null;
-        },
-        function do_get_attr_0(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token +
-                   '/0/attributes/1?callback=test',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_error_0(err, res) {
-          assert.ifError(err);
-          // jsonp errors should be returned with HTTP status 200
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          assert.equal(res.body, 'test({"errors":["Layer 0 has no exposed attributes"]});');
-          return null;
-        },
-        function do_get_attr_1(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_attr_1(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"n":6});
-          return null;
-        },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(''+err);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
-      );
+    it("are checked at map creation time", function(done) {
+        var mapconfig = createMapConfig('SELECT * FROM test_table', 'unexistant', ['cartodb_id']);
+        var testClient = new TestClient(mapconfig);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'column "unexistant" does not exist');
+            done();
+        });
     });
 
     // Test that you cannot write to the database from an attributes tile request
