@@ -108,3 +108,4 @@ module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
 module.exports.defaultTableMapConfig = OldTestClient.defaultTableMapConfig;
 
 module.exports.grainstoreOptions = grainstoreOptions;
+module.exports.mapnikOptions = rendererOptions.mapnik;
