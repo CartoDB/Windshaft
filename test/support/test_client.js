@@ -21,16 +21,20 @@ var rendererFactoryOptions = {
     http: rendererOptions.http
 };
 
-function TestClient(mapConfig, overrideOptions) {
+function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
     var options = _.extend({}, rendererFactoryOptions);
     overrideOptions = overrideOptions || {};
     _.each(overrideOptions, function(overrideConfig, key) {
-        options[key] = _.extend(options[key], overrideConfig);
+        options[key] = _.extend({}, options[key], overrideConfig);
     });
+
+    if (onTileErrorStrategy) {
+        options.onTileErrorStrategy = onTileErrorStrategy;
+    }
 
     this.config = windshaft.model.MapConfig.create(mapConfig);
 
-    this.rendererFactory = new windshaft.renderer.Factory(rendererFactoryOptions);
+    this.rendererFactory = new windshaft.renderer.Factory(options);
     this.rendererCache = new windshaft.cache.RendererCache(this.rendererFactory);
 
     this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
