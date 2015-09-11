@@ -53,22 +53,19 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
     var params = _.extend({
         dbname: 'windshaft_test',
         layer: 'all',
-        format: 'png'
+        format: 'png',
+        z: z,
+        x: x,
+        y: y
     }, options);
 
-    var context = {};
-
-    this.rendererFactory.getRenderer(this.config, params, context, function(err, renderer) {
-        if (err) {
-            return callback(err);
+    var provider = new DummyMapConfigProvider(this.config, params);
+    this.tileBackend.getTile(provider, params, function(err, tile, headers, stats) {
+        var img;
+        if (!err && tile && params.format === 'png') {
+            img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
         }
-        renderer.getTile(z, x, y, function(err, tile) {
-            var img;
-            if (!err && tile && params.format === 'png') {
-                img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
-            }
-            return callback(err, tile, img);
-        });
+        return callback(err, tile, img, headers, stats);
     });
 };
 
