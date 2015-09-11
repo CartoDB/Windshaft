@@ -7,7 +7,7 @@ var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
 var semver = require('semver');
 var http = require('http');
-var testClient = require('../support/test_client_old');
+var TestClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -61,11 +61,11 @@ describe('server_gettile', function() {
     });
 
     function imageCompareFn(fixture, done) {
-        return function(err, res) {
+        return function(err, tile) {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            assert.imageEqualsFile(tile, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         };
     }
 
@@ -77,33 +77,34 @@ describe('server_gettile', function() {
     ////////////////////////////////////////////////////////////////////
 
     it("get'ing a tile with default style should return an expected tile", function(done){
-      testClient.getTile(testClient.defaultTableMapConfig('test_table'), 13, 4011, 3088,
-          imageCompareFn('test_table_13_4011_3088.png', done)
-      );
+        new TestClient(TestClient.defaultTableMapConfig('test_table'))
+            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088.png', done));
     });
 
     it("response of get tile can be served by renderer cache",  function(done) {
-        var tileUrl = '/13/4011/3088.png';
         var lastXwc;
-        var mapConfig = testClient.defaultTableMapConfig('test_table');
-        testClient.withLayergroup(mapConfig, function (err, requestTile, finish) {
-            requestTile(tileUrl, function (err, res) {
-                var xwc = res.headers['x-windshaft-cache'];
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table'));
+        testClient.getTile(13, 4011, 3088, function(err, tile, img, headers) {
+            var xwc = headers['X-Windshaft-Cache'];
+            assert.ok(!xwc);
+
+            testClient.getTile(13, 4011, 3088, function (err, tile, img, headers) {
+                var xwc = headers['X-Windshaft-Cache'];
                 assert.ok(xwc);
                 assert.ok(xwc > 0);
                 lastXwc = xwc;
 
-                requestTile(tileUrl, function (err, res) {
-                    var xwc = res.headers['x-windshaft-cache'];
+                testClient.getTile(13, 4011, 3088, function (err, tile, img, headers) {
+                    var xwc = headers['X-Windshaft-Cache'];
                     assert.ok(xwc);
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
-                    requestTile(tileUrl + '?cache_buster=wadus', function (err, res) {
-                        var xwc = res.headers['x-windshaft-cache'];
+                    testClient.getTile(13, 4011, 3088, {cache_buster: 'wadus'}, function (err, tile, img, headers) {
+                        var xwc = headers['X-Windshaft-Cache'];
                         assert.ok(!xwc);
 
-                        finish(done);
+                        done();
                     });
                 });
             });
@@ -111,45 +112,37 @@ describe('server_gettile', function() {
     });
 
     it("should not choke when queries end with a semicolon",  function(done){
-        testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2;'), 0, 0, 0, done);
+        new TestClient(TestClient.singleLayerMapConfig('SELECT * FROM test_table limit 2;'))
+            .getTile(0, 0, 0, done);
     });
 
     it("should not choke when sql ends with a semicolon and some blanks",  function(done){
-        testClient.getTile(testClient.singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'), 0, 0, 0, done);
+        new TestClient(TestClient.singleLayerMapConfig('SELECT * FROM test_table limit 2; \t\n'))
+            .getTile(0, 0, 0, done);
     });
 
     it("should not strip quoted semicolons within an sql query",  function(done){
-        testClient.getTile(
-            testClient.singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"), 0, 0, 0, done
-        );
+        new TestClient(TestClient.singleLayerMapConfig("SELECT * FROM test_table where name != ';\n'"))
+            .getTile(0, 0, 0, done);
     });
 
     it("getting two tiles with same configuration uses renderer cache",  function(done) {
 
         var imageFixture = './test/fixtures/test_table_13_4011_3088_styled.png';
-        var tileUrl = '/13/4011/3088.png';
-        var mapConfig = testClient.defaultTableMapConfig(
+        var mapConfig = TestClient.defaultTableMapConfig(
             'test_table',
             '#test_table{marker-fill: blue;marker-line-color: black;}'
         );
 
-        function validateLayergroup(res) {
-            // cache is hit because we create a renderer to validate the map config
-            assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'), "Did hit renderer cache on first time");
-        }
+        var testClient = new TestClient(mapConfig);
+        testClient.getTile(13, 4011, 3088, function(err, tile, img, headers) {
+            assert.ok(!headers.hasOwnProperty('X-Windshaft-Cache'), "Did hit renderer cache on first time");
 
-        testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
+            testClient.getTile(13, 4011, 3088, function(err, tile, img, headers) {
+                assert.ok(headers.hasOwnProperty('X-Windshaft-Cache'), "Did not hit renderer cache on second time");
+                assert.ok(headers['X-Windshaft-Cache'] >= 0);
 
-            requestTile(tileUrl, function(err, res) {
-                assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
-                assert.ok(res.headers['x-windshaft-cache'] >= 0);
-
-                assert.imageEqualsFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-
-                    finish(function(finishErr) {
-                        done(err || finishErr);
-                    });
-                });
+                assert.imageEqualsFile(tile, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
             });
         });
     });
@@ -158,37 +151,33 @@ describe('server_gettile', function() {
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:black;marker-width:10}";
 
     it("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
-        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'),
-            13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
+        new TestClient(TestClient.defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'))
+            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     it("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
-        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'),
-            13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
+        new TestClient(TestClient.defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'))
+            .getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
     it("unused directives are tolerated",  function(done){
         var style = "#test_table{point-transform: 'scale(100)';}";
         var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
-        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 0, 0, 0,
-            imageCompareFn('test_default_mapnik_point.png', done));
+        new TestClient(TestClient.singleLayerMapConfig(sql, style))
+            .getTile(0, 0, 0, imageCompareFn('test_default_mapnik_point.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/100
     var test_strictness = function(done) {
-        var nonStrictMapConfig = testClient.singleLayerMapConfig(
+        var nonStrictMapConfig = TestClient.singleLayerMapConfig(
             "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom",
             "#test_table{point-transform: 'scale(100)';}"
         );
-        testClient.withLayergroup(nonStrictMapConfig, function(err, requestTile, finish) {
-            var options = {
-                statusCode: 400,
-                contentType: 'application/json; charset=utf-8'
-            };
-            requestTile('/0/0/0.png?strict=1', options, function() {
-                finish(done);
-            });
+        var testClient = new TestClient(nonStrictMapConfig);
+        testClient.getTile(0, 0, 0, {strict: 1}, function(err) {
+            assert.ok(err);
+            done();
         });
     };
     var test_strict_lbl = "unused directives are not tolerated if strict";
@@ -240,7 +229,8 @@ describe('server_gettile', function() {
             '}'
         ].join('');
 
-        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
+        new TestClient(TestClient.singleLayerMapConfig(sql, style))
+            .getTile(13, 4011, 3088, done);
     });
 
     // https://github.com/CartoDB/Windshaft-cartodb/issues/316
@@ -280,12 +270,8 @@ describe('server_gettile', function() {
             ]
         };
 
-        var options = {
-            statusCode: 400
-        };
-
-        testClient.createLayergroup(mapConfig, options, function(err, res, parsedBody) {
-            assert.ok(parsedBody.errors);
+        new TestClient(mapConfig).createLayergroup(function(err) {
+            assert.ok(err);
             // more assertions when errors is populated with better format
             done();
         });
