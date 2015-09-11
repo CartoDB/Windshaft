@@ -91,3 +91,5 @@ TestClient.prototype.createLayergroup = function(callback) {
 
 module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
 module.exports.defaultTableMapConfig = OldTestClient.defaultTableMapConfig;
+
+module.exports.grainstoreOptions = grainstoreOptions;
