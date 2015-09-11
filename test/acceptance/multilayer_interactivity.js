@@ -41,15 +41,7 @@ describe('multilayer interactivity and layers order', function() {
                     assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
                 }
 
-                redisClient.exists("map_cfg|" +  layergroupId, function(err, exists) {
-                    if (err) {
-                        return done(err);
-                    }
-                    assert.ok(exists, "Missing expected token " + layergroupId + " from redis");
-                    redisClient.del("map_cfg|" +  layergroupId, function(err) {
-                        done(err);
-                    });
-                });
+                done();
             });
         });
     }

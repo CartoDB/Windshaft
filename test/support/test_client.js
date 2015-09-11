@@ -6,6 +6,8 @@ var windshaft = require('../../lib/windshaft');
 var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig_provider');
 var OldTestClient = require('./test_client_old');
 
+var redisClient = require('redis').createClient(global.environment.redis.port);
+
 var rendererOptions = global.environment.renderer;
 var grainstoreOptions = {
     datasource: global.environment.postgres,
@@ -90,7 +92,16 @@ TestClient.prototype.createLayergroup = function(callback) {
         dbname: 'windshaft_test'
     };
     var validatorProvider = new DummyMapConfigProvider(this.config, params);
-    this.mapBackend.createLayergroup(this.config, params, validatorProvider, callback);
+    this.mapBackend.createLayergroup(this.config, params, validatorProvider, function(err, layergroup) {
+        if (layergroup) {
+            var redisKey = 'map_cfg|' + layergroup.layergroupid;
+            redisClient.del(redisKey, function () {
+                return callback(err, layergroup);
+            });
+        } else {
+            return callback(err);
+        }
+    });
 };
 
 module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;

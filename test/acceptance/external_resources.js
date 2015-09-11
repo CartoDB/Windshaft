@@ -109,10 +109,7 @@ describe('external resources', function() {
                     new TestClient(externalResourceMapConfig).createLayergroup(function(err, layergroup) {
                         assert.equal(numRequests, ++externalResourceRequestsCount);
 
-                        redisClient.del('map_cfg|' + layergroup.layergroupid, function() {
-                            done();
-                        });
-
+                        done();
                     });
                 });
             });
