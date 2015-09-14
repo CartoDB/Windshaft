@@ -1,15 +1,9 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
-var OldTestClient = require('../support/test_client_old');
 var TestClient = require('../support/test_client');
 
 describe('multilayer error cases', function() {
-
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
 
     it("layergroup with no cartocss_version", function(done) {
       var layergroup =  {
@@ -174,38 +168,6 @@ describe('multilayer error cases', function() {
         });
     });
 
-    it('bogus sql raises 200 status code for jsonp', function(done) {
-        var bogusSqlMapConfig = OldTestClient.singleLayerMapConfig('bogus');
-        var options = {
-            method: 'GET',
-            callbackName: 'test',
-            headers: {
-                'Content-Type': 'text/javascript; charset=utf-8'
-            }
-        };
-        OldTestClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
-            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
-            assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
-            done();
-        });
-    });
-
-    it('query not selecting the_geom raises 200 status code for jsonp instead of 404', function(done) {
-        var noGeomMapConfig = OldTestClient.singleLayerMapConfig('select null::geometry the_geom_wadus');
-        var options = {
-            method: 'GET',
-            callbackName: 'test',
-            headers: {
-                'Content-Type': 'text/javascript; charset=utf-8'
-            }
-        };
-        OldTestClient.createLayergroup(noGeomMapConfig, options, function(err, res) {
-            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
-            assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
-            done();
-        });
-    });
-
     it("query with no geometry field returns 400 status",  function(done){
         var noGeometrySqlMapConfig = TestClient.singleLayerMapConfig('SELECT 1');
         var testClient = new TestClient(noGeometrySqlMapConfig);
@@ -234,36 +196,6 @@ describe('multilayer error cases', function() {
             assert.equal(err.message, "Layer '1' not found in layergroup");
             done();
         });
-    });
-
-    it('error 400 on json syntax error', function(done) {
-        var layergroup =  {
-            version: '1.0.1',
-            layers: [
-                {
-                    options: {
-                        sql: 'select the_geom from test_table limit 1',
-                        cartocss: '#layer { marker-fill:red }'
-                    }
-                }
-            ]
-        };
-        assert.response(server,
-            {
-                url: '/database/windshaft_test/layergroup',
-                method: 'POST',
-                headers: {'Content-Type': 'application/json; charset=utf-8' },
-                data: '{' + JSON.stringify(layergroup)
-            },
-            {
-                status: 400
-            },
-            function(res) {
-                var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, { errors: ['SyntaxError: Unexpected token {'] });
-                done();
-            }
-        );
     });
 
 });
