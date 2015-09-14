@@ -323,38 +323,6 @@ describe('multilayer error cases', function() {
         });
     });
 
-    ////////////////////////////////////////////////////////////////////
-    //
-    // OPTIONS LAYERGROUP
-    //
-    ////////////////////////////////////////////////////////////////////
-
-    it("nonexistent layergroup token error", function(done) {
-      step(
-        function do_get_tile(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/deadbeef/0/0/0/0.grid.json',
-              method: 'GET',
-              encoding: 'binary'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkResponse(err, res) {
-          assert.ifError(err);
-          // FIXME: should be 404
-          assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"errors": ["Invalid or nonexistent map configuration token 'deadbeef'"]});
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
-    });
-
     it('error 400 on json syntax error', function(done) {
         var layergroup =  {
             version: '1.0.1',
