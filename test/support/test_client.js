@@ -4,12 +4,22 @@ var RedisPool = require('redis-mpool');
 
 var windshaft = require('../../lib/windshaft');
 var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig_provider');
-var OldTestClient = require('./test_client_old');
 
 var redisClient = require('redis').createClient(global.environment.redis.port);
 
+global.statsClient = windshaft.stats.Client.getInstance({});
+
+mapnik.register_system_fonts();
+mapnik.register_default_fonts();
+var cartoEnv = {
+    validation_data: {
+        fonts: _.keys(mapnik.fontFiles())
+    }
+};
+
 var rendererOptions = global.environment.renderer;
 var grainstoreOptions = {
+    carto_env: cartoEnv,
     datasource: global.environment.postgres,
     cachedir: global.environment.millstone.cache_basedir,
     mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik
@@ -156,8 +166,48 @@ TestClient.prototype.getStaticBbox = function(west, south, east, north, width, h
     this.previewBackend.getImage(provider, format, width, height, bounds, previewImageCallbackWrapper(callback));
 };
 
-module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
-module.exports.defaultTableMapConfig = OldTestClient.defaultTableMapConfig;
+
+var DEFAULT_POINT_STYLE = [
+    '#layer {',
+    '  marker-fill: #FF6600;',
+    '  marker-opacity: 1;',
+    '  marker-width: 16;',
+    '  marker-line-color: white;',
+    '  marker-line-width: 3;',
+    '  marker-line-opacity: 0.9;',
+    '  marker-placement: point;',
+    '  marker-type: ellipse;',
+    '  marker-allow-overlap: true;',
+    '}'
+].join('');
+
+function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
+    return {
+        version: '1.3.0',
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: sql,
+                    cartocss: cartocss || DEFAULT_POINT_STYLE,
+                    cartocss_version: cartocssVersion || '2.3.0',
+                    interactivity: interactivity
+                }
+            }
+        ]
+    };
+}
+
+function defaultTableQuery(tableName) {
+    return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
+}
+
+function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
+    return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
+}
+
+module.exports.singleLayerMapConfig = singleLayerMapConfig;
+module.exports.defaultTableMapConfig = defaultTableMapConfig;
 
 module.exports.grainstoreOptions = grainstoreOptions;
 module.exports.mapnikOptions = rendererOptions.mapnik;

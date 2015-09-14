@@ -374,7 +374,7 @@ describe('multilayer', function() {
     it("unknown text-face-name", function(done) {
         new TestClient(fontLayergroup('bogus')).getTile(0, 0, 0, function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Unable to find specified font face 'bogus'");
+            assert.ok(err.message.match(/Invalid value for text-face-name.*bogus \(of type string\)  was given/));
             done();
         });
     });
