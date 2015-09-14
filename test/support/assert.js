@@ -3,7 +3,6 @@
 
 var exec = require('child_process').exec;
 var fs = require('fs');
-var http = require('http');
 var path = require('path');
 var util = require('util');
 
@@ -88,191 +87,23 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
     });
 }
 
-/**
- * Assert response from `server` with
- * the given `req` object and `res` assertions object.
- *
- * @param {Server|Object} server
- * @param {Object} req
- * @param {Object|Function} res
- * @param {String|Function} msg
- */
-// jshint maxcomplexity:12
-assert.response = function(server, req, res, msg){
-    debug('assert.response is deprecated');
+function Celldiff(x, y, ev, ov) {
+    this.x = x;
+    this.y = y;
+    this.ev = ev;
+    this.ov = ov;
+}
 
-    var port = 5555;
-    function check(){
-        try {
-            server.__port = server.address().port;
-            server.__listening = true;
-        } catch (err) {
-            process.nextTick(check);
-            return;
-        }
-        if (server.__deferred) {
-            server.__deferred.forEach(function(args){
-                assert.response.apply(assert, args);
-            });
-            server.__deferred = null;
-        }
-    }
-
-    // Check that the server is ready or defer
-    if (!server.fd) {
-        server.__deferred = server.__deferred || [];
-        server.listen(server.__port = port++, '127.0.0.1', check);
-    } else if (!server.__port) {
-        server.__deferred = server.__deferred || [];
-        process.nextTick(check);
-    }
-
-    // The socket was created but is not yet listening, so keep deferring
-    if (!server.__listening) {
-        server.__deferred.push(arguments);
-        return;
-    }
-
-    // Callback as third or fourth arg
-    var callback = typeof res === 'function' ? res : (typeof msg === 'function' ? msg : function(){});
-
-    // Default messate to test title
-    if (typeof msg === 'function') {
-        msg = null;
-    }
-    msg = msg || assert.testTitle;
-    msg += '. ';
-
-    // Pending responses
-    server.__pending = server.__pending || 0;
-    server.__pending++;
-
-    // Create client
-    if (!server.fd) {
-        server.listen(server.__port = port++, '127.0.0.1', issue);
-    } else {
-        issue();
-    }
-
-    // jshint maxcomplexity:8
-    function issue(){
-
-        // Issue request
-        var timer,
-            method = req.method || 'GET',
-            status = res.status || res.statusCode,
-            data = req.data || req.body,
-            requestTimeout = req.timeout || 0,
-            encoding = req.encoding || 'utf8';
-
-        var request = http.request({
-            host: '127.0.0.1',
-            port: server.__port,
-            path: req.url,
-            method: method,
-            headers: req.headers
-        });
-
-        var check = function() {
-            if (--server.__pending === 0) {
-                server.close();
-                server.__listening = false;
-            }
-        };
-
-        // Timeout
-        if (requestTimeout) {
-            timer = setTimeout(function(){
-                check();
-                delete req.timeout;
-                assert.fail(msg + 'Request timed out after ' + requestTimeout + 'ms.');
-            }, requestTimeout);
-        }
-
-        if (data) {
-            request.write(data);
-        }
-
-        request.on('response', function(response){
-            response.body = '';
-            response.setEncoding(encoding);
-            response.on('data', function(chunk){ response.body += chunk; });
-            response.on('end', function(){
-                if (timer) {
-                    clearTimeout(timer);
-                }
-
-                check();
-
-                // Assert response body
-                if (res.body !== undefined) {
-                    var eql = res.body instanceof RegExp ? res.body.test(response.body) : res.body === response.body;
-                    assert.ok(
-                        eql,
-                        msg + colorize('[red]{Invalid response body.}\n' +
-                            '    Expected: [green]{' + res.body + '}\n' +
-                            '    Got: [red]{' + response.body + '}')
-                    );
-                }
-
-                // Assert response status
-                if (typeof status === 'number') {
-                    assert.equal(
-                        response.statusCode,
-                        status,
-                        msg + colorize('[red]{Invalid response status code.}\n' +
-                            '    Expected: [green]{' + status + '}\n' +
-                            '    Got: [red]{' + response.statusCode + '}\n' +
-                            '    Body: ' + response.body)
-                    );
-                }
-
-                // Assert response headers
-                if (res.headers) {
-                    var keys = Object.keys(res.headers);
-                    for (var i = 0, len = keys.length; i < len; ++i) {
-                        var name = keys[i],
-                            actual = response.headers[name.toLowerCase()],
-                            expected = res.headers[name],
-                            headerEql = expected instanceof RegExp ? expected.test(actual) : expected === actual;
-                        assert.ok(
-                            headerEql,
-                            msg + colorize('Invalid response header [bold]{' + name + '}.\n' +
-                                '    Expected: [green]{' + expected + '}\n' +
-                                '    Got: [red]{' + actual + '}')
-                        );
-                    }
-                }
-
-                // Callback
-                callback(response);
-            });
-        });
-
-        request.end();
-      }
+Celldiff.prototype.toString = function() {
+    return '(' + this.x + ',' + this.y + ')["' + this.ev + '" != "' + this.ov + '"]';
 };
 
 // @param tolerance number of tolerated grid cell differences
-// jshint maxcomplexity:8
+// jshint maxcomplexity:9
 assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
-    fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
+    //fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
 
-    var err = null;
-
-    var Celldiff = function(x, y, ev, ov) {
-      this.x = x;
-      this.y = y;
-      this.ev = ev;
-      this.ov = ov;
-    };
-
-    Celldiff.prototype.toString = function() {
-      return '(' + this.x + ',' + this.y + ')["' + this.ev + '" != "' + this.ov + '"]';
-    };
-
-    try {
       var obtained_json = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
 
       // compare grid
@@ -280,8 +111,9 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
       var expected_grid = expected_json.grid;
       var nrows = obtained_grid.length;
       if (nrows !== expected_grid.length) {
-        throw new Error( "Obtained grid rows (" + nrows +
-                    ") != expected grid rows (" + expected_grid.length + ")" );
+          return callback(
+              new Error("Obtained grid rows (" + nrows + ") != expected grid rows (" + expected_grid.length + ")" )
+          );
       }
       var celldiff = [];
       for (var i=0; i<nrows; ++i) {
@@ -289,9 +121,9 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
         var ecols = expected_grid[i];
         var ncols = ocols.length;
         if ( ncols !== ecols.length ) {
-          throw new Error( "Obtained grid cols (" + ncols +
-                   ") != expected grid cols (" + ecols.length +
-                   ") on row " + i );
+            return callback(
+                new Error("Obtained grid cols (" + ncols + ") != expected grid cols (" + ecols.length + ") on row " + i)
+            );
         }
         for (var j=0; j<ncols; ++j) {
           var ocell = ocols[j];
@@ -303,26 +135,14 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
       }
 
       if ( celldiff.length > tolerance ) {
-        throw new Error( celldiff.length + " cell differences: " + celldiff );
+          return callback(new Error( celldiff.length + " cell differences: " + celldiff ));
       }
 
+    try {
       assert.deepEqual(obtained_json.keys, expected_json.keys);
-    } catch (e) { err = e; }
+    } catch (e) {
+        return callback(e);
+    }
 
-    callback(err);
+    return callback();
 };
-
-
-/**
- * Colorize the given string using ansi-escape sequences.
- * Disabled when --boring is set.
- *
- * @param {String} str
- * @return {String}
- */
-function colorize(str) {
-    var colors = { bold: 1, red: 31, green: 32, yellow: 33 };
-    return str.replace(/\[(\w+)\]\{([^]*?)\}/g, function(_, color, str) {
-        return '\x1B[' + colors[color] + 'm' + str + '\x1B[0m';
-    });
-}
