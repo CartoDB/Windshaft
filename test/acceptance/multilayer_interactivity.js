@@ -1,14 +1,11 @@
 require('../support/test_helper');
 
-var assert        = require('../support/assert');
-var _             = require('underscore');
-var redis         = require('redis');
+var assert = require('../support/assert');
+var _ = require('underscore');
 var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
 var TestClient = require('../support/test_client');
 
 describe('multilayer interactivity and layers order', function() {
-
-    var redisClient = redis.createClient(global.settings.redis.port);
 
     function layerType(layer) {
         return layer.type || 'undefined';

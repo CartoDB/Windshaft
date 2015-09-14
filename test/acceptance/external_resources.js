@@ -106,7 +106,7 @@ describe('external resources', function() {
                     // reset resources cache
                     rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-                    new TestClient(externalResourceMapConfig).createLayergroup(function(err, layergroup) {
+                    new TestClient(externalResourceMapConfig).createLayergroup(function() {
                         assert.equal(numRequests, ++externalResourceRequestsCount);
 
                         done();

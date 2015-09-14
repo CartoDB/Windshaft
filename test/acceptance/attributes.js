@@ -1,17 +1,9 @@
 require('../support/test_helper');
 
 var assert        = require('../support/assert');
-var redis         = require('redis');
-var step          = require('step');
-var Windshaft     = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
 var TestClient = require('../support/test_client');
 
 describe('attributes', function() {
-
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     function createMapConfig(sql, id, columns) {
         return {
@@ -43,11 +35,6 @@ describe('attributes', function() {
 
     var NO_ATTRIBUTES_LAYER = 0;
     var ATTRIBUTES_LAYER = 1;
-
-    function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
-    }
 
     it("cannot be fetched from layer not having an attributes spec", function(done) {
 

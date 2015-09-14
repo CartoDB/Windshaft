@@ -2,32 +2,21 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var _ = require('underscore');
-var querystring = require('querystring');
 var fs = require('fs');
-var redis = require('redis');
 var step = require('step');
 var mapnik = require('mapnik');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
 var http = require('http');
 
 var TestClient = require('../support/test_client');
 
 describe('multilayer', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
     var resourcesServer;
     var resourcesServerPort = 8033;
     var available_system_fonts = _.keys(mapnik.fontFiles());
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
-    function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
-    }
 
     before(function(done) {
       // Start a server to test external resources
