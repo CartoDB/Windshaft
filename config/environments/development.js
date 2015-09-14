@@ -6,7 +6,9 @@ module.exports.postgres = {
     geometry_field: 'the_geom',
     srid: 4326
 };
-module.exports.millstone = {cache_basedir: '/tmp/windshaft-dev/millstone'};
+module.exports.millstone = {
+    cache_basedir: '/tmp/windshaft-dev/millstone'
+};
 module.exports.redis = {
     host: '127.0.0.1',
     port: 6379,
@@ -19,8 +21,6 @@ module.exports.renderer = {
         poolSize: 4,//require('os').cpus().length,
         metatile: 1,
         bufferSize: 64,
-        snapToGrid: false,
-        clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
         scale_factors: [1, 2],
         limits: {
             render: 0,
