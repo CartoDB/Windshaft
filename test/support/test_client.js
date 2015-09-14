@@ -91,10 +91,15 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
     });
 };
 
-TestClient.prototype.createLayergroup = function(callback) {
-    var params = {
+TestClient.prototype.createLayergroup = function(options, callback) {
+    if (!callback) {
+        callback = options;
+        options = {};
+    }
+    var params = _.extend({
         dbname: 'windshaft_test'
-    };
+    }, options);
+
     var validatorProvider = new DummyMapConfigProvider(this.config, params);
     this.mapBackend.createLayergroup(this.config, params, validatorProvider, function(err, layergroup) {
         if (layergroup) {
