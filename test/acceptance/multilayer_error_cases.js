@@ -11,19 +11,6 @@ describe('multilayer error cases', function() {
     var server = new Windshaft.Server(ServerOptions);
     server.setMaxListeners(0);
 
-    it("post layergroup with no layers", function(done) {
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' }
-        }, {}, function(res) {
-            assert.equal(res.statusCode, 400, res.body);
-            var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody, {"errors":["Missing layers array from layergroup config"]});
-            done();
-        });
-    });
-
     it("post layergroup jsonp errors are returned with 200 status", function(done) {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup?callback=test',
