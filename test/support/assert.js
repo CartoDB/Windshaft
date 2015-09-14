@@ -273,7 +273,7 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
     };
 
     try {
-      var obtained_json = JSON.parse(buffer);
+      var obtained_json = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
 
       // compare grid
       var obtained_grid = obtained_json.grid;
