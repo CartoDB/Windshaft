@@ -1,28 +1,9 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 describe('torque regression', function() {
-
-    var layergroupIdToDelete = null;
-
-    beforeEach(function() {
-        layergroupIdToDelete = null;
-    });
-
-    afterEach(function(done) {
-        var redisKey = 'map_cfg|' + layergroupIdToDelete;
-        redis_client.del(redisKey, function () {
-            done();
-        });
-    });
-
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     it('regression london point', function(done) {
         var londonPointMapConfig =  {
@@ -45,41 +26,22 @@ describe('torque regression', function() {
             ]
         };
 
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-            data: JSON.stringify(londonPointMapConfig)
-        }, {}, function (res, err) {
-            assert.ok(!err, 'Failed to create layergroup');
+        var testClient = new TestClient(londonPointMapConfig);
+        testClient.getTile(2, 1, 1, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
+            assert.ok(!err);
+            assert.deepEqual(torqueTile, [{
+                x__uint8: 255,
+                y__uint8: 172,
+                vals__uint8: [1],
+                dates__uint16: [0]
+            }]);
 
-            var parsedBody = JSON.parse(res.body);
-            var layergroupId = parsedBody.layergroupid;
-            layergroupIdToDelete = layergroupId;
-
-
-            assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
-                method: 'GET'
-            }, {}, function (res, err) {
-                assert.ok(!err, 'Failed to request torque.json');
-
-                var parsed = JSON.parse(res.body);
-
-                assert.deepEqual(parsed, [{
-                    x__uint8: 255,
-                    y__uint8: 172,
-                    vals__uint8: [1],
-                    dates__uint16: [0]
-                }]);
-
-                done();
-            });
+            done();
         });
     });
 
     it('should consider resolution for least value in query', function(done) {
-        var londonPointMapConfig =  {
+        var resolutionTwoMapConfig =  {
             version: '1.1.0',
             layers: [
                 { type: 'torque', options: {
@@ -108,44 +70,25 @@ describe('torque regression', function() {
             ]
         };
 
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-            data: JSON.stringify(londonPointMapConfig)
-        }, {}, function (res, err) {
-            assert.ok(!err, 'Failed to create layergroup');
+        var testClient = new TestClient(resolutionTwoMapConfig);
+        testClient.getTile(13, 4255, 2765, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
+            assert.ok(!err);
+            assert.deepEqual(torqueTile, [
+                {
+                    x__uint8: 47,
+                    y__uint8: 127,
+                    vals__uint8: [2],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 48,
+                    y__uint8: 127,
+                    vals__uint8: [1],
+                    dates__uint16: [0]
+                }
+            ]);
 
-            var parsedBody = JSON.parse(res.body);
-            var layergroupId = parsedBody.layergroupid;
-            layergroupIdToDelete = layergroupId;
-
-
-            assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/13/4255/2765.json.torque',
-                method: 'GET'
-            }, {}, function (res, err) {
-                assert.ok(!err, 'Failed to request torque.json');
-
-                var parsed = JSON.parse(res.body);
-
-                assert.deepEqual(parsed, [
-                    {
-                        x__uint8: 47,
-                        y__uint8: 127,
-                        vals__uint8: [2],
-                        dates__uint16: [0]
-                    },
-                    {
-                        x__uint8: 48,
-                        y__uint8: 127,
-                        vals__uint8: [1],
-                        dates__uint16: [0]
-                    }
-                ]);
-
-                done();
-            });
+            done();
         });
     });
 });
