@@ -47,6 +47,7 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
         pool: new RedisPool(global.settings.redis)
     });
     this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
+    this.previewBackend = new windshaft.backend.Preview(this.rendererCache);
 }
 
 module.exports = TestClient;
@@ -111,6 +112,48 @@ TestClient.prototype.createLayergroup = function(options, callback) {
             return callback(err);
         }
     });
+};
+
+function previewImageCallbackWrapper(callback) {
+    return function(err, imageBuffer) {
+        var image;
+        if (!err) {
+            image = mapnik.Image.fromBytesSync(new Buffer(imageBuffer, 'binary'));
+        }
+        return callback(err, imageBuffer, image);
+    };
+}
+
+TestClient.prototype.getStaticCenter = function(zoom, lon, lat, width, height, callback) {
+    var format = 'png';
+    var params = {
+        layer: 'all',
+        dbname: 'windshaft_test',
+        format: format
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    var center = {
+        lng: lon,
+        lat: lat
+    };
+    this.previewBackend.getImage(provider, format, width, height, zoom, center, previewImageCallbackWrapper(callback));
+};
+
+TestClient.prototype.getStaticBbox = function(west, south, east, north, width, height, callback) {
+    var format = 'png';
+    var params = {
+        layer: 'all',
+        dbname: 'windshaft_test',
+        format: format
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    var bounds = {
+        west: west,
+        south: south,
+        east: east,
+        north: north
+    };
+    this.previewBackend.getImage(provider, format, width, height, bounds, previewImageCallbackWrapper(callback));
 };
 
 module.exports.singleLayerMapConfig = OldTestClient.singleLayerMapConfig;
