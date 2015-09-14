@@ -65,6 +65,10 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
         y: y
     }, options);
 
+    if (params.format === 'grid.json') {
+        params.token = 'wadus';
+    }
+
     var provider = new DummyMapConfigProvider(this.config, params);
     this.tileBackend.getTile(provider, params, function(err, tile, headers, stats) {
         var img;
