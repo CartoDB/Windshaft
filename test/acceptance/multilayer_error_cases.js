@@ -1,10 +1,10 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var step = require('step');
 var Windshaft = require('../../lib/windshaft');
 var ServerOptions = require('../support/server_options');
-var testClient = require('../support/test_client_old');
+var OldTestClient = require('../support/test_client_old');
+var TestClient = require('../support/test_client');
 
 describe('multilayer error cases', function() {
 
@@ -21,17 +21,13 @@ describe('multilayer error cases', function() {
              } }
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-          assert.equal(res.statusCode, 400, res.body);
-          var parsedBody = JSON.parse(res.body);
-          assert.deepEqual(parsedBody, {errors:["Missing cartocss_version for layer 0 options"]});
-          done();
-      });
+
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'Missing cartocss_version for layer 0 options');
+            done();
+        });
     });
 
     it("sql/cartocss combination errors", function(done) {
@@ -43,26 +39,16 @@ describe('multilayer error cases', function() {
            cartocss: '#layer [missing=1] { line-width:16; }'
         }}]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-        try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed);
-          assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0];
-          assert.ok(error.match(/column "missing" does not exist/m), error);
-          // cannot check for error starting with style0 until a new enough mapnik
-          // is used: https://github.com/mapnik/mapnik/issues/1924
-          //assert.ok(error.match(/^style0/), "Error doesn't start with style0: " + error);
-          // TODO: check which layer introduced the problem ?
-          done();
-        } catch (err) { done(err); }
-      });
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(err.message.match(/column "missing" does not exist/m));
+            // cannot check for error starting with style0 until a new enough mapnik
+            // is used: https://github.com/mapnik/mapnik/issues/1924
+            //assert.ok(error.match(/^style0/), "Error doesn't start with style0: " + error);
+            // TODO: check which layer introduced the problem ?
+            done();
+        });
     });
 
     it("sql/interactivity combination error", function(done) {
@@ -88,23 +74,13 @@ describe('multilayer error cases', function() {
           }}
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-        try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed);
-          assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0];
-          assert.ok(error.match(/column "missing" does not exist/m), error);
-          // TODO: check which layer introduced the problem ?
-          done();
-        } catch (err) { done(err); }
-      });
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(err.message.match(/column "missing" does not exist/m));
+            // TODO: check which layer introduced the problem ?
+            done();
+        });
     });
 
     it("blank CartoCSS error", function(done) {
@@ -125,22 +101,12 @@ describe('multilayer error cases', function() {
           }}
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-        try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed);
-          assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0];
-          assert.ok(error.match(/^style1: CartoCSS is empty/), error);
-          done();
-        } catch (err) { done(err); }
-      });
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(err.message.match(/^style1: CartoCSS is empty/));
+            done();
+        });
     });
 
     it("Invalid mapnik-geometry-type CartoCSS error", function(done) {
@@ -159,24 +125,14 @@ describe('multilayer error cases', function() {
           }}
         ]
       };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-        try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed);
-          assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0];
-          // carto-0.9.3 used to say "Failed to parse expression",
-          // carto-0.9.5 says "not a valid keyword"
-          assert.ok(error.match(/^style0:.*(Failed|not a valid)/), error);
-          // TODO: check which layer introduced the problem ?
-          done();
-        } catch (err) { done(err); }
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            // carto-0.9.3 used to say "Failed to parse expression",
+            // carto-0.9.5 says "not a valid keyword"
+            assert.ok(err.message.match(/^style0:.*(Failed|not a valid)/));
+            // TODO: check which layer introduced the problem ?
+            done();
       });
     });
 
@@ -199,32 +155,27 @@ describe('multilayer error cases', function() {
             ]
         };
 
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-            data: JSON.stringify(layergroup)
-        }, {}, function(res) {
-            assert.equal(res.statusCode, 400, res.body);
-            var parsed = JSON.parse(res.body);
-            assert.equal(parsed.errors.length, 1);
-            var error = parsed.errors[0];
-            assert.ok(error.match(/column "address" does not exist/m), error);
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(err.message.match(/column "address" does not exist/m));
             done();
         });
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/31
     it('bogus sql raises 400 status code', function(done) {
-        var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
-        testClient.createLayergroup(bogusSqlMapConfig, { statusCode: 400 }, function(err, res) {
-            assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
+        var bogusSqlMapConfig = TestClient.singleLayerMapConfig('BOGUS FROM test_table');
+        var testClient = new TestClient(bogusSqlMapConfig);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(/syntax error/.test(err.message), "Unexpected error: " + err.message);
             done();
         });
     });
 
     it('bogus sql raises 200 status code for jsonp', function(done) {
-        var bogusSqlMapConfig = testClient.singleLayerMapConfig('bogus');
+        var bogusSqlMapConfig = OldTestClient.singleLayerMapConfig('bogus');
         var options = {
             method: 'GET',
             callbackName: 'test',
@@ -232,7 +183,7 @@ describe('multilayer error cases', function() {
                 'Content-Type': 'text/javascript; charset=utf-8'
             }
         };
-        testClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
+        OldTestClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
             assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
             done();
@@ -240,7 +191,7 @@ describe('multilayer error cases', function() {
     });
 
     it('query not selecting the_geom raises 200 status code for jsonp instead of 404', function(done) {
-        var noGeomMapConfig = testClient.singleLayerMapConfig('select null::geometry the_geom_wadus');
+        var noGeomMapConfig = OldTestClient.singleLayerMapConfig('select null::geometry the_geom_wadus');
         var options = {
             method: 'GET',
             callbackName: 'test',
@@ -248,7 +199,7 @@ describe('multilayer error cases', function() {
                 'Content-Type': 'text/javascript; charset=utf-8'
             }
         };
-        testClient.createLayergroup(noGeomMapConfig, options, function(err, res) {
+        OldTestClient.createLayergroup(noGeomMapConfig, options, function(err, res) {
             assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
             assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
             done();
@@ -256,30 +207,31 @@ describe('multilayer error cases', function() {
     });
 
     it("query with no geometry field returns 400 status",  function(done){
-        var noGeometrySqlMapConfig = testClient.singleLayerMapConfig('SELECT 1');
-        testClient.createLayergroup(noGeometrySqlMapConfig, { statusCode: 400 }, function(err, res) {
-            assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
+        var noGeometrySqlMapConfig = TestClient.singleLayerMapConfig('SELECT 1');
+        var testClient = new TestClient(noGeometrySqlMapConfig);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(/column.*does not exist/.test(err.message), "Unexpected error: " + err.message);
             done();
         });
     });
 
     it("bogus style should raise 400 status",  function(done){
-        var bogusStyleMapConfig = testClient.defaultTableMapConfig('test_table', '#test_table{xxxxx;}');
-        testClient.createLayergroup(bogusStyleMapConfig, { method: 'GET', statusCode: 400 }, done);
+        var bogusStyleMapConfig = TestClient.defaultTableMapConfig('test_table', '#test_table{xxxxx;}');
+        var testClient = new TestClient(bogusStyleMapConfig);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'style0:1:9 Invalid code: xxxxx;');
+            done();
+        });
     });
 
-    var defaultErrorExpectedResponse = {
-        status: 400,
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-    };
-
     it('should raise 400 error for out of bounds layer index',  function(done){
-        var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
-
-        testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function(err, res) {
-            assert.deepEqual(JSON.parse(res.body), { errors: ["Layer '1' not found in layergroup"] });
+        var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+        var testClient = new TestClient(mapConfig);
+        testClient.getTile(13, 4011, 3088, {layer: 1, format: 'grid.json'}, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Layer '1' not found in layergroup");
             done();
         });
     });
