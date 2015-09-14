@@ -1,64 +1,13 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var fs = require('fs');
 var mapnik = require('mapnik');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
 var semver = require('semver');
-var http = require('http');
 var TestClient = require('../support/test_client');
-
-function rmdir_recursive_sync(dirname) {
-  var files = fs.readdirSync(dirname);
-  for (var i=0; i<files.length; ++i) {
-    var f = dirname + "/" + files[i];
-    var s = fs.lstatSync(f);
-    if ( s.isFile() ) {
-      fs.unlinkSync(f);
-    }
-    else {
-        rmdir_recursive_sync(f);
-    }
-  }
-}
 
 describe('server_gettile', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var res_serv; // resources server
-    var res_serv_status = { numrequests:0 }; // status of resources server
-    var res_serv_port = 8033; // FIXME: make configurable ?
-
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
-
-    before(function(done) {
-        // Start a server to test external resources
-        res_serv = http.createServer( function(request, response) {
-            ++res_serv_status.numrequests;
-            var filename = __dirname + '/../fixtures/markers' + request.url;
-            fs.readFile(filename, "binary", function(err, file) {
-              if ( err ) {
-                response.writeHead(404, {'Content-Type': 'text/plain'});
-                response.write("404 Not Found\n");
-              } else {
-                response.writeHead(200);
-                response.write(file, "binary");
-              }
-              response.end();
-            });
-        });
-        res_serv.listen(res_serv_port, done);
-    });
-
-
-    after(function(done) {
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
-
-        // Close the resources server
-        res_serv.close(done);
-    });
 
     function imageCompareFn(fixture, done) {
         return function(err, tile) {
