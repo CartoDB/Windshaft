@@ -15,6 +15,7 @@ module.exports.redis = {
 };
 module.exports.renderer = {
     mapnik: {
+        geometry_field: 'the_geom',
         poolSize: 4,//require('os').cpus().length,
         metatile: 1,
         bufferSize: 64,
