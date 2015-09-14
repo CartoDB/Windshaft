@@ -1,16 +1,11 @@
 require('../support/test_helper');
 
-var assert        = require('../support/assert');
-var _             = require('underscore');
-var redis         = require('redis');
-var Windshaft     = require('../../lib/windshaft');
+var assert = require('../support/assert');
+var _ = require('underscore');
 var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 describe('multilayer interactivity and layers order', function() {
-
-    var server = new Windshaft.Server(ServerOptions);
-    var redisClient = redis.createClient(ServerOptions.redis.port);
 
     function layerType(layer) {
         return layer.type || 'undefined';
@@ -18,68 +13,33 @@ describe('multilayer interactivity and layers order', function() {
 
     function testInteractivityLayersOrderScenario(testScenario) {
         it(testScenario.desc, function(done) {
-            var layergroup =  {
+            var mapConfig =  {
                 version: '1.3.0',
                 layers: testScenario.layers
             };
+            var testClient = new TestClient(mapConfig);
+            testClient.createLayergroup(function(err, layergroup) {
+                var layergroupId = layergroup.layergroupid;
+                assert.ok(layergroupId);
+                assert.equal(layergroup.metadata.layers.length, mapConfig.layers.length);
 
-            assert.response(server,
-                {
-                    url: '/database/windshaft_test/layergroup',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify(layergroup)
-                },
-                {
-                    //status: 200, don't use status here to have a more meaningful error message
-                    headers: {
-                        'content-type': 'application/json; charset=utf-8'
-                    }
-                },
-                function(response) {
+                // check layers metadata at least match in number
+                var layersMetadata = layergroup.metadata.layers;
+                assert.equal(layersMetadata.length, mapConfig.layers.length);
+                for (var i = 0, len = layersMetadata.length; i < len; i++) {
                     assert.equal(
-                        response.statusCode,
-                        200,
-                            'Expected status code 200, got ' + response.statusCode +
-                            '\n\tResponse body: ' + response.body +
-                            '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
+                        getLayerTypeFn(layersMetadata[i].type),
+                        getLayerTypeFn(mapConfig.layers[i].type)
                     );
-
-                    var layergroupResponse = JSON.parse(response.body);
-                    assert.ok(layergroupResponse);
-
-                    var layergroupId = layergroupResponse.layergroupid;
-                    assert.ok(layergroupId);
-                    assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
-
-                    // check layers metadata at least match in number
-                    var layersMetadata = layergroupResponse.metadata.layers;
-                    assert.equal(layersMetadata.length, layergroup.layers.length);
-                    for (var i = 0, len = layersMetadata.length; i < len; i++) {
-                        assert.equal(
-                            getLayerTypeFn(layersMetadata[i].type),
-                            getLayerTypeFn(layergroup.layers[i].type)
-                        );
-                    }
-                    // check torque metadata at least match in number
-                    var torqueLayers = layergroup.layers.filter(function(layer) { return layer.type === 'torque'; });
-                    if (torqueLayers.length) {
-                        assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
-                    }
-
-                    redisClient.exists("map_cfg|" +  layergroupId, function(err, exists) {
-                        if (err) {
-                            return done(err);
-                        }
-                        assert.ok(exists, "Missing expected token " + layergroupId + " from redis");
-                        redisClient.del("map_cfg|" +  layergroupId, function(err) {
-                            done(err);
-                        });
-                    });
                 }
-            );
+                // check torque metadata at least match in number
+                var torqueLayers = mapConfig.layers.filter(function(layer) { return layer.type === 'torque'; });
+                if (torqueLayers.length) {
+                    assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
+                }
+
+                done();
+            });
         });
     }
 

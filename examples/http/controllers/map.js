@@ -1,10 +1,11 @@
 var assert = require('assert');
 var step = require('step');
+var windshaft = require('../../../lib/windshaft');
 
-var MapConfig = require('../models/mapconfig');
-var DummyMapConfigProvider = require('../models/dummy_mapconfig_provider');
+var MapConfig = windshaft.model.MapConfig;
+var DummyMapConfigProvider = require('../../../lib/windshaft/models/dummy_mapconfig_provider');
 
-var MapStoreMapConfigProvider = require('../models/mapstore_mapconfig_provider');
+var MapStoreMapConfigProvider = windshaft.model.provider.MapStoreMapConfig;
 
 /**
  * @param app
@@ -45,8 +46,6 @@ MapController.prototype.cors = function(req, res, next) {
 MapController.prototype.attributes = function(req, res) {
     var self = this;
 
-    req.profiler.start('windshaft.maplayer_attribute');
-
     this._app.doCORS(res);
 
     step(
@@ -54,15 +53,11 @@ MapController.prototype.attributes = function(req, res) {
             self._app.req2params(req, this);
         },
         function retrieveFeatureAttributes(err) {
-            req.profiler.done('req2params');
-
             assert.ifError(err);
-
-            self.attributesBackend.getFeatureAttributes(req.params, false, this);
+            var mapConfigProvider = new MapStoreMapConfigProvider(self.mapStore, req.params);
+            self.attributesBackend.getFeatureAttributes(mapConfigProvider, req.params, false, this);
         },
-        function finish(err, tile, stats) {
-            req.profiler.add(stats || {});
-
+        function finish(err, tile) {
             if (err) {
                 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/68
                 var errMsg = err.message ? ( '' + err.message ) : ( '' + err );
@@ -106,8 +101,6 @@ MapController.prototype.create = function(req, res, prepareConfigFn) {
 };
 
 MapController.prototype.createGet = function(req, res){
-    req.profiler.start('windshaft.createmap_get');
-
     this.create(req, res, function createGet$prepareConfig(err, req) {
         assert.ifError(err);
         if ( ! req.params.config ) {
@@ -119,8 +112,6 @@ MapController.prototype.createGet = function(req, res){
 
 // TODO rewrite this so it is possible to share code with `MapController::create` method
 MapController.prototype.createPost = function(req, res) {
-    req.profiler.start('windshaft.createmap_post');
-
     this.create(req, res, function createPost$prepareConfig(err, req) {
         assert.ifError(err);
         if ( ! req.headers['content-type'] || req.headers['content-type'].split(';')[0] !== 'application/json' ) {
@@ -132,7 +123,6 @@ MapController.prototype.createPost = function(req, res) {
 
 // Gets a tile for a given token and set of tile ZXY coords. (OSM style)
 MapController.prototype.tile = function(req, res) {
-    req.profiler.start('windshaft.map_tile');
     this.tileOrLayer(req, res);
 };
 
@@ -141,7 +131,6 @@ MapController.prototype.layer = function(req, res, next) {
     if (req.params.token === 'static') {
         return next();
     }
-    req.profiler.start('windshaft.maplayer_tile');
     this.tileOrLayer(req, res);
 };
 
@@ -154,14 +143,12 @@ MapController.prototype.tileOrLayer = function (req, res) {
             self._app.req2params(req, this);
         },
         function mapController$getTile(err) {
-            req.profiler.done('req2params');
             if ( err ) {
                 throw err;
             }
             self.tileBackend.getTile(new MapStoreMapConfigProvider(self.mapStore, req.params), req.params, this);
         },
-        function mapController$finalize(err, tile, headers, stats) {
-            req.profiler.add(stats);
+        function mapController$finalize(err, tile, headers) {
             self.finalizeGetTileOrGrid(err, req, res, tile, headers);
             return null;
         },
@@ -203,11 +190,7 @@ MapController.prototype.finalizeGetTileOrGrid = function(err, req, res, tile, he
         }
 
         this._app.sendError(res, { errors: ['' + errMsg] }, statusCode, 'TILE RENDER', err);
-        global.statsClient.increment('windshaft.tiles.error');
-        global.statsClient.increment('windshaft.tiles.' + formatStat + '.error');
     } else {
         this._app.sendWithHeaders(res, tile, 200, headers);
-        global.statsClient.increment('windshaft.tiles.success');
-        global.statsClient.increment('windshaft.tiles.' + formatStat + '.success');
     }
 };

@@ -2,7 +2,6 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
-var OldTestClient = require('../support/test_client_old');
 
 describe('torque png renderer', function() {
 
@@ -130,11 +129,9 @@ describe('torque png renderer', function() {
         it('torque static map with offset', function(done) {
             var w = 600,
                 h = 400;
-
-            OldTestClient.getStaticBbox(mapConfigTorqueOffset, -170, -87, 170, 87, w, h, function(err, res, img) {
-                if (err) {
-                    return done(err);
-                }
+            var testClient = new TestClient(mapConfigTorqueOffset);
+            testClient.getStaticBbox(-170, -87, 170, 87, w, h, function(err, imageBuffer, img) {
+                assert.ok(!err);
 
                 assert.equal(img.width(), w);
                 assert.equal(img.height(), h);

@@ -1,7 +1,8 @@
 var step = require('step');
 var assert = require('assert');
+var windshaft = require('../../../lib/windshaft');
 
-var MapStoreMapConfigProvider = require('../models/mapstore_mapconfig_provider');
+var MapStoreMapConfigProvider = windshaft.model.provider.MapStoreMapConfig;
 
 /**
  *
@@ -57,7 +58,6 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
             self._app.req2params(req, this);
         },
         function(err) {
-            req.profiler.done('req2params');
             assert.ifError(err);
             if (center) {
                 self.previewBackend.getImage(new MapStoreMapConfigProvider(self.mapStore, req.params),
@@ -67,10 +67,7 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
                     format, width, height, zoom /* bounds */, this);
             }
         },
-        function handleImage(err, image, headers, stats) {
-            req.profiler.done('render-' + format);
-            req.profiler.add(stats || {});
-
+        function handleImage(err, image, headers) {
             if (err) {
                 if (!err.error) {
                     err.error = err.message;

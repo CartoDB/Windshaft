@@ -4,7 +4,6 @@ var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
 var redis = require('redis');
-var mapnik = require('mapnik');
 var TestClient = require('../support/test_client');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
@@ -15,23 +14,17 @@ describe('server_png8_format', function() {
 
     var layergroupId;
 
-    var grainstoreOptions = {
-        datasource: global.environment.postgres,
-        cachedir: global.environment.millstone.cache_basedir,
-        mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik
-    };
-
     var testClientPng8;
     var testClientPng32;
     before(function(done) {
         testClientPng8 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: _.extend({mapnik_tile_format: 'png8:m=h'}, grainstoreOptions)
+                grainstore: _.extend({mapnik_tile_format: 'png8:m=h'}, TestClient.grainstoreOptions)
             }
         });
         testClientPng32 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: _.extend({mapnik_tile_format: 'png'}, grainstoreOptions)
+                grainstore: _.extend({mapnik_tile_format: 'png'}, TestClient.grainstoreOptions)
             }
         });
         var testPngFilesDir = __dirname + '/../results/png';

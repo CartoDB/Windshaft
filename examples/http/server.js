@@ -1,29 +1,13 @@
 var debug = require('debug')('windshaft:server');
 var express = require('express');
-var grainstore = require('grainstore');
 var RedisPool = require('redis-mpool');
 var _ = require('underscore');
 var mapnik = require('mapnik');
 
-var MapStore = require('./storages/mapstore');
-var RendererCache = require('./cache/renderer_cache');
-var RendererStatsReporter = require('./stats/reporter/renderer');
+var windshaft = require('../../lib/windshaft');
 
-var AttributesBackend = require('./backends/attributes');
-var MapBackend = require('./backends/map');
-var MapValidatorBackend = require('./backends/map_validator');
-var PreviewBackend = require('./backends/preview');
-var TileBackend = require('./backends/tile');
-
-var Profiler = require('./stats/profiler_proxy');
-var StatsClient = require('./stats/client');
 var StaticMapsController = require('./controllers/static_maps');
 var MapController = require('./controllers/map');
-
-
-var WELCOME_MSG = "This is the CartoDB Maps API, " +
-    "see the documentation at http://docs.cartodb.com/cartodb-platform/maps-api.html";
-
 
 //
 // @param opts server options object. Example value:
@@ -88,24 +72,20 @@ module.exports = function(opts) {
 
     bootstrapFonts(opts);
 
-    // Make stats client globally accessible
-    global.statsClient = StatsClient.getInstance(opts.statsd);
-
     // initialize express server
     var app = bootstrap(opts);
     addFilters(app, opts);
 
     var redisPool = makeRedisPool(opts.redis);
 
-    var map_store  = new MapStore({
+    var map_store  = new windshaft.storage.MapStore({
         pool: redisPool,
         expire_time: opts.grainstore.default_layergroup_ttl
     });
 
     opts.renderer = opts.renderer || {};
 
-    var RendererFactory = require('./renderers/renderer_factory');
-    var rendererFactory = new RendererFactory({
+    var rendererFactory = new windshaft.renderer.Factory({
         onTileErrorStrategy: opts.renderer.onTileErrorStrategy,
         mapnik: {
             grainstore: opts.grainstore,
@@ -120,49 +100,21 @@ module.exports = function(opts) {
         ttl: 60000, // 60 seconds TTL by default
         statsInterval: 60000 // reports stats every milliseconds defined here
     });
-    var rendererCache = new RendererCache(rendererFactory, rendererCacheOpts);
-    var rendererStatsReporter = new RendererStatsReporter(rendererCache, rendererCacheOpts.statsInterval);
-    rendererStatsReporter.start();
+    var rendererCache = new windshaft.cache.RendererCache(rendererFactory, rendererCacheOpts);
 
-    var attributesBackend = new AttributesBackend(map_store);
-    var previewBackend = new PreviewBackend(rendererCache);
-    var tileBackend = new TileBackend(rendererCache);
-    var mapValidatorBackend = new MapValidatorBackend(tileBackend, attributesBackend);
-    var mapBackend = new MapBackend(rendererCache, map_store, mapValidatorBackend);
+    var attributesBackend = new windshaft.backend.Attributes();
+    var previewBackend = new windshaft.backend.Preview(rendererCache);
+    var tileBackend = new windshaft.backend.Tile(rendererCache);
+    var mapValidatorBackend = new windshaft.backend.MapValidator(tileBackend, attributesBackend);
+    var mapBackend = new windshaft.backend.Map(rendererCache, map_store, mapValidatorBackend);
 
     app.sendResponse = function(res, args) {
-      // When using custom results from tryFetch* methods,
-      // there is no "req" link in the result object.
-      // In those cases we don't want to send stats now
-      // as they will be sent at the real end of request
-      var req = res.req;
-
-      if (global.environment && global.environment.api_hostname) {
-        res.header('X-Served-By-Host', global.environment.api_hostname);
-      }
-
-      if (req && req.params && req.params.dbhost) {
-        res.header('X-Served-By-DB-Host', req.params.dbhost);
-      }
-
-      if ( req && req.profiler ) {
-        res.header('X-Tiler-Profiler', req.profiler.toJSONString());
-      }
-
       res.send.apply(res, args);
-
-      if ( req && req.profiler ) {
-        try {
-          // May throw due to dns, see
-          // See http://github.com/CartoDB/Windshaft/issues/166
-          req.profiler.sendStats();
-        } catch (err) {
-          debug("error sending profiling stats: " + err);
-        }
-      }
     };
 
-    setupSendWithHeaders(app);
+    app.sendWithHeaders = function(res, what, status, headers) {
+        app.sendResponse(res, [what, headers, status]);
+    };
 
     app.findStatusCode = function(err) {
         var statusCode;
@@ -217,7 +169,7 @@ module.exports = function(opts) {
 
     // simple testable route
     app.get('/', function(req, res) {
-        app.sendResponse(res, [WELCOME_MSG]);
+        app.sendResponse(res, ["This is an example HTTP server using windshaft library"]);
     });
 
     // version
@@ -291,15 +243,6 @@ function bootstrap(opts) {
         next();
     });
 
-    // Use our step-profiler
-    app.use(function(req, res, next) {
-        req.profiler = new Profiler({
-            statsd_client: global.statsClient,
-            profile: opts.useProfiler
-        });
-        next();
-    });
-
     setupLogger(app, opts);
 
     return app;
@@ -346,28 +289,9 @@ function addFilters(app, opts) {
         },
 
         getVersion: function() {
-            return {
-                windshaft: require('../../package.json').version,
-                grainstore: grainstore.version(),
-                node_mapnik: mapnik.version,
-                mapnik: mapnik.versions.mapnik
-            };
+            return windshaft.versions;
         }
     });
-}
-
-function setupSendWithHeaders(app) {
-    // Support both express-2.5 and express-3.0
-    if ( express.version.split('.')[0] >= 3 ) {
-        app.sendWithHeaders = function(res, what, status, headers) {
-            res.set(headers);
-            app.sendResponse(res, [what, status]);
-        };
-    } else {
-        app.sendWithHeaders = function(res, what, status, headers) {
-            app.sendResponse(res, [what, headers, status]);
-        };
-    }
 }
 
 function statusFromErrorMessage(errMsg) {
