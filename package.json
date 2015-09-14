@@ -25,7 +25,6 @@
         "Raul Ochoa <rochoa@cartodb.com>"
     ],
     "dependencies": {
-        "chronograph": "git://github.com/CartoDB/chronographjs.git#0.1.0",
         "underscore": "~1.6.0",
         "step": "~0.0.5",
         "queue-async": "~1.0.7",
@@ -39,13 +38,11 @@
         "semver": "~1.1.4",
         "redis-mpool": "~0.4.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
-        "step-profiler": "~0.2.1",
         "cartodb-psql": "~0.4.0",
         "torque.js": "~2.11.0",
         "request": "2.48.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
-        "sphericalmercator": "1.0.2",
-        "node-statsd": "~0.0.7"
+        "sphericalmercator": "1.0.2"
     },
     "devDependencies": {
         "istanbul": "~0.3.6",

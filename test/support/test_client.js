@@ -7,8 +7,6 @@ var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig
 
 var redisClient = require('redis').createClient(global.environment.redis.port);
 
-global.statsClient = windshaft.stats.Client.getInstance({});
-
 mapnik.register_system_fonts();
 mapnik.register_default_fonts();
 var cartoEnv = {
