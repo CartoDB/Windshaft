@@ -171,6 +171,11 @@ You need to install fonts at system level to be able to use them. If you face an
 text-face-name, the type font is expected. DejaVu Sans Book (of type string) was given.` probably you don't have the
 required fonts, try to install [DejaVu fonts](http://dejavu-fonts.org/wiki/Download) or any other font needed.
 
+Contributing
+------------
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 
 --
 Thanks to the Mapnik and Mapbox team for making such flexible tools
