@@ -191,6 +191,6 @@ MapController.prototype.finalizeGetTileOrGrid = function(err, req, res, tile, he
 
         this._app.sendError(res, { errors: ['' + errMsg] }, statusCode, 'TILE RENDER', err);
     } else {
-        this._app.sendWithHeaders(res, tile, 200, headers);
+        this._app.sendResponse(res, [tile, headers, 200]);
     }
 };

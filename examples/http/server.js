@@ -112,10 +112,6 @@ module.exports = function(opts) {
       res.send.apply(res, args);
     };
 
-    app.sendWithHeaders = function(res, what, status, headers) {
-        app.sendResponse(res, [what, headers, status]);
-    };
-
     app.findStatusCode = function(err) {
         var statusCode;
         if ( err.http_status ) {
