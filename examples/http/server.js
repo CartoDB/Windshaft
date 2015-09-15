@@ -144,7 +144,7 @@ module.exports = function(opts) {
       err = err.replace(/is the server.*encountered/im, 'encountered');
       err = JSON.parse(err);
 
-      app.sendResponse(res, [err, statusCode]);
+      res.send(err, statusCode);
     };
 
     /*******************************************************************************************************************
@@ -159,12 +159,12 @@ module.exports = function(opts) {
 
     // simple testable route
     app.get('/', function(req, res) {
-        app.sendResponse(res, ["This is an example HTTP server using windshaft library"]);
+        res.send('This is an example HTTP server using windshaft library');
     });
 
     // version
     app.get('/version', function(req, res) {
-        app.sendResponse(res, [app.getVersion(), 200]);
+        res.send(app.getVersion(), 200);
     });
 
     /*******************************************************************************************************************
@@ -228,17 +228,6 @@ function bootstrap(opts) {
     app.enable('jsonp callback');
     app.use(express.bodyParser());
 
-    app.use(function createRequestContext(req, res, next) {
-        req.context = req.context || {};
-        next();
-    });
-
-    setupLogger(app, opts);
-
-    return app;
-}
-
-function setupLogger(app, opts) {
     if (opts.log_format) {
         var loggerOpts = {
             // Allowing for unbuffered logging is mainly
@@ -250,12 +239,11 @@ function setupLogger(app, opts) {
             // optional log format
             format: opts.log_format
         };
-        if (global.log4js) {
-            app.use(global.log4js.connectLogger(global.log4js.getLogger(), _.defaults(loggerOpts, {level: 'info'})));
-        } else {
-            app.use(express.logger(loggerOpts));
-        }
+
+        app.use(express.logger(loggerOpts));
     }
+
+    return app;
 }
 
 // set default before/after filters if not set in opts object

@@ -61,10 +61,9 @@ MapController.prototype.attributes = function(req, res) {
             if (err) {
                 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/68
                 var errMsg = err.message ? ( '' + err.message ) : ( '' + err );
-                var statusCode = self._app.findStatusCode(err);
-                self._app.sendError(res, { errors: [errMsg] }, statusCode, 'GET ATTRIBUTES', err);
+                self._app.sendError(res, { errors: [errMsg] }, self._app.findStatusCode(err), 'ATTRIBUTES', err);
             } else {
-                self._app.sendResponse(res, [tile, 200]);
+                res.send(tile, 200);
             }
         }
     );
@@ -90,11 +89,9 @@ MapController.prototype.create = function(req, res, prepareConfigFn) {
         },
         function finish(err, response){
             if (err) {
-                response = { errors: [ err.message ] };
-                var statusCode = self._app.findStatusCode(err);
-                self._app.sendError(res, response, statusCode, 'GET LAYERGROUP', err);
+                self._app.sendError(res, { errors: [ err.message ] }, self._app.findStatusCode(err), 'LAYERGROUP', err);
             } else {
-                self._app.sendResponse(res, [response, 200]);
+                res.send(response, 200);
             }
         }
     );
@@ -163,25 +160,9 @@ MapController.prototype.tileOrLayer = function (req, res) {
 // This function is meant for being called as the very last
 // step by all endpoints serving tiles or grids
 MapController.prototype.finalizeGetTileOrGrid = function(err, req, res, tile, headers) {
-    var supportedFormats = {
-        grid_json: true,
-        json_torque: true,
-        torque_json: true,
-        png: true
-    };
-
-    var formatStat = 'invalid';
-    if (req.params.format) {
-        var format = req.params.format.replace('.', '_');
-        if (supportedFormats[format]) {
-            formatStat = format;
-        }
-    }
-
     if (err){
         // See https://github.com/Vizzuality/Windshaft-cartodb/issues/68
         var errMsg = err.message ? ( '' + err.message ) : ( '' + err );
-        var statusCode = this._app.findStatusCode(err);
 
         // Rewrite mapnik parsing errors to start with layer number
         var matches = errMsg.match("(.*) in style 'layer([0-9]+)'");
@@ -189,8 +170,8 @@ MapController.prototype.finalizeGetTileOrGrid = function(err, req, res, tile, he
             errMsg = 'style'+matches[2]+': ' + matches[1];
         }
 
-        this._app.sendError(res, { errors: ['' + errMsg] }, statusCode, 'TILE RENDER', err);
+        this._app.sendError(res, { errors: ['' + errMsg] }, this._app.findStatusCode(err), 'TILE', err);
     } else {
-        this._app.sendResponse(res, [tile, headers, 200]);
+        res.send(tile, headers, 200);
     }
 };
