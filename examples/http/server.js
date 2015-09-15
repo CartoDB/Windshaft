@@ -42,11 +42,6 @@ var MapController = require('./controllers/map');
 //
 //          },
 //        },
-//        // http://github.com/sivy/node-statsd/blob/master/lib/statsd.js#L6
-//        statsd {,
-//          host: 'localhost',
-//          port: 8125
-//        },
 //        renderCache: {
 //          ttl: 60000, // seconds
 //        },
@@ -58,8 +53,7 @@ var MapController = require('./controllers/map');
 //        https: {
 //          key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
 //          cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
-//        },
-//        useProfiler:true
+//        }
 //     }
 //
 module.exports = function(opts) {
