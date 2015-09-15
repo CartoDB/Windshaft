@@ -165,13 +165,6 @@ PGUSER=postgres npm test
 Troubleshooting
 ---------------
 
-### Uncaught Error: Command failed running tests
-
-You need [ImageMagick](http://www.imagemagick.org/) to run some tests. In Mac OS X
-there are some issues running with latest versions of ImageMagick. If you use
-[Homebrew](http://brew.sh/) you can try with a
-[modified Formula to install ImageMagick version 6.7.7](https://gist.github.com/rochoa/10017167).
-
 ### Fonts: Invalid value for text-face-name
 
 You need to install fonts at system level to be able to use them. If you face an issue like `Invalid value for
