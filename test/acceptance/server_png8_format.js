@@ -3,16 +3,11 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
-var redis = require('redis');
 var TestClient = require('../support/test_client');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
 describe('server_png8_format', function() {
-
-    var redisClient = redis.createClient(global.environment.redis.port);
-
-    var layergroupId;
 
     var testClientPng8;
     var testClientPng32;
@@ -54,9 +49,7 @@ describe('server_png8_format', function() {
                     assert.ok(bufferPng8.length < bufferPng32.length);
                     assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                         function (err, imagePaths, similarity) {
-                            redisClient.del('map_cfg|' + layergroupId, function () {
-                                callback(err, imagePaths, similarity, done);
-                            });
+                            callback(err, imagePaths, similarity, done);
                         }
                     );
                 });
