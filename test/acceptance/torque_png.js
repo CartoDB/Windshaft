@@ -139,7 +139,7 @@ describe('torque png renderer', function() {
             var testClient = new TestClient(mapConfig);
             testClient.getTile(2, 2, 1, function(err, tile) {
                 assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ok(!err, err);
                     done();
                 });
             });
