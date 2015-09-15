@@ -1,5 +1,7 @@
 require('../support/test_helper');
 
+var fs = require('fs');
+var http = require('http');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
@@ -44,9 +46,32 @@ describe('torque png renderer', function() {
             ]
         };
 
+        var resourcesServer;
+        var resourcesServerPort = 8033;
+
         var testClient;
-        before(function() {
+        before(function(done) {
             testClient = new TestClient(torquePngPointsMapConfig);
+            // Start a server to test external resources
+            resourcesServer = http.createServer(function(request, response) {
+                var filename = __dirname + '/../fixtures/markers' + request.url;
+                fs.readFile(filename, "binary", function(err, file) {
+                    if ( err ) {
+                        response.writeHead(404, {'Content-Type': 'text/plain'});
+                        response.write("404 Not Found\n");
+                    } else {
+                        response.writeHead(200);
+                        response.write(file, "binary");
+                    }
+                    response.end();
+                });
+            });
+            resourcesServer.listen(resourcesServerPort, done);
+        });
+
+        after(function(done) {
+            // Close the resources server
+            resourcesServer.close(done);
         });
 
         var tileRequests = [
@@ -77,6 +102,45 @@ describe('torque png renderer', function() {
                         assert.ok(!err);
                         done();
                     });
+                });
+            });
+        });
+
+        it('should support marker-file with url', function(done) {
+            var fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
+            var markerFileUrl = 'http://localhost:' + resourcesServerPort + '/maki/circle-24.png';
+            var mapConfig = {
+                version: '1.3.0',
+                "layers": [
+                    {
+                        type: 'torque',
+                        options: {
+                            "sql": 'select * from populated_places_simple_reduced',
+                            "cartocss": [
+                                'Map {',
+                                    '-torque-frame-count:1;',
+                                    '\n-torque-animation-duration:30;',
+                                    '\n-torque-time-attribute:\"cartodb_id\";',
+                                    '\n-torque-aggregation-function:\"count(cartodb_id)\";',
+                                    '\n-torque-resolution:1;',
+                                    '\n-torque-data-aggregation:linear;',
+                                '}',
+                                '',
+                                '#protected_areas_points{',
+                                    'marker-width: 4;',
+                                    'marker-file: url(' + markerFileUrl + ');',
+                                '}'
+                            ].join(' ')
+                        }
+                    }
+                ]
+            };
+
+            var testClient = new TestClient(mapConfig);
+            testClient.getTile(2, 2, 1, function(err, tile) {
+                assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    assert.ok(!err);
+                    done();
                 });
             });
         });
