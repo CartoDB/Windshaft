@@ -3,6 +3,8 @@ sudo: false
 addons:
   postgresql: "9.3"
   apt:
+    sources:
+      - cartodb
     packages:
       - pkg-config
       - libcairo2-dev
