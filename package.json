@@ -26,7 +26,7 @@
     ],
     "dependencies": {
         "underscore": "~1.6.0",
-        "step": "~0.0.5",
+        "step": "~0.0.6",
         "queue-async": "~1.0.7",
         "grainstore": "~1.0.0",
         "debug": "~2.2.0",
@@ -40,9 +40,9 @@
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "cartodb-psql": "~0.6.1",
         "torque.js": "~2.11.0",
-        "request": "2.48.0",
+        "request": "2.62.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
-        "sphericalmercator": "1.0.2"
+        "sphericalmercator": "1.0.3"
     },
     "devDependencies": {
         "istanbul": "~0.3.6",
