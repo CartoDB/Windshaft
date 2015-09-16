@@ -37,7 +37,7 @@
         "semver": "~1.1.4",
         "redis-mpool": "~0.4.0",
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
-        "cartodb-psql": "~0.4.0",
+        "cartodb-psql": "~0.6.1",
         "torque.js": "~2.11.0",
         "request": "2.48.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/cdb",
