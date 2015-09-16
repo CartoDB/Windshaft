@@ -3,16 +3,11 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
-var redis = require('redis');
 var TestClient = require('../support/test_client');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
 describe('server_png8_format', function() {
-
-    var redisClient = redis.createClient(global.environment.redis.port);
-
-    var layergroupId;
 
     var testClientPng8;
     var testClientPng32;
@@ -40,23 +35,17 @@ describe('server_png8_format', function() {
         done();
     });
 
-    function testOutputForPng32AndPng8(tile, callback) {
-
-        var bufferPng32,
-            bufferPng8;
-
+    function testOutputForPng32AndPng8(tile, persist, callback) {
         it('intensity visualization; tile: ' + JSON.stringify(tile),  function(done) {
             testClientPng32.getTile(tile.z, tile.x, tile.y, function(err, tileBuffer) {
-                bufferPng32 = tileBuffer;
+                var bufferPng32 = tileBuffer;
                 testClientPng8.getTile(tile.z, tile.x, tile.y, function(err, tileBuffer) {
-                    bufferPng8 = tileBuffer;
+                    var bufferPng8 = tileBuffer;
 
                     assert.ok(bufferPng8.length < bufferPng32.length);
-                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, persist,
                         function (err, imagePaths, similarity) {
-                            redisClient.del('map_cfg|' + layergroupId, function () {
-                                callback(err, imagePaths, similarity, done);
-                            });
+                            callback(err, imagePaths, similarity, done);
                         }
                     );
                 });
@@ -107,24 +96,29 @@ describe('server_png8_format', function() {
         ]
     };
 
-    var allImagePaths = [],
-        similarities = [];
+    // when using PERSIST=true you can check differences in test/results/compare.html
+    var PERSIST = false;
+
+    var allImagePaths = [];
+    var similarities = [];
     allLevelTiles.forEach(function(tile) {
-        testOutputForPng32AndPng8(tile, function(err, imagePaths, similarity, done) {
-            allImagePaths.push(imagePaths);
-            similarities.push(similarity);
-            var transformPaths = [];
-            for (var i = 0, len = allImagePaths.length; i < len; i++) {
-                if (similarities[i] > 0.075) {
-                    transformPaths.push({
-                        passive: allImagePaths[i][0],
-                        active: allImagePaths[i][1],
-                        similarity: similarities[i]
-                    });
+        testOutputForPng32AndPng8(tile, PERSIST, function(err, imagePaths, similarity, done) {
+            if (PERSIST) {
+                allImagePaths.push(imagePaths);
+                similarities.push(similarity);
+                var transformPaths = [];
+                for (var i = 0, len = allImagePaths.length; i < len; i++) {
+                    if (similarities[i] > 0.075) {
+                        transformPaths.push({
+                            passive: allImagePaths[i][0],
+                            active: allImagePaths[i][1],
+                            similarity: similarities[i]
+                        });
+                    }
                 }
+                var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
+                fs.writeFileSync('test/results/png/results.js', output);
             }
-            var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
-            fs.writeFileSync('test/results/png/results.js', output);
             assert.ifError(err);
             done();
         });
