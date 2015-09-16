@@ -32,7 +32,7 @@
         "debug": "~2.2.0",
         "tilelive": "~4.5.3",
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.x-cdb1",
-        "tilelive-bridge": "https://github.com/CartoDB/tilelive-bridge/tarball/cdb",
+        "tilelive-bridge": "https://github.com/CartoDB/tilelive-bridge/tarball/gzip-option",
         "mapnik": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb2",
         "canvas": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
         "semver": "~1.1.4",
