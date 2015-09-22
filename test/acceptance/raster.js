@@ -65,5 +65,36 @@ describe('raster', function() {
         });
     });
 
+    it("raster geom type allows to set raster_band", function(done) {
+
+        var mapconfig =  {
+            version: '1.2.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: [
+                            "select 1 id,",
+                            "ST_AsRaster(ST_MakeEnvelope(-100, -40, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst"
+                        ].join(' '),
+                        cartocss_version: '2.3.0',
+                        cartocss: '#layer { raster-opacity: 1.0 }',
+                        geom_column: 'rst',
+                        geom_type: 'raster',
+                        raster_band: 1
+                    }
+                }
+            ]
+        };
+
+        var testClient = new TestClient(mapconfig);
+        testClient.getTile(0, 0, 0, function(err, tile, img) {
+            assert.ok(!err);
+            assert.ok(tile);
+            assert.equal(img.width(), 256);
+            done();
+        });
+    });
+
 });
 
