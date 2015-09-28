@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "0.52.0",
+    "version": "1.0.0-alpha",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
     "keywords": [
