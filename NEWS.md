@@ -1,7 +1,30 @@
-# Version 0.52.0
+# Version 1.0.0-alpha
 2015-mm-dd
 
-New features:
+From Semantic Versioning:
+> Major version zero (0.y.z) is for initial development. Anything may change at any time. The public
+API should not be considered stable.
+
+As we are following Semantic Versioning and we didn't release any major > 0 we could change anything with next minor
+bump but I would like to make this version 1.0.0 so this stays as the first public API.
+
+A lot of things have changed/moved/disappeared, internal API has nothing to do with previous one.
+
+List of changes:
+
+ - RendererCache now works with MapConfig providers (~~needs documentation~~).
+ - Backends hold a RendererCache, so they also work with MapConfig providers
+ - More specific backends: tiles, previews, map, validator, attributes
+ - Express no longer a dependency
+ - Makefile picks tests with `find`, no need to add files manually
+ - Example contains a basic server similar to original windshaft's server
+ - Test environment now extends development
+ - Mapnik factory no longer supports snapToGrid and clipByBox2d
+ - RendererFactory now supports a `mapnik` filter to retrieve all mapnik layers
+ - Starts using debug to no output to stdout by default
+ - Removes stats code: profiler, client, reporter
+ - Major rewrite of tests to not rely on server
+ - Support for `MVT` format in mapnik renderer
  - Official support for `plain` layer type: options include `color` and `imageUrl`.
    * Check [doc/MapConfig-1.4.0.md](doc/MapConfig-1.4.0.md#24-plain-layers-options) for more details.
 
