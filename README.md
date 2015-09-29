@@ -51,7 +51,11 @@ npm install
 Usage
 -----
 
-TODO
+An example http service is implemented in [examples/http/server.js](examples/http/server.js),
+[examples/readme_server.js](examples/readme_server.js) extends its behaviour.
+
+Probably one of the more advanced uses of Windshaft library can be found at
+[Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb) project.
 
 
 Installing Mapnik
