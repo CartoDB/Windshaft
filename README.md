@@ -1,20 +1,17 @@
 Windshaft map tiler
 ===================
 
-A Node.js map tile server for PostGIS with CartoCSS styling.
+A Node.js map tile library for PostGIS and torque.js, with CartoCSS styling.
 
 [![NPM](https://nodei.co/npm/windshaft.png?downloads=true&downloadRank=true)](https://nodei.co/npm/windshaft)
 
 [![Build Status](https://travis-ci.org/CartoDB/Windshaft.png?branch=master)](https://travis-ci.org/CartoDB/Windshaft)
 [![Code Climate](https://codeclimate.com/github/CartoDB/Windshaft/badges/gpa.png)](https://codeclimate.com/github/CartoDB/Windshaft)
 
-* Pluggable routing to provide customizable tile API URL endpoints
-* Before and after filters to allow custom access control and caching strategies
 * Can render arbitrary SQL queries
 * Generates image and UTFGrid interactivity tiles
 * Accepts, stores, serves, and applies map styles written in [CartoCSS](https://github.com/mapbox/carto/blob/master/docs/latest.md)
 * Supports re-projections
-* Allows setting of CORS headers to allow access to tile data from client side
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
 its raw form. The idea is that you the developer will want to graft your
@@ -53,74 +50,8 @@ npm install
 
 Usage
 -----
-```javascript
 
-var Windshaft = require('windshaft');
-
-// Configure pluggable URLs
-// =========================
-// The config object must define grainstore config (generally just
-// postgres connection details), redis config, a base url and a function
-// that adds 'dbname' and 'table' variables onto the Express.js req.params
-// object.  In this example, the base URL is such that dbname and table will
-// automatically be added to the req.params object by express.js. req2params
-// can be extended to allow full control over the specifying of database
-// parameters and also allows for the req.params object to be extended with
-// other variables, such as:
-//
-// * sql - custom sql query to narrow results shown in map)
-// * geom_type - specify the geom type (point|polygon) to get more
-//               appropriate default styles
-// * cache_buster - forces the creation of a new render object, nullifying
-//                  existing metatile caches
-// * interactivity - specify the column to use in the UTFGrid
-//                   interactivity layer (defaults to null)
-// * style - specify map style in the Carto map language on a per tile basis
-//
-// * dbuser - username for database connection
-// * dbpassword - password for database connection
-// * dbhost - database host
-// * dbport - database port
-// * dbname - database name
-//
-// the base url is also used for persisiting and retrieving map styles via:
-//
-// GET  base_url + '/style' (returns a map style)
-// POST base_url + '/style' (allows specifying of a style in Carto markup
-//                           in the 'style' form variable).
-
-var config = {
-        base_url: '/database/:dbname/table/:table',
-        base_url_mapconfig: '/database/:dbname/layergroup',
-        req2params: function(req, callback){
-          callback(null,req)
-        },
-        grainstore: {
-          datasource: {
-            user:'postgres', host: '127.0.0.1',
-            port: 5432
-          }
-        }, //see grainstore npm for other options
-        renderCache: {
-          ttl: 60000, // seconds
-        },
-        mapnik: {
-          metatile: 4,
-          bufferSize:64
-        },
-        redis: {host: '127.0.0.1', port: 6379}
-    };
-
-// Initialize tile server on port 4000
-var ws = new Windshaft.Server(config);
-ws.listen(4000);
-console.log("map tiles are now being served out of: http://localhost:4000"
-            + config.base_url + '/:z/:x/:y.*');
-
-// Specify .png, .png8 or .grid.json tiles.
-```
-
-See examples directory for running server and maptile viewer
+TODO
 
 
 Installing Mapnik
@@ -164,13 +95,6 @@ PGUSER=postgres npm test
 
 Troubleshooting
 ---------------
-
-### Uncaught Error: Command failed running tests
-
-You need [ImageMagick](http://www.imagemagick.org/) to run some tests. In Mac OS X
-there are some issues running with latest versions of ImageMagick. If you use
-[Homebrew](http://brew.sh/) you can try with a
-[modified Formula to install ImageMagick version 6.7.7](https://gist.github.com/rochoa/10017167).
 
 ### Fonts: Invalid value for text-face-name
 

@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client');
+var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
@@ -10,8 +10,10 @@ describe('blend http fallback', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
+    var testClient;
 
     before(function(done) {
+        testClient = new TestClient(mapConfig);
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer( function(request, response) {
             if (request.url.match(/^\/error404\//)) {
@@ -93,17 +95,10 @@ describe('blend http fallback', function() {
 
     filteredLayersSuite.forEach(function(filteredLayers) {
         var layerFilter = filteredLayers.join(',');
-        var tileRequest = {
-            z: 1,
-            x: 0,
-            y: 0,
-            layer: layerFilter,
-            format: 'png'
-        };
 
         it('should fallback on http error while blending layers ' + layerFilter + '/1/0/0.png', function (done) {
-            testClient.getTileLayer(mapConfig, tileRequest, function(err, res) {
-                assert.imageEqualsFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
+            testClient.getTile(1, 0, 0, {layer: layerFilter}, function(err, tile) {
+                assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err, err);
                     done();
                 });
@@ -112,27 +107,9 @@ describe('blend http fallback', function() {
     });
 
     it('should keep failing when http layer is requested individually', function(done) {
-        var tileRequest = {
-            z: 1,
-            x: 0,
-            y: 0,
-            layer: 3,
-            format: 'png'
-        };
-        var expectedResponse = {
-            status: 400,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        };
-        testClient.getTileLayer(mapConfig, tileRequest, expectedResponse, function(err, res) {
-            assert.ok(!err);
-            var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody, {
-                errors: [
-                    "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]"
-                ]
-            });
+        testClient.getTile(1, 0, 0, {layer: 3}, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]");
             done();
         });
     });

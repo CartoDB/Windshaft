@@ -35,11 +35,6 @@ module.exports = (function(opts) {
             // send the finished req object on
             callback(null,req);
         },
-        afterLayergroupCreate: function(req, cfg, res, callback) {
-            res.layercount = cfg.layers.length;
-            this.afterLayergroupCreateCalls = this.afterLayergroupCreateCalls ? this.afterLayergroupCreateCalls + 1 : 1;
-            callback(null);
-        },
         useProfiler: true,
         statsd: {
             host: 'localhost',

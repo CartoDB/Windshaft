@@ -1,14 +1,44 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
-var testClient = require('../support/test_client');
+var TestClient = require('../support/test_client');
 
 describe('torque tiles at 0,0 point', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
+    var query = 'select 1 cartodb_id,' +
+        ' ST_Transform(ST_SetSRID(ST_MakePoint(0, 0), 4326), 3857) the_geom_webmercator';
+    var mapConfig =  {
+        version: '1.3.0',
+        layers: [
+            {
+                type: 'torque',
+                options: {
+                    sql: query,
+                    cartocss: [
+                        'Map {',
+                        '  -torque-time-attribute: "cartodb_id";',
+                        '  -torque-aggregation-function: "count(cartodb_id)";',
+                        '  -torque-frame-count: 1;',
+                        '  -torque-animation-duration: 15;',
+                        '  -torque-resolution: 128',
+                        '}',
+                        '#layer {',
+                        '  marker-fill: #fff;',
+                        '  marker-fill-opacity: 0.4;',
+                        '  marker-width: 1;',
+                        '}'
+                    ].join(' '),
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ]
+    };
+
+    var testClient;
+
+    before(function() {
+        testClient = new TestClient(mapConfig);
+    });
 
 /*
     Tiles are represented as in:
@@ -49,38 +79,8 @@ describe('torque tiles at 0,0 point', function() {
 
     tiles.forEach(function(tile) {
         it(tile.what, function(done) {
-
-            var query = 'select 1 cartodb_id,' +
-                ' ST_Transform(ST_SetSRID(ST_MakePoint(0, 0), 4326), 3857) the_geom_webmercator';
-            var mapConfig =  {
-                version: '1.3.0',
-                layers: [
-                    {
-                        type: 'torque',
-                        options: {
-                            sql: query,
-                            cartocss: [
-                                'Map {',
-                                '  -torque-time-attribute: "cartodb_id";',
-                                '  -torque-aggregation-function: "count(cartodb_id)";',
-                                '  -torque-frame-count: 1;',
-                                '  -torque-animation-duration: 15;',
-                                '  -torque-resolution: 128',
-                                '}',
-                                '#layer {',
-                                '  marker-fill: #fff;',
-                                '  marker-fill-opacity: 0.4;',
-                                '  marker-width: 1;',
-                                '}'
-                            ].join(' '),
-                            cartocss_version: '2.3.0'
-                        }
-                    }
-                ]
-            };
-
-            testClient.getTorque(mapConfig, 0, 3, tile.x, tile.y, function(err, res) {
-                assert.deepEqual(JSON.parse(res.body), tile.expects);
+            testClient.getTile(3, tile.x, tile.y, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
+                assert.deepEqual(torqueTile, tile.expects);
                 done();
             });
         });

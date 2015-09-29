@@ -1,9 +1,20 @@
 var step = require('step');
 var assert = require('assert');
+var windshaft = require('../../../lib/windshaft');
 
-function StaticMapsController(app, staticMapBackend) {
+var MapStoreMapConfigProvider = windshaft.model.provider.MapStoreMapConfig;
+
+/**
+ *
+ * @param app
+ * @param {MapStore} mapStore
+ * @param {PreviewBackend} previewBackend
+ * @constructor
+ */
+function StaticMapsController(app, mapStore, previewBackend) {
     this._app = app;
-    this._staticMapBackend = staticMapBackend;
+    this.mapStore = mapStore;
+    this.previewBackend = previewBackend;
 }
 
 module.exports = StaticMapsController;
@@ -37,6 +48,8 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
     this._app.doCORS(res);
 
     var format = req.params.format === 'jpg' ? 'jpeg' : 'png';
+    req.params.format = 'png';
+    req.params.layer = 'all';
 
     var self = this;
 
@@ -45,18 +58,16 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
             self._app.req2params(req, this);
         },
         function(err) {
-            req.profiler.done('req2params');
             assert.ifError(err);
             if (center) {
-                self._staticMapBackend.getImage(req, width, height, zoom, center, this);
+                self.previewBackend.getImage(new MapStoreMapConfigProvider(self.mapStore, req.params),
+                    format, width, height, zoom, center, this);
             } else {
-                self._staticMapBackend.getImage(req, width, height, zoom /* bounds */, this);
+                self.previewBackend.getImage(new MapStoreMapConfigProvider(self.mapStore, req.params),
+                    format, width, height, zoom /* bounds */, this);
             }
         },
-        function handleImage(err, image, headers, stats) {
-            req.profiler.done('render-' + format);
-            req.profiler.add(stats || {});
-
+        function handleImage(err, image, headers) {
             if (err) {
                 if (!err.error) {
                     err.error = err.message;
@@ -64,7 +75,7 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
                 self._app.sendError(res, {errors: ['' + err] }, self._app.findStatusCode(err), 'STATIC_MAP', err);
             } else {
                 res.setHeader('Content-Type', headers['Content-Type'] || 'image/' + format);
-                self._app.sendResponse(res, [image, 200]);
+                res.send(image, 200);
             }
         }
     );

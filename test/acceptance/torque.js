@@ -1,113 +1,61 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var _ = require('underscore');
-var redis = require('redis');
-var step = require('step');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 describe('torque', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
-
-    function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+    function createTorqueMapConfig(cartoCss) {
+        return {
+            version: '1.1.0',
+            layers: [
+                {
+                    type: 'torque',
+                    options: {
+                        sql: 'select cartodb_id, the_geom from test_table',
+                        geom_column: 'the_geom',
+                        srid: 4326,
+                        cartocss: cartoCss
+                    }
+                }
+            ]
+        };
     }
 
-    it("missing required property from torque layer", function(done) {
+    it("missing required property `-torque-frame-count` from torque layer", function(done) {
+        var testClient = new TestClient(createTorqueMapConfig('Map { marker-fill:blue; }'));
+        testClient.createLayergroup(function (err) {
+            assert.ok(err);
+            assert.equal(err.message, "Missing required property '-torque-frame-count' in torque layer CartoCSS");
+            done();
+        });
+    });
 
-      var layergroup =  {
-        version: '1.1.0',
-        layers: [
-           { type: 'torque', options: {
-               sql: 'select cartodb_id, the_geom from test_table',
-               geom_column: 'the_geom',
-               srid: 4326,
-               cartocss: 'Map { marker-fill:blue; }'
-             } }
-        ]
-      };
+    it("missing required property `-torque-resolution` from torque layer", function(done) {
+        var testClient = new TestClient(createTorqueMapConfig('Map { -torque-frame-count: 2; }'));
+        testClient.createLayergroup(function (err) {
+            assert.ok(err);
+            assert.equal(err.message, "Missing required property '-torque-resolution' in torque layer CartoCSS");
+            done();
+        });
+    });
 
-      step(
-        function do_post1()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
-        },
-        function checkResponse(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error,
-            "Missing required property '-torque-frame-count' in torque layer CartoCSS");
-          return null;
-        },
-        function do_post2(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          var css = 'Map { -torque-frame-count: 2; }';
-          layergroup.layers[0].options.cartocss = css;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
-        },
-        function checkResponse2(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error,
-            "Missing required property '-torque-resolution' in torque layer CartoCSS");
-          return null;
-        },
-        function do_post3(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          var css = 'Map { -torque-frame-count: 2; -torque-resolution: 3; }';
-          layergroup.layers[0].options.cartocss = css;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
-        },
-        function checkResponse3(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error,
-            "Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
+    it("missing required property `-torque-aggregation-function` from torque layer", function(done) {
+        var testClient = new TestClient(
+            createTorqueMapConfig('Map { -torque-frame-count: 2; -torque-resolution: 3; }')
+        );
+        testClient.createLayergroup(function (err) {
+            assert.ok(err);
+            assert.equal(
+                err.message,
+                "Missing required property '-torque-aggregation-function' in torque layer CartoCSS"
+            );
+            done();
+        });
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/150
-    it.skip("unquoted property in torque layer", function(done) {
-
+    it("unquoted property in torque layer", function(done) {
       var layergroup =  {
         version: '1.1.0',
         layers: [
@@ -120,181 +68,84 @@ describe('torque', function() {
              } }
         ]
       };
-      step(
-        function do_post1()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
-        },
-        function checkResponse(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error, "Something meaningful here");
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Unexpected type for property '-torque-aggregation-function', expected string");
+            done();
+        });
     });
 
-    it("can render tile for valid mapconfig", function(done) {
-
-      var mapconfig =  {
+    var validTorqueMapConfig = {
         version: '1.1.0',
         layers: [
-           { type: 'torque', options: {
-               sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
-                   "'1970-01-01'::date, 'POINT(1 1)'::geometry",
-               geom_column: 'the_geom',
-               cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
-                   '-torque-aggregation-function:\'count(id)\'; }',
-               cartocss_version: '2.0.1'
-             } }
+            { type: 'torque', options: {
+                sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
+                    "'1970-01-01'::date, 'POINT(1 1)'::geometry",
+                geom_column: 'the_geom',
+                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
+                    '-torque-aggregation-function:\'count(id)\'; }',
+                cartocss_version: '2.0.1'
+            } }
         ]
-      };
+    };
 
-      var expected_token;
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(mapconfig)
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkPost(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          // CORS headers should be sent with response
-          // from layergroup creation via POST
-          checkCORSHeaders(res);
-          var parsedBody = JSON.parse(res.body);
-          if ( expected_token ) {
-              assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-          } else {
-              expected_token = parsedBody.layergroupid;
-          }
-          var meta = parsedBody.metadata;
-          assert.ok(!_.isUndefined(meta),
-            'No metadata in torque MapConfig creation response: ' + res.body);
-          var tm = meta.torque;
-          assert.ok(tm,
-            'No "torque" in metadata:' + JSON.stringify(meta));
-          var tm0 = tm[0];
-          assert.ok(tm0,
-            'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
-          var expectedTorqueMetadata = {"start":0,"end":86400000,"data_steps":2,"column_type":"date"};
-          assert.deepEqual(tm0, expectedTorqueMetadata);
-          assert.deepEqual(meta.layers[0].meta, expectedTorqueMetadata);
-          return null;
-        },
-        function do_get_tile(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
-              method: 'GET',
-              encoding: 'binary'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_mapnik_error_1(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
-          var parsed = JSON.parse(res.body);
-          assert.equal(parsed.errors.length, 1);
-          assert.equal(parsed.errors[0], "No 'mapnik' layers in MapConfig");
-          return null;
-        },
-        function do_get_grid0(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_mapnik_error_2(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' ));
-          var parsed = JSON.parse(res.body);
-          assert.equal(parsed.errors.length, 1);
-          assert.equal(parsed.errors[0], "Unsupported format grid.json");
-          return null;
-        },
-        function do_get_torque0(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.json.torque',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_torque0_response(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.body);
-          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,1]}];
-          var parsed = JSON.parse(res.body);
-          assert.deepEqual(tile_content, parsed);
-          return null;
-        },
-        function do_get_torque0_1(err)
-        {
-          assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.torque.json',
-              method: 'GET'
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function check_torque0_response_1(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.body);
-          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          var tile_content = [{"x__uint8":43,"y__uint8":43,"vals__uint8":[1,1],"dates__uint16":[0,1]}];
-          var parsed = JSON.parse(res.body);
-          assert.deepEqual(tile_content, parsed);
-          return null;
-        },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(''+err);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
-      );
+    it("should create a layergroup for valid mapconfig", function(done) {
+        var testClient = new TestClient(validTorqueMapConfig);
+        testClient.createLayergroup(function (err, layergroup) {
+            assert.equal(layergroup.metadata.layers.length, 1);
+            var meta = layergroup.metadata;
+            assert.ok(meta, 'No metadata in torque MapConfig creation response: ' + layergroup);
+            var tm = meta.torque;
+            assert.ok(tm, 'No "torque" in metadata:' + JSON.stringify(meta));
+            var tm0 = tm[0];
+            assert.ok(tm0, 'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
+            var expectedTorqueMetadata = {"start": 0, "end": 86400000, "data_steps": 2, "column_type": "date"};
+            assert.deepEqual(tm0, expectedTorqueMetadata);
+            assert.deepEqual(meta.layers[0].meta, expectedTorqueMetadata);
+
+            done();
+        });
     });
+
+    ['torque.json', 'json.torque'].forEach(function(format) {
+        it("should render a torque tile for valid mapconfig, format=" + format, function(done) {
+            var expectedTorqueTileAt_0_0_0 = [
+                {
+                    x__uint8: 43,
+                    y__uint8:43,
+                    vals__uint8: [1,1],
+                    dates__uint16: [0,1]
+                }
+            ];
+
+            var testClient = new TestClient(validTorqueMapConfig);
+            testClient.getTile(0, 0, 0, {layer: 0, format: format}, function(err, torqueTile) {
+                assert.ok(!err);
+                assert.deepEqual(torqueTile, expectedTorqueTileAt_0_0_0);
+                done();
+            });
+        });
+    });
+
+    it("should fail for undefined layer", function(done) {
+        var testClient = new TestClient(validTorqueMapConfig);
+        testClient.getTile(0, 0, 0, { layer: undefined }, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "No 'mapnik' layers in MapConfig");
+            done();
+        });
+    });
+
+    it("should fails for grid.json format", function(done) {
+        var testClient = new TestClient(validTorqueMapConfig);
+        testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Unsupported format grid.json");
+            done();
+        });
+    });
+
 
     // Test that you cannot write to the database from a torque tile request
     //
@@ -314,33 +165,12 @@ describe('torque', function() {
              } }
         ]
       };
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(mapconfig)
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkPost(err, res) {
-          assert.ifError(err);
-          // TODO: should be 403 Forbidden
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors);
-          assert.equal(parsed.errors.length, 1);
-          var msg = parsed.errors[0];
-          assert.equal(msg, "TorqueRenderer: cannot execute INSERT in a read-only transaction");
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
-
+        var testClient = new TestClient(mapconfig);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "TorqueRenderer: cannot execute INSERT in a read-only transaction");
+            done();
+        });
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/164
@@ -360,30 +190,12 @@ describe('torque', function() {
         ]
       };
 
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup?dbport=1234567',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(mapconfig)
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function checkPost(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error, "TorqueRenderer: cannot connect to the database");
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
+        var testClient = new TestClient(mapconfig);
+        testClient.createLayergroup({dbport: 1234567}, function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "TorqueRenderer: cannot connect to the database");
+            done();
+        });
     });
 
     it("checks types for torque-specific styles", function(done) {
@@ -407,27 +219,11 @@ describe('torque', function() {
         ]
       };
 
-      step(
-        function request(){
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' }, 
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
-        },
-        function checkResponse(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.errors, parsed);
-          var error = parsed.errors[0];
-          assert.equal(error,
-            "Unexpected type for property '-torque-aggregation-function', expected string");
-          done();
-          return null;
-        }
-      );
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Unexpected type for property '-torque-aggregation-function', expected string");
+            done();
+        });
   });
 });
