@@ -3,7 +3,7 @@ var mapnik = require('mapnik');
 var RedisPool = require('redis-mpool');
 
 var windshaft = require('../../lib/windshaft');
-var DummyMapConfigProvider = require('../../lib/windshaft/models/dummy_mapconfig_provider');
+var DummyMapConfigProvider = require('../../lib/windshaft/models/providers/dummy_mapconfig_provider');
 
 var redisClient = require('redis').createClient(global.environment.redis.port);
 

@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('assert');
-var MapStoreProvider = require('../../lib/windshaft/models/mapstore_mapconfig_provider');
+var MapStoreProvider = require('../../lib/windshaft/models/providers/mapstore_mapconfig_provider');
 var _ = require('underscore');
 
 describe('renderer_params', function() {
