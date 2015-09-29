@@ -3,7 +3,7 @@ var step = require('step');
 var windshaft = require('../../../lib/windshaft');
 
 var MapConfig = windshaft.model.MapConfig;
-var DummyMapConfigProvider = require('../../../lib/windshaft/models/dummy_mapconfig_provider');
+var DummyMapConfigProvider = require('../../../lib/windshaft/models/providers/dummy_mapconfig_provider');
 
 var MapStoreMapConfigProvider = windshaft.model.provider.MapStoreMapConfig;
 
