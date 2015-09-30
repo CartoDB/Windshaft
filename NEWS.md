@@ -1,6 +1,10 @@
 # Version 1.0.1
 2015-mm-dd
 
+Bug fixes:
+ - Lowercasing dbparams in MapConfig to be backwards compatible
+
+
 # Version 1.0.0
 2015-09-30
 
