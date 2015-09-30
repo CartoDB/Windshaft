@@ -482,5 +482,16 @@ describe('multilayer', function() {
         });
     });
 
+    it("layergroupid didn't change", function(done) {
+        var testClient = new TestClient(layergroupOrder);
+        testClient.createLayergroup(function (err, layergroup) {
+            assert.ok(!err);
+            assert.ok(layergroup);
+            assert.ok(layergroup.layergroupid);
+            assert.equal(layergroup.layergroupid, '80dc4ccd7d334435d64feaec7f55c4c5');
+            done();
+        });
+    });
+
 });
 
