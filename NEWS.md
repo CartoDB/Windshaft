@@ -1,4 +1,4 @@
-# Version 1.0.0-alpha
+# Version 1.0.0
 2015-mm-dd
 
 From Semantic Versioning:
