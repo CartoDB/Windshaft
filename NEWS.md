@@ -1,5 +1,5 @@
 # Version 1.0.0
-2015-mm-dd
+2015-09-30
 
 From Semantic Versioning:
 > Major version zero (0.y.z) is for initial development. Anything may change at any time. The public
