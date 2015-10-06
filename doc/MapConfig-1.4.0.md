@@ -251,7 +251,7 @@ Some notes:
 # Extensions
 
 The document may be extended for specific uses.
-For example, Windshaft-CartoDB defines the addition of a "stats_tag" element
+For example, Windshaft-CartoDB defines the addition of a "stat_tag" element
 in the config. See https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API
 
 Specification for how to name extensions is yet to be defined as of this version
