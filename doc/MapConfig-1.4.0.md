@@ -266,6 +266,10 @@ of MapConfig.
 
 # History
 
+## 1.4.0
+
+ - Add support for 'plain' layer type
+
 ## 1.3.0
 
  - Add support for 'http' layer type
