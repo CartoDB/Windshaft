@@ -49,6 +49,7 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
 
     this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
     this.attributesBackend = new windshaft.backend.Attributes();
+    this.listBackend = new windshaft.backend.List();
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
@@ -98,6 +99,15 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
     this.attributesBackend.getFeatureAttributes(provider, params, false, function(err, attributes, stats) {
         return callback(err, attributes, stats);
     });
+};
+
+TestClient.prototype.getList = function(listName, callback) {
+    var params = {
+        dbname: 'windshaft_test',
+        listName: listName
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    this.listBackend.getList(provider, params, callback);
 };
 
 TestClient.prototype.createLayergroup = function(options, callback) {
