@@ -87,7 +87,7 @@ describe('list', function() {
                     },
                     lists: {
                         places: {
-                            sql: 'select * from test_table'
+                            // it uses sql from layer options.sql
                         }
                     }
                 }
@@ -107,6 +107,75 @@ describe('list', function() {
                 'the_geom',
                 'the_geom_webmercator'
             ]);
+
+            done();
+        });
+    });
+
+    it('should fetch all columns from layer query when no columns are specified', function(done) {
+        var testClient = new TestClient({
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select cartodb_id, the_geom, name from test_table',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1'
+                    },
+                    lists: {
+                        places: {
+                            // it uses sql from layer options.sql
+                        }
+                    }
+                }
+            ]
+        });
+        testClient.getList('places', function (err, list) {
+            assert.ok(!err);
+            assert.ok(list);
+            assert.equal(list.length, 5);
+
+            assert.deepEqual(Object.keys(list[0]), [
+                'cartodb_id',
+                'the_geom',
+                'name'
+            ]);
+
+            done();
+        });
+    });
+
+    it('should fetch columns from layer options.sql', function(done) {
+        var testClient = new TestClient({
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1'
+                    },
+                    lists: {
+                        places: {
+                            columns: ['cartodb_id', 'name']
+                        }
+                    }
+                }
+            ]
+        });
+        testClient.getList('places', function (err, list) {
+            assert.ok(!err);
+            assert.ok(list);
+            assert.equal(list.length, 5);
+
+            var expectedIds = [1,2,3,4,5];
+            var ids = list.map(function (item) {
+                return item.cartodb_id;
+            });
+
+            assert.deepEqual(ids, expectedIds);
 
             done();
         });
