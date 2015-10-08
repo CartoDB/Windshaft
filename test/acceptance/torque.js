@@ -2,6 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+var SubstitutionTokens = require('../../lib/windshaft/renderers/torque/substitution_tokens');
 
 describe('torque', function() {
 
@@ -225,5 +226,67 @@ describe('torque', function() {
             assert.equal(err.message, "Unexpected type for property '-torque-aggregation-function', expected string");
             done();
         });
-  });
+    });
+
+    it('query can hold substitution tokens', function(done) {
+
+        var tokens = ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height'].map(function(token) {
+            return "!" + token + "! as " + token;
+        });
+
+        var sql = 'select *, ' + tokens.join(', ') + ' from test_table';
+
+        var mapConfig = {
+            version: '1.1.0',
+            layers: [
+                {
+                    type: 'torque',
+                    options: {
+                        sql: sql,
+                        geom_column: 'the_geom',
+                        cartocss: 'Map {' +
+                            '-torque-frame-count:2;' +
+                            '-torque-resolution:1;' +
+                            '-torque-time-attribute:cartodb_id;' +
+                            '-torque-aggregation-function:\'count(cartodb_id)\';' +
+                            '}',
+                        cartocss_version: '2.0.1'
+                    }
+                }
+            ]
+        };
+
+        var expectedSubstitutionTokens = [
+            {
+                bbox: 'ST_MakeEnvelope(0,0,0,0)',
+                scale_denominator: '0',
+                pixel_width: '1',
+                pixel_height: '1'
+            },
+            {
+                bbox: 'ST_MakeEnvelope(-20037508.5,20037508.5,20037508.5,-20037508.5,3857)',
+                scale_denominator: 559082268.4151787,
+                pixel_width: 156543.03515625,
+                pixel_height: 156543.03515625
+            }
+        ];
+
+        var replaceFn = SubstitutionTokens.replace;
+        SubstitutionTokens.replace = function(sql, replaceValues) {
+            assert.deepEqual(replaceValues, expectedSubstitutionTokens.shift());
+            return replaceFn(sql, replaceValues);
+        };
+
+        var testClient = new TestClient(mapConfig);
+        testClient.getTile(0, 0, 0, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
+            SubstitutionTokens.replace = replaceFn;
+
+            assert.ok(!err, err);
+            assert.deepEqual(torqueTile, [{ x__uint8: 128, y__uint8: 128, vals__uint8: [2,3], dates__uint16: [1,0] }]);
+
+            assert.equal(expectedSubstitutionTokens.length, 0);
+
+            done();
+        });
+    });
 });
