@@ -1,5 +1,5 @@
 # Version 1.1.0
-2015-mm-dd
+2015-10-09
 
 New features:
  - Adds support for substitution tokens in Torque (#392)
