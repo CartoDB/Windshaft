@@ -1,5 +1,13 @@
-# Version 1.0.2
+# Version 1.1.1
 2015-mm-dd
+
+
+# Version 1.1.0
+2015-10-09
+
+New features:
+ - Adds support for substitution tokens in Torque (#392)
+   Supported substitution tokens are: `!bbox!`, `!pixel_width!`, `!pixel_height!`, and `!scale_denominator!`.
 
 
 # Version 1.0.1
