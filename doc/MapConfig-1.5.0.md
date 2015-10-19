@@ -268,7 +268,7 @@ of MapConfig.
 
 ## 1.5.0
 
- - TBA
+ - Lists, Histograms, and Filters
 
 
 ## 1.4.0
