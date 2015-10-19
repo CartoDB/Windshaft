@@ -45,7 +45,7 @@
         "sphericalmercator": "1.0.3"
     },
     "devDependencies": {
-        "istanbul": "~0.3.6",
+        "istanbul": "~0.4.0",
         "express": "~2.5.11",
         "jshint": "~2.6.0",
         "mocha": "~1.21.4",
