@@ -1,5 +1,5 @@
 # Version 1.2.0
-2015-mm-dd
+2015-10-21
 
 New features:
  - Adds support for `png32` format in mapnik layers (#344)
