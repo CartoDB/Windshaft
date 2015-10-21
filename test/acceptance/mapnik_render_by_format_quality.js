@@ -1,25 +1,21 @@
 require('../support/test_helper');
 
-var assert = require('../support/assert');
 var _ = require('underscore');
+var assert = require('../support/assert');
 var fs = require('fs');
-var redis = require('redis');
-var Windshaft     = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
-describe('Mapnik get tile by format quality', function() {
+describe('mapnik_render_by_format_quality', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-
-    server.setMaxListeners(0);
-
-    var redisClient = redis.createClient(ServerOptions.redis.port);
-
-    var layergroupId;
-
+    var testClient;
     before(function(done) {
+        testClient = new TestClient(layergroup, {
+            mapnik: {
+                grainstore: _.extend({mapnik_tile_format: 'png8:m=h'}, TestClient.grainstoreOptions)
+            }
+        });
         var testPngFilesDir = __dirname + '/../results/png';
         fs.readdirSync(testPngFilesDir)
             .filter(function(fileName) {
@@ -33,77 +29,29 @@ describe('Mapnik get tile by format quality', function() {
         done();
     });
 
-    function testOutputForPng32AndPng8(desc, tile, callback) {
+    function testOutputForPng32AndPng8(tile, persist, callback) {
+        it('intensity visualization; tile: ' + JSON.stringify(tile),  function(done) {
+            var options = { layer: 'mapnik' };
+            var optionsForPng32 = _.extend({ format: 'png32' }, options);
 
-        var bufferPng32,
-            bufferPng8;
+            testClient.getTile(tile.z, tile.x, tile.y, optionsForPng32, function(err, tileBuffer) {
+                var bufferPng32 = tileBuffer;
+                testClient.getTile(tile.z, tile.x, tile.y, options, function(err, tileBuffer) {
+                    var bufferPng8 = tileBuffer;
 
-        it(desc + '; tile: ' + JSON.stringify(tile),  function(done){
-            assert.response(
-                server,
-                {
-                    url: '/database/windshaft_test/layergroup',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify(layergroup)
-                },
-                {
-                    status: 200
-                },
-                function(res, err) {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    layergroupId = JSON.parse(res.body).layergroupid;
-
-                    var tilePartialUrlPng8 =  _.template('/<%= z %>/<%= x %>/<%= y %>.png', tile);
-
-                    var requestPayloadPng8 = {
-                        url: '/database/windshaft_test/layergroup/' + layergroupId + tilePartialUrlPng8,
-                        method: 'GET',
-                        encoding: 'binary'
-                    };
-
-                    var tilePartialUrlPng32 =  _.template('/<%= z %>/<%= x %>/<%= y %>.png32', tile);
-
-                    var requestPayloadPng32 = {
-                        url: '/database/windshaft_test/layergroup/' + layergroupId + tilePartialUrlPng32,
-                        method: 'GET',
-                        encoding: 'binary'
-                    };
-
-                    var requestHeaders = {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'image/png'
+                    assert.ok(bufferPng8.length < bufferPng32.length);
+                    assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, persist,
+                        function (err, imagePaths, similarity) {
+                            callback(err, imagePaths, similarity, done);
                         }
-                    };
-
-                    assert.response(server, requestPayloadPng32, requestHeaders, function(responsePng32) {
-                        assert.equal(responsePng32.headers['content-type'], "image/png");
-                        bufferPng32 = responsePng32.body;
-                        assert.response(server, requestPayloadPng8, requestHeaders, function(responsePng8) {
-                            assert.equal(responsePng8.headers['content-type'], "image/png");
-                            bufferPng8 = responsePng8.body;
-                            assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
-                                function(err, imagePaths, similarity) {
-                                    redisClient.del('map_cfg|' + layergroupId, function() {
-                                        callback(err, imagePaths, similarity, done);
-                                    });
-                                }
-                            );
-                        });
-                    });
-                }
-            );
+                    );
+                });
+            });
         });
     }
 
 
-    var currentLevel = 2,
+    var currentLevel = 3,
         allLevelTiles = [],
         maxLevelTile = Math.pow(2, currentLevel);
 
@@ -116,6 +64,7 @@ describe('Mapnik get tile by format quality', function() {
             });
         }
     }
+
 
     var layergroup =  {
         version: '1.3.0',
@@ -138,30 +87,35 @@ describe('Mapnik get tile by format quality', function() {
                             'marker-clip: false;',
                         '}'
                     ].join(' '),
-                    cartocss_version: '2.0.1'
+                    cartocss_version: '2.3.0'
                 }
             }
         ]
     };
 
-    var allImagePaths = [],
-        similarities = [];
+    // when using PERSIST=true you can check differences in test/results/compare.html
+    var PERSIST = false;
+
+    var allImagePaths = [];
+    var similarities = [];
     allLevelTiles.forEach(function(tile) {
-        testOutputForPng32AndPng8('intensity visualization', tile, function(err, imagePaths, similarity, done) {
-            allImagePaths.push(imagePaths);
-            similarities.push(similarity);
-            var transformPaths = [];
-            for (var i = 0, len = allImagePaths.length; i < len; i++) {
-                if (similarities[i] > 0.075) {
-                    transformPaths.push({
-                        passive: allImagePaths[i][0],
-                        active: allImagePaths[i][1],
-                        similarity: similarities[i]
-                    });
+        testOutputForPng32AndPng8(tile, PERSIST, function(err, imagePaths, similarity, done) {
+            if (PERSIST) {
+                allImagePaths.push(imagePaths);
+                similarities.push(similarity);
+                var transformPaths = [];
+                for (var i = 0, len = allImagePaths.length; i < len; i++) {
+                    if (similarities[i] > 0.075) {
+                        transformPaths.push({
+                            passive: allImagePaths[i][0],
+                            active: allImagePaths[i][1],
+                            similarity: similarities[i]
+                        });
+                    }
                 }
+                var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
+                fs.writeFileSync('test/results/png/results.js', output);
             }
-            var output = 'handleResults(' + JSON.stringify(transformPaths) + ');';
-            fs.writeFileSync('test/results/png/results.js', output);
             assert.ifError(err);
             done();
         });
