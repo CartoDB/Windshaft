@@ -1,11 +1,12 @@
 require('../support/test_helper');
 
-var assert = require('../support/assert');
 var fs = require('fs');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
 var http = require('http');
-var testClient = require('../support/test_client');
+
+var redis = require('redis');
+
+var assert = require('../support/assert');
+var TestClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
@@ -23,18 +24,21 @@ function rmdir_recursive_sync(dirname) {
 
 describe('external resources', function() {
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var res_serv; // resources server
-    var res_serv_status = { numrequests:0 }; // status of resources server
-    var res_serv_port = 8033; // FIXME: make configurable ?
+    var resourcesServer;
+    var resourcesServerPort = 8033;
+    var numRequests;
+
+    var redisClient = redis.createClient(global.environment.redis.port);
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
-    before(function(done) {
+    beforeEach(function(done) {
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+        numRequests = 0;
+
         // Start a server to test external resources
-        res_serv = http.createServer( function(request, response) {
-            ++res_serv_status.numrequests;
+        resourcesServer = http.createServer( function(request, response) {
+            numRequests++;
             var filename = __dirname + '/../fixtures/markers' + request.url;
             fs.readFile(filename, "binary", function(err, file) {
               if ( err ) {
@@ -47,86 +51,84 @@ describe('external resources', function() {
               response.end();
             });
         });
-        res_serv.listen(res_serv_port, done);
+        resourcesServer.listen(resourcesServerPort, done);
+    });
+
+    afterEach(function(done) {
+        // Close the resources server
+        resourcesServer.close(done);
     });
 
     function imageCompareFn(fixture, done) {
-        return function(err, res) {
+        return function(err, tile) {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            assert.imageEqualsFile(tile, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         };
     }
 
     it("basic external resource", function(done) {
 
-        var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + resourcesServerPort +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
-
-        testClient.getTile(testClient.defaultTableMapConfig('test_table_3', circleStyle), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_svg1.png', done));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', circleStyle));
+        testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg1.png', done));
     });
 
     it("different external resource", function(done) {
 
-        var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + resourcesServerPort +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
-        testClient.getTile(testClient.defaultTableMapConfig('test_table_3', squareStyle), 13, 4011, 3088,
-            imageCompareFn('test_table_13_4011_3088_svg2.png', done));
+        var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table_3', squareStyle));
+        testClient.getTile(13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_svg2.png', done));
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/107
     it("external resources get localized on renderer creation if not locally cached", function(done) {
 
-        var options = {
-            serverOptions: ServerOptions
-        };
-
-        var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+        var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + resourcesServerPort +
           "/square.svg'); marker-transform:'scale(0.2)'; }";
 
-        var externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
+        var externalResourceMapConfig = TestClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
 
-        testClient.createLayergroup(externalResourceMapConfig, options, function() {
-            var externalResourceRequestsCount = res_serv_status.numrequests;
+        assert.equal(numRequests, 0);
+        var externalResourceRequestsCount = numRequests;
 
-            testClient.createLayergroup(externalResourceMapConfig, options, function() {
-                assert.equal(res_serv_status.numrequests, externalResourceRequestsCount);
+        new TestClient(externalResourceMapConfig).createLayergroup(function() {
+            assert.equal(numRequests, ++externalResourceRequestsCount);
 
-                // reset resources cache
-                rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+            new TestClient(externalResourceMapConfig).createLayergroup(function(err, layergroup) {
+                assert.equal(numRequests, externalResourceRequestsCount);
 
-                testClient.createLayergroup(externalResourceMapConfig, options, function() {
-                    assert.equal(res_serv_status.numrequests, externalResourceRequestsCount + 1);
+                redisClient.del('map_cfg|' + layergroup.layergroupid, function() {
+                    // reset resources cache
+                    rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-                    done();
+                    new TestClient(externalResourceMapConfig).createLayergroup(function() {
+                        assert.equal(numRequests, ++externalResourceRequestsCount);
+
+                        done();
+                    });
                 });
             });
         });
     });
 
     it("referencing unexistant external resources returns an error", function(done) {
-        var url = "http://localhost:" + res_serv_port + "/notfound.png";
+        var url = "http://localhost:" + resourcesServerPort + "/notfound.png";
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
-        var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
+        var mapConfig = TestClient.defaultTableMapConfig('test_table_3', style);
+        var testClient = new TestClient(mapConfig);
 
-        testClient.createLayergroup(mapConfig, { statusCode: 400 }, function(err, res) {
-            assert.deepEqual(JSON.parse(res.body), {
-                errors: ["Unable to download '" + url + "' for 'style0' (server returned 404)"]
-            });
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Unable to download '" + url + "' for 'style0' (server returned 404)");
             done();
         });
     });
 
-
-    after(function(done) {
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
-
-        // Close the resources server
-        res_serv.close(done);
-    });
 });
 

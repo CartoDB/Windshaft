@@ -3,7 +3,7 @@
 //
 // If you want to get something running quickly, follow the instructions for a seed DB in test/windshaft.test.sql
 
-var Windshaft = require('../lib/windshaft');
+var Server = require('./http/server');
 var _         = require('underscore');
 
 // Force 'development' environment
@@ -38,7 +38,7 @@ var config = {
 };
 
 // Initialize tile server
-var ws = new Windshaft.Server(config);
-ws.listen(PORT);
-
-console.log("map tiles are now being served out of: http://localhost:" + PORT + config.base_url_mapconfig);
+var server = new Server(config);
+server.listen(PORT, function() {
+    console.log("map tiles are now being served out of: http://localhost:" + PORT + config.base_url_mapconfig);
+});

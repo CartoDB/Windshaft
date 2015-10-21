@@ -1,20 +1,13 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
-var mapnik = require('mapnik');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 describe('retina support', function() {
 
-    var layergroupId = null;
+    var testClient;
 
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
-
-    beforeEach(function(done) {
+    before(function() {
         var retinaSampleMapConfig =  {
             version: '1.2.0',
             layers: [
@@ -27,97 +20,43 @@ describe('retina support', function() {
                 }
             ]
         };
-
-        assert.response(server,
-            {
-                url: '/database/windshaft_test/layergroup',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(retinaSampleMapConfig)
-            },
-            {
-
-            },
-            function (res, err) {
-                assert.ok(!err, 'Failed to create layergroup');
-
-                layergroupId = JSON.parse(res.body).layergroupid;
-
-                done();
-            }
-        );
+        testClient = new TestClient(retinaSampleMapConfig);
     });
 
-
-    function testRetinaImage(scaleFactor, responseHead, assertFn) {
-        assert.response(server,
-            {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
-                method: 'GET',
-                encoding: 'binary'
-            },
-            responseHead,
-            assertFn
-        );
+    function testRetinaImage(scaleFactor, assertFn) {
+        testClient.getTile(0, 0, 0, {scale_factor: scaleFactor}, assertFn);
     }
 
-    function testValidImageDimmensions(scaleFactor, imageSize, done) {
-        testRetinaImage(scaleFactor,
-            {
-                status: 200,
-                headers: {
-                    'Content-Type': 'image/png'
-                }
-            },
-            function(res, err) {
-                assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
+    function testValidImageDimensions(scaleFactor, imageSize, done) {
+        testRetinaImage(scaleFactor,  function(err, tile, image) {
+            assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
 
-                var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-
-                assert.equal(image.width(), imageSize);
-                assert.equal(image.height(), imageSize);
-                done();
-            }
-        );
+            assert.equal(image.width(), imageSize);
+            assert.equal(image.height(), imageSize);
+            done();
+        });
     }
 
     it('image dimensions when scale factor is not defined', function(done) {
-        testValidImageDimmensions('', 256, done);
+        testValidImageDimensions(undefined, 256, done);
     });
 
     it('image dimensions when scale factor = @1x', function(done) {
-        testValidImageDimmensions('@1x', 256, done);
+        testValidImageDimensions(1, 256, done);
     });
 
     it('image dimensions when scale factor = @2x', function(done) {
-        testValidImageDimmensions('@2x', 512, done);
+        testValidImageDimensions(2, 512, done);
     });
 
     it('error when scale factor is not enabled', function(done) {
 
-        var scaleFactor = '@4x';
+        var scaleFactor = 4;
 
-        testRetinaImage(scaleFactor,
-            {
-                status: 404,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            },
-            function(res, err) {
-                assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
-                assert.deepEqual(JSON.parse(res.body), { errors: ["Tile with specified resolution not found"] } );
+        testRetinaImage(scaleFactor, function(err) {
+            assert.ok(err);
+            assert.deepEqual(err.message, "Tile with specified resolution not found");
 
-                done();
-            }
-        );
-    });
-
-    afterEach(function(done) {
-        var redisKey = 'map_cfg|' + layergroupId;
-        redis_client.del(redisKey, function () {
             done();
         });
     });

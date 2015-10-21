@@ -12,19 +12,12 @@ describe('mapstore', function() {
     var redis_pool = new RedisPool(serverOptions.redis);
 
     it('fails loading unexistent map', function(done){
-      var map_store = new MapStore({pool:redis_pool, expire_time:50000});
-      step(
-        function getMap() {
-          map_store.load('unexistent', this);
-        },
-        function checkErr(err) {
-          assert.ok(err);
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
+        var mapStore = new MapStore({pool:redis_pool, expire_time:50000});
+        mapStore.load('unexistent', function(err) {
+            assert.ok(err);
+            assert.equal(err.message, "Invalid or nonexistent map configuration token 'unexistent'");
+            done();
+        });
     });
 
     it('can save a map and tell if it existed already', function(done) {

@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var testClient = require('../support/test_client');
+var TestClient = require('../support/test_client');
 
 describe('blend png renderer', function() {
 
@@ -81,8 +81,9 @@ describe('blend png renderer', function() {
         var tileRequest = testScenario.tile;
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
         it('tile all/' + zxy.join('/') + '.png', function (done) {
-            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
-                assert.imageEqualsFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
+            var testClient = new TestClient(plainTorqueMapConfig(testScenario.plainColor));
+            testClient.getTile(tileRequest.z, tileRequest.x, tileRequest.y, function(err, tile) {
+                assert.imageEqualsFile(tile, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     done();
                 });

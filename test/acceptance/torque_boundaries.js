@@ -1,21 +1,9 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var redis = require('redis');
-var Windshaft = require('../../lib/windshaft');
-var ServerOptions = require('../support/server_options');
+var TestClient = require('../support/test_client');
 
 describe('torque boundary points', function() {
-
-    var layergroupIdToDelete = null;
-
-    beforeEach(function() {
-        layergroupIdToDelete = null;
-    });
-
-    var server = new Windshaft.Server(ServerOptions);
-    server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     var boundaryPointsMapConfig =  {
         version: '1.1.0',
@@ -64,6 +52,11 @@ describe('torque boundary points', function() {
             } }
         ]
     };
+
+    var testClient;
+    before(function() {
+        testClient = new TestClient(boundaryPointsMapConfig);
+    });
 
     var tileRequests = [
         {
@@ -225,221 +218,68 @@ describe('torque boundary points', function() {
         // See https://github.com/CartoDB/Windshaft/issues/186
         var desc = 'handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n';
         it(desc, function (done) {
+            var z = tileRequest.z;
+            var x = tileRequest.x;
+            var y = tileRequest.y;
 
-            assert.response(server, {
-                url: '/database/windshaft_test/layergroup',
-                method: 'POST',
-                headers: {'Content-Type': 'application/json' },
-                data: JSON.stringify(boundaryPointsMapConfig)
-            }, {}, function (res, err) {
-
-                assert.ok(!err, 'Failed to create layergroup');
-
-                var parsedBody = JSON.parse(res.body);
-                var expected_token = parsedBody.layergroupid;
-                layergroupIdToDelete = expected_token;
-
-                var partialUrl = tileRequest.z + '/' + tileRequest.x + '/' + tileRequest.y;
-                assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/0/' + partialUrl + '.json.torque',
-                    method: 'GET'
-                }, {}, function (res, err) {
-                    assert.ok(!err, 'Failed to get json');
-
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-                    var parsed = JSON.parse(res.body);
-
-                    var i = 0;
-                    tileRequest.expects.forEach(function(expected) {
+            testClient.getTile(z, x, y, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
+                var i = 0;
+                tileRequest.expects.forEach(function(expected) {
+                    assert.equal(
+                        torqueTile[i].x__uint8,
+                        expected.x__uint8,
+                            torqueTile[i].x__uint8 + ' == ' + expected.x__uint8 +
+                            '\nRESULT\n------' +
+                            '\n' + JSON.stringify(torqueTile, null, 4) +
+                            '\nEXPECTED\n--------' +
+                            '\n' + JSON.stringify(tileRequest.expects, null, 4)
+                    );
+                    assert.equal(
+                        torqueTile[i].y__uint8,
+                        expected.y__uint8,
+                            torqueTile[i].y__uint8 + ' == ' + expected.y__uint8 +
+                            '\nRESULT\n------' +
+                            '\n' + JSON.stringify(torqueTile, null, 4) +
+                            '\nEXPECTED\n--------' +
+                            '\n' + JSON.stringify(tileRequest.expects, null, 4)
+                    );
+                    var j = 0;
+                    expected.vals__uint8.forEach(function(val) {
                         assert.equal(
-                            parsed[i].x__uint8,
-                            expected.x__uint8,
-                            parsed[i].x__uint8 + ' == ' + expected.x__uint8 +
-                                '\nRESULT\n------' +
-                                '\n' + JSON.stringify(parsed, null, 4) +
-                                '\nEXPECTED\n--------' +
-                                '\n' + JSON.stringify(tileRequest.expects, null, 4)
-                        );
-                        assert.equal(
-                            parsed[i].y__uint8,
-                            expected.y__uint8,
-                            parsed[i].y__uint8 + ' == ' + expected.y__uint8 +
-                                '\nRESULT\n------' +
-                                '\n' + JSON.stringify(parsed, null, 4) +
-                                '\nEXPECTED\n--------' +
-                                '\n' + JSON.stringify(tileRequest.expects, null, 4)
-                        );
-
-                        var j = 0;
-                        expected.vals__uint8.forEach(function(val) {
-                            assert.equal(
-                                parsed[i].vals__uint8[j],
-                                val.v,
+                            torqueTile[i].vals__uint8[j],
+                            val.v,
                                 'desc: ' + val.d +
-                                'Number of points got=' + parsed.length + '; ' +
+                                'Number of points got=' + torqueTile.length + '; ' +
                                 'expected=' + tileRequest.expects.length +
-                                    '\n\tindex=' + i +
-                                    '\n\tvals__uint8 index=' + j +
-                                    '\n\tgot=' + parsed[i].vals__uint8[j] +
-                                    '\n\texpected=' + val.v +
-                                    '\nRESULT\n------' +
-                                    '\n' + JSON.stringify(parsed, null, 4) +
-                                    '\nEXPECTED\n--------' +
-                                    '\n' + JSON.stringify(tileRequest.expects, null, 4));
+                                '\n\tindex=' + i +
+                                '\n\tvals__uint8 index=' + j +
+                                '\n\tgot=' + torqueTile[i].vals__uint8[j] +
+                                '\n\texpected=' + val.v +
+                                '\nRESULT\n------' +
+                                '\n' + JSON.stringify(torqueTile, null, 4) +
+                                '\nEXPECTED\n--------' +
+                                '\n' + JSON.stringify(tileRequest.expects, null, 4));
 
-                            j++;
-                        });
-
-                        i++;
+                        j++;
                     });
 
-                    assert.equal(
-                        parsed.length,
-                        tileRequest.expects.length,
-                        'Number of points did not match ' +
-                            'got=' + parsed.length + '; ' +
-                            'expected=' + tileRequest.expects.length +
-                            '\nRESULT\n------' +
-                            '\n' + JSON.stringify(parsed, null, 4) +
-                            '\nEXPECTED\n--------' +
-                            '\n' + JSON.stringify(tileRequest.expects, null, 4));
-
-                    done();
+                    i++;
                 });
-            });
-        });
-    });
 
-    it('regression london point', function(done) {
-        var londonPointMapConfig =  {
-            version: '1.1.0',
-            layers: [
-                { type: 'torque', options: {
-                    sql: "SELECT " +
-                            "1 as i, " +
-                            "'1970-01-02'::date as d, " +
-                            "ST_MakePoint(-11309.9155492599,6715342.44989312) g",
-                    geom_column: 'g',
-                    cartocss: 'Map { ' +
-                        '-torque-frame-count:2; ' +
-                        '-torque-resolution:1; ' +
-                        '-torque-time-attribute:"d"; ' +
-                        '-torque-data-aggregation:linear; ' +
-                        '-torque-aggregation-function:"count(i)"; }',
-                    cartocss_version: '1.0.1'
-                } }
-            ]
-        };
-
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-            data: JSON.stringify(londonPointMapConfig)
-        }, {}, function (res, err) {
-            assert.ok(!err, 'Failed to create layergroup');
-
-            var parsedBody = JSON.parse(res.body);
-            var layergroupId = parsedBody.layergroupid;
-            layergroupIdToDelete = layergroupId;
-
-
-            assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
-                method: 'GET'
-            }, {}, function (res, err) {
-                assert.ok(!err, 'Failed to request torque.json');
-
-                var parsed = JSON.parse(res.body);
-
-                assert.deepEqual(parsed, [{
-                    x__uint8: 255,
-                    y__uint8: 172,
-                    vals__uint8: [1],
-                    dates__uint16: [0]
-                }]);
+                assert.equal(
+                    torqueTile.length,
+                    tileRequest.expects.length,
+                        'Number of points did not match ' +
+                        'got=' + torqueTile.length + '; ' +
+                        'expected=' + tileRequest.expects.length +
+                        '\nRESULT\n------' +
+                        '\n' + JSON.stringify(torqueTile, null, 4) +
+                        '\nEXPECTED\n--------' +
+                        '\n' + JSON.stringify(tileRequest.expects, null, 4));
 
                 done();
             });
         });
     });
 
-    it('should consider resolution for least value in query', function(done) {
-        var londonPointMapConfig =  {
-            version: '1.1.0',
-            layers: [
-                { type: 'torque', options: {
-                    sql: "" +
-                    "SELECT " +
-                        "0 as i, " +
-                        "st_transform('0101000020E6100000FABD3AB4B5031C400581A80ECC2F4940'::geometry, 3857) as g " +
-                    "UNION ALL " +
-                    "SELECT " +
-                        "2 as i, " +
-                        "st_transform('0101000020E61000006739E30EAE031C406625C0C3C72F4940'::geometry, 3857) as g " +
-                    "UNION ALL " +
-                    "SELECT " +
-                        "3 as i, " +
-                        "st_transform('0101000020E6100000E26DB8A2A7031C40C8BAA5C2C52F4940'::geometry, 3857) as g",
-                    geom_column: 'g',
-                    cartocss: 'Map { ' +
-                        '-torque-frame-count:1; ' +
-                        '-torque-animation-duration:30;' +
-                        '-torque-time-attribute:"i"; ' +
-                        '-torque-aggregation-function:"count(i)"; ' +
-                        '-torque-resolution:2; ' +
-                        '-torque-data-aggregation: cumulative; }',
-                    cartocss_version: '1.0.1'
-                } }
-            ]
-        };
-
-        assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-            data: JSON.stringify(londonPointMapConfig)
-        }, {}, function (res, err) {
-            assert.ok(!err, 'Failed to create layergroup');
-
-            var parsedBody = JSON.parse(res.body);
-            var layergroupId = parsedBody.layergroupid;
-            layergroupIdToDelete = layergroupId;
-
-
-            assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/13/4255/2765.json.torque',
-                method: 'GET'
-            }, {}, function (res, err) {
-                assert.ok(!err, 'Failed to request torque.json');
-
-                var parsed = JSON.parse(res.body);
-
-                assert.deepEqual(parsed, [
-                    {
-                        x__uint8: 47,
-                        y__uint8: 127,
-                        vals__uint8: [2],
-                        dates__uint16: [0]
-                    },
-                    {
-                        x__uint8: 48,
-                        y__uint8: 127,
-                        vals__uint8: [1],
-                        dates__uint16: [0]
-                    }
-                ]);
-
-                done();
-            });
-        });
-    });
-
-    afterEach(function(done) {
-        var redisKey = 'map_cfg|' + layergroupIdToDelete;
-        redis_client.del(redisKey, function () {
-            done();
-        });
-    });
 });
