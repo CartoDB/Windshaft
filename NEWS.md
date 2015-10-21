@@ -1,6 +1,9 @@
 # Version 1.1.1
 2015-mm-dd
 
+Enhancements:
+ - Removes step dependency in RendererCache
+
 
 # Version 1.1.0
 2015-10-09
