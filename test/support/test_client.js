@@ -111,6 +111,16 @@ TestClient.prototype.getList = function(layer, listName, callback) {
     this.widgetBackend.getList(provider, params, callback);
 };
 
+TestClient.prototype.getHistogram = function(layer, histogramName, callback) {
+    var params = {
+        dbname: 'windshaft_test',
+        layer: layer,
+        histogramName: histogramName
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    this.widgetBackend.getHistogram(provider, params, callback);
+};
+
 TestClient.prototype.createLayergroup = function(options, callback) {
     if (!callback) {
         callback = options;
