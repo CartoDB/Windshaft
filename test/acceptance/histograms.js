@@ -64,4 +64,46 @@ describe('histograms', function() {
         });
     });
 
+    it('returns array with undefined entries for empty bins', function(done) {
+        var histogram20binsMapConfig = {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1'
+                    },
+                    widgets: {
+                        pop_max: {
+                            type: 'histogram',
+                            options: {
+                                column: 'pop_max',
+                                bins: 20
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        var testClient = new TestClient(histogram20binsMapConfig);
+        testClient.getWidget(0, 'pop_max', function (err, histogram) {
+            assert.ok(!err, err);
+            assert.ok(histogram);
+
+            assert.ok(histogram.length);
+
+            assert.deepEqual(
+                histogram[histogram.length - 1],
+                { bucket: 19, buckets: 20, min: 35676000, max: 35676000, freq: 1 }
+            );
+
+            assert.ok(!histogram[histogram.length - 2]);
+
+            done();
+        });
+    });
+
 });
