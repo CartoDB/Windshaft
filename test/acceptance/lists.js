@@ -29,7 +29,7 @@ describe('list', function() {
 
     it('cannot be fetched from nonexistent list name', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getList(0, 'nonexistent', function (err) {
+        testClient.getWidget(0, 'nonexistent', function (err) {
             assert.ok(err);
             assert.equal(err.message, "Widget 'nonexistent' not found at layer 0");
             done();
@@ -38,7 +38,7 @@ describe('list', function() {
 
     it('can be fetched from a valid list', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getList(0, 'places', function (err, list) {
+        testClient.getWidget(0, 'places', function (err, list) {
             assert.ok(!err, err);
             assert.ok(list);
             assert.equal(list.length, 5);
