@@ -35,7 +35,7 @@ describe('histograms', function() {
 
     it('can be fetched from a valid histogram', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getHistogram(0, 'scalerank', function (err, histogram) {
+        testClient.getWidget(0, 'scalerank', function (err, histogram) {
             assert.ok(!err, err);
             assert.ok(histogram);
 
@@ -49,7 +49,7 @@ describe('histograms', function() {
 
     it('can be fetched from a valid histogram', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getHistogram(0, 'pop_max', function (err, histogram) {
+        testClient.getWidget(0, 'pop_max', function (err, histogram) {
             assert.ok(!err, err);
             assert.ok(histogram);
 

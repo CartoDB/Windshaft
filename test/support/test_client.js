@@ -101,25 +101,16 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
     });
 };
 
-TestClient.prototype.getList = function(layer, listName, callback) {
+TestClient.prototype.getWidget = function(layer, widgetName, callback) {
     var params = {
         dbname: 'windshaft_test',
         layer: layer,
-        listName: listName
+        widgetName: widgetName
     };
     var provider = new DummyMapConfigProvider(this.config, params);
-    this.widgetBackend.getList(provider, params, callback);
+    this.widgetBackend.getWidget(provider, params, callback);
 };
 
-TestClient.prototype.getHistogram = function(layer, histogramName, callback) {
-    var params = {
-        dbname: 'windshaft_test',
-        layer: layer,
-        histogramName: histogramName
-    };
-    var provider = new DummyMapConfigProvider(this.config, params);
-    this.widgetBackend.getHistogram(provider, params, callback);
-};
 
 TestClient.prototype.createLayergroup = function(options, callback) {
     if (!callback) {

@@ -24,7 +24,7 @@ describe('mapconfig lists', function() {
 
         assert.throws(
             function() {
-                mapConfig.getList(1, 'wadus');
+                mapConfig.getWidget(1, 'wadus');
             },
             function(err) {
                 assert.equal(err.message, 'Layer 1 not found');
@@ -38,7 +38,7 @@ describe('mapconfig lists', function() {
 
         assert.throws(
             function() {
-                mapConfig.getList(0, 'nonexistent');
+                mapConfig.getWidget(0, 'nonexistent');
             },
             function(err) {
                 assert.equal(err.message, "Widget 'nonexistent' not found at layer 0");
@@ -72,7 +72,7 @@ describe('mapconfig lists', function() {
         };
         var mapConfig = MapConfig.create(listsMapConfig);
 
-        var list = mapConfig.getList(0, 'places');
+        var list = mapConfig.getWidget(0, 'places');
         assert.equal(list.sql(), "select name, address from ( select * from test_table ) as _windshaft_subquery");
     });
 
@@ -116,11 +116,11 @@ describe('mapconfig lists', function() {
         };
         var mapConfig = MapConfig.create(listsMapConfig);
 
-        var placesList = mapConfig.getList(0, 'places');
+        var placesList = mapConfig.getWidget(0, 'places');
         assert.equal(placesList.sql(), "select address from ( select * from test_table ) as _windshaft_subquery");
         assert.deepEqual(placesList.columns, ['address']);
 
-        var places2List = mapConfig.getList(1, 'places_2');
+        var places2List = mapConfig.getWidget(1, 'places_2');
         assert.equal(places2List.sql(), "select name from ( select * from test_table ) as _windshaft_subquery");
         assert.deepEqual(places2List.columns, ['name']);
     });
