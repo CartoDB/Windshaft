@@ -41,7 +41,7 @@ describe('histograms', function() {
 
             assert.ok(histogram.length);
 
-            assert.deepEqual(histogram[0], { bucket: 1, min: 1, max: 1, freq: 179 });
+            assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 1, max: 1, freq: 179 });
 
             done();
         });
@@ -55,7 +55,10 @@ describe('histograms', function() {
 
             assert.ok(histogram.length);
 
-            assert.deepEqual(histogram[histogram.length - 1], { bucket: 10, min: 35676000, max: 35676000, freq: 1 });
+            assert.deepEqual(
+                histogram[histogram.length - 1],
+                { bucket: 9, buckets: 10, min: 35676000, max: 35676000, freq: 1 }
+            );
 
             done();
         });
