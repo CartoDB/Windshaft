@@ -13,13 +13,13 @@ describe('list', function() {
                 options: {
                     sql: 'select * from test_table',
                     cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                    cartocss_version: '2.0.1'
-                },
-                widgets: {
-                    places: {
-                        type: 'list',
-                        options: {
-                            columns: ['name', 'address']
+                    cartocss_version: '2.0.1',
+                    widgets: {
+                        places: {
+                            type: 'list',
+                            options: {
+                                columns: ['name', 'address']
+                            }
                         }
                     }
                 }

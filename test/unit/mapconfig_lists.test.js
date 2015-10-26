@@ -57,13 +57,13 @@ describe('mapconfig lists', function() {
                     options: {
                         sql: layerSql,
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    },
-                    widgets: {
-                        places: {
-                            type: 'list',
-                            options: {
-                                columns: ['name', 'address']
+                        cartocss_version: '2.0.1',
+                        widgets: {
+                            places: {
+                                type: 'list',
+                                options: {
+                                    columns: ['name', 'address']
+                                }
                             }
                         }
                     }
@@ -85,13 +85,13 @@ describe('mapconfig lists', function() {
                     options: {
                         sql: 'select * from test_table',
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    widgets: {
-                        places: {
-                            type: 'list',
-                            options: {
-                                columns: ['address']
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            places: {
+                                type: 'list',
+                                options: {
+                                    columns: ['address']
+                                }
                             }
                         }
                     }
@@ -101,13 +101,13 @@ describe('mapconfig lists', function() {
                     options: {
                         sql: 'select * from test_table',
                         cartocss: '#layer1 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    widgets: {
-                        places_2: {
-                            type: 'list',
-                            options: {
-                                columns: ['name']
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            places_2: {
+                                type: 'list',
+                                options: {
+                                    columns: ['name']
+                                }
                             }
                         }
                     }

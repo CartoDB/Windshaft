@@ -13,19 +13,19 @@ describe('histograms', function() {
                 options: {
                     sql: 'select * from populated_places_simple_reduced',
                     cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                    cartocss_version: '2.0.1'
-                },
-                widgets: {
-                    scalerank: {
-                        type: 'histogram',
-                        options: {
-                            column: 'scalerank'
-                        }
-                    },
-                    pop_max: {
-                        type: 'histogram',
-                        options: {
-                            column: 'pop_max'
+                    cartocss_version: '2.0.1',
+                    widgets: {
+                        scalerank: {
+                            type: 'histogram',
+                            options: {
+                                column: 'scalerank'
+                            }
+                        },
+                        pop_max: {
+                            type: 'histogram',
+                            options: {
+                                column: 'pop_max'
+                            }
                         }
                     }
                 }
@@ -73,14 +73,14 @@ describe('histograms', function() {
                     options: {
                         sql: 'select * from populated_places_simple_reduced',
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    },
-                    widgets: {
-                        pop_max: {
-                            type: 'histogram',
-                            options: {
-                                column: 'pop_max',
-                                bins: 20
+                        cartocss_version: '2.0.1',
+                        widgets: {
+                            pop_max: {
+                                type: 'histogram',
+                                options: {
+                                    column: 'pop_max',
+                                    bins: 20
+                                }
                             }
                         }
                     }
