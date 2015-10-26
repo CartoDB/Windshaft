@@ -5,53 +5,75 @@ var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
 describe('mapconfig lists', function() {
 
-    it('should return empty object when config has no lists', function() {
-        var noListsMapConfig = {
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    }
+    var noListsMapConfig = {
+        version: '1.5.0',
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select * from test_table',
+                    cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                    cartocss_version: '2.0.1'
                 }
-            ]
-        };
+            }
+        ]
+    };
 
+    it('should fail to retrieve a list from nonexistent layer', function() {
         var mapConfig = MapConfig.create(noListsMapConfig);
 
-        assert.deepEqual(mapConfig.getLists(), {});
+        assert.throws(
+            function() {
+                mapConfig.getList(1, 'wadus');
+            },
+            function(err) {
+                assert.equal(err.message, 'Layer 1 not found');
+                return true;
+            }
+        );
+    });
+
+    it('should return empty object when config has no lists', function() {
+        var mapConfig = MapConfig.create(noListsMapConfig);
+
+        assert.throws(
+            function() {
+                mapConfig.getList(0, 'nonexistent');
+            },
+            function(err) {
+                assert.equal(err.message, "Widget 'nonexistent' not found at layer 0");
+                return true;
+            }
+        );
     });
 
     it('should return an object with lists from config', function() {
+        var layerSql = 'select * from test_table';
         var listsMapConfig = {
             version: '1.5.0',
             layers: [
                 {
                     type: 'mapnik',
                     options: {
-                        sql: 'select * from test_table',
+                        sql: layerSql,
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.0.1'
+                    },
+                    widgets: {
+                        places: {
+                            type: 'list',
+                            options: {
+                                columns: ['name', 'address']
+                            }
+                        }
                     }
                 }
-            ],
-            lists: {
-                places: {
-                    sql: 'select * from test_table',
-                    columns: ['name', 'address']
-                }
-            }
+            ]
         };
         var mapConfig = MapConfig.create(listsMapConfig);
 
-        assert.deepEqual(Object.keys(mapConfig.getLists()), ['places']);
-        assert.deepEqual(mapConfig.getLists().places.getConfig(), {
-            sql: 'select * from test_table',
-            columns: ['name', 'address']
-        });
+        var list = mapConfig.getList(0, 'places');
+        assert.equal(list.sql(), "select name, address from ( select * from test_table ) as _windshaft_subquery");
     });
 
     it('should return an object with lists from layers', function() {
@@ -65,10 +87,12 @@ describe('mapconfig lists', function() {
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.3.0'
                     },
-                    lists: {
+                    widgets: {
                         places: {
-                            sql: 'select * from test_table',
-                            columns: ['address']
+                            type: 'list',
+                            options: {
+                                columns: ['address']
+                            }
                         }
                     }
                 },
@@ -79,10 +103,12 @@ describe('mapconfig lists', function() {
                         cartocss: '#layer1 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.3.0'
                     },
-                    lists: {
+                    widgets: {
                         places_2: {
-                            sql: 'select * from test_table',
-                            columns: ['name']
+                            type: 'list',
+                            options: {
+                                columns: ['name']
+                            }
                         }
                     }
                 }
@@ -90,104 +116,13 @@ describe('mapconfig lists', function() {
         };
         var mapConfig = MapConfig.create(listsMapConfig);
 
-        assert.deepEqual(Object.keys(mapConfig.getLists()), ['places', 'places_2']);
-        assert.deepEqual(mapConfig.getLists().places.getConfig(), {
-            sql: 'select * from test_table',
-            columns: ['address']
-        });
-        assert.deepEqual(mapConfig.getLists().places_2.getConfig(), {
-            sql: 'select * from test_table',
-            columns: ['name']
-        });
-    });
+        var placesList = mapConfig.getList(0, 'places');
+        assert.equal(placesList.sql(), "select address from ( select * from test_table ) as _windshaft_subquery");
+        assert.deepEqual(placesList.columns, ['address']);
 
-    it('should return an object with lists from layers and sql from layers if not present in list def', function() {
-        var listsMapConfig = {
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 4',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    lists: {
-                        places: {
-                            columns: ['address']
-                        }
-                    }
-                },
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 2',
-                        cartocss: '#layer1 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    lists: {
-                        places_2: {
-                            sql: 'select * from test_table',
-                            columns: ['name']
-                        }
-                    }
-                }
-            ]
-        };
-        var mapConfig = MapConfig.create(listsMapConfig);
-
-        assert.deepEqual(Object.keys(mapConfig.getLists()), ['places', 'places_2']);
-        assert.deepEqual(mapConfig.getLists().places.getConfig(), {
-            sql: 'select * from test_table limit 4',
-            columns: ['address']
-        });
-        assert.deepEqual(mapConfig.getLists().places_2.getConfig(), {
-            sql: 'select * from test_table',
-            columns: ['name']
-        });
-    });
-
-    it('should default to all columns when no columns are specified', function() {
-        var listsMapConfig = {
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 4',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    lists: {
-                        places: {}
-                    }
-                },
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 2',
-                        cartocss: '#layer1 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    lists: {
-                        places_2: {
-                            sql: 'select * from test_table'
-                        }
-                    }
-                }
-            ]
-        };
-        var mapConfig = MapConfig.create(listsMapConfig);
-
-        assert.deepEqual(Object.keys(mapConfig.getLists()), ['places', 'places_2']);
-        assert.deepEqual(mapConfig.getLists().places.getConfig(), {
-            sql: 'select * from test_table limit 4',
-            columns: ['*']
-        });
-        assert.deepEqual(mapConfig.getLists().places_2.getConfig(), {
-            sql: 'select * from test_table',
-            columns: ['*']
-        });
+        var places2List = mapConfig.getList(1, 'places_2');
+        assert.equal(places2List.sql(), "select name from ( select * from test_table ) as _windshaft_subquery");
+        assert.deepEqual(places2List.columns, ['name']);
     });
 
 });

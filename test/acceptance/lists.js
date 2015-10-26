@@ -5,20 +5,6 @@ var TestClient = require('../support/test_client');
 
 describe('list', function() {
 
-    var mapConfig = {
-        version: '1.5.0',
-        layers: [
-            {
-                type: 'mapnik',
-                options: {
-                    sql: 'select * from test_table',
-                    cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                    cartocss_version: '2.0.1'
-                }
-            }
-        ]
-    };
-
     var listsMapConfig = {
         version: '1.5.0',
         layers: [
@@ -29,38 +15,31 @@ describe('list', function() {
                     cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                     cartocss_version: '2.0.1'
                 },
-                lists: {
+                widgets: {
                     places: {
-                        sql: 'select * from test_table',
-                        columns: ['name', 'address']
+                        type: 'list',
+                        options: {
+                            columns: ['name', 'address']
+                        }
                     }
                 }
             }
         ]
     };
 
-    it('cannot be fetched from MapConfig with no lists', function(done) {
-        var testClient = new TestClient(mapConfig);
-        testClient.getList('any', function (err) {
-            assert.ok(err);
-            assert.equal(err.message, 'MapConfig has no exposed lists');
-            done();
-        });
-    });
-
     it('cannot be fetched from nonexistent list name', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getList('nonexistent', function (err) {
+        testClient.getList(0, 'nonexistent', function (err) {
             assert.ok(err);
-            assert.equal(err.message, "List 'nonexistent' does not exists");
+            assert.equal(err.message, "Widget 'nonexistent' not found at layer 0");
             done();
         });
     });
 
     it('can be fetched from a valid list', function(done) {
         var testClient = new TestClient(listsMapConfig);
-        testClient.getList('places', function (err, list) {
-            assert.ok(!err);
+        testClient.getList(0, 'places', function (err, list) {
+            assert.ok(!err, err);
             assert.ok(list);
             assert.equal(list.length, 5);
 
@@ -69,113 +48,6 @@ describe('list', function() {
                 return item.name;
             });
             assert.deepEqual(names, expectedNames);
-
-            done();
-        });
-    });
-
-    it('should fetch all columns when no columns are specified', function(done) {
-        var testClient = new TestClient({
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    },
-                    lists: {
-                        places: {
-                            // it uses sql from layer options.sql
-                        }
-                    }
-                }
-            ]
-        });
-        testClient.getList('places', function (err, list) {
-            assert.ok(!err);
-            assert.ok(list);
-            assert.equal(list.length, 5);
-
-            assert.deepEqual(Object.keys(list[0]), [
-                'updated_at',
-                'created_at',
-                'cartodb_id',
-                'name',
-                'address',
-                'the_geom',
-                'the_geom_webmercator'
-            ]);
-
-            done();
-        });
-    });
-
-    it('should fetch all columns from layer query when no columns are specified', function(done) {
-        var testClient = new TestClient({
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select cartodb_id, the_geom, name from test_table',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    },
-                    lists: {
-                        places: {
-                            // it uses sql from layer options.sql
-                        }
-                    }
-                }
-            ]
-        });
-        testClient.getList('places', function (err, list) {
-            assert.ok(!err);
-            assert.ok(list);
-            assert.equal(list.length, 5);
-
-            assert.deepEqual(Object.keys(list[0]), [
-                'cartodb_id',
-                'the_geom',
-                'name'
-            ]);
-
-            done();
-        });
-    });
-
-    it('should fetch columns from layer options.sql', function(done) {
-        var testClient = new TestClient({
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1'
-                    },
-                    lists: {
-                        places: {
-                            columns: ['cartodb_id', 'name']
-                        }
-                    }
-                }
-            ]
-        });
-        testClient.getList('places', function (err, list) {
-            assert.ok(!err);
-            assert.ok(list);
-            assert.equal(list.length, 5);
-
-            var expectedIds = [1,2,3,4,5];
-            var ids = list.map(function (item) {
-                return item.cartodb_id;
-            });
-
-            assert.deepEqual(ids, expectedIds);
 
             done();
         });
