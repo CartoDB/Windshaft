@@ -174,5 +174,140 @@ describe('mapconfig filters', function() {
 
     });
 
+    describe('range', function() {
+        var histogramWidgetMapConfig = {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1',
+                        widgets: {
+                            adm0name: {
+                                type: 'histogram',
+                                options: {
+                                    column: 'adm0name'
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        describe('errors', function() {
+            var mapConfig = MapConfig.create(histogramWidgetMapConfig);
+
+            it('fails to apply range filter if no params are used', function() {
+                assert.throws(
+                    function() {
+                        mapConfig.applyFilters({layers: [{
+                            adm0name: {}
+                        }]});
+                    },
+                    function(err) {
+                        assert.equal(
+                            err.message,
+                            'Range filter expect to have at least one value in min or max numeric params'
+                        );
+                        return true;
+                    }
+                );
+            });
+
+            it('fails to apply range filter if min is not a number', function() {
+                assert.throws(
+                    function() {
+                        mapConfig.applyFilters({layers: [{
+                            adm0name: {
+                                min: 'wadus'
+                            }
+                        }]});
+                    },
+                    function(err) {
+                        assert.equal(
+                            err.message,
+                            'Range filter expect to have at least one value in min or max numeric params'
+                        );
+                        return true;
+                    }
+                );
+            });
+
+            it('fails to apply range filter if max is not a number', function() {
+                assert.throws(
+                    function() {
+                        mapConfig.applyFilters({layers: [{
+                            adm0name: {
+                                max: 'wadus'
+                            }
+                        }]});
+                    },
+                    function(err) {
+                        assert.equal(
+                            err.message,
+                            'Range filter expect to have at least one value in min or max numeric params'
+                        );
+                        return true;
+                    }
+                );
+            });
+        });
+
+        describe('queries with filters', function() {
+            it('uses min filter param', function() {
+                var mapConfig = MapConfig.create(histogramWidgetMapConfig);
+                var minFilterMapConfig = mapConfig.applyFilters({layers: [{
+                    adm0name: { // this is a range filter associated to the histogram widget
+                        min: 0
+                    }
+                }]});
+
+                var filteredHistogram = minFilterMapConfig.getWidget(0, 'adm0name');
+                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name > 0/));
+
+                // check original mapconfig keeps it right
+                var histogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(!histogram.sql().match(/_cdb_range_filter/));
+            });
+
+            it('uses max filter param', function() {
+                var mapConfig = MapConfig.create(histogramWidgetMapConfig);
+                var maxFilterMapConfig = mapConfig.applyFilters({layers: [{
+                    adm0name: { // this is a range filter associated to the histogram widget
+                        max: 100
+                    }
+                }]});
+
+                var filteredHistogram = maxFilterMapConfig.getWidget(0, 'adm0name');
+                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name < 100/));
+
+                // check original mapconfig keeps it right
+                var histogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(!histogram.sql().match(/_cdb_range_filter/));
+            });
+
+            it('uses min and max filter params', function() {
+                var mapConfig = MapConfig.create(histogramWidgetMapConfig);
+                var maxFilterMapConfig = mapConfig.applyFilters({layers: [{
+                    adm0name: { // this is a range filter associated to the histogram widget
+                        min: 0,
+                        max: 100
+                    }
+                }]});
+
+                var filteredHistogram = maxFilterMapConfig.getWidget(0, 'adm0name');
+                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name BETWEEN 0 AND 100/));
+
+                // check original mapconfig keeps it right
+                var histogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(!histogram.sql().match(/_cdb_range_filter/));
+            });
+        });
+
+    });
+
 });
 
