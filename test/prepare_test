@@ -36,6 +36,8 @@ dropdb windshaft_test | 2>&1
 createdb -EUTF8 windshaft_test || die "Could not create test database"
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
+#  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_XYZ.sql -o CDB_XYZ.sql
+cat sql/CDB_XYZ.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
 dropdb windshaft_test2 | 2>&1
 createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test database 2"
 
