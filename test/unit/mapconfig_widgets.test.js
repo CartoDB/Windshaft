@@ -3,7 +3,7 @@ require('../support/test_helper.js');
 var assert = require('assert');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
-describe('mapconfig lists', function() {
+describe('mapconfig widgets', function() {
 
     var noListsMapConfig = {
         version: '1.5.0',
