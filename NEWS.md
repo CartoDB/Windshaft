@@ -3,7 +3,7 @@
 
 Announcements:
  - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb3](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb3)
- - Upgrades all mapnik dependants to upgrade mapnik dependency on them
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
 
 
 # Version 1.2.0
