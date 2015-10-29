@@ -1,5 +1,9 @@
-# Version 1.4.1
+# Version 1.5.0
 2015-mm-dd
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb5)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
 
 
 # Version 1.4.0
