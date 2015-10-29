@@ -97,7 +97,7 @@ describe('widgets', function() {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bucket: 0, min: 1, max: 1, freq: 179 });
+                assert.deepEqual(histogram.bins[0], { bin: 0, min: 1, max: 1, freq: 179 });
 
                 done();
             });
@@ -113,7 +113,7 @@ describe('widgets', function() {
                 assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1], { bucket: 9, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1], { bin: 9, min: 35676000, max: 35676000, freq: 1 }
                 );
 
                 done();
@@ -152,7 +152,7 @@ describe('widgets', function() {
                 assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1], { bucket: 19, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1], { bin: 19, min: 35676000, max: 35676000, freq: 1 }
                 );
 
                 assert.ok(!histogram.bins[histogram.bins.length - 2]);
