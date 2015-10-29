@@ -3,8 +3,6 @@ require('../support/test_helper');
 var assert = require('assert');
 
 describe('Geojson renderer', function() {
-
-
     var GeojsonRenderer = require('../../lib/windshaft/renderers/mapnik/geojson_renderer.js');
     var dummyLayer = {
         options: {
@@ -20,13 +18,13 @@ describe('Geojson renderer', function() {
     };
 
     describe('when postres returns a geojson', function() {
-        var DummyCartoPSQL = function () {};
-        DummyCartoPSQL.prototype.query = function (query, callback) {
+        var CartoPSQLStub = function () {};
+        CartoPSQLStub.prototype.query = function (query, callback) {
             callback(null, dummyTile);
         };
 
         var dummyCartoPSQLFactory = function () {
-            return new DummyCartoPSQL();
+            return new CartoPSQLStub();
         };
 
         beforeEach(function () {
@@ -45,17 +43,17 @@ describe('Geojson renderer', function() {
     });
 
     describe('when postres returns an error', function() {
-        var DummyCartoPSQL = function () {};
-        DummyCartoPSQL.prototype.query = function (query, callback) {
+        var CartoPSQLStub = function () {};
+        CartoPSQLStub.prototype.query = function (query, callback) {
             callback(new Error('Something went wrong'));
         };
 
-        var dummyCartoPSQLFactory = function () {
-            return new DummyCartoPSQL();
+        var cartoPSQLFactoryStub = function () {
+            return new CartoPSQLStub();
         };
 
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), dummyLayer);
+            this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), dummyLayer);
         });
 
         it('.getTile should call the callback with an error', function(done) {

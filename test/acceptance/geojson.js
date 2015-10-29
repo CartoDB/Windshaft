@@ -15,9 +15,7 @@ describe('Rendering geojsons', function() {
 
         it('should return a geojson with points', function (done) {
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                if (err) {
-                    return done(err);
-                }
+                assert.ok(!err);
                 assert.ok(geojsonTile);
                 assert.equal(geojsonTile.type, 'FeatureCollection');
                 assert.ok(geojsonTile.features instanceof Array);
@@ -38,10 +36,7 @@ describe('Rendering geojsons', function() {
 
 
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                if (err) {
-                    return done(err);
-                }
-
+                assert.ok(!err);
                 assert.ok(geojsonTile);
                 assert.equal(geojsonTile.type, 'FeatureCollection');
                 assert.ok(geojsonTile.features instanceof Array);
@@ -57,21 +52,16 @@ describe('Rendering geojsons', function() {
 
         it('should return an empty geojson if tile requested is out of bound', function(done) {
             this.testClient.getTile(1, 4011, 3088, this.options, function (err, geojsonTile) {
-                if (err) {
-                    return done(err);
-                }
-
-                assert.equal(JSON.stringify(geojsonTile), '{}');
+                assert.ok(!err);
+                assert.deepEqual(geojsonTile.features, []);
                 done();
             });
         });
 
         it('should return an empty geojson if tile requested has not data', function(done) {
             this.testClient.getTile(29, 4011, 3088, this.options, function (err, geojsonTile) {
-                if (err) {
-                    return done(err);
-                }
-                assert.equal(JSON.stringify(geojsonTile), '{}');
+                assert.ok(!err);
+                assert.deepEqual(geojsonTile.features, []);
                 done();
             });
         });
