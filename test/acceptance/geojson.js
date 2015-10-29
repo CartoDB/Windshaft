@@ -50,7 +50,7 @@ describe('Rendering geojsons', function() {
 
         });
 
-        it('should return an empty geojson if tile requested is out of bound', function(done) {
+        it('should return an empty geojson\'s features if tile requested is out of bound', function(done) {
             this.testClient.getTile(1, 4011, 3088, this.options, function (err, geojsonTile) {
                 assert.ok(!err);
                 assert.deepEqual(geojsonTile.features, []);
@@ -58,7 +58,7 @@ describe('Rendering geojsons', function() {
             });
         });
 
-        it('should return an empty geojson if tile requested has not data', function(done) {
+        it('should return an empty geojson\' features if tile requested has not data', function(done) {
             this.testClient.getTile(29, 4011, 3088, this.options, function (err, geojsonTile) {
                 assert.ok(!err);
                 assert.deepEqual(geojsonTile.features, []);
