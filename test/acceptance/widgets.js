@@ -43,10 +43,11 @@ describe('widgets', function() {
             testClient.getWidget(0, 'places', function (err, list) {
                 assert.ok(!err, err);
                 assert.ok(list);
-                assert.equal(list.length, 5);
+                assert.equal(list.type, 'list');
+                assert.equal(list.rows.length, 5);
 
                 var expectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
-                var names = list.map(function (item) {
+                var names = list.rows.map(function (item) {
                     return item.name;
                 });
                 assert.deepEqual(names, expectedNames);
@@ -92,10 +93,11 @@ describe('widgets', function() {
             testClient.getWidget(0, 'scalerank', function (err, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
+                assert.equal(histogram.type, 'histogram');
 
-                assert.ok(histogram.length);
+                assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 1, max: 1, freq: 179 });
+                assert.deepEqual(histogram.bins[0], { bucket: 0, min: 1, max: 1, freq: 179 });
 
                 done();
             });
@@ -106,12 +108,12 @@ describe('widgets', function() {
             testClient.getWidget(0, 'pop_max', function (err, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
+                assert.equal(histogram.type, 'histogram');
 
-                assert.ok(histogram.length);
+                assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram[histogram.length - 1],
-                    { bucket: 9, buckets: 10, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1], { bucket: 9, min: 35676000, max: 35676000, freq: 1 }
                 );
 
                 done();
@@ -145,16 +147,15 @@ describe('widgets', function() {
             var testClient = new TestClient(histogram20binsMapConfig);
             testClient.getWidget(0, 'pop_max', function (err, histogram) {
                 assert.ok(!err, err);
-                assert.ok(histogram);
+                assert.equal(histogram.type, 'histogram');
 
-                assert.ok(histogram.length);
+                assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram[histogram.length - 1],
-                    { bucket: 19, buckets: 20, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1], { bucket: 19, min: 35676000, max: 35676000, freq: 1 }
                 );
 
-                assert.ok(!histogram[histogram.length - 2]);
+                assert.ok(!histogram.bins[histogram.bins.length - 2]);
 
                 done();
             });
