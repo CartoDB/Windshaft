@@ -34,7 +34,6 @@ describe('Rendering geojsons', function() {
             this.mapConfig = TestClient.singleLayerMapConfig('select * from test_big_poly', null, null, 'name');
             this.testClient = new TestClient(this.mapConfig);
 
-
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
                 assert.ok(!err);
                 assert.ok(geojsonTile);
