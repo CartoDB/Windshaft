@@ -1,4 +1,5 @@
 require('../support/test_helper');
+var _ = require('underscore');
 
 var assert        = require('../support/assert');
 var TestClient = require('../support/test_client');
@@ -94,10 +95,11 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
+                validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bin: 0, min: 1, max: 1, freq: 179 });
+                assert.deepEqual(histogram.bins[0], { bin:0, start:1, end:1.9, min:1, max:1, freq:179 });
 
                 done();
             });
@@ -109,18 +111,20 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
+                //validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1], { bin: 9, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1],
+                    { bin: 9, start: 32108400, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
                 done();
             });
         });
 
-        it('returns array with undefined entries for empty bins', function(done) {
+        it('returns array with freq=0 entries for empty bins', function(done) {
             var histogram20binsMapConfig = {
                 version: '1.5.0',
                 layers: [
@@ -148,20 +152,48 @@ describe('widgets', function() {
             testClient.getWidget(0, 'pop_max', function (err, histogram) {
                 assert.ok(!err, err);
                 assert.equal(histogram.type, 'histogram');
+                //validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1], { bin: 19, min: 35676000, max: 35676000, freq: 1 }
+                    histogram.bins[histogram.bins.length - 1],
+                    { bin: 19, start: 33892200, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
-                assert.ok(!histogram.bins[histogram.bins.length - 2]);
+                var emptyBin = histogram.bins[18];
+                assert.equal(emptyBin.freq, 0);
+                assert.equal(emptyBin.bin, 18);
 
                 done();
             });
         });
 
     });
+
+    function validateHistogramBins(histogram) {
+        var firstBin = histogram.bins[0];
+        assert.equal(firstBin.min, firstBin.start,
+            'First bin does not match min and start ' + JSON.stringify(_.pick(firstBin, 'min', 'start'))
+        );
+        var lastBin = histogram.bins[histogram.bins.length - 1];
+        assert.equal(lastBin.max, lastBin.end,
+            'Last bin does not match max and end ' + JSON.stringify(_.pick(firstBin, 'max', 'end'))
+        );
+
+        histogram.bins.forEach(function(bin) {
+            if (bin.min !== void 0) {
+                assert.ok(bin.start <= bin.min,
+                    'Bin start bigger than bin min ' + JSON.stringify(_.pick(firstBin, 'min', 'start', 'bin'))
+                );
+            }
+            if (bin.max !== void 0) {
+                assert.ok(bin.end >= bin.max,
+                    'Bin end smaller than bin max ' + JSON.stringify(_.pick(firstBin, 'max', 'end', 'bin'))
+                );
+            }
+        });
+    }
 
 
 });
