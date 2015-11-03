@@ -74,11 +74,11 @@ can also use other alternatives:
 Recommended options to build from source:
 
  - **node-mapnik**: from [1.x branch](https://github.com/CartoDB/node-mapnik/tree/1.x), current tagged version is
- [1.4.15-cdb1](https://github.com/CartoDB/node-mapnik/tree/1.4.15-cdb1), which is
- [what windshaft uses](https://github.com/CartoDB/Windshaft/blob/0.43.0/package.json#L36).
+ [1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/tree/1.4.15-cdb5), which is
+ [what windshaft uses](https://github.com/CartoDB/Windshaft/blob/1.5.0/package.json#L31).
  - **mapnik**: node-mapnik uses a fixed version of mapnik, which currently is
- [82df66e](https://github.com/CartoDB/mapnik/commit/82df66e), check
- [build_against_sdk.sh#L100-L101@1.4.15-cdb1](https://github.com/CartoDB/node-mapnik/blob/1.4.15-cdb1/scripts/build_against_sdk.sh#L100-L101).
+ [9d40bb2](https://github.com/CartoDB/mapnik/commit/9d40bb2), check
+ [build_against_sdk.sh#L100-L101@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/blob/1.4.15-cdb5/scripts/build_against_sdk.sh#L100-L101).
 
 We maintain a set of [scripts/recipes to package mapnik sdk and node-mapnik](https://github.com/CartoDB/node-mapnik-packaging-recipes).
 It can help to understand what you really need to package mapnik + node-mapnik to be used from windshaft[-cartodb].
