@@ -34,7 +34,7 @@ More examples built on top of Windshaft can be found in [CartoDB's gallery](http
 Dependencies
 ------------
 * Node >=0.8
-* npm >=1.2.1
+* npm >=1.2.1 <2.0.0
 * Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
