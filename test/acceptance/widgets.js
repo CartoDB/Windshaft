@@ -45,10 +45,10 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(list);
                 assert.equal(list.type, 'list');
-                assert.equal(list.rows.length, 5);
+                assert.equal(list.ownFilterOff.rows.length, 5);
 
                 var expectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
-                var names = list.rows.map(function (item) {
+                var names = list.ownFilterOff.rows.map(function (item) {
                     return item.name;
                 });
                 assert.deepEqual(names, expectedNames);
@@ -95,11 +95,11 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
-                validateHistogramBins(histogram);
+                validateHistogramBins(histogram.ownFilterOff);
 
-                assert.ok(histogram.bins.length);
+                assert.ok(histogram.ownFilterOff.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bin:0, start:1, end:1.9, min:1, max:1, freq:179 });
+                assert.deepEqual(histogram.ownFilterOff.bins[0], { bin:0, start:1, end:1.9, min:1, max:1, freq:179 });
 
                 done();
             });
@@ -113,10 +113,10 @@ describe('widgets', function() {
                 assert.equal(histogram.type, 'histogram');
                 //validateHistogramBins(histogram);
 
-                assert.ok(histogram.bins.length);
+                assert.ok(histogram.ownFilterOff.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1],
+                    histogram.ownFilterOff.bins[histogram.ownFilterOff.bins.length - 1],
                     { bin: 9, start: 32108400, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
@@ -154,14 +154,14 @@ describe('widgets', function() {
                 assert.equal(histogram.type, 'histogram');
                 //validateHistogramBins(histogram);
 
-                assert.ok(histogram.bins.length);
+                assert.ok(histogram.ownFilterOff.bins.length);
 
                 assert.deepEqual(
-                    histogram.bins[histogram.bins.length - 1],
+                    histogram.ownFilterOff.bins[histogram.ownFilterOff.bins.length - 1],
                     { bin: 19, start: 33892200, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
-                var emptyBin = histogram.bins[18];
+                var emptyBin = histogram.ownFilterOff.bins[18];
                 assert.equal(emptyBin.freq, 0);
                 assert.equal(emptyBin.bin, 18);
 

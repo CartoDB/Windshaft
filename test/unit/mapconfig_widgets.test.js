@@ -73,7 +73,7 @@ describe('mapconfig widgets', function() {
         var mapConfig = MapConfig.create(listsMapConfig);
 
         var list = mapConfig.getWidget(0, 'places');
-        assert.equal(list.sql(), "select name, address from ( select * from test_table ) as _windshaft_subquery");
+        assert.equal(list.sql(), "select name, address from (select * from test_table) as _cdb_list");
     });
 
     it('should return an object with lists from layers', function() {
@@ -117,11 +117,11 @@ describe('mapconfig widgets', function() {
         var mapConfig = MapConfig.create(listsMapConfig);
 
         var placesList = mapConfig.getWidget(0, 'places');
-        assert.equal(placesList.sql(), "select address from ( select * from test_table ) as _windshaft_subquery");
+        assert.equal(placesList.sql(), "select address from (select * from test_table) as _cdb_list");
         assert.deepEqual(placesList.columns, ['address']);
 
         var places2List = mapConfig.getWidget(1, 'places_2');
-        assert.equal(places2List.sql(), "select name from ( select * from test_table ) as _windshaft_subquery");
+        assert.equal(places2List.sql(), "select name from (select * from test_table) as _cdb_list");
         assert.deepEqual(places2List.columns, ['name']);
     });
 

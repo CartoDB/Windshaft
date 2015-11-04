@@ -7,13 +7,15 @@ describe('mapconfig filters', function() {
 
     describe('aggregations', function() {
 
+        var layerSql = 'select * from populated_places_simple_reduced';
+
         var categoryWidgetMapConfig = {
             version: '1.5.0',
             layers: [
                 {
                     type: 'mapnik',
                     options: {
-                        sql: 'select * from populated_places_simple_reduced',
+                        sql: layerSql,
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.0.1',
                         widgets: {
@@ -36,7 +38,7 @@ describe('mapconfig filters', function() {
             it('fails to apply category filter if no params are used', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {}
                         }]});
                     },
@@ -53,7 +55,7 @@ describe('mapconfig filters', function() {
             it('fails to apply category filter if accept is empty', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {
                                 accept: []
                             }
@@ -72,7 +74,7 @@ describe('mapconfig filters', function() {
             it('fails to apply category filter if reject is empty', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {
                                 reject: []
                             }
@@ -93,20 +95,35 @@ describe('mapconfig filters', function() {
 
             it('uses accept filter param', function() {
                 var mapConfig = MapConfig.create(categoryWidgetMapConfig);
-                var acceptFilterMapConfig = mapConfig.applyFilters({layers: [{
-                    adm0name: { // this is category filter associated to the aggregation widget
+                var mapConfigId = mapConfig.id();
+
+                assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
+
+                mapConfig.setFiltersParams({layers: [{
+                    adm0name: { // this is a category filter associated to the aggregation widget
                         accept: ['Spain']
                     }
                 }]});
 
-                var acceptFilterAggregation = acceptFilterMapConfig.getWidget(0, 'adm0name');
-                assert.equal(acceptFilterAggregation.sql(),
+                assert.equal(mapConfig.getLayer(0).options.sql,
+                    "SELECT * FROM (" +
+                        "select * from populated_places_simple_reduced" +
+                    ") _cdb_category_filter WHERE adm0name IN ('Spain')"
+                );
+
+                assert.notEqual(mapConfig.id(), mapConfigId);
+
+                var acceptFilterAggregation = mapConfig.getWidget(0, 'adm0name');
+                assert.equal(acceptFilterAggregation.sql(mapConfig.getLayerFilters(0)),
                         "SELECT count(*) AS count, adm0name FROM" +
                         " (SELECT * FROM" +
                         " (select * from populated_places_simple_reduced) " +
                         "_cdb_category_filter WHERE adm0name IN ('Spain')) " +
                         "_cdb_aggregation GROUP BY adm0name ORDER BY count DESC"
                 );
+
+                mapConfig.clearFilters();
+                assert.equal(mapConfig.id(), mapConfigId);
 
                 // check original mapconfig keeps it right
                 var aggregation = mapConfig.getWidget(0, 'adm0name');
@@ -120,13 +137,13 @@ describe('mapconfig filters', function() {
             it('uses reject filter param', function() {
                 var mapConfig = MapConfig.create(categoryWidgetMapConfig);
 
-                var rejectFilterMapConfig = mapConfig.applyFilters({layers: [{
+                mapConfig.setFiltersParams({layers: [{
                     adm0name: { // this is a category filter associated to the aggregation widget
                         reject: ['Spain']
                     }
                 }]});
-                var rejectFilterAggregation = rejectFilterMapConfig.getWidget(0, 'adm0name');
-                assert.equal(rejectFilterAggregation.sql(),
+                var rejectFilterAggregation = mapConfig.getWidget(0, 'adm0name');
+                assert.equal(rejectFilterAggregation.sql(mapConfig.getLayerFilters(0)),
                         "SELECT count(*) AS count, adm0name FROM" +
                         " (SELECT * FROM" +
                         " (select * from populated_places_simple_reduced) " +
@@ -135,6 +152,7 @@ describe('mapconfig filters', function() {
                 );
 
                 // check original mapconfig keeps it right
+                mapConfig.clearFilters();
                 var aggregation = mapConfig.getWidget(0, 'adm0name');
                 assert.equal(aggregation.sql(),
                         "SELECT count(*) AS count, adm0name FROM" +
@@ -146,15 +164,15 @@ describe('mapconfig filters', function() {
             it('uses accept and reject filter param', function() {
                 var mapConfig = MapConfig.create(categoryWidgetMapConfig);
 
-                var acceptAndRejectFilterMapConfig = mapConfig.applyFilters({layers: [{
+                mapConfig.setFiltersParams({layers: [{
                     adm0name: { // this is a category filter associated to the aggregation widget
                         reject: ['Spain'],
                         accept: ['USA']
                     }
                 }]});
-                var acceptAndRejectFilterAggregation = acceptAndRejectFilterMapConfig.getWidget(0, 'adm0name');
+                var acceptAndRejectFilterAggregation = mapConfig.getWidget(0, 'adm0name');
 
-                assert.equal(acceptAndRejectFilterAggregation.sql(),
+                assert.equal(acceptAndRejectFilterAggregation.sql(mapConfig.getLayerFilters(0)),
                         "SELECT count(*) AS count, adm0name FROM" +
                         " (SELECT * FROM" +
                         " (select * from populated_places_simple_reduced) " +
@@ -163,6 +181,7 @@ describe('mapconfig filters', function() {
                 );
 
                 // check original mapconfig keeps it right
+                mapConfig.clearFilters();
                 var aggregation = mapConfig.getWidget(0, 'adm0name');
                 assert.equal(aggregation.sql(),
                         "SELECT count(*) AS count, adm0name FROM" +
@@ -203,7 +222,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if no params are used', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {}
                         }]});
                     },
@@ -220,7 +239,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if min is not a number', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {
                                 min: 'wadus'
                             }
@@ -239,7 +258,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if max is not a number', function() {
                 assert.throws(
                     function() {
-                        mapConfig.applyFilters({layers: [{
+                        mapConfig.setFiltersParams({layers: [{
                             adm0name: {
                                 max: 'wadus'
                             }
@@ -259,49 +278,59 @@ describe('mapconfig filters', function() {
         describe('queries with filters', function() {
             it('uses min filter param', function() {
                 var mapConfig = MapConfig.create(histogramWidgetMapConfig);
-                var minFilterMapConfig = mapConfig.applyFilters({layers: [{
+                mapConfig.setFiltersParams({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         min: 0
                     }
                 }]});
 
-                var filteredHistogram = minFilterMapConfig.getWidget(0, 'adm0name');
-                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name > 0/));
+                var filteredHistogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(
+                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name > 0/)
+                );
 
                 // check original mapconfig keeps it right
+                mapConfig.clearFilters();
                 var histogram = mapConfig.getWidget(0, 'adm0name');
                 assert.ok(!histogram.sql().match(/_cdb_range_filter/));
             });
 
             it('uses max filter param', function() {
                 var mapConfig = MapConfig.create(histogramWidgetMapConfig);
-                var maxFilterMapConfig = mapConfig.applyFilters({layers: [{
+                mapConfig.setFiltersParams({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         max: 100
                     }
                 }]});
 
-                var filteredHistogram = maxFilterMapConfig.getWidget(0, 'adm0name');
-                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name < 100/));
+                var filteredHistogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(
+                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name < 100/)
+                );
 
                 // check original mapconfig keeps it right
+                mapConfig.clearFilters();
                 var histogram = mapConfig.getWidget(0, 'adm0name');
                 assert.ok(!histogram.sql().match(/_cdb_range_filter/));
             });
 
             it('uses min and max filter params', function() {
                 var mapConfig = MapConfig.create(histogramWidgetMapConfig);
-                var maxFilterMapConfig = mapConfig.applyFilters({layers: [{
+                mapConfig.setFiltersParams({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         min: 0,
                         max: 100
                     }
                 }]});
 
-                var filteredHistogram = maxFilterMapConfig.getWidget(0, 'adm0name');
-                assert.ok(filteredHistogram.sql().match(/_cdb_range_filter WHERE adm0name BETWEEN 0 AND 100/));
+                var filteredHistogram = mapConfig.getWidget(0, 'adm0name');
+                assert.ok(
+                    filteredHistogram.sql(mapConfig.getLayerFilters(0))
+                        .match(/_cdb_range_filter WHERE adm0name BETWEEN 0 AND 100/)
+                );
 
                 // check original mapconfig keeps it right
+                mapConfig.clearFilters();
                 var histogram = mapConfig.getWidget(0, 'adm0name');
                 assert.ok(!histogram.sql().match(/_cdb_range_filter/));
             });
