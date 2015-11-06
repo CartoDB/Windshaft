@@ -40,6 +40,7 @@
         "carto": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
         "cartodb-psql": "~0.6.1",
         "torque.js": "~2.11.0",
+        "dot": "~1.0.2",
         "request": "2.62.0",
         "abaculus": "https://github.com/CartoDB/abaculus/tarball/1.1.0-cdb3",
         "sphericalmercator": "1.0.3"
