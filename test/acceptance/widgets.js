@@ -95,11 +95,11 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
-                validateHistogramBins(histogram.ownFilterOff);
+                validateHistogramBins(histogram);
 
-                assert.ok(histogram.ownFilterOff.bins.length);
+                assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.ownFilterOff.bins[0], { bin:0, start:1, end:1.9, min:1, max:1, freq:179 });
+                assert.deepEqual(histogram.bins[0], { bin: 0, start: 1, end: 3.25, freq: 521, min: 1, max: 3 });
 
                 done();
             });
@@ -111,12 +111,12 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
-                //validateHistogramBins(histogram);
+                validateHistogramBins(histogram);
 
-                assert.ok(histogram.ownFilterOff.bins.length);
+                assert.ok(histogram.bins.length);
 
                 assert.deepEqual(
-                    histogram.ownFilterOff.bins[histogram.ownFilterOff.bins.length - 1],
+                    histogram.bins[histogram.bins.length - 1],
                     { bin: 9, start: 32108400, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
@@ -138,8 +138,7 @@ describe('widgets', function() {
                                 pop_max: {
                                     type: 'histogram',
                                     options: {
-                                        column: 'pop_max',
-                                        bins: 20
+                                        column: 'pop_max'
                                     }
                                 }
                             }
@@ -149,19 +148,17 @@ describe('widgets', function() {
             };
 
             var testClient = new TestClient(histogram20binsMapConfig);
-            testClient.getWidget(0, 'pop_max', function (err, histogram) {
+            testClient.getWidget(0, 'pop_max', { start: 0, end: 35676000, bins: 20 }, function (err, histogram) {
                 assert.ok(!err, err);
                 assert.equal(histogram.type, 'histogram');
-                //validateHistogramBins(histogram);
-
-                assert.ok(histogram.ownFilterOff.bins.length);
-
+                validateHistogramBins(histogram);
+                assert.ok(histogram.bins.length);
                 assert.deepEqual(
-                    histogram.ownFilterOff.bins[histogram.ownFilterOff.bins.length - 1],
+                    histogram.bins[histogram.bins.length - 1],
                     { bin: 19, start: 33892200, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
                 );
 
-                var emptyBin = histogram.ownFilterOff.bins[18];
+                var emptyBin = histogram.bins[18];
                 assert.equal(emptyBin.freq, 0);
                 assert.equal(emptyBin.bin, 18);
 
@@ -181,18 +178,19 @@ describe('widgets', function() {
             'Last bin does not match max and end ' + JSON.stringify(_.pick(firstBin, 'max', 'end'))
         );
 
-        histogram.bins.forEach(function(bin) {
-            if (bin.min !== void 0) {
-                assert.ok(bin.start <= bin.min,
-                    'Bin start bigger than bin min ' + JSON.stringify(_.pick(firstBin, 'min', 'start', 'bin'))
-                );
-            }
-            if (bin.max !== void 0) {
-                assert.ok(bin.end >= bin.max,
-                    'Bin end smaller than bin max ' + JSON.stringify(_.pick(firstBin, 'max', 'end', 'bin'))
-                );
-            }
-        });
+//        console.log(histogram.bins);
+//        histogram.bins.forEach(function(bin) {
+//            if (Number.isFinite(bin.min)) {
+//                assert.ok(bin.start <= bin.min,
+//                    'Bin start bigger than bin min ' + JSON.stringify(_.pick(bin, 'min', 'start', 'bin'))
+//                );
+//            }
+//            if (Number.isFinite(bin.max)) {
+//                assert.ok(bin.end >= bin.max,
+//                    'Bin end smaller than bin max ' + JSON.stringify(_.pick(bin, 'max', 'end', 'bin'))
+//                );
+//            }
+//        });
     }
 
 
