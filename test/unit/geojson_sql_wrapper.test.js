@@ -17,10 +17,11 @@ describe('Geojson sql wrapper', function() {
                 x: 1,
                 y: 1
             },
-            zoom: 1
+            zoom: 1,
+            columns: null
         });
 
-        assert.ok(query.indexOf('SELECT row_to_json(fc) as geojson') === 0);
+        assert.ok(query.indexOf('SELECT row_to_json(featcoll) as geojson') === 0);
     });
 
     it('.wrap should throw an error if context argument is not valid', function() {

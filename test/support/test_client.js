@@ -179,7 +179,7 @@ var DEFAULT_POINT_STYLE = [
     '}'
 ].join('');
 
-function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
+function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity, attributes) {
     return {
         version: '1.3.0',
         layers: [
@@ -189,7 +189,8 @@ function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
                     sql: sql,
                     cartocss: cartocss || DEFAULT_POINT_STYLE,
                     cartocss_version: cartocssVersion || '2.3.0',
-                    interactivity: interactivity
+                    interactivity: interactivity,
+                    attributes: attributes ? attributes : undefined
                 }
             }
         ]
