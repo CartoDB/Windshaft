@@ -1,5 +1,36 @@
-# Version 1.2.1
+# Version 1.6.1
 2015-mm-dd
+
+
+# Version 1.6.0
+2015-11-11
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb6](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb6)
+
+
+# Version 1.5.0
+2015-10-29
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb5)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
+
+
+# Version 1.4.0
+2015-10-28
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb4](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb4)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
+
+
+# Version 1.3.0
+2015-10-28
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb3](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb3)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
 
 
 # Version 1.2.0
