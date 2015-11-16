@@ -45,10 +45,10 @@ describe('widgets', function() {
                 assert.ok(!err, err);
                 assert.ok(list);
                 assert.equal(list.type, 'list');
-                assert.equal(list.ownFilterOff.rows.length, 5);
+                assert.equal(list.rows.length, 5);
 
                 var expectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
-                var names = list.ownFilterOff.rows.map(function (item) {
+                var names = list.rows.map(function (item) {
                     return item.name;
                 });
                 assert.deepEqual(names, expectedNames);
