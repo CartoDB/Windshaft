@@ -101,14 +101,18 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
     });
 };
 
-TestClient.prototype.getWidget = function(layer, widgetName, callback) {
+TestClient.prototype.getWidget = function(layer, widgetName, override, callback) {
+    if (!callback) {
+        callback = override;
+        override = {};
+    }
     var params = {
         dbname: 'windshaft_test',
         layer: layer,
         widgetName: widgetName
     };
     var provider = new DummyMapConfigProvider(this.config, params);
-    this.widgetBackend.getWidget(provider, params, callback);
+    this.widgetBackend.getWidget(provider, _.extend(override, params), callback);
 };
 
 
