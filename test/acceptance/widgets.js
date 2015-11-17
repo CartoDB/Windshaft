@@ -219,59 +219,27 @@ describe('widgets', function() {
             };
         }
 
-        it('should do min over column', function(done) {
-            var testClient = new TestClient(formulaMapConfig('min'));
-            testClient.getWidget(0, 'pop_max_f', function (err, result) {
-                assert.ok(!err, err);
-                assert.equal(result.min, 10);
-                assert.equal(result.nulls, 0);
+        var operations = {
+            min: [10, 0],
+            max: [599579, 0],
+            count: [5822, 0],
+            avg: [112246.00893163861, 0],
+            sum: [653496264, 0]
+        };
 
-                done();
+        Object.keys(operations).forEach(function(operation) {
+            it('should do ' + operation + ' over column', function(done) {
+                var testClient = new TestClient(formulaMapConfig(operation));
+                testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                    assert.ok(!err, err);
+                    assert.equal(result.operation, operation);
+                    assert.equal(result.result, operations[operation][0]);
+                    assert.equal(result.nulls, operations[operation][1]);
+
+                    done();
+                });
             });
         });
 
-        it('should do max over column', function(done) {
-            var testClient = new TestClient(formulaMapConfig('max'));
-            testClient.getWidget(0, 'pop_max_f', function (err, result) {
-                assert.ok(!err, err);
-                assert.equal(result.max, 599579);
-                assert.equal(result.nulls, 0);
-
-                done();
-            });
-        });
-
-        it('should do avg over column', function(done) {
-            var testClient = new TestClient(formulaMapConfig('avg'));
-            testClient.getWidget(0, 'pop_max_f', function (err, result) {
-                assert.ok(!err, err);
-                assert.ok(Math.abs(result.avg - 112246.00893163861) < 0.1);
-                assert.equal(result.nulls, 0);
-
-                done();
-            });
-        });
-
-        it('should do sum over column', function(done) {
-            var testClient = new TestClient(formulaMapConfig('sum'));
-            testClient.getWidget(0, 'pop_max_f', function (err, result) {
-                assert.ok(!err, err);
-                assert.equal(result.sum, 653496264);
-                assert.equal(result.nulls, 0);
-
-                done();
-            });
-        });
-
-        it('should do count over column', function(done) {
-            var testClient = new TestClient(formulaMapConfig('count'));
-            testClient.getWidget(0, 'pop_max_f', function (err, result) {
-                assert.ok(!err, err);
-                assert.equal(result.count, 5822);
-                assert.equal(result.nulls, 0);
-
-                done();
-            });
-        });
     });
 });
