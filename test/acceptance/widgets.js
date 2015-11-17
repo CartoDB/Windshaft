@@ -192,4 +192,86 @@ describe('widgets', function() {
         }
 
     });
+
+    describe('formula', function() {
+        function formulaMapConfig(operation) {
+            return {
+                version: '1.5.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced where pop_max > 0 and pop_max < 600000',
+                            cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                            cartocss_version: '2.0.1',
+                            widgets: {
+                                pop_max_f: {
+                                    type: 'formula',
+                                    options: {
+                                        column: 'pop_max',
+                                        operation: operation
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+        }
+
+        it('should do min over column', function(done) {
+            var testClient = new TestClient(formulaMapConfig('min'));
+            testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                assert.ok(!err, err);
+                assert.equal(result.min, 10);
+                assert.equal(result.nulls, 0);
+
+                done();
+            });
+        });
+
+        it('should do max over column', function(done) {
+            var testClient = new TestClient(formulaMapConfig('max'));
+            testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                assert.ok(!err, err);
+                assert.equal(result.max, 599579);
+                assert.equal(result.nulls, 0);
+
+                done();
+            });
+        });
+
+        it('should do avg over column', function(done) {
+            var testClient = new TestClient(formulaMapConfig('avg'));
+            testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                assert.ok(!err, err);
+                assert.ok(Math.abs(result.avg - 112246.00893163861) < 0.1);
+                assert.equal(result.nulls, 0);
+
+                done();
+            });
+        });
+
+        it('should do sum over column', function(done) {
+            var testClient = new TestClient(formulaMapConfig('sum'));
+            testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                assert.ok(!err, err);
+                assert.equal(result.sum, 653496264);
+                assert.equal(result.nulls, 0);
+
+                done();
+            });
+        });
+
+        it('should do count over column', function(done) {
+            var testClient = new TestClient(formulaMapConfig('count'));
+            testClient.getWidget(0, 'pop_max_f', function (err, result) {
+                assert.ok(!err, err);
+                assert.equal(result.count, 5822);
+                assert.equal(result.nulls, 0);
+
+                done();
+            });
+        });
+    });
 });
