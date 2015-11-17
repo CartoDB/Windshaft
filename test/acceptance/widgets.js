@@ -166,17 +166,15 @@ describe('widgets', function() {
             });
         });
 
-    });
-
-    function validateHistogramBins(histogram) {
-        var firstBin = histogram.bins[0];
-        assert.equal(firstBin.min, firstBin.start,
-            'First bin does not match min and start ' + JSON.stringify(_.pick(firstBin, 'min', 'start'))
-        );
-        var lastBin = histogram.bins[histogram.bins.length - 1];
-        assert.equal(lastBin.max, lastBin.end,
-            'Last bin does not match max and end ' + JSON.stringify(_.pick(firstBin, 'max', 'end'))
-        );
+        function validateHistogramBins(histogram) {
+            var firstBin = histogram.bins[0];
+            assert.equal(firstBin.min, firstBin.start,
+                    'First bin does not match min and start ' + JSON.stringify(_.pick(firstBin, 'min', 'start'))
+            );
+            var lastBin = histogram.bins[histogram.bins.length - 1];
+            assert.equal(lastBin.max, lastBin.end,
+                    'Last bin does not match max and end ' + JSON.stringify(_.pick(firstBin, 'max', 'end'))
+            );
 
 //        console.log(histogram.bins);
 //        histogram.bins.forEach(function(bin) {
@@ -191,7 +189,7 @@ describe('widgets', function() {
 //                );
 //            }
 //        });
-    }
+        }
 
-
+    });
 });
