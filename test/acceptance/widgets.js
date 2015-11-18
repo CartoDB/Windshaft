@@ -1,5 +1,4 @@
 require('../support/test_helper');
-var _ = require('underscore');
 
 var assert        = require('../support/assert');
 var TestClient = require('../support/test_client');
@@ -99,7 +98,7 @@ describe('widgets', function() {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bin: 0, start: 1, end: 3.25, freq: 521, min: 1, max: 3 });
+                assert.deepEqual(histogram.bins[0], { bin: 0, freq: 521, min: 1, max: 3 });
 
                 done();
             });
@@ -117,7 +116,7 @@ describe('widgets', function() {
 
                 assert.deepEqual(
                     histogram.bins[histogram.bins.length - 1],
-                    { bin: 9, start: 32108400, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
+                    { bin: 9, freq: 1, min: 35676000, max: 35676000 }
                 );
 
                 done();
@@ -155,25 +154,34 @@ describe('widgets', function() {
                 assert.ok(histogram.bins.length);
                 assert.deepEqual(
                     histogram.bins[histogram.bins.length - 1],
-                    { bin: 19, start: 33892200, end: 35676000, freq: 1, min: 35676000, max: 35676000 }
+                    { bin: 19, freq: 1, min: 35676000, max: 35676000 }
                 );
 
                 var emptyBin = histogram.bins[18];
-                assert.equal(emptyBin.freq, 0);
-                assert.equal(emptyBin.bin, 18);
+                assert.ok(!emptyBin);
 
                 done();
             });
         });
 
         function validateHistogramBins(histogram) {
+            var start = histogram.bins_start;
+            var end = start + (histogram.bins_count * histogram.bin_width);
+
             var firstBin = histogram.bins[0];
-            assert.equal(firstBin.min, firstBin.start,
-                    'First bin does not match min and start ' + JSON.stringify(_.pick(firstBin, 'min', 'start'))
+            assert.equal(firstBin.min, start,
+                'First bin does not match min and start ' + JSON.stringify({
+                    min: firstBin.min,
+                    start: start
+                })
             );
+
             var lastBin = histogram.bins[histogram.bins.length - 1];
-            assert.equal(lastBin.max, lastBin.end,
-                    'Last bin does not match max and end ' + JSON.stringify(_.pick(firstBin, 'max', 'end'))
+            assert.equal(lastBin.max, end,
+                'Last bin does not match max and end ' + JSON.stringify({
+                    max: lastBin.max,
+                    end: end
+                })
             );
 
 //        console.log(histogram.bins);
