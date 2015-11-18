@@ -203,13 +203,13 @@ describe('widgets', function() {
                     })
                 );
 
-//                assert.ok(binStartEnd.end >= bin.max,
-//                    'Bin end smaller than bin max ' + JSON.stringify({
-//                        bin: bin.bin,
-//                        max: bin.max,
-//                        end: binStartEnd.end
-//                    })
-//                );
+                assert.ok(binStartEnd.end >= bin.max,
+                    'Bin end smaller than bin max ' + JSON.stringify({
+                        bin: bin.bin,
+                        max: bin.max,
+                        end: binStartEnd.end
+                    })
+                );
             });
         }
 
