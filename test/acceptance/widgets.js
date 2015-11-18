@@ -165,8 +165,9 @@ describe('widgets', function() {
         });
 
         function validateHistogramBins(histogram) {
+            var binWidth = histogram.bin_width;
             var start = histogram.bins_start;
-            var end = start + (histogram.bins_count * histogram.bin_width);
+            var end = start + (histogram.bins_count * binWidth);
 
             var firstBin = histogram.bins[0];
             assert.equal(firstBin.min, start,
@@ -184,19 +185,32 @@ describe('widgets', function() {
                 })
             );
 
-//        console.log(histogram.bins);
-//        histogram.bins.forEach(function(bin) {
-//            if (Number.isFinite(bin.min)) {
-//                assert.ok(bin.start <= bin.min,
-//                    'Bin start bigger than bin min ' + JSON.stringify(_.pick(bin, 'min', 'start', 'bin'))
+            function getBinStartEnd(binIndex) {
+                return {
+                    start: start + (binIndex * binWidth),
+                    end: start + ((binIndex + 1) * binWidth)
+                };
+            }
+
+            histogram.bins.forEach(function(bin) {
+                var binStartEnd = getBinStartEnd(bin.bin);
+
+                assert.ok(binStartEnd.start <= bin.min,
+                    'Bin start bigger than bin min ' + JSON.stringify({
+                        bin: bin.bin,
+                        min: bin.min,
+                        start: binStartEnd.start
+                    })
+                );
+
+//                assert.ok(binStartEnd.end >= bin.max,
+//                    'Bin end smaller than bin max ' + JSON.stringify({
+//                        bin: bin.bin,
+//                        max: bin.max,
+//                        end: binStartEnd.end
+//                    })
 //                );
-//            }
-//            if (Number.isFinite(bin.max)) {
-//                assert.ok(bin.end >= bin.max,
-//                    'Bin end smaller than bin max ' + JSON.stringify(_.pick(bin, 'max', 'end', 'bin'))
-//                );
-//            }
-//        });
+            });
         }
 
     });
