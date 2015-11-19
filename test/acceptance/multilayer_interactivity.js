@@ -314,4 +314,3 @@ describe('multilayer interactivity and layers order', function() {
     chaosScenarios.forEach(testInteractivityLayersOrderScenario);
 
 });
-
