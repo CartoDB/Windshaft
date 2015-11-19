@@ -40,7 +40,7 @@ Dependencies
 * Redis >2.2.x
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
-Basic dependencies installation:
+Dependencies installation example:
 
 ```shell
 sudo add-apt-repository -y ppa:cartodb/cairo
