@@ -215,6 +215,102 @@ describe('widgets', function() {
 
     });
 
+    describe('aggregations', function() {
+
+        var aggregationMapConfig = {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1',
+                        widgets: {
+                            adm0name: {
+                                type: 'aggregation',
+                                options: {
+                                    column: 'adm0name',
+                                    aggregation: 'count'
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        it('can be fetched from a valid aggregation', function(done) {
+            var testClient = new TestClient(aggregationMapConfig);
+            testClient.getWidget(0, 'adm0name', function (err, aggregation) {
+                assert.ok(!err, err);
+                assert.ok(aggregation);
+                assert.equal(aggregation.type, 'aggregation');
+
+                assert.equal(aggregation.categories.length, 6);
+
+                assert.deepEqual(
+                    aggregation.categories[0],
+                    { category: 'United States of America', value: 769, agg: false }
+                );
+
+                assert.deepEqual(
+                    aggregation.categories[aggregation.categories.length - 1],
+                    { category: 'Other', value: 4914, agg: true }
+                );
+
+                done();
+            });
+        });
+
+        var filteredCategoriesScenarios = [
+            { accept: ['Canada'], values: [256] },
+            { accept: ['Canada', 'Spain', 'Chile', 'Thailand'], values: [256, 49, 83, 79] },
+            { accept: ['Canada', 'Spain', 'Chile', 'Thailand', 'Japan'], values: [256, 49, 83, 79, 69] },
+            { accept: ['Canada', 'Spain', 'Chile', 'Thailand', 'Japan', 'France'], values: [256, 49, 83, 79, 69, 71] },
+            {
+                accept: ['United States of America', 'Canada', 'Spain', 'Chile', 'Thailand', 'Japan', 'France'],
+                values: [769, 256, 49, 83, 79, 69, 71]
+            }
+        ];
+
+        filteredCategoriesScenarios.forEach(function(scenario) {
+            it('can filter some categories: ' + scenario.accept.join(', '), function(done) {
+                var testClient = new TestClient(aggregationMapConfig);
+                var adm0nameFilter = {
+                    adm0name: {
+                        accept: scenario.accept
+                    }
+                };
+                testClient.setLayersFiltersParams([adm0nameFilter]);
+                testClient.getWidget(0, 'adm0name', { own_filter: 1 }, function (err, aggregation) {
+                    assert.ok(!err, err);
+                    assert.ok(aggregation);
+                    assert.equal(aggregation.type, 'aggregation');
+
+                    assert.equal(aggregation.categories.length, scenario.accept.length);
+
+                    var categoriesByCategory = aggregation.categories.reduce(function(byCategory, row) {
+                        byCategory[row.category] = row;
+                        return byCategory;
+                    }, {});
+
+                    var scenarioByCategory = scenario.accept.reduce(function(byCategory, category, index) {
+                        byCategory[category] = { category: category, value: scenario.values[index], agg: false };
+                        return byCategory;
+                    }, {});
+
+                    Object.keys(categoriesByCategory).forEach(function(category) {
+                        assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
+                    });
+
+                    done();
+                });
+            });
+        });
+
+    });
+
     describe('formula', function() {
         function formulaMapConfig(operation) {
             return {

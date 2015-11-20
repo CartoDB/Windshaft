@@ -115,6 +115,10 @@ TestClient.prototype.getWidget = function(layer, widgetName, override, callback)
     this.widgetBackend.getWidget(provider, _.extend(override, params), callback);
 };
 
+TestClient.prototype.setLayersFiltersParams = function(filters) {
+    this.config.setFiltersParams({ layers: filters });
+};
+
 
 TestClient.prototype.createLayergroup = function(options, callback) {
     if (!callback) {
