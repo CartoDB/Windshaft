@@ -309,6 +309,98 @@ describe('widgets', function() {
             });
         });
 
+        var aggregationSumMapConfig = {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1',
+                        widgets: {
+                            adm0name: {
+                                type: 'aggregation',
+                                options: {
+                                    column: 'adm0name',
+                                    aggregation: 'sum',
+                                    aggregationColumn: 'pop_max'
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        it('can sum other column for aggregation value', function(done) {
+
+            var testClient = new TestClient(aggregationSumMapConfig);
+            testClient.getWidget(0, 'adm0name', function (err, aggregation) {
+                assert.ok(!err, err);
+                assert.ok(aggregation);
+                assert.equal(aggregation.type, 'aggregation');
+
+                assert.equal(aggregation.categories.length, 6);
+
+                assert.deepEqual(
+                    aggregation.categories[0],
+                    { category: 'China', value: 374537585, agg: false }
+                );
+
+                assert.deepEqual(
+                    aggregation.categories[aggregation.categories.length - 1],
+                    { category: 'Other', value: 1635139855, agg: true }
+                );
+
+                done();
+            });
+        });
+
+        var filteredCategoriesSumScenarios = [
+            { accept: ['Canada'], values: [23955084] },
+            { accept: ['Canada', 'Spain', 'Chile', 'Thailand'], values: [23955084, 22902774, 14356263, 17492483] },
+            {
+                accept: ['United States of America', 'Canada', 'Spain', 'Chile', 'Thailand', 'Japan', 'France'],
+                values: [239098994, 23955084, 22902774, 14356263, 17492483, 93577001, 25473876]
+            }
+        ];
+
+        filteredCategoriesSumScenarios.forEach(function(scenario) {
+            it('can filter some categories with sum aggregation: ' + scenario.accept.join(', '), function(done) {
+                var testClient = new TestClient(aggregationSumMapConfig);
+                var adm0nameFilter = {
+                    adm0name: {
+                        accept: scenario.accept
+                    }
+                };
+                testClient.setLayersFiltersParams([adm0nameFilter]);
+                testClient.getWidget(0, 'adm0name', { own_filter: 1 }, function (err, aggregation) {
+                    assert.ok(!err, err);
+                    assert.ok(aggregation);
+                    assert.equal(aggregation.type, 'aggregation');
+
+                    assert.equal(aggregation.categories.length, scenario.accept.length);
+
+                    var categoriesByCategory = aggregation.categories.reduce(function(byCategory, row) {
+                        byCategory[row.category] = row;
+                        return byCategory;
+                    }, {});
+
+                    var scenarioByCategory = scenario.accept.reduce(function(byCategory, category, index) {
+                        byCategory[category] = { category: category, value: scenario.values[index], agg: false };
+                        return byCategory;
+                    }, {});
+
+                    Object.keys(categoriesByCategory).forEach(function(category) {
+                        assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
+                    });
+
+                    done();
+                });
+            });
+        });
+
     });
 
     describe('formula', function() {
