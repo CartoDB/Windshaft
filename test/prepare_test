@@ -34,8 +34,10 @@ echo "...Configuring Windshaft test database"
 echo "...Recreating windshaft_test database"
 dropdb windshaft_test | 2>&1
 createdb -EUTF8 windshaft_test || die "Could not create test database"
+
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
+  
 psql -c 'CREATE LANGUAGE plpythonu' windshaft_test ||
   die "Could not install plpythonu in test database"
 #  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_XYZ.sql -o CDB_XYZ.sql
