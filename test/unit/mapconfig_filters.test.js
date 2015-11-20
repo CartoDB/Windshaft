@@ -128,8 +128,8 @@ describe('mapconfig filters', function() {
                         'WHERE adm0name IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
                         'WHERE adm0name IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
@@ -140,15 +140,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
                 );
@@ -168,8 +166,8 @@ describe('mapconfig filters', function() {
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
@@ -178,15 +176,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
 
@@ -214,8 +210,8 @@ describe('mapconfig filters', function() {
                         'WHERE adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
                         'WHERE adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
@@ -226,15 +222,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
 
@@ -253,8 +247,8 @@ describe('mapconfig filters', function() {
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
@@ -263,15 +257,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
 
@@ -298,16 +290,14 @@ describe('mapconfig filters', function() {
                         '  sum(CASE WHEN adm0name IS NULL THEN 1 ELSE 0 END) AS nulls_count',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$))' +
-                            ' _cdb_aggregation_nulls',
+                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$))' +
-                            ' _cdb_aggregation_all',
+                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
                         '),',
@@ -315,15 +305,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
 
@@ -342,8 +330,8 @@ describe('mapconfig filters', function() {
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
-                        '  SELECT adm0name AS category, count(1) AS value, row_number() OVER (ORDER BY count(1) desc)' +
-                            ' as rank',
+                        '  SELECT adm0name AS category, count(1) AS value,',
+                        '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (select * from populated_places_simple_reduced) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
@@ -352,15 +340,13 @@ describe('mapconfig filters', function() {
                         '  SELECT count(1) categories_count, max(value) max_val, min(value) min_val',
                         '  FROM categories',
                         ')',
-                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT CAST(category AS text), value, false as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank < 12',
+                        '  WHERE rank < 6',
                         'UNION ALL',
-                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count,' +
-                            ' categories_count',
+                        'SELECT \'Other\' category, sum(value), true as agg, nulls_count, min_val, max_val, count, categories_count',
                         '  FROM categories, summary, categories_summary',
-                        '  WHERE rank >= 12',
+                        '  WHERE rank >= 6',
                         'GROUP BY nulls_count, min_val, max_val, count, categories_count'
                     ].join('\n')
 
