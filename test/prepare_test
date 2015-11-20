@@ -62,5 +62,9 @@ psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/populated_places_simp
 
 psql -c 'VACUUM ANALYZE test_table;' windshaft_test ||
   die "Could not generate stats for test_table in windshaft database"
+psql -c 'VACUUM ANALYZE test_table_2;' windshaft_test ||
+  die "Could not generate stats for test_table_2 in windshaft database"
+psql -c 'VACUUM ANALYZE test_table_3;' windshaft_test ||
+    die "Could not generate stats for test_table_3 in windshaft database"
 
 echo "...Test database configuration complete"
