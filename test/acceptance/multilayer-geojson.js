@@ -34,22 +34,68 @@ describe('Rendering multiple geojson layers', function() {
                 mapnikLayer2
             ]
         });
-        this.options = { format: 'geojson', layer: 'mapnik' };
+        this.options = { format: 'geojson'};
+    });
+    
+    it('for all layers should return a multilayer geojson', function (done) {
+        this.options.layer = undefined;
+      
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(!err);
+            assert.ok(geojsonTile);
+            assert.equal(geojsonTile.type, 'FeatureCollection');
+            assert.ok(geojsonTile.features instanceof Array);
+            assert.equal(geojsonTile.features.length, 2);
+            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[0].features instanceof Array);
+            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
+            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[1].features instanceof Array);
+            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+
+            done();
+        });
     });
 
-    it('should return a geojson with points', function (done) {
+    it('for layer 0 should return a geojson with points', function (done) {
+        this.options.layer = 0;
+        
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-            console.log(JSON.stringify(geojsonTile));
             assert.ok(!err);
             assert.ok(geojsonTile);
             assert.equal(geojsonTile.type, 'FeatureCollection');
             assert.ok(geojsonTile.features instanceof Array);
             assert.ok(geojsonTile.features.length > 0);
-            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[0].features);
-            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
+            assert.equal(geojsonTile.features[0].type, 'Feature');
+            assert.equal(geojsonTile.features[0].geometry.type, 'Point');
             done();
         });
-
+    });
+    
+    it('for layer 1 should return a geojson with points', function (done) {
+        this.options.layer = 1;
+        
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(!err);
+            assert.ok(geojsonTile);
+            assert.equal(geojsonTile.type, 'FeatureCollection');
+            assert.ok(geojsonTile.features instanceof Array);
+            assert.ok(geojsonTile.features.length > 0);
+            assert.equal(geojsonTile.features[0].type, 'Feature');
+            assert.equal(geojsonTile.features[0].geometry.type, 'Point');
+            done();
+        });
+    });
+    
+    it('for layer 2 (out of range) should return a specific error', function (done) {
+        this.options.layer = 2;
+        
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(err);
+            assert.equal(err.message, "Layer '2' not found in layergroup");
+            assert.ok(!geojsonTile);
+            
+            done();
+        });
     });
 });

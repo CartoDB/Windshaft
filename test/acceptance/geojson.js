@@ -8,7 +8,7 @@ describe('Rendering geojsons', function() {
     beforeEach(function () {
         this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         this.testClient = new TestClient(this.mapConfig);
-        this.options = { format: 'geojson', layer: 'mapnik' };
+        this.options = { format: 'geojson', layer: 0 };
     });
 
     describe('single layer', function() {

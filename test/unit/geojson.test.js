@@ -43,6 +43,7 @@ describe('Geojson renderer', function() {
 
     describe('when postgres returns a geojson for one layer', function() {
         var CartoPSQLStub = function () {};
+        
         CartoPSQLStub.prototype.query = function (query, callback) {
             callback(null, dummyTile);
         };
@@ -52,7 +53,7 @@ describe('Geojson renderer', function() {
         };
         
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig);
+            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
         });
 
         it('.getTile should call the callback with a tile, headers and stats', function(done) {
@@ -99,7 +100,7 @@ describe('Geojson renderer', function() {
         var mapConfig = MapConfig.create(dummyMapConfigRaw);
 
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig);
+            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
         });
 
         it('.getTile should call the callback with a tile, headers and stats', function(done) {
@@ -133,7 +134,7 @@ describe('Geojson renderer', function() {
         };
 
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig);
+            this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig.getLayers());
         });
 
         it('.getTile should call the callback with an error', function(done) {
