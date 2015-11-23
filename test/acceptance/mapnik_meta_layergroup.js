@@ -3,7 +3,7 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-describe.only('Create mapnik layergroup', function() {
+describe('Create mapnik layergroup', function() {
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
 
