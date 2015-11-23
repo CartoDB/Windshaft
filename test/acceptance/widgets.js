@@ -401,6 +401,51 @@ describe('widgets', function() {
             });
         });
 
+        var numericAggregationMapConfig = {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            scalerank: {
+                                type: 'aggregation',
+                                options: {
+                                    column: 'scalerank',
+                                    aggregation: 'count'
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        ['1', 1].forEach(function(filterValue) {
+            it('can filter numeric categories: ' + (typeof filterValue), function(done) {
+                var testClient = new TestClient(numericAggregationMapConfig);
+                var scalerankFilter = {
+                    scalerank: {
+                        accept: [filterValue]
+                    }
+                };
+                testClient.setLayersFiltersParams([scalerankFilter]);
+                testClient.getWidget(0, 'scalerank', { own_filter: 1 }, function (err, aggregation) {
+                    assert.ok(!err, err);
+                    assert.ok(aggregation);
+                    assert.equal(aggregation.type, 'aggregation');
+
+                    assert.equal(aggregation.categories.length, 1);
+                    assert.deepEqual(aggregation.categories[0], { category: '1', value: 179, agg: false });
+
+                    done();
+                });
+            });
+        });
+
     });
 
     describe('formula', function() {
