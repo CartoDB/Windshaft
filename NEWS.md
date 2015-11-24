@@ -1,5 +1,9 @@
-# Version 1.6.1
+# Version 1.6.2
 2015-mm-dd
+
+
+# Version 1.6.1
+2015-11-23
 
 Announcements:
  - Upgrades tilelive-mapnik to not cache solid grids
