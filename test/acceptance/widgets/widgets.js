@@ -1,7 +1,7 @@
-require('../support/test_helper');
+require('../../support/test_helper');
 
-var assert        = require('../support/assert');
-var TestClient = require('../support/test_client');
+var assert        = require('../../support/assert');
+var TestClient = require('../../support/test_client');
 
 describe('widgets', function() {
 
@@ -350,7 +350,7 @@ describe('widgets', function() {
 
                 assert.deepEqual(
                     aggregation.categories[aggregation.categories.length - 1],
-                    { category: 'Other', value: 1635139855, agg: true }
+                    { category: 'Other', value: 1412626289, agg: true }
                 );
 
                 done();
