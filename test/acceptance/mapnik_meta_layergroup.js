@@ -162,27 +162,6 @@ describe('Create mapnik layergroup', function() {
         });
     });
     
-    it('with two mapnik layer (with & without join) should response with meta-stats for every layer', function(done) {
-        var testClient = new TestClient({
-            version: '1.4.0',
-            layers: [
-                mapnikLayer3,
-                mapnikLayer4
-            ]
-        });
-        
-        testClient.createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
-            assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
-            assert.ok(!layergroup.metadata.layers[0].meta.stats[1]);
-            assert.ok(layergroup.metadata.layers[1].meta.stats[0].features === 5);
-            assert.ok(layergroup.metadata.layers[1].meta.stats[1].features === 5);
-            assert.ok(!layergroup.metadata.layers[1].meta.stats[2]);
-            assert.ok(!layergroup.metadata.layers[2]);
-            done();
-        });
-    });
-    
     it('with mapnik and layer and httplayer should response with layer metadata with same order', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
