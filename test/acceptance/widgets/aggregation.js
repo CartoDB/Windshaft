@@ -236,6 +236,33 @@ describe('widgets', function() {
             });
         });
 
+        describe('search', function() {
+            ['1', 1].forEach(function(userQuery) {
+                it('can search numeric categories: ' + (typeof userQuery), function(done) {
+                    var testClient = new TestClient(numericAggregationMapConfig);
+                    var scalerankFilter = {
+                        scalerank: {
+                            accept: [userQuery]
+                        }
+                    };
+                    testClient.setLayersFiltersParams([scalerankFilter]);
+                    testClient.widgetSearch(0, 'scalerank', userQuery, function (err, searchResult) {
+                        assert.ok(!err, err);
+                        assert.ok(searchResult);
+                        assert.equal(searchResult.type, 'aggregation');
+
+                        assert.equal(searchResult.categories.length, 2);
+                        assert.deepEqual(
+                            searchResult.categories,
+                            [{ category: 10, value: 515 }, { category: 1, value: 179 }]
+                        );
+
+                        done();
+                    });
+                });
+            });
+        });
+
     });
 
 });

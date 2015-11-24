@@ -115,6 +115,21 @@ TestClient.prototype.getWidget = function(layer, widgetName, override, callback)
     this.widgetBackend.getWidget(provider, _.extend(override, params), callback);
 };
 
+TestClient.prototype.widgetSearch = function(layer, widgetName, userQuery, override, callback) {
+    if (!callback) {
+        callback = override;
+        override = {};
+    }
+    var params = {
+        dbname: 'windshaft_test',
+        layer: layer,
+        widgetName: widgetName,
+        q: userQuery
+    };
+    var provider = new DummyMapConfigProvider(this.config, params);
+    this.widgetBackend.search(provider, _.extend(override, params), callback);
+};
+
 TestClient.prototype.setLayersFiltersParams = function(filters) {
     this.config.setFiltersParams({ layers: filters });
 };
