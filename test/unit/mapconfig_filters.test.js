@@ -57,25 +57,7 @@ describe('mapconfig filters', function() {
                     function() {
                         mapConfig.setFiltersParams({layers: [{
                             adm0name: {
-                                accept: []
-                            }
-                        }]});
-                    },
-                    function(err) {
-                        assert.equal(
-                            err.message,
-                            'Category filter expects to have at least one value in accept or reject arrays'
-                        );
-                        return true;
-                    }
-                );
-            });
-
-            it('fails to apply category filter if reject is empty', function() {
-                assert.throws(
-                    function() {
-                        mapConfig.setFiltersParams({layers: [{
-                            adm0name: {
+                                accept: [],
                                 reject: []
                             }
                         }]});
@@ -83,7 +65,7 @@ describe('mapconfig filters', function() {
                     function(err) {
                         assert.equal(
                             err.message,
-                            'Category filter expects to have at least one value in accept or reject arrays'
+                            'Category filter expects one value either in accept or reject params when both are provided'
                         );
                         return true;
                     }
@@ -109,7 +91,7 @@ describe('mapconfig filters', function() {
                     [
                         'SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$Spain$string_0$)'
+                        'WHERE adm0name IN ($escape_0$Spain$escape_0$)'
                     ].join('\n')
                 );
 
@@ -125,14 +107,14 @@ describe('mapconfig filters', function() {
                         '  sum(CASE WHEN adm0name IS NULL THEN 1 ELSE 0 END) AS nulls_count',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
+                        'WHERE adm0name IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
                         '  SELECT adm0name AS category, count(1) AS value,',
                         '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
+                        'WHERE adm0name IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
                         '),',
@@ -207,14 +189,14 @@ describe('mapconfig filters', function() {
                         '  sum(CASE WHEN adm0name IS NULL THEN 1 ELSE 0 END) AS nulls_count',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
+                        'WHERE adm0name NOT IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
                         '  SELECT adm0name AS category, count(1) AS value,',
                         '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
+                        'WHERE adm0name NOT IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
                         '),',
@@ -290,14 +272,14 @@ describe('mapconfig filters', function() {
                         '  sum(CASE WHEN adm0name IS NULL THEN 1 ELSE 0 END) AS nulls_count',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_nulls',
+                        'WHERE adm0name IN ($escape_0$USA$escape_0$) AND adm0name NOT IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_nulls',
                         '),',
                         'categories AS(',
                         '  SELECT adm0name AS category, count(1) AS value,',
                         '    row_number() OVER (ORDER BY count(1) desc) as rank',
                         '  FROM (SELECT *',
                         'FROM (select * from populated_places_simple_reduced) _cdb_category_filter',
-                        'WHERE adm0name IN ($string_0$USA$string_0$) AND adm0name NOT IN ($string_0$Spain$string_0$)) _cdb_aggregation_all',
+                        'WHERE adm0name IN ($escape_0$USA$escape_0$) AND adm0name NOT IN ($escape_0$Spain$escape_0$)) _cdb_aggregation_all',
                         '  GROUP BY adm0name',
                         '  ORDER BY 2 DESC',
                         '),',

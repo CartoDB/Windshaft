@@ -148,6 +148,7 @@ describe('widgets', function() {
         });
 
         var filteredCategoriesSumScenarios = [
+            { accept: [], values: [] },
             { accept: ['Canada'], values: [23955084] },
             { accept: ['Canada', 'Spain', 'Chile', 'Thailand'], values: [23955084, 22902774, 14356263, 17492483] },
             {
