@@ -43,7 +43,7 @@ describe('Geojson renderer', function() {
 
     describe('when postgres returns a geojson for one layer', function() {
         var CartoPSQLStub = function () {};
-        
+
         CartoPSQLStub.prototype.query = function (query, callback) {
             callback(null, dummyTile);
         };
@@ -51,14 +51,29 @@ describe('Geojson renderer', function() {
         var dummyCartoPSQLFactory = function () {
             return new CartoPSQLStub();
         };
-        
+
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
+
+            this.geojsonRenderer._getInvolvedTablenames = function () {
+                arguments[2](null, {
+                    tablenames: ['test_table'],
+                    stats: { 'whatever1': 1 }
+                });
+            };
+
+            this.geojsonRenderer._getExtraColumnNames = function () {
+                arguments[2](null, {
+                    extraColumNames: ['name'],
+                    stats: { 'whatever2': 2 }
+                });
+            };
+
         });
 
         it('.getTile should call the callback with a tile, headers and stats', function(done) {
             this.geojsonRenderer.getTile(0, 0, 0, function (err, tile, headers, stats) {
-                
+
                 assert.ok(!err);
                 assert.equal(tile, dummyTile.rows[0].geojson);
                 assert.deepEqual(headers, { 'Content-Type': 'application/json' });
@@ -67,7 +82,7 @@ describe('Geojson renderer', function() {
             });
         });
     });
-    
+
     describe('when postgres returns a geojson for several layer', function() {
         var CartoPSQLStub = function () {};
         CartoPSQLStub.prototype.query = function (query, callback) {
@@ -77,7 +92,7 @@ describe('Geojson renderer', function() {
         var dummyCartoPSQLFactory = function () {
             return new CartoPSQLStub();
         };
-        
+
         var dummyMapConfigRaw = {
             version: '1.4.0',
             layers: [{
@@ -96,16 +111,30 @@ describe('Geojson renderer', function() {
                 }
             }]
         };
-        
+
         var mapConfig = MapConfig.create(dummyMapConfigRaw);
 
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
+
+            this.geojsonRenderer._getInvolvedTablenames = function () {
+                arguments[2](null, {
+                    tablenames: ['test_table'],
+                    stats: { 'whatever1': 1 }
+                });
+            };
+
+            this.geojsonRenderer._getExtraColumnNames = function () {
+                arguments[2](null, {
+                    extraColumNames: ['name'],
+                    stats: { 'whatever2': 2 }
+                });
+            };
         });
 
         it('.getTile should call the callback with a tile, headers and stats', function(done) {
             this.geojsonRenderer.getTile(0, 0, 0, function (err, tile, headers, stats) {
-                
+
                 var expectedTile = {
                     type: 'FeatureCollection',
                     features: [
@@ -113,7 +142,7 @@ describe('Geojson renderer', function() {
                         dummyTile.rows[0].geojson
                     ]
                 };
-                
+
                 assert.ok(!err);
                 assert.deepEqual(tile, expectedTile);
                 assert.deepEqual(headers, { 'Content-Type': 'application/json' });
@@ -135,6 +164,21 @@ describe('Geojson renderer', function() {
 
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig.getLayers());
+
+
+            this.geojsonRenderer._getInvolvedTablenames = function () {
+                arguments[2](null, {
+                    tablenames: ['test_table'],
+                    stats: { 'whatever1': 1 }
+                });
+            };
+
+            this.geojsonRenderer._getExtraColumnNames = function () {
+                arguments[2](null, {
+                    extraColumNames: ['name'],
+                    stats: { 'whatever2': 2 }
+                });
+            };
         });
 
         it('.getTile should call the callback with an error', function(done) {

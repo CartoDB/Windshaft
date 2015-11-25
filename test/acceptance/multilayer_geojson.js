@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
 describe('Rendering multiple geojson layers', function() {
-    
+
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
 
@@ -16,7 +16,7 @@ describe('Rendering multiple geojson layers', function() {
             cartocss: cartocss
         }
     };
-    
+
     var mapnikLayer2 = {
         type: 'mapnik',
         options: {
@@ -36,10 +36,10 @@ describe('Rendering multiple geojson layers', function() {
         });
         this.options = { format: 'geojson'};
     });
-    
+
     it('for all layers should return a multilayer geojson', function (done) {
         this.options.layer = undefined;
-      
+
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
             assert.ok(geojsonTile);
@@ -59,7 +59,7 @@ describe('Rendering multiple geojson layers', function() {
 
     it('for layer 0 should return a geojson with points', function (done) {
         this.options.layer = 0;
-        
+
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
             assert.ok(geojsonTile);
@@ -71,10 +71,10 @@ describe('Rendering multiple geojson layers', function() {
             done();
         });
     });
-    
+
     it('for layer 1 should return a geojson with points', function (done) {
         this.options.layer = 1;
-        
+
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
             assert.ok(geojsonTile);
@@ -86,15 +86,15 @@ describe('Rendering multiple geojson layers', function() {
             done();
         });
     });
-    
+
     it('for layer 2 (out of range) should return a specific error', function (done) {
         this.options.layer = 2;
-        
+
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(err);
             assert.equal(err.message, "Layer '2' not found in layergroup");
             assert.ok(!geojsonTile);
-            
+
             done();
         });
     });

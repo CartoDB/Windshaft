@@ -64,67 +64,17 @@ describe('Rendering geojsons', function() {
                 done();
             });
         });
-        
-        describe('with attributtes defined in MapConfig', function() {
 
-            it('should return a geojson with property (name)', function (done) {
-                this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name', {
-                    columns: ['name']
-                });
-                
-                this.testClient = new TestClient(this.mapConfig);
+        it('should return a geojson with properties (name & address)', function (done) {
+            this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+            this.testClient = new TestClient(this.mapConfig);
 
-                this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                    assert.ok(!err);
-                    assert.ok(geojsonTile.features[0].properties);
-                    assert.ok(geojsonTile.features[0].properties.name);
-                    done();
-                });
-            });
-
-            it('should return a geojson with properties (name & address)', function (done) {
-                this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name', {
-                    columns: ['name', 'address']
-                });
-                
-                this.testClient = new TestClient(this.mapConfig);
-
-                this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                    assert.ok(!err);
-                    assert.ok(geojsonTile.features[0].properties);
-                    assert.ok(geojsonTile.features[0].properties.name);
-                    assert.ok(geojsonTile.features[0].properties.address);
-                    done();
-                });
-            });
-            
-            it('and with empty array of columns should return a geojson with empty properties', function (done) {
-                this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name', {
-                    columns: []
-                });
-                
-                this.testClient = new TestClient(this.mapConfig);
-
-                this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                    assert.ok(!err);
-                    assert.ok(geojsonTile.features[0].properties);
-                    assert.deepEqual(geojsonTile.features[0].properties, {});
-                    done();
-                });
-            });
-            
-            it('and with invalid array of columns should return an error', function (done) {
-                this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name', {
-                    columns: ['non_existent_column']
-                });
-                
-                this.testClient = new TestClient(this.mapConfig);
-
-                this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                    assert.ok(err);
-                    assert.ok(!geojsonTile);
-                    done();
-                });
+            this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+                assert.ok(!err);
+                assert.ok(geojsonTile.features[0].properties);
+                assert.ok(geojsonTile.features[0].properties.name);
+                assert.ok(geojsonTile.features[0].properties.address);
+                done();
             });
         });
     });
