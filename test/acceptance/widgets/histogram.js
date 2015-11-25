@@ -45,7 +45,7 @@ describe('widgets', function() {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bin: 0, freq: 179, min: 1, max: 1 });
+                assert.deepEqual(histogram.bins[0], { bin: 0, freq: 179, min: 1, max: 1, avg: 1 });
 
                 done();
             });
@@ -63,7 +63,7 @@ describe('widgets', function() {
 
                 assert.deepEqual(
                     histogram.bins[histogram.bins.length - 1],
-                    { bin: 47, freq: 1, min: 35676000, max: 35676000 }
+                    { bin: 47, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
                 );
 
                 done();
@@ -101,7 +101,7 @@ describe('widgets', function() {
                 assert.ok(histogram.bins.length);
                 assert.deepEqual(
                     histogram.bins[histogram.bins.length - 1],
-                    { bin: 19, freq: 1, min: 35676000, max: 35676000 }
+                    { bin: 19, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
                 );
 
                 var emptyBin = histogram.bins[18];
@@ -155,6 +155,15 @@ describe('widgets', function() {
                         bin: bin.bin,
                         max: bin.max,
                         end: binStartEnd.end
+                    })
+                );
+
+                assert.ok(bin.avg >= bin.min && bin.avg <= bin.max,
+                        'Bin avg not between min and max values' + JSON.stringify({
+                        bin: bin.bin,
+                        avg: bin.avg,
+                        min: bin.min,
+                        max: bin.max
                     })
                 );
             });
