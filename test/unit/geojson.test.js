@@ -55,14 +55,7 @@ describe('Geojson renderer', function() {
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
 
-            this.geojsonRenderer._getInvolvedTablenames = function () {
-                arguments[2](null, {
-                    tablenames: ['test_table'],
-                    stats: { 'whatever1': 1 }
-                });
-            };
-
-            this.geojsonRenderer._getExtraColumnNames = function () {
+            this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
                     extraColumNames: ['name'],
                     stats: { 'whatever2': 2 }
@@ -117,14 +110,7 @@ describe('Geojson renderer', function() {
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
 
-            this.geojsonRenderer._getInvolvedTablenames = function () {
-                arguments[2](null, {
-                    tablenames: ['test_table'],
-                    stats: { 'whatever1': 1 }
-                });
-            };
-
-            this.geojsonRenderer._getExtraColumnNames = function () {
+            this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
                     extraColumNames: ['name'],
                     stats: { 'whatever2': 2 }
@@ -165,15 +151,7 @@ describe('Geojson renderer', function() {
         beforeEach(function () {
             this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig.getLayers());
 
-
-            this.geojsonRenderer._getInvolvedTablenames = function () {
-                arguments[2](null, {
-                    tablenames: ['test_table'],
-                    stats: { 'whatever1': 1 }
-                });
-            };
-
-            this.geojsonRenderer._getExtraColumnNames = function () {
+            this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
                     extraColumNames: ['name'],
                     stats: { 'whatever2': 2 }
