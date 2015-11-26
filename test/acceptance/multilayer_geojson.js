@@ -145,4 +145,28 @@ describe('Rendering multiple geojson layers', function() {
             done();
         });
     });
+
+    it('for layer 0 and 3 (one is out of range) should return a specific error', function (done) {
+        this.options.layer = '0,3';
+
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(err);
+            assert.equal(err.message, "Invalid layer filtering");
+            assert.ok(!geojsonTile);
+
+            done();
+        });
+    });
+
+    it('for layer 3 and 0 (invalid layer filtering) should return a specific error', function (done) {
+        this.options.layer = '3,2';
+
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(err);
+            assert.equal(err.message, "Invalid layer filtering");
+            assert.ok(!geojsonTile);
+
+            done();
+        });
+    });
 });
