@@ -26,12 +26,22 @@ describe('Rendering multiple geojson layers', function() {
         }
     };
 
+    var mapnikLayer3 = {
+        type: 'mapnik',
+        options: {
+            sql: 'select * from test_table_3 limit 3',
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
+        }
+    };
+
     beforeEach(function () {
         this.testClient = new TestClient({
             version: '1.4.0',
             layers: [
                 mapnikLayer1,
-                mapnikLayer2
+                mapnikLayer2,
+                mapnikLayer3
             ]
         });
         this.options = { format: 'geojson'};
@@ -45,6 +55,25 @@ describe('Rendering multiple geojson layers', function() {
             assert.ok(geojsonTile);
             assert.equal(geojsonTile.type, 'FeatureCollection');
             assert.ok(geojsonTile.features instanceof Array);
+            assert.equal(geojsonTile.features.length, 3);
+            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[0].features instanceof Array);
+            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
+            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[1].features instanceof Array);
+            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            done();
+        });
+    });
+
+    it('for layers 0 and 2 should return a multilayer geojson using the requested layers', function (done) {
+        this.options.layer = '0,2';
+
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(!err);
+            assert.ok(geojsonTile);
+            assert.equal(geojsonTile.type, 'FeatureCollection');
+            assert.ok(geojsonTile.features instanceof Array);
             assert.equal(geojsonTile.features.length, 2);
             assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
             assert.ok(geojsonTile.features[0].features instanceof Array);
@@ -52,7 +81,25 @@ describe('Rendering multiple geojson layers', function() {
             assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
             assert.ok(geojsonTile.features[1].features instanceof Array);
             assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            done();
+        });
+    });
 
+    it('for layers 1 and 2 should return a multilayer geojson using the requested layers', function (done) {
+        this.options.layer = '1,2';
+
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(!err);
+            assert.ok(geojsonTile);
+            assert.equal(geojsonTile.type, 'FeatureCollection');
+            assert.ok(geojsonTile.features instanceof Array);
+            assert.equal(geojsonTile.features.length, 2);
+            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[0].features instanceof Array);
+            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
+            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[1].features instanceof Array);
+            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
             done();
         });
     });
@@ -87,12 +134,12 @@ describe('Rendering multiple geojson layers', function() {
         });
     });
 
-    it('for layer 2 (out of range) should return a specific error', function (done) {
-        this.options.layer = 2;
+    it('for layer 3 (out of range) should return a specific error', function (done) {
+        this.options.layer = 3;
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(err);
-            assert.equal(err.message, "Layer '2' not found in layergroup");
+            assert.equal(err.message, "Layer '3' not found in layergroup");
             assert.ok(!geojsonTile);
 
             done();
