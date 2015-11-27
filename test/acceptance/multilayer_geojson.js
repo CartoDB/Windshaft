@@ -1,10 +1,10 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
+var geojsonValue = require('../support/geojson_value').multilayer;
 var TestClient = require('../support/test_client');
 
 describe('Rendering multiple geojson layers', function() {
-
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
 
@@ -52,16 +52,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.equal(geojsonTile.features.length, 3);
-            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[0].features instanceof Array);
-            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
-            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[1].features instanceof Array);
-            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonValue);
             done();
         });
     });
@@ -71,54 +62,41 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.equal(geojsonTile.features.length, 3);
-            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[0].features instanceof Array);
-            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
-            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[1].features instanceof Array);
-            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonValue);
             done();
         });
     });
 
     it('for layers 0 and 2 should return a multilayer geojson using the requested layers', function (done) {
         this.options.layer = '0,2';
+        var geojsonExpected = {
+            type: "FeatureCollection",
+            features: [
+                geojsonValue.features[0],
+                geojsonValue.features[2]
+            ]
+        };
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.equal(geojsonTile.features.length, 2);
-            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[0].features instanceof Array);
-            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
-            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[1].features instanceof Array);
-            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonExpected);
             done();
         });
     });
 
     it('for layers 1 and 2 should return a multilayer geojson using the requested layers', function (done) {
         this.options.layer = '1,2';
+        var geojsonExpected = {
+            type: "FeatureCollection",
+            features: [
+                geojsonValue.features[1],
+                geojsonValue.features[2]
+            ]
+        };
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.equal(geojsonTile.features.length, 2);
-            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[0].features instanceof Array);
-            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
-            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
-            assert.ok(geojsonTile.features[1].features instanceof Array);
-            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonExpected);
             done();
         });
     });
@@ -128,12 +106,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.ok(geojsonTile.features.length > 0);
-            assert.equal(geojsonTile.features[0].type, 'Feature');
-            assert.equal(geojsonTile.features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonValue.features[0]);
             done();
         });
     });
@@ -143,12 +116,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.ok(geojsonTile);
-            assert.equal(geojsonTile.type, 'FeatureCollection');
-            assert.ok(geojsonTile.features instanceof Array);
-            assert.ok(geojsonTile.features.length > 0);
-            assert.equal(geojsonTile.features[0].type, 'Feature');
-            assert.equal(geojsonTile.features[0].geometry.type, 'Point');
+            assert.deepEqual(geojsonTile, geojsonValue.features[1]);
             done();
         });
     });
@@ -177,7 +145,7 @@ describe('Rendering multiple geojson layers', function() {
         });
     });
 
-    it('for layer 3 and 0 (invalid layer filtering) should return a specific error', function (done) {
+    it('for layer 3 and 2 (invalid layer filtering) should return a specific error', function (done) {
         this.options.layer = '3,2';
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
