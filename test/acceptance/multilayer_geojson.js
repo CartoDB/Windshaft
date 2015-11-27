@@ -66,6 +66,25 @@ describe('Rendering multiple geojson layers', function() {
         });
     });
 
+    it('for "mapnik" layer param should return a multilayer geojson', function (done) {
+        this.options.layer = 'mapnik';
+
+        this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
+            assert.ok(!err);
+            assert.ok(geojsonTile);
+            assert.equal(geojsonTile.type, 'FeatureCollection');
+            assert.ok(geojsonTile.features instanceof Array);
+            assert.equal(geojsonTile.features.length, 3);
+            assert.equal(geojsonTile.features[0].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[0].features instanceof Array);
+            assert.equal(geojsonTile.features[0].features[0].geometry.type, 'Point');
+            assert.equal(geojsonTile.features[1].type, 'FeatureCollection');
+            assert.ok(geojsonTile.features[1].features instanceof Array);
+            assert.equal(geojsonTile.features[1].features[0].geometry.type, 'Point');
+            done();
+        });
+    });
+
     it('for layers 0 and 2 should return a multilayer geojson using the requested layers', function (done) {
         this.options.layer = '0,2';
 
