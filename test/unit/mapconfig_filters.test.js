@@ -445,7 +445,7 @@ describe('mapconfig filters', function() {
 
                 var filteredHistogram = mapConfig.getWidget(0, 'adm0name');
                 assert.ok(
-                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name > 0/)
+                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name >= 0/)
                 );
 
                 // check original mapconfig keeps it right
@@ -464,7 +464,7 @@ describe('mapconfig filters', function() {
 
                 var filteredHistogram = mapConfig.getWidget(0, 'adm0name');
                 assert.ok(
-                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name < 100/)
+                    filteredHistogram.sql(mapConfig.getLayerFilters(0)).match(/_cdb_range_filter WHERE adm0name <= 100/)
                 );
 
                 // check original mapconfig keeps it right
