@@ -6,7 +6,7 @@
     <script src="http://underscorejs.org/underscore-min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="leaflet.js"></script>
-    <script src="wax.leaf.min.js"></script>
+    <script src="leaflet.utfgrid.js"></script>
 
     <script>
         $(document).ready(function(){
@@ -25,43 +25,48 @@
                   }},
                 { type:"mapnik",
                   options:{
-                    sql: "select ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
+                    sql: "select 1 id, ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
                     geom_column: "g",
                     cartocss: "#s { polygon-fill: blue; line-color: red; }",
-                    cartocss_version: "2.0.0"
+                    cartocss_version: "2.0.0",
+                    "interactivity": "id"
                   }}
               ]
             }, null, 2);
 
             var layers = [];
-            var tilejson = {
-                tilejson: '1.0.0',
-                scheme: 'xyz',
-                tiles: [],
-                grids: [],
-                formatter: function(options, data) { return data.id }
-            };
 
             function setMap(token, metadata) {
               metadata = metadata || {};
               var metadataLayers = metadata.layers || [];
 
+              // remove previous layers
+              layers.forEach(function(layer){
+                map.removeLayer(layer)
+              });
+              layers = [];
+
               var baseURL = $('#baseurl').val() + '/' + token;
+              var tileLayer = new L.tileLayer(baseURL + '/{z}/{x}/{y}.png');
 
-              tilejson.tiles = [baseURL + '/{z}/{x}/{y}.png'];
+              map.addLayer(tileLayer);
+              layers.push(tileLayer);
+
               metadataLayers.forEach(function(layer, layerIndex) {
-                tilejson.grids = [baseURL + '/' + layerIndex + '/{z}/{x}/{y}.grid.json'];
+                var utfGridLayer = new L.UtfGrid(baseURL + '/' + layerIndex + '/{z}/{x}/{y}.grid.json?callback={cb}');
+                utfGridLayer.on('click', function (e) {
+                  if (e.data) {
+                    console.log('click', e.data);
+                  } else {
+                    console.log('click nothing');
+                  }
+                });
+
+                map.addLayer(utfGridLayer);
+                layers.push(utfGridLayer);
               });
 
-              _.each(layers, function(layer){
-                  map.removeLayer(layer)
-              });
-
-              var testMap = new wax.leaf.connector(tilejson);
-              map.addLayer(testMap);
               map.setView(new L.LatLng(0, 0), 1, true);
-              wax.leaf.interaction(map, tilejson);
-              layers.push(testMap);
             }
 
             submitForm = function(ev){
@@ -75,10 +80,10 @@
                   type: 'POST',
                   contentType: 'application/json',
                   error: function(xhr, textStatus, errorThrown) {
-                    alert("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
+                    console.error("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
                   },
                   success: function(data, textStatus) {
-                    console.log("Success: " + textStatus + " / " + JSON.stringify(data));
+                    console.info("Success: " + textStatus + " / " + JSON.stringify(data));
                     setMap(data.layergroupid, data.metadata);
                   },
                   data: mapConfig
