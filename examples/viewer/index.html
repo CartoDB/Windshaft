@@ -42,12 +42,16 @@
                 formatter: function(options, data) { return data.id }
             };
 
-            setMap = function(token) {
-              var baseURL = $('#baseurl').val();
-              var url = baseURL + '/' + token + '/{z}/{x}/{y}';
+            function setMap(token, metadata) {
+              metadata = metadata || {};
+              var metadataLayers = metadata.layers || [];
 
-              tilejson.tiles = [url + '.png'];
-              tilejson.grids = [url + '.grid.json'];
+              var baseURL = $('#baseurl').val() + '/' + token;
+
+              tilejson.tiles = [baseURL + '/{z}/{x}/{y}.png'];
+              metadataLayers.forEach(function(layer, layerIndex) {
+                tilejson.grids = [baseURL + '/' + layerIndex + '/{z}/{x}/{y}.grid.json'];
+              });
 
               _.each(layers, function(layer){
                   map.removeLayer(layer)
@@ -58,7 +62,7 @@
               map.setView(new L.LatLng(0, 0), 1, true);
               wax.leaf.interaction(map, tilejson);
               layers.push(testMap);
-            };
+            }
 
             submitForm = function(ev){
                 ev.preventDefault();
@@ -73,10 +77,9 @@
                   error: function(xhr, textStatus, errorThrown) {
                     alert("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
                   },
-                  success: function(data, textStatus, xhr) {
+                  success: function(data, textStatus) {
                     console.log("Success: " + textStatus + " / " + JSON.stringify(data));
-                    var token = data.layergroupid;
-                    setMap(token);
+                    setMap(data.layergroupid, data.metadata);
                   },
                   data: mapConfig
                 });
