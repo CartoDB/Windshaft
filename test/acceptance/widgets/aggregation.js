@@ -262,6 +262,26 @@ describe('widgets', function() {
                     });
                 });
             });
+
+            var adm0name = 'Argentina';
+            [adm0name, adm0name.toLowerCase(), adm0name.toUpperCase()].forEach(function(userQuery) {
+                it('should search with case insensitive: ' + userQuery, function(done) {
+                    var testClient = new TestClient(aggregationMapConfig);
+                    testClient.widgetSearch(0, 'adm0name', adm0name, function (err, searchResult) {
+                        assert.ok(!err, err);
+                        assert.ok(searchResult);
+                        assert.equal(searchResult.type, 'aggregation');
+
+                        assert.equal(searchResult.categories.length, 1);
+                        assert.deepEqual(
+                            searchResult.categories,
+                            [{ category:"Argentina", value:159 }]
+                        );
+
+                        done();
+                    });
+                });
+            });
         });
 
     });
