@@ -1,9 +1,9 @@
-# 1. Purpose
+# Purpose
 
 This specification describes [MapConfig](MapConfig-specification.md) format version 1.4.0.
 
 
-# 2. File format
+# File Format
 
 Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.org/rfc/rfc4627.txt).
 
@@ -54,7 +54,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
-## 2.1 Mapnik layers options
+## Mapnik Layers Options
 
 ```javascript
 {
@@ -135,7 +135,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
-## 2.2 Torque layers options
+## Torque Layers Options
 
 ```javascript
 {
@@ -198,7 +198,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 ```
 
 
-## 2.3 Http layers options
+## Http Layers Options
 
 ```javascript
 {
@@ -224,11 +224,14 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
-## 2.4 Plain layers options
+## Plain Layers Options
 
-Some notes:
- - At least one of the options, `color` or `imageUrl`, must be provided.
+**Note:**
+
+ - At least one of the options, `color` or `imageUrl`, must be provided
+
  - If both options are provided `color` will be the only one used.
+
 
 ```javascript
 {
@@ -252,10 +255,12 @@ Some notes:
 
 The document may be extended for specific uses.
 For example, Windshaft-CartoDB defines the addition of a "stat_tag" element
-in the config. See https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API
+in the config. See [https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API](https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API)
 
-Specification for how to name extensions is yet to be defined as of this version
+**Note:** Specifications for how to name extensions is yet to be defined, as of this version
 of MapConfig.
+
+{% comment %}writer note_csobier: 30-Dec-2015. I do not think the TODO and History topics below should appear in the end-user content, do you? Is there a way, to track this information somewhere more internal, like a Product Spec, or something?{% endcomment %}
 
 # TODO
 
