@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
-var SubstitutionTokens = require('../../lib/windshaft/renderers/torque/substitution_tokens');
+var SubstitutionTokens = require('../../lib/windshaft/utils/substitution_tokens');
 
 describe('torque', function() {
 
