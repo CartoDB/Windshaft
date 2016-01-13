@@ -1,5 +1,7 @@
 sudo: false
 
+dist: trusty
+
 addons:
   postgresql: "9.3"
   apt:
