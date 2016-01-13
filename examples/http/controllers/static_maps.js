@@ -75,7 +75,7 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
                 self._app.sendError(res, {errors: ['' + err] }, self._app.findStatusCode(err), 'STATIC_MAP', err);
             } else {
                 res.setHeader('Content-Type', headers['Content-Type'] || 'image/' + format);
-                self._app.sendResponse(res, [image, 200]);
+                res.send(image, 200);
             }
         }
     );

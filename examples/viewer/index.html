@@ -3,10 +3,10 @@
 <head>
     <title>Windshaft test</title>
     <meta charset="utf-8" />
-    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="leaflet.js"></script>
-    <script src="wax.leaf.min.js"></script>
+    <script src="leaflet.utfgrid.js"></script>
 
     <script>
         $(document).ready(function(){
@@ -25,40 +25,49 @@
                   }},
                 { type:"mapnik",
                   options:{
-                    sql: "select ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
+                    sql: "select 1 id, ST_Buffer(ST_SetSRID(ST_MakePoint(0,0),3857),5e6,4) g",
                     geom_column: "g",
                     cartocss: "#s { polygon-fill: blue; line-color: red; }",
-                    cartocss_version: "2.0.0"
+                    cartocss_version: "2.0.0",
+                    "interactivity": "id"
                   }}
               ]
             }, null, 2);
 
             var layers = [];
-            var tilejson = {
-                tilejson: '1.0.0',
-                scheme: 'xyz',
-                tiles: [],
-                grids: [],
-                formatter: function(options, data) { return data.id }
-            };
 
-            setMap = function(token) {
-              var baseURL = $('#baseurl').val();
-              var url = baseURL + '/' + token + '/{z}/{x}/{y}';
+            function setMap(token, metadata) {
+              metadata = metadata || {};
+              var metadataLayers = metadata.layers || [];
 
-              tilejson.tiles = [url + '.png'];
-              tilejson.grids = [url + '.grid.json'];
+              // remove previous layers
+              layers.forEach(function(layer){
+                map.removeLayer(layer)
+              });
+              layers = [];
 
-              _.each(layers, function(layer){
-                  map.removeLayer(layer)
+              var baseURL = $('#baseurl').val() + '/' + token;
+              var tileLayer = new L.tileLayer(baseURL + '/{z}/{x}/{y}.png');
+
+              map.addLayer(tileLayer);
+              layers.push(tileLayer);
+
+              metadataLayers.forEach(function(layer, layerIndex) {
+                var utfGridLayer = new L.UtfGrid(baseURL + '/' + layerIndex + '/{z}/{x}/{y}.grid.json?callback={cb}');
+                utfGridLayer.on('click', function (e) {
+                  if (e.data) {
+                    console.log('click', e.data);
+                  } else {
+                    console.log('click nothing');
+                  }
+                });
+
+                map.addLayer(utfGridLayer);
+                layers.push(utfGridLayer);
               });
 
-              var testMap = new wax.leaf.connector(tilejson);
-              map.addLayer(testMap);
               map.setView(new L.LatLng(0, 0), 1, true);
-              wax.leaf.interaction(map, tilejson);
-              layers.push(testMap);
-            };
+            }
 
             submitForm = function(ev){
                 ev.preventDefault();
@@ -71,12 +80,11 @@
                   type: 'POST',
                   contentType: 'application/json',
                   error: function(xhr, textStatus, errorThrown) {
-                    alert("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
+                    console.error("Error: " + textStatus + " / " + JSON.stringify(errorThrown));
                   },
-                  success: function(data, textStatus, xhr) {
-                    console.log("Success: " + textStatus + " / " + JSON.stringify(data));
-                    var token = data.layergroupid;
-                    setMap(token);
+                  success: function(data, textStatus) {
+                    console.info("Success: " + textStatus + " / " + JSON.stringify(data));
+                    setMap(data.layergroupid, data.metadata);
                   },
                   data: mapConfig
                 });
@@ -108,7 +116,7 @@ to values meant for use against server started with: <code>node ../readme_server
 Base URL: <input type="text" size="50" id="baseurl">
 <input type="button" id="update_map" value="Go">
 <br />
-MapConfig (see <a href="https://github.com/strk/Windshaft/blob/pgraster/doc/MapConfig-1.2.0.md">docs</a>):
+MapConfig (see <a href=https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md">docs</a>):
 <br/>
 <textarea id="mapconfig" cols="100" rows="5"></textarea>
 </p>

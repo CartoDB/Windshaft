@@ -226,4 +226,45 @@ describe('server_gettile', function() {
         });
     });
 
+    it('should fail for non-cartocss options', function(done) {
+        var mapConfig = {
+            "version": "1.4.0",
+            "layers": [
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.3.0',
+                        "sql": "SELECT null::geometry AS the_geom"
+                    }
+                }
+            ]
+        };
+
+        new TestClient(mapConfig).createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'Missing cartocss for layer 0 options');
+            done();
+        });
+    });
+
+    it('should fail for non-sql options', function(done) {
+        var mapConfig = {
+            "version": "1.4.0",
+            "layers": [
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.3.0',
+                        "cartocss": '#layer0 { polygon-fill: red }'
+                    }
+                }
+            ]
+        };
+
+        new TestClient(mapConfig).createLayergroup(function(err) {
+            assert.ok(err);
+            assert.equal(err.message, 'Missing sql for layer 0 options');
+            done();
+        });
+    });
 });

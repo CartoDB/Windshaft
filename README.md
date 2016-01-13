@@ -1,20 +1,17 @@
 Windshaft map tiler
 ===================
 
-A Node.js map tile server for PostGIS with CartoCSS styling.
+A Node.js map tile library for PostGIS and torque.js, with CartoCSS styling.
 
 [![NPM](https://nodei.co/npm/windshaft.png?downloads=true&downloadRank=true)](https://nodei.co/npm/windshaft)
 
 [![Build Status](https://travis-ci.org/CartoDB/Windshaft.png?branch=master)](https://travis-ci.org/CartoDB/Windshaft)
 [![Code Climate](https://codeclimate.com/github/CartoDB/Windshaft/badges/gpa.png)](https://codeclimate.com/github/CartoDB/Windshaft)
 
-* Pluggable routing to provide customizable tile API URL endpoints
-* Before and after filters to allow custom access control and caching strategies
 * Can render arbitrary SQL queries
 * Generates image and UTFGrid interactivity tiles
 * Accepts, stores, serves, and applies map styles written in [CartoCSS](https://github.com/mapbox/carto/blob/master/docs/latest.md)
 * Supports re-projections
-* Allows setting of CORS headers to allow access to tile data from client side
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
 its raw form. The idea is that you the developer will want to graft your
@@ -37,90 +34,35 @@ More examples built on top of Windshaft can be found in [CartoDB's gallery](http
 Dependencies
 ------------
 * Node >=0.8
-* npm >=1.2.1
+* npm >=1.2.1 <2.0.0
 * Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
 * PostgreSQL >8.3.x, PostGIS >1.5.x
 * Redis >2.2.x
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
+Dependencies installation example:
+
+```shell
+sudo add-apt-repository -y ppa:cartodb/cairo
+sudo apt-get update
+sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
+```
 
 Install
 -------
 ```
-npm install
+npm install [windshaft]
 ```
 
 
 Usage
 -----
-```javascript
 
-var Windshaft = require('windshaft');
+An example http service is implemented in [examples/http/server.js](examples/http/server.js),
+[examples/readme_server.js](examples/readme_server.js) extends its behaviour.
 
-// Configure pluggable URLs
-// =========================
-// The config object must define grainstore config (generally just
-// postgres connection details), redis config, a base url and a function
-// that adds 'dbname' and 'table' variables onto the Express.js req.params
-// object.  In this example, the base URL is such that dbname and table will
-// automatically be added to the req.params object by express.js. req2params
-// can be extended to allow full control over the specifying of database
-// parameters and also allows for the req.params object to be extended with
-// other variables, such as:
-//
-// * sql - custom sql query to narrow results shown in map)
-// * geom_type - specify the geom type (point|polygon) to get more
-//               appropriate default styles
-// * cache_buster - forces the creation of a new render object, nullifying
-//                  existing metatile caches
-// * interactivity - specify the column to use in the UTFGrid
-//                   interactivity layer (defaults to null)
-// * style - specify map style in the Carto map language on a per tile basis
-//
-// * dbuser - username for database connection
-// * dbpassword - password for database connection
-// * dbhost - database host
-// * dbport - database port
-// * dbname - database name
-//
-// the base url is also used for persisiting and retrieving map styles via:
-//
-// GET  base_url + '/style' (returns a map style)
-// POST base_url + '/style' (allows specifying of a style in Carto markup
-//                           in the 'style' form variable).
-
-var config = {
-        base_url: '/database/:dbname/table/:table',
-        base_url_mapconfig: '/database/:dbname/layergroup',
-        req2params: function(req, callback){
-          callback(null,req)
-        },
-        grainstore: {
-          datasource: {
-            user:'postgres', host: '127.0.0.1',
-            port: 5432
-          }
-        }, //see grainstore npm for other options
-        renderCache: {
-          ttl: 60000, // seconds
-        },
-        mapnik: {
-          metatile: 4,
-          bufferSize:64
-        },
-        redis: {host: '127.0.0.1', port: 6379}
-    };
-
-// Initialize tile server on port 4000
-var ws = new Windshaft.Server(config);
-ws.listen(4000);
-console.log("map tiles are now being served out of: http://localhost:4000"
-            + config.base_url + '/:z/:x/:y.*');
-
-// Specify .png, .png8 or .grid.json tiles.
-```
-
-See examples directory for running server and maptile viewer
+Probably one of the more advanced uses of Windshaft library can be found at
+[Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb) project.
 
 
 Installing Mapnik
@@ -139,11 +81,11 @@ can also use other alternatives:
 Recommended options to build from source:
 
  - **node-mapnik**: from [1.x branch](https://github.com/CartoDB/node-mapnik/tree/1.x), current tagged version is
- [1.4.15-cdb1](https://github.com/CartoDB/node-mapnik/tree/1.4.15-cdb1), which is
- [what windshaft uses](https://github.com/CartoDB/Windshaft/blob/0.43.0/package.json#L36).
+ [1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/tree/1.4.15-cdb5), which is
+ [what windshaft uses](https://github.com/CartoDB/Windshaft/blob/1.5.0/package.json#L31).
  - **mapnik**: node-mapnik uses a fixed version of mapnik, which currently is
- [82df66e](https://github.com/CartoDB/mapnik/commit/82df66e), check
- [build_against_sdk.sh#L100-L101@1.4.15-cdb1](https://github.com/CartoDB/node-mapnik/blob/1.4.15-cdb1/scripts/build_against_sdk.sh#L100-L101).
+ [9d40bb2](https://github.com/CartoDB/mapnik/commit/9d40bb2), check
+ [build_against_sdk.sh#L100-L101@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/blob/1.4.15-cdb5/scripts/build_against_sdk.sh#L100-L101).
 
 We maintain a set of [scripts/recipes to package mapnik sdk and node-mapnik](https://github.com/CartoDB/node-mapnik-packaging-recipes).
 It can help to understand what you really need to package mapnik + node-mapnik to be used from windshaft[-cartodb].
@@ -170,6 +112,11 @@ Troubleshooting
 You need to install fonts at system level to be able to use them. If you face an issue like `Invalid value for
 text-face-name, the type font is expected. DejaVu Sans Book (of type string) was given.` probably you don't have the
 required fonts, try to install [DejaVu fonts](http://dejavu-fonts.org/wiki/Download) or any other font needed.
+
+Contributing
+------------
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 --
