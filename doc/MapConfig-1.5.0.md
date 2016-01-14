@@ -1,6 +1,8 @@
 # 1. Purpose
 
-This specification describes [MapConfig](MapConfig-specification.md) format version 1.5.0.
+This specification describes [MapConfig](MapConfig-specification.md) format version 1.5.0-alpha.
+
+**This is not the final specification, this is an alpha version**. Use at your own peril.
 
 
 # 2. File format
@@ -64,9 +66,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // It should select at least the columns specified in ``geom_column``,
     // ``interactivity`` and  ``attributes`` configurations below.
     //
-    // For ``mapnik`` layers it can contain substitution tokens !bbox!,
-    // !pixel_width! and !pixel_height!, see implication of that in the
-    // ``attributes`` configuration below.
+    // It can contain substitution tokens !bbox!, !pixel_width!, !scale_denominator!,
+    // and !pixel_height!, see implication of that in the ``attributes`` configuration below.
     //
     sql: 'select * from table',
 
@@ -121,8 +122,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
-    // NOTE: enabling the attribute service is forbidden if the "sql" option contains
-    //       substitution token that make it dependent on zoom level or viewport extent.
     attributes: {
         // REQUIRED
         // used as key value to fetch columns
@@ -131,6 +130,19 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
         // REQUIRED
         // string list of columns returned by attributes service
         columns: ['column1', 'column2']
+    },
+
+    // This is not the final specification, this is an alpha version. Use at your own peril.
+    // OPTIONAL
+    // Widgets definitions
+    widgets: {
+        widget_name: {
+            // All types will be documented when spec is final, this is just an example.
+            type: 'histogram',
+            options: {
+                column: 'column_name'
+            }
+        }
     }
 }
 ```
@@ -183,8 +195,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
-    // NOTE: enabling the attribute service is forbidden if the "sql" option contains
-    //       substitution token that make it dependent on zoom level or viewport extent.
     attributes: {
         // REQUIRED
         // used as key value to fetch columns
