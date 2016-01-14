@@ -1,13 +1,17 @@
+sudo: false
+
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
+  apt:
+    packages:
+      - postgresql-plpython-9.4
+      - pkg-config
+      - libcairo2-dev
+      - libjpeg8-dev
+      - libgif-dev
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
-
-before_install:
- - sudo add-apt-repository -y ppa:cartodb/cairo
- - sudo apt-get update
- - sudo apt-get install -y pkg-config libcairo2-dev libjpeg8-dev libgif-dev postgresql-plpython-9.3
 
 language: node_js
 node_js:
