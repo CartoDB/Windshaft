@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
-var SubstitutionTokens = require('../../lib/windshaft/renderers/torque/substitution_tokens');
+var SubstitutionTokens = require('../../lib/windshaft/utils/substitution_tokens');
 
 describe('torque', function() {
 
@@ -101,7 +101,9 @@ describe('torque', function() {
             assert.ok(tm, 'No "torque" in metadata:' + JSON.stringify(meta));
             var tm0 = tm[0];
             assert.ok(tm0, 'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
-            var expectedTorqueMetadata = {"start": 0, "end": 86400000, "data_steps": 2, "column_type": "date"};
+            var expectedTorqueMetadata = {
+                "start": 0, "end": 86400000, "steps": 2, "data_steps": 2, "column_type": "date"
+            };
             assert.deepEqual(tm0, expectedTorqueMetadata);
             assert.deepEqual(meta.layers[0].meta, expectedTorqueMetadata);
 

@@ -107,7 +107,6 @@ describe('torque png renderer', function() {
         });
 
         it('should support marker-file with url', function(done) {
-            var fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
             var markerFileUrl = 'http://localhost:' + resourcesServerPort + '/maki/circle-24.png';
             var mapConfig = {
                 version: '1.3.0',
@@ -136,11 +135,21 @@ describe('torque png renderer', function() {
                 ]
             };
 
+            var fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
+            var fixtureFileCairoLT_1_14 =
+                './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1-cairo-lt-1.14.png';
+
             var testClient = new TestClient(mapConfig);
             testClient.getTile(2, 2, 1, function(err, tile) {
-                assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err, err);
-                    done();
+                assert.imageEqualsFile(tile, fixtureFileCairoLT_1_14, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    if (err) {
+                        assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                            assert.ok(!err, err);
+                            done();
+                        });
+                    } else {
+                        done();
+                    }
                 });
             });
         });

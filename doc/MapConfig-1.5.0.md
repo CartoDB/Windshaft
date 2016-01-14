@@ -1,6 +1,8 @@
 # 1. Purpose
 
-This specification describes [MapConfig](MapConfig-specification.md) format version 1.3.0.
+This specification describes [MapConfig](MapConfig-specification.md) format version 1.5.0-alpha.
+
+**This is not the final specification, this is an alpha version**. Use at your own peril.
 
 
 # 2. File format
@@ -40,6 +42,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
             //  - 'cartodb' - an alias for mapnik, for backward compatibility
             //  - 'torque'  - render vector tiles in torque format (to be linked)
             //  - 'http'    - load tiles over HTTP
+            //  - 'plain'   - color or background image url
             type: 'mapnik',
 
             // REQUIRED
@@ -127,6 +130,19 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
         // REQUIRED
         // string list of columns returned by attributes service
         columns: ['column1', 'column2']
+    },
+
+    // This is not the final specification, this is an alpha version. Use at your own peril.
+    // OPTIONAL
+    // Widgets definitions
+    widgets: {
+        widget_name: {
+            // All types will be documented when spec is final, this is just an example.
+            type: 'histogram',
+            options: {
+                column: 'column_name'
+            }
+        }
     }
 }
 ```
@@ -179,8 +195,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
-    // NOTE: enabling the attribute service is forbidden if the "sql" option contains
-    //       substitution token that make it dependent on zoom level or viewport extent.
     attributes: {
         // REQUIRED
         // used as key value to fetch columns
@@ -220,6 +234,29 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 }
 ```
 
+## 2.4 Plain layers options
+
+Some notes:
+ - At least one of the options, `color` or `imageUrl`, must be provided.
+ - If both options are provided `color` will be the only one used.
+
+```javascript
+{
+    // OPTIONAL/REQUIRED
+    // {String|Array<Number>}
+    // Defaults to null
+    // Valid colors include:
+    //  - The string may be a CSS color name (e.g. `'blue'`) or a hex color string (e.g. `'#0000ff'`).
+    //  - Integer array with r,g,b values (e.g. `[255,0,0]`)
+    //  - Integer array with r,g,b,a values (e.g. `[255,0,0,128]`)
+    color: 'blue',
+
+    // OPTIONAL/REQUIRED
+    // {String} end URL to retrieve the image from.
+    // Defaults to null
+    imageUrl: 'http://example.com/background.png'
+}
+```
 
 # Extensions
 
@@ -238,6 +275,15 @@ of MapConfig.
  - Link to a document describing "CartoCSS" version (ie: what's required for torque etc.)
 
 # History
+
+## 1.5.0
+
+ - Lists, Histograms, and Filters
+
+
+## 1.4.0
+
+ - Add support for 'plain' layer type
 
 ## 1.3.0
 
