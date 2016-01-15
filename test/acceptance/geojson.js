@@ -23,7 +23,16 @@ describe('Rendering geojsons', function() {
             assert.equal(feature.type, expectedFeature.type);
 
             assert.deepEqual(feature.geometry, expectedFeature.geometry);
-            assert.deepEqual(feature.properties, expectedFeature.properties);
+
+            Object.keys(feature.properties).forEach(function(pKey) {
+                if (pKey.match(/_at$/)) {
+                    var actualDate = new Date(feature.properties[pKey]);
+                    var expectedDate = new Date(expectedFeature.properties[pKey]);
+                    assert.equal(actualDate.getTime(), expectedDate.getTime());
+                } else {
+                    assert.equal(feature.properties[pKey], expectedFeature.properties[pKey]);
+                }
+            });
         });
     }
 
