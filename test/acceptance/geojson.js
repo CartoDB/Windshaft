@@ -12,15 +12,27 @@ describe('Rendering geojsons', function() {
         this.options = { format: 'geojson', layer: 0 };
     });
 
+    function assertGeoJSONFeature(actual, expected) {
+        assert.equal(actual.type, expected.type);
+        assert.equal(actual.features.length, expected.features.length);
+
+        actual.features.forEach(function(feature, idx) {
+            assert.ok(expected.features[idx], 'missing expected feature for index=' + idx);
+
+            var expectedFeature = expected.features[idx];
+            assert.equal(feature.type, expectedFeature.type);
+
+            assert.deepEqual(feature.geometry, expectedFeature.geometry);
+            assert.deepEqual(feature.properties, expectedFeature.properties);
+        });
+    }
+
     describe('single layer', function() {
 
         it('should return a geojson with points', function (done) {
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
                 assert.ok(!err);
-                assert.equal(geojsonTile.features.length, geojsonValue.singlelayer.features.length);
-                geojsonTile.features.forEach(function(feature, idx) {
-                    assert.deepEqual(feature, geojsonValue.singlelayer.features[idx]);
-                });
+                assertGeoJSONFeature(geojsonTile, geojsonValue.singlelayer);
                 done();
             });
         });
