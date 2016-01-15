@@ -17,7 +17,10 @@ describe('Rendering geojsons', function() {
         it('should return a geojson with points', function (done) {
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
                 assert.ok(!err);
-                assert.deepEqual(geojsonTile, geojsonValue.singlelayer);
+                assert.equal(geojsonTile.features.length, geojsonValue.singlelayer.features.length);
+                geojsonTile.features.forEach(function(feature, idx) {
+                    assert.deepEqual(feature, geojsonValue.singlelayer.features[idx]);
+                });
                 done();
             });
         });
