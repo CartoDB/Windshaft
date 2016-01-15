@@ -52,7 +52,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonValue);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonValue);
             done();
         });
     });
@@ -62,7 +62,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonValue);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonValue);
             done();
         });
     });
@@ -79,7 +79,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonExpected);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonExpected);
             done();
         });
     });
@@ -96,7 +96,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonExpected);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonExpected);
             done();
         });
     });
@@ -106,7 +106,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonValue.features[0]);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonValue.features[0]);
             done();
         });
     });
@@ -116,7 +116,7 @@ describe('Rendering multiple geojson layers', function() {
 
         this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
             assert.ok(!err);
-            assert.deepEqual(geojsonTile, geojsonValue.features[1]);
+            assert.deepEqualGeoJSON(geojsonTile, geojsonValue.features[1]);
             done();
         });
     });

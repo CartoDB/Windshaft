@@ -11,6 +11,43 @@ var debug = require('debug')('windshaft:assert');
 var assert = module.exports = exports = require('assert');
 
 /**
+ * Check to GeoJSON are deeply equal.
+ *
+ * Properties check dates using new Date().getTime().
+ * All properties with key matching `/_at$/` regex will be validated as dates.
+ *
+ * @param actual The GeoJSON to validate
+ * @param expected GeoJSON reference
+ */
+assert.deepEqualGeoJSON = function(actual, expected) {
+    assert.equal(actual.type, expected.type);
+    assert.equal(actual.features.length, expected.features.length);
+
+    actual.features.forEach(function(feature, idx) {
+        assert.ok(expected.features[idx], 'missing expected feature for index=' + idx);
+
+        var expectedFeature = expected.features[idx];
+        assert.equal(feature.type, expectedFeature.type);
+
+        if (feature.type === 'FeatureCollection') {
+            return assert.deepEqualGeoJSON(feature, expectedFeature);
+        }
+
+        assert.deepEqual(feature.geometry, expectedFeature.geometry);
+
+        Object.keys(feature.properties).forEach(function(pKey) {
+            if (pKey.match(/_at$/)) {
+                var actualDate = new Date(feature.properties[pKey]);
+                var expectedDate = new Date(expectedFeature.properties[pKey]);
+                assert.equal(actualDate.getTime(), expectedDate.getTime());
+            } else {
+                assert.equal(feature.properties[pKey], expectedFeature.properties[pKey]);
+            }
+        });
+    });
+};
+
+/**
  * Takes an image data as an input and an image path and compare them using Mapnik's Image.compare in case the
  * similarity is not within the tolerance limit it will callback with an error.
  *
