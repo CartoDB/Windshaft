@@ -35,6 +35,7 @@ module.exports.renderer = {
         }
     }
 };
-module.exports.mapnik_version = undefined; // will be looked up at runtime if undefined
+
+module.exports.mapnik_version = '2.3.0'; // will be looked up at runtime if undefined
 module.exports.windshaft_port = 8080;
 module.exports.enable_cors = true;

@@ -111,7 +111,7 @@ describe('static_maps', function() {
         width = 400,
         height = 300;
 
-    it('center image', function (done) {
+    it.only('center image', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
         previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat},
             function(err, resource, headers, stats) {
@@ -124,6 +124,8 @@ describe('static_maps', function() {
                 var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
                 assert.equal(image.width(), width);
                 assert.equal(image.height(), height);
+
+                console.log(stats);
 
                 assert.ok(stats.hasOwnProperty('tiles'));
                 assert.ok(stats.hasOwnProperty('renderAvg'));

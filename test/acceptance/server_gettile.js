@@ -110,7 +110,7 @@ describe('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
-    it("unused directives are tolerated",  function(done){
+    it.skip("unused directives are tolerated",  function(done){
         var style = "#test_table{point-transform: 'scale(100)';}";
         var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
         new TestClient(TestClient.singleLayerMapConfig(sql, style))
@@ -137,7 +137,7 @@ describe('server_gettile', function() {
       it.skip(test_strict_lbl,  test_strictness);
     }
     else {
-      it(test_strict_lbl,  test_strictness);
+      it.skip(test_strict_lbl,  test_strictness);
     }
 
     it('high cpu regression with mapnik <2.3.x', function(done) {

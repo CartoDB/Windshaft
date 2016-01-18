@@ -57,6 +57,7 @@ describe('render limits', function() {
 
     it('returns a fallback tile that was modified via onTileErrorStrategy', function(done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyFallback);
+
         testClient.getTile(0, 0, 0, function(err, tile) {
             assert.imageEqualsFile(tile, FIXTURE_IMAGE, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
