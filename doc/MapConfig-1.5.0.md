@@ -143,6 +143,21 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
                 column: 'column_name'
             }
         }
+    },
+
+    // OPTIONAL
+    // Information about existing overview tables that can be used to optimize
+    // this layer's query for rendering at low zoom levels.
+    // For each table with available overviews an object is provided which
+    // associates zoom levels (the maximum zoom level at which the overview
+    // should be used) with overview info (currently only the name of the
+    // overview table).
+    overviews: {
+      'table1': {
+        0: { table: 'table1_ov0' },
+        2: { table: 'table1_ov2' },
+        4: { table: 'table1_ov2' }
+      }
     }
 }
 ```
