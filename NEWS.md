@@ -1,5 +1,5 @@
 # Version 1.7.0
-2015-mm-dd
+2016-01-20
 
 New features:
  - Allow to use Substitution tokens with attributes service #416
