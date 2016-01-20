@@ -33,7 +33,7 @@
         "debug": "~2.2.0",
         "tilelive": "5.12.0",
         "tilelive-mapnik": "git://github.com/CartoDB/tilelive-mapnik.git#cross-identifier",
-        "tilelive-bridge": "*",
+        "tilelive-bridge": "2.2.3",
         "canvas": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
         "semver": "~5.0.3",
         "redis-mpool": "~0.4.0",
@@ -42,7 +42,7 @@
         "torque.js": "~2.11.0",
         "dot": "~1.0.2",
         "request": "2.62.0",
-        "abaculus": "*",
+        "abaculus": "1.2.1",
         "sphericalmercator": "1.0.3"
     },
     "devDependencies": {
