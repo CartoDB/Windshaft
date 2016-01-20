@@ -28,7 +28,7 @@
         "underscore": "~1.6.0",
         "step": "~0.0.6",
         "queue-async": "~1.0.7",
-        "mapnik": "*",
+        "mapnik": "3.4.14",
         "grainstore": "~1.1.0",
         "debug": "~2.2.0",
         "tilelive": "5.12.0",
