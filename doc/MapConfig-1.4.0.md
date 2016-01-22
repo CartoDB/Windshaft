@@ -10,6 +10,11 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 ```javascript
 {
     // OPTIONAL
+    // Version of this spec to use for validation.
+    // Defaults to "1.0.0".
+    version: "1.4.0",
+
+    // OPTIONAL
     // default map extent, in map projection
     // (only webmercator supported at this version)
     extent: [-20037508.5, -20037508.5, 20037508.5, 20037508.5],
