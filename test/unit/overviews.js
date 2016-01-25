@@ -50,13 +50,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM table1_ov0, vovw_scale WHERE vovw_z = 0\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
-            SELECT * FROM table1, vovw_scale WHERE vovw_z > 0\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 0\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -72,13 +72,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM table1_ov2, vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM table1, vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -97,19 +97,19 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM table1_ov0, vovw_scale WHERE vovw_z = 0\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
-            SELECT * FROM table1_ov1, vovw_scale WHERE vovw_z = 1\
+            SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
             UNION ALL\
-            SELECT * FROM table1_ov2, vovw_scale WHERE vovw_z = 2\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
             UNION ALL\
-            SELECT * FROM table1_ov3, vovw_scale WHERE vovw_z = 3\
+            SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
             UNION ALL\
-            SELECT * FROM table1, vovw_scale WHERE vovw_z > 3\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -127,17 +127,17 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM table1_ov0, vovw_scale WHERE vovw_z = 0\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
-            SELECT * FROM table1_ov1, vovw_scale WHERE vovw_z = 1\
+            SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
             UNION ALL\
-            SELECT * FROM table1_ov6, vovw_scale WHERE vovw_z > 1 AND vovw_z <= 6\
+            SELECT * FROM table1_ov6, _vovw_scale WHERE _vovw_z > 1 AND _vovw_z <= 6\
             UNION ALL\
-            SELECT * FROM table1, vovw_scale WHERE vovw_z > 6\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 6\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -153,13 +153,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM public.table1_ov2, vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.table1, vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -175,13 +175,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM public.table1_ov2, vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.table1, vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -197,13 +197,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          \"vovw_table 1\" AS (\
-            SELECT * FROM public.\"table 1_ov2\", vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          \"_vovw_table 1\" AS (\
+            SELECT * FROM public.\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.\"table 1\", vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM public.\"table 1\", _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM \"vovw_table 1\"\
+        SELECT * FROM \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -219,13 +219,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          vovw_table1 AS (\
-            SELECT * FROM \"user-1\".table1_ov2, vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM \"user-1\".table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM \"user-1\".table1, vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM \"user-1\".table1, _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM vovw_table1\
+        SELECT * FROM _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -242,13 +242,13 @@ describe('Overviews-support', function() {
     var overviews_sql = Overviews.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
-          \"vovw_table 1\" AS (\
-            SELECT * FROM \"user-1\".\"table 1_ov2\", vovw_scale WHERE vovw_z <= 2\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          \"_vovw_table 1\" AS (\
+            SELECT * FROM \"user-1\".\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM \"user-1\".\"table 1\", vovw_scale WHERE vovw_z > 2\
+            SELECT * FROM \"user-1\".\"table 1\", _vovw_scale WHERE _vovw_z > 2\
           )\
-        SELECT * FROM \"vovw_table 1\"\
+        SELECT * FROM \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
