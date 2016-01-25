@@ -19,6 +19,7 @@ describe('Overviews-support', function() {
     var overviews = {};
     var overviews_sql = Overviews.query(sql, overviews);
     assert.equal(overviews_sql, sql);
+
     done();
   });
 
@@ -141,5 +142,118 @@ describe('Overviews-support', function() {
     assertSameSql(overviews_sql, expected_sql);
     done();
   });
+
+  it('generates query for a table with explicit schema', function(done){
+    var sql = "SELECT * FROM public.table1";
+    var overviews = {
+        'public.table1': {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
+          vovw_table1 AS (\
+            SELECT * FROM public.table1_ov2, vovw_scale WHERE vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM public.table1, vovw_scale WHERE vovw_z > 2\
+          )\
+        SELECT * FROM vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('generates query for a table with explicit schema in the overviews info', function(done){
+    var sql = "SELECT * FROM table1";
+    var overviews = {
+        'public.table1': {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
+          vovw_table1 AS (\
+            SELECT * FROM public.table1_ov2, vovw_scale WHERE vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM public.table1, vovw_scale WHERE vovw_z > 2\
+          )\
+        SELECT * FROM vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('generates query for a table that needs quoting with explicit schema', function(done){
+    var sql = "SELECT * FROM public.\"table 1\"";
+    var overviews = {
+        'public."table 1"': {
+          2: { table: '"table 1_ov2"' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
+          \"vovw_table 1\" AS (\
+            SELECT * FROM public.\"table 1_ov2\", vovw_scale WHERE vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM public.\"table 1\", vovw_scale WHERE vovw_z > 2\
+          )\
+        SELECT * FROM \"vovw_table 1\"\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('generates query for a table with explicit schema that needs quoting', function(done){
+    var sql = "SELECT * FROM \"user-1\".table1";
+    var overviews = {
+        '"user-1".table1': {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
+          vovw_table1 AS (\
+            SELECT * FROM \"user-1\".table1_ov2, vovw_scale WHERE vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM \"user-1\".table1, vovw_scale WHERE vovw_z > 2\
+          )\
+        SELECT * FROM vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+
+  it('generates query for a table with explicit schema both needing quoting', function(done){
+    var sql = "SELECT * FROM \"user-1\".\"table 1\"";
+    var overviews = {
+        '"user-1"."table 1"': {
+          2: { table: '"table 1_ov2"' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS vovw_z ),\
+          \"vovw_table 1\" AS (\
+            SELECT * FROM \"user-1\".\"table 1_ov2\", vovw_scale WHERE vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM \"user-1\".\"table 1\", vovw_scale WHERE vovw_z > 2\
+          )\
+        SELECT * FROM \"vovw_table 1\"\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+
 
 });
