@@ -166,7 +166,7 @@ describe('Overviews-support', function() {
   });
 
   it('generates query for a table with explicit schema in the overviews info', function(done){
-    var sql = "SELECT * FROM table1";
+    var sql = "SELECT * FROM public.table1";
     var overviews = {
         'public.table1': {
           2: { table: 'table1_ov2' }
@@ -183,6 +183,7 @@ describe('Overviews-support', function() {
           )\
         SELECT * FROM _vovw_table1\
     ";
+
     assertSameSql(overviews_sql, expected_sql);
     done();
   });
