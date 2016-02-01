@@ -51,9 +51,14 @@ describe('Geojson renderer', function() {
         var dummyCartoPSQLFactory = function () {
             return new CartoPSQLStub();
         };
+        var mapnikOptions = {
+            geojson: {
+                clipByBox2d: false
+            }
+        };
 
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
+            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers(), mapnikOptions);
 
             this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
@@ -107,8 +112,14 @@ describe('Geojson renderer', function() {
 
         var mapConfig = MapConfig.create(dummyMapConfigRaw);
 
+        var mapnikOptions = {
+            geojson: {
+                clipByBox2d: false
+            }
+        };
+
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers());
+            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers(), mapnikOptions);
 
             this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
@@ -148,8 +159,14 @@ describe('Geojson renderer', function() {
             return new CartoPSQLStub();
         };
 
+        var mapnikOptions = {
+            geojson: {
+                clipByBox2d: false
+            }
+        };
+
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig.getLayers());
+            this.geojsonRenderer = new GeojsonRenderer(cartoPSQLFactoryStub(), mapConfig.getLayers(), mapnikOptions);
 
             this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {

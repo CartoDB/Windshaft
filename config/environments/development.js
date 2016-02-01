@@ -25,6 +25,21 @@ module.exports.renderer = {
         limits: {
             render: 0,
             cacheOnTimeout: true
+        },
+        geojson: {
+            dbPoolParams: {
+                  // maximum number of resources to create at any given time
+                  size: 16,
+                  // max milliseconds a resource can go unused before it should be destroyed
+                  idleTimeout: 3000,
+                  // frequency to check for idle resources
+                  reapInterval: 1000
+            },
+
+            // SQL queries will be wrapped with ST_ClipByBox2D
+            // Returning the portion of a geometry falling within a rectangle
+            // It will only work if snapToGrid is enabled
+            clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
         }
     },
     torque: {

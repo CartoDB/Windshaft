@@ -18,7 +18,8 @@ describe('Geojson sql wrapper', function() {
                 y: 1
             },
             zoom: 1,
-            columns: null
+            columns: null,
+            clipByBox2d: true
         });
 
         assert.ok(query.indexOf('SELECT row_to_json(featcoll) as geojson') === 0);
