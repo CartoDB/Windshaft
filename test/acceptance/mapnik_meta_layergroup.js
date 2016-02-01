@@ -15,7 +15,7 @@ describe('Create mapnik layergroup', function() {
             cartocss: cartocss
         }
     };
-    
+
     var mapnikLayer2 = {
         type: 'mapnik',
         options: {
@@ -33,7 +33,7 @@ describe('Create mapnik layergroup', function() {
             cartocss: cartocss
         }
     };
-    
+
     var mapnikLayer4 = {
         type: 'mapnik',
         options: {
@@ -46,7 +46,7 @@ describe('Create mapnik layergroup', function() {
             cartocss: cartocss
         }
     };
-    
+
     var httpLayer = {
         type: 'http',
         options: {
@@ -54,7 +54,7 @@ describe('Create mapnik layergroup', function() {
             subdomains: ['a','b','c']
         }
     };
-    
+
     it('with one mapnik layer should response with meta-stats for that layer', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -62,14 +62,14 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer1
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
             done();
         });
     });
-    
+
     it('with two mapnik layer should response with meta-stats for every layer', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -78,7 +78,7 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer2
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
@@ -96,7 +96,7 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer3
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
@@ -105,7 +105,7 @@ describe('Create mapnik layergroup', function() {
             done();
         });
     });
-    
+
     it('with one mapnik layer (sql with join) should response with meta-stats for that layer', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -113,7 +113,7 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer4
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
@@ -121,7 +121,7 @@ describe('Create mapnik layergroup', function() {
             done();
         });
     });
-    
+
     it('with two mapnik layer (sql with join) should response with meta-stats for every layer', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -130,7 +130,7 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer4
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
@@ -140,7 +140,7 @@ describe('Create mapnik layergroup', function() {
             done();
         });
     });
-    
+
     it('with two mapnik layer (with & without join) should response with meta-stats for every layer', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -149,7 +149,7 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer4
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
@@ -161,7 +161,7 @@ describe('Create mapnik layergroup', function() {
             done();
         });
     });
-    
+
     it('with mapnik and layer and httplayer should response with layer metadata with same order', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -170,7 +170,7 @@ describe('Create mapnik layergroup', function() {
                 httpLayer
             ]
         });
-        
+
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
@@ -188,11 +188,11 @@ describe('Create mapnik layergroup', function() {
                 mapnikLayer1
             ]
         });
-        
-        testClient.createLayergroup(function(err, layergroup) {
+
+        testClient.createLayergroup(function (err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].type, 'http');
-            assert.ok(layergroup.metadata.layers[0].meta.stats[0].features === 5);
+            assert.ok(layergroup.metadata.layers[1].meta.stats[0].features === 5);
             assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
             done();
         });
