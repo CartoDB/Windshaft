@@ -1,8 +1,8 @@
 --
 -- Windshaft test database
--- 
+--
 -- To use:
--- 
+--
 -- > dropdb windshaft_test
 -- > createdb -EUTF8 windshaft_test
 -- > psql -c 'create extension postgis' windshaft_test
@@ -132,3 +132,28 @@ CREATE INDEX test_big_poly_the_geom_webmercator_idx ON test_big_poly USING gist 
 
 
 --GRANT ALL ON TABLE test_table_3 TO postgres;
+
+CREATE TABLE _vovw_12_test_table (
+    updated_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    cartodb_id serial NOT NULL PRIMARY KEY,
+    name character varying,
+    address character varying,
+    the_geom geometry,
+    the_geom_webmercator geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
+    CONSTRAINT enforce_dims_the_geom_webmercator CHECK ((st_ndims(the_geom_webmercator) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'POINT'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom_webmercator CHECK (((geometrytype(the_geom_webmercator) = 'POINT'::text) OR (the_geom_webmercator IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
+    CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
+);
+
+INSERT INTO _vovw_12_test_table (updated_at, created_at, name, address, the_geom)
+VALUES
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.329509', 'El Lacón', 'Manuel Fernández y González 8, Madrid, Spain', '0101000020E6100000BC5983F755990DC07D923B6C22354440'),
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.334931', 'El Pico', 'Calle Divino Pastor 12, Madrid, Spain', '0101000020E61000003B6D8D08C6A10DC0371B2B31CF364440');
+UPDATE _vovw_12_test_table SET the_geom_webmercator = ST_Transform(the_geom, 3857);
+
+CREATE INDEX _vovw_12_test_table_the_geom_idx ON _vovw_12_test_table USING gist (the_geom);
+CREATE INDEX _vovw_12_test_table_the_geom_webmercator_idx ON _vovw_12_test_table USING gist (the_geom_webmercator);

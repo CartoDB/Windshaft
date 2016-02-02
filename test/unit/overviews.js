@@ -1,7 +1,10 @@
 require('../support/test_helper.js');
 
-var assert        = require('assert');
-var Overviews     = require('../../lib/windshaft/utils/overviews');
+var assert           = require('assert');
+var OverviewsHandler = require('../../lib/windshaft/utils/overviews_handler');
+var overviewsHandler = new OverviewsHandler({
+  zoom_level: 'ZoomLevel()'
+});
 
 function normalize_whitespace(txt) {
   return txt.replace(/\s+/g, " ").trim();
@@ -17,7 +20,7 @@ describe('Overviews-support', function() {
   it('does not alter queries if no overviews data is present', function(done){
     var sql = "SELECT * FROM table1";
     var overviews = {};
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     done();
@@ -33,7 +36,7 @@ describe('Overviews-support', function() {
           4: { table: 'table2_ov4' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
     done();
   });
@@ -47,10 +50,10 @@ describe('Overviews-support', function() {
           0: { table: 'table1_ov0' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
@@ -69,10 +72,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -94,10 +97,10 @@ describe('Overviews-support', function() {
           3: { table: 'table1_ov3' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
@@ -124,10 +127,10 @@ describe('Overviews-support', function() {
           6: { table: 'table1_ov6' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
@@ -150,10 +153,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -172,10 +175,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -195,10 +198,10 @@ describe('Overviews-support', function() {
           2: { table: '"table 1_ov2"' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           \"_vovw_table 1\" AS (\
             SELECT * FROM public.\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -217,10 +220,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM \"user-1\".table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -240,10 +243,10 @@ describe('Overviews-support', function() {
           2: { table: '"table 1_ov2"' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           \"_vovw_table 1\" AS (\
             SELECT * FROM \"user-1\".\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -263,10 +266,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -285,10 +288,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -307,10 +310,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -329,10 +332,10 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
           _vovw_table1 AS (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
@@ -351,7 +354,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    var overviews_sql = Overviews.query(sql, overviews);
+    var overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT * FROM table1 JOIN table2 ON (table1.col1=table2.col1)";
@@ -360,7 +363,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT a+b AS c FROM table1";
@@ -369,7 +372,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT f(a) AS b FROM table1";
@@ -378,7 +381,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT * FROM table1 AS x";
@@ -387,7 +390,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "WITH a AS (1) SELECT * FROM table1";
@@ -396,7 +399,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT * FROM table1 WHERE a=1";
@@ -405,7 +408,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     sql = "\
@@ -418,7 +421,7 @@ describe('Overviews-support', function() {
           2: { table: 'table1_ov2' }
         }
     };
-    overviews_sql = Overviews.query(sql, overviews);
+    overviews_sql = overviewsHandler.query(sql, overviews);
     assert.equal(overviews_sql, sql);
 
     done();
