@@ -26,9 +26,18 @@ describe('multilayer metadata disabled', function() {
 
             testClient.createLayergroup(function(err, layergroup) {
                 layergroup.metadata.layers.forEach(function (layer) {
-                    assert.deepEqual(layer.meta, {
-                        stats: []
-                    });
+                    if (layer.type !== 'torque') {
+                        assert.deepEqual(layer.meta, {
+                            stats: []
+                        });
+                    } else {
+                        // check torque metadata at least match in number
+                        var torqueLayers = mapConfig.layers.filter(function(layer) { return layer.type === 'torque'; });
+                        if (torqueLayers.length) {
+                            assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
+                        }
+                    }
+
                 });
 
                 done();
