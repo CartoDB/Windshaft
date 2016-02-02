@@ -300,6 +300,50 @@ describe('Overviews-support', function() {
     done();
   });
 
+  it('generates query using overviews for queries with a semicolon', function(done){
+    var sql = "SELECT table1.*, column1, column2, column3 FROM table1;";
+    var overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+          )\
+        SELECT _vovw_table1.*, column1, column2, column3 FROM _vovw_table1;\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('generates query using overviews for queries with extra whitespace', function(done){
+    var sql = "  SELECT  table1.* , column1,column2,  column3 FROM  table1  ";
+    var overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    var overviews_sql = Overviews.query(sql, overviews);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT CDB_ZoomFromScale(!scale_denominator!) AS _vovw_z ),\
+          _vovw_table1 AS (\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+          )\
+        SELECT _vovw_table1.* , column1,column2, column3 FROM _vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
   it('does not alter queries which have not the simple supported form', function(done){
     var sql = "SELECT * FROM table1 WHERE column1='x'";
     var overviews = {
@@ -311,6 +355,64 @@ describe('Overviews-support', function() {
     assert.equal(overviews_sql, sql);
 
     sql = "SELECT * FROM table1 JOIN table2 ON (table1.col1=table2.col1)";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "SELECT a+b AS c FROM table1";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "SELECT f(a) AS b FROM table1";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "SELECT * FROM table1 AS x";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "WITH a AS (1) SELECT * FROM table1";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "SELECT * FROM table1 WHERE a=1";
+    overviews = {
+        table1: {
+          2: { table: 'table1_ov2' }
+        }
+    };
+    overviews_sql = Overviews.query(sql, overviews);
+    assert.equal(overviews_sql, sql);
+
+    sql = "\
+        SELECT table1.* FROM table1 \
+               JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom) \
+               WHERE areas.name='A' \
+          ";
     overviews = {
         table1: {
           2: { table: 'table1_ov2' }
