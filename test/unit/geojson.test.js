@@ -48,9 +48,6 @@ describe('Geojson renderer', function() {
             callback(null, dummyTile);
         };
 
-        var dummyCartoPSQLFactory = function () {
-            return new CartoPSQLStub();
-        };
         var mapnikOptions = {
             geojson: {
                 clipByBox2d: false
@@ -58,7 +55,7 @@ describe('Geojson renderer', function() {
         };
 
         beforeEach(function () {
-            this.geojsonRenderer = new GeojsonRenderer(dummyCartoPSQLFactory(), mapConfig.getLayers(), mapnikOptions);
+            this.geojsonRenderer = new GeojsonRenderer(new CartoPSQLStub(), mapConfig.getLayers(), mapnikOptions);
 
             this.geojsonRenderer._getQueryColumnNames = function () {
                 arguments[2](null, {
@@ -66,7 +63,6 @@ describe('Geojson renderer', function() {
                     stats: { 'whatever2': 2 }
                 });
             };
-
         });
 
         it('.getTile should call the callback with a tile, headers and stats', function(done) {
