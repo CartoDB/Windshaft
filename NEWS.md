@@ -1,5 +1,18 @@
-# Version 1.6.2
-2015-mm-dd
+# Version 1.7.1
+2016-mm-dd
+
+
+# Version 1.7.0
+2016-01-20
+
+New features:
+ - Allow to use Substitution tokens with attributes service #416
+
+Unsupported:
+ - Histograms, aggregations, formulas, and lists
+ - Filters
+
+Note: API for unsupported list might change in the future, use at your own peril.
 
 
 # Version 1.6.1
