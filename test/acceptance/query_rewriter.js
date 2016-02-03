@@ -53,11 +53,11 @@ describe('server_gettile', function() {
             }
         };
         var mapConfig = TestClient.singleLayerMapConfig('SELECT * FROM test_table');
-        mapConfig.layers[0].options.query_rewriter_data = {
+        mapConfig.layers[0].options.query_rewrite_data = {
             table: '_vovw_12_test_table'
         };
         new TestClient(mapConfig, options)
-            .getTile(11, 1002, 772, imageCompareFn('test_table_11_1002_772.png', done));
+            .getTile(11, 1002, 772, imageCompareFn('_vovw_12_test_table_11_1002_772.png', done));
     });
 
 });
