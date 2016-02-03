@@ -31,6 +31,6 @@ describe('Geojson sql wrapper', function() {
                 irrelevant: 'irrelevant'
             });
         }.bind(this),
-        ReferenceError);
+        TypeError);
     });
 });
