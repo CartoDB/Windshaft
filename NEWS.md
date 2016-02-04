@@ -1,6 +1,8 @@
-# Version 1.7.1
-2016-mm-dd
+# Version 1.8.0
+2016-02-04
 
+New features:
+ - Supported GeoJSON format for MVT tiles #421
 
 # Version 1.7.0
 2016-01-20
@@ -1269,4 +1271,3 @@ This release drops the requirement of a field already in epsg:3857
 
 # Version 0.0.2
 2011-09-04
-
