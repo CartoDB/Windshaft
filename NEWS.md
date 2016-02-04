@@ -1,6 +1,9 @@
 # Version 1.8.2
 2016-mm-dd
 
+Bug fixes:
+ - Use datasource from layer id to compute mapnik layers metadata
+
 
 # Version 1.8.1
 2016-02-04
