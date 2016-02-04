@@ -152,7 +152,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // Per-layer data can be passed to the query rewriter with
     // this option:
     query_rewrite_data: {
-      // ... arbitrary date used by the query rewriter
+      // ... arbitrary data used by the query rewriter
     }
 }
 ```
