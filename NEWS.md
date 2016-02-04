@@ -1,8 +1,13 @@
+# Version 1.8.1
+2016-mm-dd
+
+
 # Version 1.8.0
 2016-02-04
 
 New features:
  - Supported GeoJSON format for MVT tiles #421
+
 
 # Version 1.7.0
 2016-01-20
