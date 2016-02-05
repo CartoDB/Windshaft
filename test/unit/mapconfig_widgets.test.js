@@ -47,7 +47,7 @@ describe('mapconfig widgets', function() {
         );
     });
 
-    it('should return an object with lists from config', function() {
+    it('should return an object with lists from config', function(done) {
         var layerSql = 'select * from test_table';
         var listsMapConfig = {
             version: '1.5.0',
@@ -73,10 +73,13 @@ describe('mapconfig widgets', function() {
         var mapConfig = MapConfig.create(listsMapConfig);
 
         var list = mapConfig.getWidget(0, 'places');
-        assert.equal(list.sql(), "select name, address from (select * from test_table) as _cdb_list");
+        list.sql([], function(err, query) {
+            assert.equal(query, "select name, address from (select * from test_table) as _cdb_list");
+            done();
+        });
     });
 
-    it('should return an object with lists from layers', function() {
+    it('should return an object with lists from layers', function(done) {
         var listsMapConfig = {
             version: '1.5.0',
             layers: [
@@ -117,12 +120,19 @@ describe('mapconfig widgets', function() {
         var mapConfig = MapConfig.create(listsMapConfig);
 
         var placesList = mapConfig.getWidget(0, 'places');
-        assert.equal(placesList.sql(), "select address from (select * from test_table) as _cdb_list");
-        assert.deepEqual(placesList.columns, ['address']);
+        placesList.sql([], function(err, query) {
+            assert.equal(query, "select address from (select * from test_table) as _cdb_list");
+            assert.deepEqual(placesList.columns, ['address']);
 
-        var places2List = mapConfig.getWidget(1, 'places_2');
-        assert.equal(places2List.sql(), "select name from (select * from test_table) as _cdb_list");
-        assert.deepEqual(places2List.columns, ['name']);
+            var places2List = mapConfig.getWidget(1, 'places_2');
+            places2List.sql([], function(err, query) {
+                assert.equal(query, "select name from (select * from test_table) as _cdb_list");
+                assert.deepEqual(places2List.columns, ['name']);
+
+                done();
+            });
+        });
+
     });
 
 });
