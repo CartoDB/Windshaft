@@ -147,10 +147,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // A query-rewriter can be supplied in the Windshaft server configuration
-    // to preprocess SQL queries and cartocss
-    // code before it is passed to the Mapnik renderer.
-    // Per-layer data can be passed to the query rewriter with
-    // this option:
+    // to preprocess SQL queries before they're passed to the Mapnik renderer.
+    // Per-layer data can be passed to the query rewriter with this options:
     query_rewrite_data: {
       // ... arbitrary data used by the query rewriter
     }

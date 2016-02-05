@@ -10,9 +10,6 @@ var testQueryRewriter = {
         var table = (data && data.table) || 'test_table';
         return 'SELECT * FROM ' + table;
     },
-    style: function(style) {
-        return style;
-    }
 };
 
 describe('server_gettile', function() {
