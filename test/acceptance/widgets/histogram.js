@@ -72,6 +72,32 @@ describe('widgets', function() {
             });
         });
 
+        it('can be fetched from a valid filtered histogram', function(done) {
+            var testClient = new TestClient(histogramsMapConfig());
+            var popMaxFilter = {
+                pop_max: {
+                    min: 1e5,
+                    max: 1e7
+                }
+            };
+            testClient.setLayersFiltersParams([popMaxFilter]);
+            testClient.getWidget(0, 'pop_max', { own_filter: 1 }, function (err, histogram) {
+                assert.ok(!err, err);
+                assert.ok(histogram);
+                assert.equal(histogram.type, 'histogram');
+                validateHistogramBins(histogram);
+
+                assert.ok(histogram.bins.length);
+
+                assert.deepEqual(
+                    histogram.bins[histogram.bins.length - 1],
+                    { bin: 7, min: 8829000, max: 9904000, avg: 9340914.714285715, freq: 7 }
+                );
+
+                done();
+            });
+        });
+
         it('can use a datetime column', function(done) {
             var testClient = new TestClient(histogramsMapConfig({
                 updated_at: {
@@ -82,6 +108,32 @@ describe('widgets', function() {
                 }
             }));
             testClient.getWidget(0, 'updated_at', function (err, histogram) {
+                assert.ok(!err, err);
+                assert.ok(histogram);
+                assert.equal(histogram.type, 'histogram');
+
+                assert.ok(histogram.bins.length);
+
+                done();
+            });
+        });
+
+        it('can use a datetime filtered column', function(done) {
+            var testClient = new TestClient(histogramsMapConfig({
+                updated_at: {
+                    type: 'histogram',
+                    options: {
+                        column: 'updated_at'
+                    }
+                }
+            }));
+            var updatedAtFilter = {
+                updated_at: {
+                    min: 0
+                }
+            };
+            testClient.setLayersFiltersParams([updatedAtFilter]);
+            testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
                 assert.equal(histogram.type, 'histogram');
