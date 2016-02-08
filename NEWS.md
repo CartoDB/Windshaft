@@ -1,5 +1,5 @@
 # Version 1.8.3
-2016-mm-dd
+2016-02-08
 
 Enhancements:
  - Widgets histogram improvements: type casting when required #428
