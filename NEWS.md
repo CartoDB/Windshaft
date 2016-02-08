@@ -1,5 +1,9 @@
 # Version 1.8.3
-2016-02-04
+2016-mm-dd
+
+Enhancements:
+ - Widgets histogram improvements: type casting when required #428
+ - Widgets async queries #427
 
 
 # Version 1.8.2
