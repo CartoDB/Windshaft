@@ -25,6 +25,21 @@ module.exports.renderer = {
         limits: {
             render: 0,
             cacheOnTimeout: true
+        },
+        geojson: {
+            dbPoolParams: {
+                  // maximum number of resources to create at any given time
+                  size: 16,
+                  // max milliseconds a resource can go unused before it should be destroyed
+                  idleTimeout: 3000,
+                  // frequency to check for idle resources
+                  reapInterval: 1000
+            },
+
+            // SQL queries will be wrapped with ST_ClipByBox2D
+            // Returning the portion of a geometry falling within a rectangle
+            // It will only work if snapToGrid is enabled
+            clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
         }
     },
     torque: {
@@ -38,3 +53,7 @@ module.exports.renderer = {
 module.exports.mapnik_version = undefined; // will be looked up at runtime if undefined
 module.exports.windshaft_port = 8080;
 module.exports.enable_cors = true;
+module.exports.enabledFeatures = {
+    // whether in mapconfig is available stats & metadata for each layer
+    layerMetadata: true
+};

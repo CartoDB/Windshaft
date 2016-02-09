@@ -1,5 +1,33 @@
-# Version 1.7.1
+# Version 1.8.4
 2016-mm-dd
+
+# Version 1.8.3
+2016-02-08
+
+Enhancements:
+ - Widgets histogram improvements: type casting when required #428
+ - Widgets async queries #427
+
+
+# Version 1.8.2
+2016-02-04
+
+Bug fixes:
+ - Use datasource from layer id to compute mapnik layers metadata
+
+
+# Version 1.8.1
+2016-02-04
+
+Announcements:
+ - Upgrades grainstore to [1.1.1](https://github.com/CartoDB/grainstore/releases/tag/1.1.1)
+
+
+# Version 1.8.0
+2016-02-04
+
+New features:
+ - Supported GeoJSON format for MVT tiles #421
 
 
 # Version 1.7.0
@@ -1269,4 +1297,3 @@ This release drops the requirement of a field already in epsg:3857
 
 # Version 0.0.2
 2011-09-04
-
