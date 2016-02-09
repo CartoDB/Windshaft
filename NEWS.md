@@ -1,7 +1,7 @@
-# Version 1.8.4
+# Version 1.9.0
 2016-02-09
 
-Enhancements:
+New features:
 - Provisional internal query-rewriting interface for Windshaft-cartodb tests
 
 
