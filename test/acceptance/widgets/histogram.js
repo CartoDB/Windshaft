@@ -98,49 +98,61 @@ describe('widgets', function() {
             });
         });
 
-        it('can use a datetime column', function(done) {
-            var testClient = new TestClient(histogramsMapConfig({
-                updated_at: {
-                    type: 'histogram',
-                    options: {
-                        column: 'updated_at'
-                    }
-                }
-            }));
-            testClient.getWidget(0, 'updated_at', function (err, histogram) {
-                assert.ok(!err, err);
-                assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
+        describe('datetime column', function() {
 
-                assert.ok(histogram.bins.length);
+            var testClient;
 
-                done();
-            });
-        });
-
-        it('can use a datetime filtered column', function(done) {
-            var testClient = new TestClient(histogramsMapConfig({
-                updated_at: {
-                    type: 'histogram',
-                    options: {
-                        column: 'updated_at'
-                    }
-                }
-            }));
             var updatedAtFilter = {
                 updated_at: {
                     min: 0
                 }
             };
-            testClient.setLayersFiltersParams([updatedAtFilter]);
-            testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
-                assert.ok(!err, err);
-                assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
 
-                assert.ok(histogram.bins.length);
+            before(function() {
+                testClient = new TestClient(histogramsMapConfig({
+                    updated_at: {
+                        type: 'histogram',
+                        options: {
+                            column: 'updated_at'
+                        }
+                    }
+                }));
+            });
 
-                done();
+            it('can use a datetime column', function(done) {
+                testClient.getWidget(0, 'updated_at', function (err, histogram) {
+                    assert.ok(!err, err);
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+
+                    assert.ok(histogram.bins.length);
+
+                    done();
+                });
+            });
+
+            it('can use a datetime filtered column', function(done) {
+                testClient.setLayersFiltersParams([updatedAtFilter]);
+                testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                    assert.ok(!err, err);
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+
+                    assert.ok(histogram.bins.length);
+
+                    done();
+                });
+            });
+
+            it.skip('can getTile with datetime filtered column', function(done) {
+                testClient.setLayersFiltersParams([updatedAtFilter]);
+                testClient.getTile(0, 0, 0, function (err, tile) {
+                    console.log(arguments);
+                    assert.ok(!err, err);
+                    assert.ok(tile);
+
+                    done();
+                });
             });
         });
 
