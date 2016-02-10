@@ -144,7 +144,7 @@ describe('widgets', function() {
                 });
             });
 
-            it.skip('can getTile with datetime filtered column', function(done) {
+            it('can getTile with datetime filtered column', function(done) {
                 testClient.setLayersFiltersParams([updatedAtFilter]);
                 testClient.getTile(0, 0, 0, function (err, tile) {
                     console.log(arguments);
