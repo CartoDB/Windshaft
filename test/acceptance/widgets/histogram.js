@@ -80,7 +80,7 @@ describe('widgets', function() {
                     max: 1e7
                 }
             };
-            testClient.setLayersFiltersParams([popMaxFilter]);
+            testClient.setLayersFiltersParamsSync([popMaxFilter]);
             testClient.getWidget(0, 'pop_max', { own_filter: 1 }, function (err, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
@@ -132,7 +132,7 @@ describe('widgets', function() {
             });
 
             it('can use a datetime filtered column', function(done) {
-                testClient.setLayersFiltersParams([updatedAtFilter]);
+                testClient.setLayersFiltersParamsSync([updatedAtFilter]);
                 testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
                     assert.ok(!err, err);
                     assert.ok(histogram);
@@ -145,13 +145,15 @@ describe('widgets', function() {
             });
 
             it('can getTile with datetime filtered column', function(done) {
-                testClient.setLayersFiltersParams([updatedAtFilter]);
-                testClient.getTile(0, 0, 0, function (err, tile) {
-                    console.log(arguments);
+                testClient.setLayersFiltersParams([updatedAtFilter], function(err) {
                     assert.ok(!err, err);
-                    assert.ok(tile);
 
-                    done();
+                    testClient.getTile(0, 0, 0, function (err, tile) {
+                        assert.ok(!err, err);
+                        assert.ok(tile);
+
+                        done();
+                    });
                 });
             });
         });

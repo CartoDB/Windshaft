@@ -72,7 +72,7 @@ describe('widgets', function() {
                         accept: scenario.accept
                     }
                 };
-                testClient.setLayersFiltersParams([adm0nameFilter]);
+                testClient.setLayersFiltersParamsSync([adm0nameFilter]);
                 testClient.getWidget(0, 'adm0name', { own_filter: 1 }, function (err, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
@@ -165,7 +165,7 @@ describe('widgets', function() {
                         accept: scenario.accept
                     }
                 };
-                testClient.setLayersFiltersParams([adm0nameFilter]);
+                testClient.setLayersFiltersParamsSync([adm0nameFilter]);
                 testClient.getWidget(0, 'adm0name', { own_filter: 1 }, function (err, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
@@ -223,7 +223,7 @@ describe('widgets', function() {
                         accept: [filterValue]
                     }
                 };
-                testClient.setLayersFiltersParams([scalerankFilter]);
+                testClient.setLayersFiltersParamsSync([scalerankFilter]);
                 testClient.getWidget(0, 'scalerank', { own_filter: 1 }, function (err, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
@@ -246,7 +246,7 @@ describe('widgets', function() {
                             accept: [userQuery]
                         }
                     };
-                    testClient.setLayersFiltersParams([scalerankFilter]);
+                    testClient.setLayersFiltersParamsSync([scalerankFilter]);
                     testClient.widgetSearch(0, 'scalerank', userQuery, function (err, searchResult) {
                         assert.ok(!err, err);
                         assert.ok(searchResult);
