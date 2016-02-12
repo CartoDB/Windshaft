@@ -132,15 +132,18 @@ describe('widgets', function() {
             });
 
             it('can use a datetime filtered column', function(done) {
-                testClient.setLayersFiltersParamsSync([updatedAtFilter]);
-                testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                testClient.setLayersFiltersParams([updatedAtFilter], function(err) {
                     assert.ok(!err, err);
-                    assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
 
-                    assert.ok(histogram.bins.length);
+                    testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                        assert.ok(!err, err);
+                        assert.ok(histogram);
+                        assert.equal(histogram.type, 'histogram');
 
-                    done();
+                        assert.ok(histogram.bins.length);
+
+                        done();
+                    });
                 });
             });
 
@@ -151,6 +154,43 @@ describe('widgets', function() {
                     testClient.getTile(0, 0, 0, function (err, tile) {
                         assert.ok(!err, err);
                         assert.ok(tile);
+
+                        done();
+                    });
+                });
+            });
+
+            it('can use two columns with different types', function(done) {
+                var testClient = new TestClient(histogramsMapConfig({
+                    updated_at: {
+                        type: 'histogram',
+                        options: {
+                            column: 'updated_at'
+                        }
+                    },
+                    pop_max: {
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
+                        }
+                    }
+                }));
+
+                var popMaxFilter = {
+                    pop_max: {
+                        max: 1e7
+                    }
+                };
+
+                testClient.setLayersFiltersParams([popMaxFilter], function(err) {
+                    assert.ok(!err, err);
+
+                    testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                        assert.ok(!err, err);
+                        assert.ok(histogram);
+                        assert.equal(histogram.type, 'histogram');
+
+                        assert.ok(histogram.bins.length);
 
                         done();
                     });
