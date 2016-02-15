@@ -1,4 +1,5 @@
 # Version 1.10.1
+2016-02-15
 
 Enhancements:
  - Removes console.* calls
