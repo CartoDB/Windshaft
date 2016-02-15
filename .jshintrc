@@ -82,17 +82,18 @@
 //    "wsh"           : false,    // Windows Scripting Host
 //    "yui"           : false,    // Yahoo User Interface
 
-    // Custom Globals
-    "globals"       : { // additional predefined global variables
-        "suite": true,
-        "suiteSetup": true,
-        "test": true,
-        "suiteTeardown": true,
-        "beforeEach": true,
-        "afterEach": true,
-        "before": true,
-        "after": true,
-        "describe": true,
-        "it": true
-    }
+    // Custom predefined global variables
+    "predef": [
+        "-console", // disallows console, use debug
+        "suite",
+        "suiteSetup",
+        "test",
+        "suiteTeardown",
+        "beforeEach",
+        "afterEach",
+        "before",
+        "after",
+        "describe",
+        "it"
+    ]
 }
