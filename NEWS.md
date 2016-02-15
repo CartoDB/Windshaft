@@ -1,5 +1,8 @@
-# Version 1.10.2
+# Version 1.11.0
 2016-mm-dd
+
+New features:
+ - Histogram uses bins option to set the number of buckets #432
 
 
 # Version 1.10.1
