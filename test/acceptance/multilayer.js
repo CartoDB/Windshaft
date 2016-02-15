@@ -7,6 +7,8 @@ var step = require('step');
 var mapnik = require('mapnik');
 var http = require('http');
 
+var debug = require('debug')('windshaft:test');
+
 var TestClient = require('../support/test_client');
 
 describe('multilayer', function() {
@@ -25,7 +27,7 @@ describe('multilayer', function() {
           fs.readFile(filename, "binary", function(err, file) {
             if ( err ) {
               response.writeHead(404, {'Content-Type': 'text/plain'});
-              console.log("File '" + filename + "' not found");
+              debug("File '" + filename + "' not found");
               response.write("404 Not Found\n");
             } else {
               response.writeHead(200);

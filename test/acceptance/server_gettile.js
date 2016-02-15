@@ -5,6 +5,8 @@ var mapnik = require('mapnik');
 var semver = require('semver');
 var TestClient = require('../support/test_client');
 
+var debug = require('debug')('windshaft:test');
+
 describe('server_gettile', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
@@ -133,7 +135,7 @@ describe('server_gettile', function() {
     if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
       // Strictness handling changed in 2.3.x, possibly a bug:
       // see http://github.com/mapnik/mapnik/issues/2301
-      console.warn("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
+      debug("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
       it.skip(test_strict_lbl,  test_strictness);
     }
     else {
