@@ -239,6 +239,40 @@ describe('widgets', function() {
             });
         });
 
+        it('can set af fixed number of bins', function(done) {
+            var fixedBinsHistogramMapConfig = histogramsMapConfig({
+                pop_max: {
+                    type: 'histogram',
+                    options: {
+                        column: 'pop_max',
+                        bins: 5
+                    }
+                }
+            });
+
+            var testClient = new TestClient(fixedBinsHistogramMapConfig);
+            testClient.getWidget(0, 'pop_max', function (err, histogram) {
+                assert.ok(!err, err);
+                assert.equal(histogram.type, 'histogram');
+
+                assert.equal(histogram.bins_count, 5);
+
+                validateHistogramBins(histogram);
+
+                assert.ok(histogram.bins.length);
+                assert.deepEqual(
+                    histogram.bins[0],
+                    { bin: 0, min: 0, max: 7067423, avg: 280820.0057731959, freq: 7275 }
+                );
+                assert.deepEqual(
+                    histogram.bins[histogram.bins.length - 1],
+                    { bin: 4, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
+                );
+
+                done();
+            });
+        });
+
         function validateHistogramBins(histogram) {
             var binWidth = histogram.bin_width;
             var start = histogram.bins_start;
