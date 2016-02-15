@@ -1,5 +1,5 @@
 # Version 1.10.0
-2016-mm-dd
+2016-02-15
 
 New features:
  - Async filter params #431
