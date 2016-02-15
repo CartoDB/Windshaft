@@ -85,10 +85,6 @@
     // Custom predefined global variables
     "predef": [
         "-console", // disallows console, use debug
-        "suite",
-        "suiteSetup",
-        "test",
-        "suiteTeardown",
         "beforeEach",
         "afterEach",
         "before",
