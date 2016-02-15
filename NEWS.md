@@ -1,6 +1,12 @@
 # Version 1.9.1
 2016-mm-dd
 
+New features:
+ - Async filter params #431
+
+Enhancements:
+ - Geojson buffer fixed to 32px #430
+
 
 # Version 1.9.0
 2016-02-09
