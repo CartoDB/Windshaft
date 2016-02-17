@@ -239,19 +239,18 @@ describe('widgets', function() {
             });
         });
 
-        it('can set af fixed number of bins', function(done) {
+        it('can use a fixed number of bins', function(done) {
             var fixedBinsHistogramMapConfig = histogramsMapConfig({
                 pop_max: {
                     type: 'histogram',
                     options: {
-                        column: 'pop_max',
-                        bins: 5
+                        column: 'pop_max'
                     }
                 }
             });
 
             var testClient = new TestClient(fixedBinsHistogramMapConfig);
-            testClient.getWidget(0, 'pop_max', function (err, histogram) {
+            testClient.getWidget(0, 'pop_max', { bins: 5 }, function (err, histogram) {
                 assert.ok(!err, err);
                 assert.equal(histogram.type, 'histogram');
 
