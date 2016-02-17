@@ -131,4 +131,3 @@ describe('external resources', function() {
     });
 
 });
-
