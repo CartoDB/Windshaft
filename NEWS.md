@@ -2,7 +2,7 @@
 2016-mm-dd
 
 New features:
- - Histogram uses bins option to set the number of buckets #432
+ - Histogram can be retrieved with a fix number of bins #433
 
 
 # Version 1.10.1
