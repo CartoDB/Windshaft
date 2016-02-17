@@ -38,7 +38,7 @@
         "tilelive-bridge": "https://github.com/CartoDB/tilelive-bridge/tarball/1.3.0-cdb4",
         "tilelive-mapnik": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb5",
         "torque.js": "~2.11.0",
-        "turbo-cartocss": "^0.1.0",
+        "turbo-cartocss": "https://github.com/CartoDB/turbo-cartocss/tarball/turbocartocss-integration",
         "underscore": "~1.6.0"
     },
     "devDependencies": {
