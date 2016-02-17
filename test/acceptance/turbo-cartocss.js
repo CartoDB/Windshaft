@@ -14,7 +14,7 @@ function imageCompareFn(fixture, done) {
     };
 }
 
-describe.only('turbo-cartocss', function() {
+describe('turbo-cartocss', function() {
     describe('parsing ramp function with colorbrewer for greens', function () {
         before(function (done) {
             this.testClient = new TestClient({
