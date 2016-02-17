@@ -17,7 +17,8 @@ module.exports.singlelayer = {
         "created_at": "2011-09-21T14:02:21.314252",
         "cartodb_id": 1,
         "name": "Hawai",
-        "address": "Calle de Pérez Galdós 9, Madrid, Spain"
+        "address": "Calle de Pérez Galdós 9, Madrid, Spain",
+        "price": 10
       }
     },
     {
@@ -34,7 +35,8 @@ module.exports.singlelayer = {
         "created_at": "2011-09-21T14:02:21.319101",
         "cartodb_id": 2,
         "name": "El Estocolmo",
-        "address": "Calle de la Palma 72, Madrid, Spain"
+        "address": "Calle de la Palma 72, Madrid, Spain",
+        "price": 10.5
       }
     },
     {
@@ -51,7 +53,8 @@ module.exports.singlelayer = {
         "created_at": "2011-09-21T14:02:21.324",
         "cartodb_id": 3,
         "name": "El Rey del Tallarín",
-        "address": "Plaza Conde de Toreno 2, Madrid, Spain"
+        "address": "Plaza Conde de Toreno 2, Madrid, Spain",
+        "price": 11
       }
     },
     {
@@ -68,7 +71,8 @@ module.exports.singlelayer = {
         "created_at": "2011-09-21T14:02:21.329509",
         "cartodb_id": 4,
         "name": "El Lacón",
-        "address": "Manuel Fernández y González 8, Madrid, Spain"
+        "address": "Manuel Fernández y González 8, Madrid, Spain",
+        "price": 12
       }
     },
     {
@@ -85,7 +89,8 @@ module.exports.singlelayer = {
         "created_at": "2011-09-21T14:02:21.334931",
         "cartodb_id": 5,
         "name": "El Pico",
-        "address": "Calle Divino Pastor 12, Madrid, Spain"
+        "address": "Calle Divino Pastor 12, Madrid, Spain",
+        "price": 21
       }
     }
   ]
@@ -133,7 +138,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.314252",
                 cartodb_id: 1,
                 name: "Hawai",
-                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain"
+                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain",
+                price: 10
             }
         }, {
             type: "Feature",
@@ -148,7 +154,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.319101",
                 cartodb_id: 2,
                 name: "El Estocolmo",
-                address: "Calle de la Palma 72, Madrid, Spain"
+                address: "Calle de la Palma 72, Madrid, Spain",
+                price: 10.5
             }
         }]
     }, {
@@ -166,7 +173,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.314252",
                 cartodb_id: 1,
                 name: "Hawai",
-                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain"
+                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain",
+                price: 10
             }
         }, {
             type: "Feature",
@@ -181,7 +189,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.319101",
                 cartodb_id: 2,
                 name: "El Estocolmo",
-                address: "Calle de la Palma 72, Madrid, Spain"
+                address: "Calle de la Palma 72, Madrid, Spain",
+                price: 10.5
             }
         }, {
             type: "Feature",
@@ -196,7 +205,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.324",
                 cartodb_id: 3,
                 name: "El Rey del Tallar\u00edn",
-                address: "Plaza Conde de Toreno 2, Madrid, Spain"
+                address: "Plaza Conde de Toreno 2, Madrid, Spain",
+                price: 11
             }
         }, {
             type: "Feature",
@@ -211,7 +221,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.329509",
                 cartodb_id: 4,
                 name: "El Lac\u00f3n",
-                address: "Manuel Fern\u00e1ndez y Gonz\u00e1lez 8, Madrid, Spain"
+                address: "Manuel Fern\u00e1ndez y Gonz\u00e1lez 8, Madrid, Spain",
+                price: 12
             }
         }]
     }, {
@@ -229,7 +240,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.314252",
                 cartodb_id: 1,
                 name: "Hawai",
-                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain"
+                address: "Calle de P\u00e9rez Gald\u00f3s 9, Madrid, Spain",
+                price: 10
             }
         }, {
             type: "Feature",
@@ -244,7 +256,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.319101",
                 cartodb_id: 2,
                 name: "El Estocolmo",
-                address: "Calle de la Palma 72, Madrid, Spain"
+                address: "Calle de la Palma 72, Madrid, Spain",
+                price: 10.5
             }
         }, {
             type: "Feature",
@@ -259,7 +272,8 @@ module.exports.multilayer = {
                 created_at: "2011-09-21T14:02:21.324",
                 cartodb_id: 3,
                 name: "El Rey del Tallar\u00edn",
-                address: "Plaza Conde de Toreno 2, Madrid, Spain"
+                address: "Plaza Conde de Toreno 2, Madrid, Spain",
+                price: 11
             }
         }]
     }]

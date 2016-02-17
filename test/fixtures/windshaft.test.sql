@@ -32,6 +32,7 @@ CREATE TABLE test_table (
     cartodb_id serial NOT NULL PRIMARY KEY,
     name character varying,
     address character varying,
+    price real DEFAULT 0,
     the_geom geometry,
     the_geom_webmercator geometry,
     CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
@@ -42,13 +43,13 @@ CREATE TABLE test_table (
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
 
-INSERT INTO test_table (updated_at, created_at, name, address, the_geom)
+INSERT INTO test_table (updated_at, created_at, name, address, price, the_geom)
 VALUES
- ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.314252', 'Hawai', 'Calle de Pérez Galdós 9, Madrid, Spain', '0101000020E6100000A6B73F170D990DC064E8D84125364440'),
- ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.319101', 'El Estocolmo', 'Calle de la Palma 72, Madrid, Spain', '0101000020E6100000C90567F0F7AB0DC0AB07CC43A6364440'),
- ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.324', 'El Rey del Tallarín', 'Plaza Conde de Toreno 2, Madrid, Spain', '0101000020E610000021C8410933AD0DC0CB0EF10F5B364440'),
- ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.329509', 'El Lacón', 'Manuel Fernández y González 8, Madrid, Spain', '0101000020E6100000BC5983F755990DC07D923B6C22354440'),
- ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.334931', 'El Pico', 'Calle Divino Pastor 12, Madrid, Spain', '0101000020E61000003B6D8D08C6A10DC0371B2B31CF364440');
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.314252', 'Hawai', 'Calle de Pérez Galdós 9, Madrid, Spain', 10.00, '0101000020E6100000A6B73F170D990DC064E8D84125364440'),
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.319101', 'El Estocolmo', 'Calle de la Palma 72, Madrid, Spain', 10.50, '0101000020E6100000C90567F0F7AB0DC0AB07CC43A6364440'),
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.324', 'El Rey del Tallarín', 'Plaza Conde de Toreno 2, Madrid, Spain', 11.00, '0101000020E610000021C8410933AD0DC0CB0EF10F5B364440'),
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.329509', 'El Lacón', 'Manuel Fernández y González 8, Madrid, Spain', 12.00, '0101000020E6100000BC5983F755990DC07D923B6C22354440'),
+ ('2011-09-21 14:02:21.358706', '2011-09-21 14:02:21.334931', 'El Pico', 'Calle Divino Pastor 12, Madrid, Spain', 21.00, '0101000020E61000003B6D8D08C6A10DC0371B2B31CF364440');
 UPDATE test_table SET the_geom_webmercator = ST_Transform(the_geom, 3857);
 
 CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
