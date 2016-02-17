@@ -3,7 +3,7 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-var IMAGE_EQUALS_TOLERANCE_PER_MIL = 10;
+var IMAGE_EQUALS_TOLERANCE_PER_MIL = 1;
 
 function imageCompareFn(fixture, done) {
     return function(err, tile) {
@@ -51,7 +51,7 @@ describe('turbo-cartocss', function() {
                         "options": {
                             "cartocss_version": '2.3.0',
                             "sql": "select * from test_table",
-                            "cartocss": '#layer { marker-fill: ramp([price], colorbrewer(Greens), jenks); }'
+                            "cartocss": '#layer { marker-fill: ramp([price], colorbrewer(Reds), jenks); }'
                         }
                     }
                 ]
