@@ -1,5 +1,5 @@
 # Version 1.11.0
-2016-mm-dd
+2016-02-18
 
 New features:
  - Histogram can be retrieved with a fix number of bins #433
