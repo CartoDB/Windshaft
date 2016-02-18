@@ -3,7 +3,6 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-var IMAGE_EQUALS_TOLERANCE_PER_MIL = 1;
 var IMAGE_TOLERANCE_PER_MIL = 20;
 
 function imageCompareFn(fixture, done) {
@@ -11,7 +10,7 @@ function imageCompareFn(fixture, done) {
         if (err) {
             return done(err);
         }
-        assert.imageEqualsFile(tile, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+        assert.imageEqualsFile(tile, './test/fixtures/' + fixture, IMAGE_TOLERANCE_PER_MIL, done);
     };
 }
 
@@ -112,15 +111,9 @@ describe('turbo-cartocss', function() {
             var x = 2;
             var y = 1;
 
-            this.testClient.getTile(z, x, y, { layer: 0 }, function (err, tile) {
-                var pngFixture = './test/fixtures/torque/populated_places_simple_reduced-turbo-cartocss-' +
-                [z, x, y].join('.') + '.png';
-                require('fs').writeFileSync('torque.png', tile);
-                assert.imageEqualsFile(tile, pngFixture, IMAGE_TOLERANCE_PER_MIL, function (err) {
-                    assert.ok(!err);
-                    done();
-                });
-            });
+            var pngFixture = 'torque/populated_places_simple_reduced-turbo-cartocss-' + [z, x, y].join('.') + '.png';
+
+            this.testClient.getTile(z, x, y, { layer: 0 }, imageCompareFn(pngFixture, done));
         });
     });
 });
