@@ -130,8 +130,15 @@ TestClient.prototype.widgetSearch = function(layer, widgetName, userQuery, overr
     this.widgetBackend.search(provider, _.extend(override, params), callback);
 };
 
-TestClient.prototype.setLayersFiltersParams = function(filters) {
-    this.config.setFiltersParams({ layers: filters });
+TestClient.prototype.setLayersFiltersParamsSync = function(filters) {
+    this.config.setFiltersParamsSync({ layers: filters });
+};
+
+TestClient.prototype.setLayersFiltersParams = function(filters, callback) {
+    var params = {
+        dbname: 'windshaft_test'
+    };
+    this.config.setFiltersParams({ layers: filters }, params, callback);
 };
 
 

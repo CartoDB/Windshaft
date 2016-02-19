@@ -1,5 +1,29 @@
-# Version 1.9.1
+# Version 1.11.1
 2016-mm-dd
+
+
+# Version 1.11.0
+2016-02-18
+
+New features:
+ - Histogram can be retrieved with a fix number of bins #433
+
+
+# Version 1.10.1
+2016-02-15
+
+Enhancements:
+ - Removes console.* calls
+
+
+# Version 1.10.0
+2016-02-15
+
+New features:
+ - Async filter params #431
+
+Enhancements:
+ - Geojson buffer fixed to 32px #430
 
 
 # Version 1.9.0

@@ -7,6 +7,8 @@ var serverOptions = require('../support/server_options');
 var MapStore      = require('../../lib/windshaft/storages/mapstore');
 var MapConfig     = require('../../lib/windshaft/models/mapconfig');
 
+var debug = require('debug')('windshaft:test');
+
 describe('mapstore', function() {
 
     var redis_pool = new RedisPool(serverOptions.redis);
@@ -52,7 +54,7 @@ describe('mapstore', function() {
           var next = this;
           map_store.del(mapID, function(e) {
             if ( e ) {
-                console.log("Could not delete map " + mapID + ": " + e);
+                debug("Could not delete map " + mapID + ": " + e);
             }
             next(err);
           });
