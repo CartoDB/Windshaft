@@ -1,6 +1,9 @@
 # Version 1.11.1
 2016-mm-dd
 
+Enhancements:
+ - Geojson make valid #437
+
 
 # Version 1.11.0
 2016-02-18
