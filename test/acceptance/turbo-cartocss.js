@@ -102,7 +102,7 @@ describe('turbo-cartocss', function() {
                                 '    marker-line-opacity: 1;',
                                 '    marker-type: rectangle;',
                                 '    marker-width: 3;',
-                                '    marker-fill: ramp([pop_max], colorbrewer(Greens), jenks);',
+                                '    marker-fill: ramp([pop_max], colorbrewer(Greens));',
                                 '};'
                             ].join(' '),
                             cartocss_version: '2.3.0'
