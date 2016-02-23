@@ -1,5 +1,5 @@
 # Version 1.12.0
-2016-mm-dd
+2016-02-23
 
 New features:
  - Experimental support for turbo-cartocss #438
