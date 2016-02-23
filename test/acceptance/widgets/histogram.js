@@ -80,7 +80,7 @@ describe('widgets', function() {
                     max: 1e7
                 }
             };
-            testClient.setLayersFiltersParams([popMaxFilter]);
+            testClient.setLayersFiltersParamsSync([popMaxFilter]);
             testClient.getWidget(0, 'pop_max', { own_filter: 1 }, function (err, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
@@ -98,49 +98,103 @@ describe('widgets', function() {
             });
         });
 
-        it('can use a datetime column', function(done) {
-            var testClient = new TestClient(histogramsMapConfig({
-                updated_at: {
-                    type: 'histogram',
-                    options: {
-                        column: 'updated_at'
-                    }
-                }
-            }));
-            testClient.getWidget(0, 'updated_at', function (err, histogram) {
-                assert.ok(!err, err);
-                assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
+        describe('datetime column', function() {
 
-                assert.ok(histogram.bins.length);
+            var testClient;
 
-                done();
-            });
-        });
-
-        it('can use a datetime filtered column', function(done) {
-            var testClient = new TestClient(histogramsMapConfig({
-                updated_at: {
-                    type: 'histogram',
-                    options: {
-                        column: 'updated_at'
-                    }
-                }
-            }));
             var updatedAtFilter = {
                 updated_at: {
                     min: 0
                 }
             };
-            testClient.setLayersFiltersParams([updatedAtFilter]);
-            testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
-                assert.ok(!err, err);
-                assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
 
-                assert.ok(histogram.bins.length);
+            before(function() {
+                testClient = new TestClient(histogramsMapConfig({
+                    updated_at: {
+                        type: 'histogram',
+                        options: {
+                            column: 'updated_at'
+                        }
+                    }
+                }));
+            });
 
-                done();
+            it('can use a datetime column', function(done) {
+                testClient.getWidget(0, 'updated_at', function (err, histogram) {
+                    assert.ok(!err, err);
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+
+                    assert.ok(histogram.bins.length);
+
+                    done();
+                });
+            });
+
+            it('can use a datetime filtered column', function(done) {
+                testClient.setLayersFiltersParams([updatedAtFilter], function(err) {
+                    assert.ok(!err, err);
+
+                    testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                        assert.ok(!err, err);
+                        assert.ok(histogram);
+                        assert.equal(histogram.type, 'histogram');
+
+                        assert.ok(histogram.bins.length);
+
+                        done();
+                    });
+                });
+            });
+
+            it('can getTile with datetime filtered column', function(done) {
+                testClient.setLayersFiltersParams([updatedAtFilter], function(err) {
+                    assert.ok(!err, err);
+
+                    testClient.getTile(0, 0, 0, function (err, tile) {
+                        assert.ok(!err, err);
+                        assert.ok(tile);
+
+                        done();
+                    });
+                });
+            });
+
+            it('can use two columns with different types', function(done) {
+                var testClient = new TestClient(histogramsMapConfig({
+                    updated_at: {
+                        type: 'histogram',
+                        options: {
+                            column: 'updated_at'
+                        }
+                    },
+                    pop_max: {
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
+                        }
+                    }
+                }));
+
+                var popMaxFilter = {
+                    pop_max: {
+                        max: 1e7
+                    }
+                };
+
+                testClient.setLayersFiltersParams([popMaxFilter], function(err) {
+                    assert.ok(!err, err);
+
+                    testClient.getWidget(0, 'updated_at', { own_filter: 1 }, function (err, histogram) {
+                        assert.ok(!err, err);
+                        assert.ok(histogram);
+                        assert.equal(histogram.type, 'histogram');
+
+                        assert.ok(histogram.bins.length);
+
+                        done();
+                    });
+                });
             });
         });
 
@@ -180,6 +234,39 @@ describe('widgets', function() {
 
                 var emptyBin = histogram.bins[18];
                 assert.ok(!emptyBin);
+
+                done();
+            });
+        });
+
+        it('can use a fixed number of bins', function(done) {
+            var fixedBinsHistogramMapConfig = histogramsMapConfig({
+                pop_max: {
+                    type: 'histogram',
+                    options: {
+                        column: 'pop_max'
+                    }
+                }
+            });
+
+            var testClient = new TestClient(fixedBinsHistogramMapConfig);
+            testClient.getWidget(0, 'pop_max', { bins: 5 }, function (err, histogram) {
+                assert.ok(!err, err);
+                assert.equal(histogram.type, 'histogram');
+
+                assert.equal(histogram.bins_count, 5);
+
+                validateHistogramBins(histogram);
+
+                assert.ok(histogram.bins.length);
+                assert.deepEqual(
+                    histogram.bins[0],
+                    { bin: 0, min: 0, max: 7067423, avg: 280820.0057731959, freq: 7275 }
+                );
+                assert.deepEqual(
+                    histogram.bins[histogram.bins.length - 1],
+                    { bin: 4, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
+                );
 
                 done();
             });

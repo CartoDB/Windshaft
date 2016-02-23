@@ -74,4 +74,24 @@ describe('Rendering geojsons', function() {
             });
         });
     });
+
+    describe('Make valid invalid geometries', function() {
+      before(function () {
+        this.mapConfig = TestClient.singleLayerMapConfig(
+          'SELECT ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 1 1)\') As the_geom_webmercator ' +
+          ' UNION ALL SELECT ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 1 1, 1 2, 1 1, 0 0))\') ' +
+          ' As the_geom_webmercator', null, null, 'name');
+
+        this.testClient = new TestClient(this.mapConfig);
+        this.options = { format: 'geojson', layer: 0 };
+      });
+
+      it('should return a geojson with points', function (done) {
+          this.testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+              assert.ok(!err, err);
+              assert.deepEqual(geojsonTile, geojsonValue.makeValidGeojson);
+              done();
+          });
+      });
+    });
 });

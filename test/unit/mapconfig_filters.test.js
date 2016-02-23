@@ -40,7 +40,7 @@ describe('mapconfig filters', function() {
             it('fails to apply category filter if no params are used', function() {
                 assert.throws(
                     function() {
-                        mapConfig.setFiltersParams({layers: [{
+                        mapConfig.setFiltersParamsSync({layers: [{
                             adm0name: {}
                         }]});
                     },
@@ -57,7 +57,7 @@ describe('mapconfig filters', function() {
             it('fails to apply category filter if accept is empty', function() {
                 assert.throws(
                     function() {
-                        mapConfig.setFiltersParams({layers: [{
+                        mapConfig.setFiltersParamsSync({layers: [{
                             adm0name: {
                                 accept: [],
                                 reject: []
@@ -83,7 +83,7 @@ describe('mapconfig filters', function() {
 
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a category filter associated to the aggregation widget
                         accept: ['Spain']
                     }
@@ -107,7 +107,7 @@ describe('mapconfig filters', function() {
 
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a category filter associated to the aggregation widget
                         reject: ['Spain']
                     }
@@ -131,7 +131,7 @@ describe('mapconfig filters', function() {
 
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a category filter associated to the aggregation widget
                         reject: ['Spain'],
                         accept: ['USA']
@@ -183,7 +183,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if no params are used', function() {
                 assert.throws(
                     function() {
-                        mapConfig.setFiltersParams({layers: [{
+                        mapConfig.setFiltersParamsSync({layers: [{
                             adm0name: {}
                         }]});
                     },
@@ -200,7 +200,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if min is not a number', function() {
                 assert.throws(
                     function() {
-                        mapConfig.setFiltersParams({layers: [{
+                        mapConfig.setFiltersParamsSync({layers: [{
                             adm0name: {
                                 min: 'wadus'
                             }
@@ -219,7 +219,7 @@ describe('mapconfig filters', function() {
             it('fails to apply range filter if max is not a number', function() {
                 assert.throws(
                     function() {
-                        mapConfig.setFiltersParams({layers: [{
+                        mapConfig.setFiltersParamsSync({layers: [{
                             adm0name: {
                                 max: 'wadus'
                             }
@@ -243,7 +243,7 @@ describe('mapconfig filters', function() {
                 var mapConfigId = mapConfig.id();
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         min: 0
                     }
@@ -258,7 +258,7 @@ describe('mapconfig filters', function() {
                 var mapConfigId = mapConfig.id();
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         max: 100
                     }
@@ -273,7 +273,7 @@ describe('mapconfig filters', function() {
                 var mapConfigId = mapConfig.id();
                 assert.equal(mapConfig.getLayer(0).options.sql, layerSql);
 
-                mapConfig.setFiltersParams({layers: [{
+                mapConfig.setFiltersParamsSync({layers: [{
                     adm0name: { // this is a range filter associated to the histogram widget
                         min: 0,
                         max: 100
