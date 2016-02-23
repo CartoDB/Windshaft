@@ -14,22 +14,40 @@ function imageCompareFn(fixture, done) {
     };
 }
 
+function makeMapconfig(cartocss) {
+    return {
+        "version": "1.4.0",
+        "layers": [
+            {
+                "type": 'mapnik',
+                "options": {
+                    "cartocss_version": '2.3.0',
+                    "sql": [
+                        'SELECT test_table.*, _prices.price FROM test_table JOIN (' +
+                        '  SELECT 1 AS cartodb_id, 10.00 AS price',
+                        '  UNION',
+                        '  SELECT 2, 10.50',
+                        '  UNION',
+                        '  SELECT 3, 11.00',
+                        '  UNION',
+                        '  SELECT 4, 12.00',
+                        '  UNION',
+                        '  SELECT 5, 21.00',
+                        ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
+                    ].join('\n'),
+                    "cartocss": cartocss
+                }
+            }
+        ]
+    };
+}
+
 describe('turbo-cartocss', function() {
     describe('parsing ramp function with colorbrewer for greens and mapnik renderer', function () {
         before(function (done) {
-            this.testClient = new TestClient({
-                "version": "1.4.0",
-                "layers": [
-                    {
-                        "type": 'mapnik',
-                        "options": {
-                            "cartocss_version": '2.3.0',
-                            "sql": "select * from test_table",
-                            "cartocss": '#layer { marker-fill: ramp([price], colorbrewer(Greens), jenks); }'
-                        }
-                    }
-                ]
-            });
+            this.testClient = new TestClient(
+                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Greens), jenks); }')
+            );
 
             this.testClient.createLayergroup(done);
         });
@@ -43,19 +61,9 @@ describe('turbo-cartocss', function() {
     describe('parsing ramp function with colorbrewer for reds and mapnik renderer', function () {
 
         before(function (done) {
-            this.testClient = new TestClient({
-                "version": "1.4.0",
-                "layers": [
-                    {
-                        "type": 'mapnik',
-                        "options": {
-                            "cartocss_version": '2.3.0',
-                            "sql": "select * from test_table",
-                            "cartocss": '#layer { marker-fill: ramp([price], colorbrewer(Reds), jenks); }'
-                        }
-                    }
-                ]
-            });
+            this.testClient = new TestClient(
+                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Reds), jenks); }')
+            );
 
             this.testClient.createLayergroup(done);
         });
