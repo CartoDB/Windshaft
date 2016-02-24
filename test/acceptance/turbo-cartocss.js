@@ -46,7 +46,7 @@ describe('turbo-cartocss', function() {
     describe('parsing ramp function with colorbrewer for greens and mapnik renderer', function () {
         before(function (done) {
             this.testClient = new TestClient(
-                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Greens), jenks); }')
+                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Greens)); }')
             );
 
             this.testClient.createLayergroup(done);
@@ -62,7 +62,7 @@ describe('turbo-cartocss', function() {
 
         before(function (done) {
             this.testClient = new TestClient(
-                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Reds), jenks); }')
+                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Reds)); }')
             );
 
             this.testClient.createLayergroup(done);
@@ -102,7 +102,7 @@ describe('turbo-cartocss', function() {
                                 '    marker-line-opacity: 1;',
                                 '    marker-type: rectangle;',
                                 '    marker-width: 3;',
-                                '    marker-fill: ramp([pop_max], colorbrewer(Greens), jenks);',
+                                '    marker-fill: ramp([pop_max], colorbrewer(Greens));',
                                 '};'
                             ].join(' '),
                             cartocss_version: '2.3.0'

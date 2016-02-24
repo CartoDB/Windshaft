@@ -40,18 +40,13 @@ psql -c 'create extension postgis' windshaft_test ||
 
 psql -c 'CREATE LANGUAGE plpythonu' windshaft_test ||
   die "Could not install plpythonu in test database"
-#  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_XYZ.sql -o CDB_XYZ.sql
-echo "...Installing CDB_XYZ"
-cat sql/CDB_XYZ.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
-#  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_QueryStatements.sql -o CDB_QueryStatements.sql
-echo "...Installing CDB_QueryStatements"
-cat sql/CDB_QueryStatements.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
-#  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_QueryTables.sql -o CDB_QueryTables.sql
-echo "...Installing CDB_QueryTables"
-cat sql/CDB_QueryTables.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
-#  curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/CDB_QuantileBins.sql -o CDB_QuantileBins.sql
-echo "...Installing CDB_QuantileBins"
-cat sql/CDB_QuantileBins.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
+
+for i in CDB_XYZ CDB_QueryStatements CDB_QueryTables CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins
+do
+  echo "...Installing $i"
+  #curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/$i.sql -o sql/$i.sql
+  cat sql/$i.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
+done
 
 dropdb windshaft_test2 | 2>&1
 createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test database 2"
