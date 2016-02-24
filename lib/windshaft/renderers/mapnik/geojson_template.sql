@@ -6,4 +6,4 @@ SELECT row_to_json(featcoll) as geojson FROM
       )
     ) {{ } }} AS properties
     FROM ({{= it.layerSql }}) AS tbl
-    WHERE st_makevalid({{= it.geomColumn }}) && st_expand(CDB_XYZ_Extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}), cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}})) AS feat) AS featcoll;
+    WHERE {{= it.geomColumn }} && st_expand(CDB_XYZ_Extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}), cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}})) AS feat) AS featcoll;

@@ -1,10 +1,14 @@
 # Version 1.13.1
 2016-mm-dd
 
+Enhancements:
+ - Do not use st_makevalid for && envelope
+
 
 # Version 1.13.0
 2016-02-24
 
+Enhancements:
  - Improved experimental support for turbo-cartocss with number of buckets #442
 
 
