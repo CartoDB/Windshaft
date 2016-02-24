@@ -1,5 +1,7 @@
-# Version 1.12.1
+# Version 1.13.0
 2016-mm-dd
+
+ - Improved experimental support for turbo-cartocss with number of buckets #442
 
 
 # Version 1.12.0
