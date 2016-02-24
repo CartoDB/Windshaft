@@ -1,5 +1,5 @@
 # Version 1.13.1
-2016-mm-dd
+2016-02-24
 
 Enhancements:
  - Do not use st_makevalid for && envelope
