@@ -1,5 +1,5 @@
 # Version 1.13.2
-2016-mm-dd
+2016-02-25
 
 Enhancements:
  - Ignore turbo-cartocss error when it fails and continue to carto parser
