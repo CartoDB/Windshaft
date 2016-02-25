@@ -60,7 +60,6 @@ describe('turbo-cartocss regressions', function() {
         ].join('\n');
         var testClient = new TestClient(makeMapconfig(cartocss));
         testClient.createLayergroup(function(err) {
-            console.log(arguments);
             assert.ok(!err, err);
             done();
         });
