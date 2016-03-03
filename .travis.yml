@@ -1,14 +1,11 @@
-sudo: false
+sudo: true
 
 addons:
-  postgresql: "9.4"
-  apt:
-    packages:
-      - postgresql-plpython-9.4
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
+  postgresql: "9.3"
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y postgresql-plpython-9.3 pkg-config libcairo2-dev libjpeg8-dev libgif-dev
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
