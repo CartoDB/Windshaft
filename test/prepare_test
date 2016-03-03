@@ -38,9 +38,6 @@ createdb -EUTF8 windshaft_test || die "Could not create test database"
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
 
-psql -c 'CREATE LANGUAGE plpythonu' windshaft_test ||
-  die "Could not install plpythonu in test database"
-
 for i in CDB_XYZ CDB_QueryStatements CDB_QueryTables CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins
 do
   echo "...Installing $i"
