@@ -1,41 +1,192 @@
 'use strict';
 
 var assert = require('assert');
-
 var cartocssUtils = require('../../../lib/windshaft/utils/cartocss_utils');
-var cartocss =
-"/** choropleth visualization */\n" +
-"#tuenti_employees_locations_2015{\n" +
-"  polygon-fill: #000;\n" +
-"  polygon-opacity: 0;\n" +
-"  line-color: #FFF;\n" +
-"  line-width: 0.5;\n" +
-"  line-opacity: 0;\n" +
-"  polygon-comp-op: multiply;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [          total_people >=134] {\n" +
-"  polygon-opacity: 0.35;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [ total_people <= 20] {" +
-"\n  polygon-opacity: 0.30;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [ 12 <= popMax] {\n" +
-"  polygon-opacity: 0.20;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [ total_people <= 6] {\n" +
-"  polygon-opacity: 0.18;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [ total_people <= 4] {\n" +
-"  polygon-opacity: 0.14;\n" +
-"}\n" +
-"#tuenti_employees_locations_2015 [ total_people <= 1] {\n" +
-"  polygon-opacity: 0.05;\n" +
-"}";
 
 describe('cartocss utils', function () {
-    it('.getColumnNamesFromCartoCSS() should return a parsed cartocss', function () {
-        var columns = cartocssUtils(cartocss);
+    describe('.getColumnNamesFromCartoCSS()', function () {
 
-        assert.ok(Array.isArray(columns));
+        it('from "text-name: [name]" should return ["name"]', function () {
+            var cartocss =
+            "#cities {\n" +
+            "  text-name: [name];\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'name']);
+        });
+
+        it('from "#cities[1000>population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population>1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000<population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population<1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000>=population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population>=1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000<=population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population<=1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000=population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population=1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000!=population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[population!=1000] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from "#cities[1000>population]" should return ["population"]', function () {
+            var cartocss =
+            "#cities[1000>population] {\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population']);
+        });
+
+        it('from cartocss with multiple expressions should return ["population", "name"]', function () {
+            var cartocss =
+            "#cities[population>1000000] {\n" +
+            "  text-name: [name];\n" +
+            "  text-face-name: 'Open Sans Regular';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population', 'name']);
+        });
+
+        it('from cartocss with multiple and repeated expressions should return ["population", "name"]', function () {
+            var cartocss =
+            "#cities[population>1000000] {\n" +
+            "  text-name: [name];\n" +
+            "}\n" +
+            "#cities[population>100000] {\n" +
+            "  text-name: [name];\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'population', 'name']);
+        });
+
+        it('from cartocss with multiple variables should return ["name"]', function () {
+            var cartocss =
+            "#cities {\n" +
+            "  text-name: [name];\n" +
+            "  shield-name: [name_en];\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'name', 'name_en']);
+        });
+
+        it('from "cities[class=\'metropolis\']" (attribute selector) should return [] (empty array)', function () {
+            var cartocss =
+            "#cities[class='metropolis']{\n" +
+            "  text-name: 'irrelevant';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, []);
+        });
+
+        it('from "#layer[zoom>=4][zoom<=10] {" should return ["zoom"]', function () {
+            var cartocss =
+            "#layer[zoom>=4][zoom<=10] {\n" +
+            "  line-color: red;\n" +
+            "}\n";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'zoom']);
+        });
+
+        it('from "[zoom=8] { line-width: 3; }" should return ["zoom"]', function () {
+            var cartocss =
+            "#layer {\n" +
+            "  [zoom=8] { line-width: 3; }\n" +
+            "}\n";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, [ 'zoom']);
+        });
+
+        it('from "[zoom>=4][population>1000000]" should return ["zoom"]', function () {
+            var cartocss =
+            "#cities {\n" +
+            "  [zoom>=4][population>1000000]{\n" +
+            "    text-face-name: 'Open Sans Regular';\n" +
+            "  }\n" +
+            "}\n";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, ['zoom', 'population']);
+        });
+
+        it('from cartocss with multiple numeric filters should return ["zoom", "population", "name"]', function () {
+            var cartocss =
+            "#cities {\n" +
+            "  [zoom>=4][population>1000000],\n" +
+            "  [zoom>=5][population>500000],\n" +
+            "  [zoom>=6][population>100000] {\n" +
+            "    text-name: [name];\n" +
+            "    text-face-name: 'Open Sans Regular'\n" +
+            "  }\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, ['zoom', 'population', 'name']);
+        });
+
+        it('from "#cities[address=~\'.*14th Street N.*\']{" should return ["address"]', function () {
+            var cartocss =
+            "#cities[address=~'.*14th Street N.*']{\n" +
+            "  text-name: 'irrelevant';\n" +
+            "}";
+
+            var columns = cartocssUtils(cartocss);
+            assert.deepEqual(columns, ['address']);
+        });
+
     });
 });
