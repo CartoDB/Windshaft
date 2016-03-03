@@ -16,9 +16,11 @@ FROM (
         st_intersection(
         {{ } }}
           st_simplify(
-            st_makevalid(tbl.{{= it.geomColumn }}),
-            cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0),
-            true
+            st_removerepeatedpoints(
+              st_makevalid(tbl.{{= it.geomColumn }}),
+              cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
+            ),
+            cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
           ),
           st_expand(
             cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
@@ -46,11 +48,12 @@ FROM (
     FROM
       ({{= it.layerSql }}) AS tbl
     WHERE (
-      {{= it.geomColumn }}
-      &&
-      st_expand(
-        cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
-        cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
+      st_intersects(
+        {{= it.geomColumn }},
+        st_expand(
+          cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
+          cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
+        )
       )
     )
   ) AS feature
