@@ -16,7 +16,7 @@ describe('Rendering geojsons', function() {
 
         it('should return a geojson with points', function (done) {
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                assert.ok(!err);
+                assert.ok(!err, err);
                 assert.deepEqualGeoJSON(geojsonTile, geojsonValue.singlelayer);
                 done();
             });
@@ -28,7 +28,7 @@ describe('Rendering geojsons', function() {
             var polygon = geojsonValue.singlelayerPolygon.features[0].coordinates;
 
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                assert.ok(!err);
+                assert.ok(!err, err);
                 assert.deepEqual(geojsonTile.features[0].coordinates, polygon);
                 done();
             });
@@ -37,7 +37,7 @@ describe('Rendering geojsons', function() {
 
         it('should return an empty geojson\'s features if tile requested is out of bound', function(done) {
             this.testClient.getTile(1, 4011, 3088, this.options, function (err, geojsonTile) {
-                assert.ok(!err);
+                assert.ok(!err, err);
                 assert.deepEqual(geojsonTile.features, []);
                 done();
             });
@@ -45,7 +45,7 @@ describe('Rendering geojsons', function() {
 
         it('should return an empty geojson\' features if tile requested has not data', function(done) {
             this.testClient.getTile(29, 4011, 3088, this.options, function (err, geojsonTile) {
-                assert.ok(!err);
+                assert.ok(!err, err);
                 assert.deepEqual(geojsonTile.features, []);
                 done();
             });
@@ -56,7 +56,7 @@ describe('Rendering geojsons', function() {
             this.testClient = new TestClient(this.mapConfig);
 
             this.testClient.getTile(13, 4011, 3088, this.options, function (err, geojsonTile) {
-                assert.ok(!err);
+                assert.ok(!err, err);
                 assert.ok(geojsonTile.features[0].properties);
                 assert.ok(geojsonTile.features[0].properties.name);
                 assert.ok(geojsonTile.features[0].properties.address);
