@@ -12,7 +12,7 @@ describe('cartocss utils', function () {
             "  text-name: [name];\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'name']);
         });
 
@@ -22,7 +22,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -32,7 +32,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -42,7 +42,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -52,7 +52,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -62,7 +62,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -72,7 +72,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -82,7 +82,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population']);
         });
 
@@ -93,7 +93,7 @@ describe('cartocss utils', function () {
             "  text-face-name: 'Open Sans Regular';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population', 'name']);
         });
 
@@ -106,7 +106,7 @@ describe('cartocss utils', function () {
             "  text-name: [name];\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'population', 'name']);
         });
 
@@ -117,7 +117,7 @@ describe('cartocss utils', function () {
             "  shield-name: [name_en];\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'name', 'name_en']);
         });
 
@@ -127,7 +127,7 @@ describe('cartocss utils', function () {
             "  text-name: 'irrelevant';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, []);
         });
 
@@ -137,7 +137,7 @@ describe('cartocss utils', function () {
             "  line-color: red;\n" +
             "}\n";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'zoom']);
         });
 
@@ -147,7 +147,7 @@ describe('cartocss utils', function () {
             "  [zoom=8] { line-width: 3; }\n" +
             "}\n";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, [ 'zoom']);
         });
 
@@ -159,7 +159,7 @@ describe('cartocss utils', function () {
             "  }\n" +
             "}\n";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, ['zoom', 'population']);
         });
 
@@ -174,7 +174,7 @@ describe('cartocss utils', function () {
             "  }\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, ['zoom', 'population', 'name']);
         });
 
@@ -184,7 +184,7 @@ describe('cartocss utils', function () {
             "  text-name: 'irrelevant';\n" +
             "}";
 
-            var columns = cartocssUtils(cartocss);
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, ['address']);
         });
 
