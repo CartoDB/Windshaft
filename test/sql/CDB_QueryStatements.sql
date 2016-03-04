@@ -1,14 +1,16 @@
+-- DUMMY IMPLEMENTATION
+-- Ref: https://github.com/CartoDB/cartodb-postgresql/blob/master/scripts-available/CDB_QueryStatements.sql
+-- Originally implemented in plpython for performance reasons
+
 -- Return an array of statements found in the given query text
 --
 -- Regexp curtesy of Hubert Lubaczewski (depesz)
--- Implemented in plpython for performance reasons
 --
 CREATE OR REPLACE FUNCTION CDB_QueryStatements(query text)
 RETURNS SETOF TEXT AS $$
-  import re
-  pat = re.compile( r'''((?:[^'"$;]+|"[^"]*"|'[^']*'|(\$[^$]*\$).*?\2)+)''', re.DOTALL )
-  for match in pat.findall(query):
-    cleaned = match[0].strip()
-    if ( cleaned ):
-      yield cleaned
-$$ language 'plpythonu' IMMUTABLE STRICT;
+  with matches as (
+    select regexp_matches($1, $regexp$((?:[^'"$;]+|"[^"]*"|'[^']*'|(\$[^$]*\$).*?\2)+)$regexp$, 'g') as m
+  )
+  select btrim(m[1]) from matches
+$$
+LANGUAGE SQL IMMUTABLE STRICT;
