@@ -15,12 +15,18 @@ FROM (
         {{ } else { }}
         st_intersection(
         {{ } }}
-          st_simplify(
-            st_removerepeatedpoints(
+          st_makevalid(
+            st_simplify(
+              {{ if (it.removeRepeatedPoints) { }}
+              st_removerepeatedpoints(
+                st_makevalid(tbl.{{= it.geomColumn }}),
+                cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
+              ),
+              {{ } else { }}
               st_makevalid(tbl.{{= it.geomColumn }}),
+              {{ } }}
               cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
-            ),
-            cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
+            )
           ),
           st_expand(
             cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
