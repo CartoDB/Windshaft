@@ -36,5 +36,6 @@ FROM (
                         CDB_XYZ_Extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
                         cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
                     )
-    ) AS feat
-) AS featcoll;
+        ) AS feat
+    )
+AS featcoll;
