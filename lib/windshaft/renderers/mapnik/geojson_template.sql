@@ -4,7 +4,7 @@ FROM (
         array_to_json(array_agg(feat)) AS features
         FROM (
             SELECT 'Feature' AS TYPE,
-            st_asgeojson(
+            ST_AsGeoJSON(
                 {{ if (it.clipByBox2d) { }}
                     ST_ClipByBox2D
                 {{ } else { }}
