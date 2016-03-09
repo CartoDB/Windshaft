@@ -39,13 +39,11 @@ FROM (
                 )
             {{ } }} AS properties
             FROM ({{= it.layerSql }}) AS tbl
-            WHERE (
-                st_intersects(
-                    {{= it.geomColumn }},
-                    st_expand(
-                        CDB_XYZ_Extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
-                        cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
-                    )
+            WHERE st_intersects(
+                {{= it.geomColumn }},
+                st_expand(
+                    CDB_XYZ_Extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
+                    cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
                 )
             )
         ) AS feat
