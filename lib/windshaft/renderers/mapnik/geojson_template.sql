@@ -3,7 +3,8 @@ FROM (
     SELECT 'FeatureCollection' AS TYPE,
         array_to_json(array_agg(feat)) AS features
         FROM (
-            SELECT 'Feature' AS TYPE, st_asgeojson(
+            SELECT 'Feature' AS TYPE,
+            st_asgeojson(
                 {{ if (it.clipByBox2d) { }}
                     ST_ClipByBox2D
                 {{ } else { }}
