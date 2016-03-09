@@ -32,7 +32,7 @@ FROM (
             {{ if (!it.columns || it.columns.length === 0) { }}
                 '{}'::json
             {{ } else { }}
-                row_to_json(SELECT l FROM (SELECT {{=it.columns}}) AS l)
+                row_to_json((SELECT l FROM (SELECT {{=it.columns}}) AS l))
             {{ } }} AS properties
             FROM ({{= it.layerSql }}) AS tbl
             WHERE st_intersects(
