@@ -1,6 +1,8 @@
-# Version 1.13.3
-2016-mm-dd
+# Version 1.14.0
+2016-03-14
 
+Announcements:
+ - Removed experimental support for turbo-cartocss [#459]
 
 # Version 1.13.2
 2016-02-25
