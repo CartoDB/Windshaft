@@ -1,5 +1,9 @@
-# Version 1.14.1
-2016-mm-dd
+# Version 1.15.0
+2016-03-15
+
+Announcements:
+ - Added cartocss to metadata of layergroup[#462]
+
 
 # Version 1.14.0
 2016-03-14
