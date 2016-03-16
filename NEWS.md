@@ -1,6 +1,26 @@
-# Version 1.13.3
+# Version 1.16.1
 2016-mm-dd
 
+
+# Version 1.16.0
+2016-03-16
+
+Announcements:
+ - Now GeoJSON Renderer fills properties with columns that are required in CartoCSS, Widgets and Interactivity.
+
+
+# Version 1.15.0
+2016-03-15
+
+Announcements:
+ - Added cartocss to metadata of layergroup[#462]
+
+
+# Version 1.14.0
+2016-03-14
+
+Announcements:
+ - Removed experimental support for turbo-cartocss [#459]
 
 # Version 1.13.2
 2016-02-25

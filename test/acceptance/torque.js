@@ -102,8 +102,19 @@ describe('torque', function() {
             var tm0 = tm[0];
             assert.ok(tm0, 'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
             var expectedTorqueMetadata = {
-                "start": 0, "end": 86400000, "steps": 2, "data_steps": 2, "column_type": "date"
+                "start": 0,
+                "end": 86400000,
+                "steps": 2,
+                "data_steps": 2,
+                "column_type": "date",
+                "cartocss":["Map {" +
+                    " -torque-frame-count:2;" +
+                    " -torque-resolution:3;" +
+                    " -torque-time-attribute:d;" +
+                    " -torque-aggregation-function:'count(id)';" +
+                " }"].join('')
             };
+
             assert.deepEqual(tm0, expectedTorqueMetadata);
             assert.deepEqual(meta.layers[0].meta, expectedTorqueMetadata);
 
