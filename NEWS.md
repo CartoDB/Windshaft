@@ -1,5 +1,8 @@
-# Version 1.15.1
-2016-mm-dd
+# Version 1.16.0
+2016-03-16
+
+Announcements:
+ - Now GeoJSON Renderer fills properties with columns that are required in CartoCSS, Widgets and Interactivity.
 
 
 # Version 1.15.0
