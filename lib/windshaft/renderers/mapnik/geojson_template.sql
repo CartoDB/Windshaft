@@ -16,8 +16,7 @@ FROM (
                         ){{?it.removeRepeatedPoints}},
                         {{= it.xyzResolution }} * {{= it.bufferSize}}
                     ){{?}},
-                    {{= it.xyzResolution }} * {{= it.bufferSize}},
-                    true
+                    {{= it.xyzResolution }} * {{= it.bufferSize}}
                 )
             )::json AS geometry,
             {{ if (!it.columns || it.columns.length === 0) { }}
