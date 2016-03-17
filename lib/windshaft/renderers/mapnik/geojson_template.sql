@@ -4,34 +4,31 @@ FROM (
         array_to_json(array_agg(feature)) AS features
         FROM (
             SELECT 'Feature' AS TYPE,
-            ST_AsGeoJSON({{= it.clipFn }}(
-                ST_MakeValid(
-                    ST_Simplify(
-                        {{ if (it.removeRepeatedPoints) { }}
-                        ST_RemoveRepeatedPoints(
+            ST_AsGeoJSON(
+                ST_Simplify(
+                    {{?it.removeRepeatedPoints}}ST_RemoveRepeatedPoints({{?}}
+                        {{= it.clipFn }}(
                             ST_MakeValid(tbl.{{= it.geomColumn }}),
-                            {{= it.xyzResolution }}
-                        ),
-                        {{ } else { }}
-                        ST_MakeValid(tbl.{{= it.geomColumn }}),
-                        {{ } }}
-                        {{= it.xyzResolution }}
-                    )
-                ),
-                ST_Expand(
-                    ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
-                    {{= it.xyzResolution }} * {{= it.bufferSize}}
+                            ST_Expand(
+                                ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
+                                {{= it.xyzResolution }} * {{= it.bufferSize}}
+                            )
+                        ){{?it.removeRepeatedPoints}},
+                        {{= it.xyzResolution }} * {{= it.bufferSize}}
+                    ){{?}},
+                    {{= it.xyzResolution }} * {{= it.bufferSize}},
+                    true
                 )
-            ))::json AS geometry,
+            )::json AS geometry,
             {{ if (!it.columns || it.columns.length === 0) { }}
                 '{}'::json
             {{ } else { }}
-                row_to_json((SELECT l FROM (SELECT {{=it.columns}}) AS l))
+                row_to_json((SELECT l FROM (SELECT {{= it.columns }}) AS l))
             {{ } }} AS properties
             FROM ({{= it.layerSql }}) AS tbl
             WHERE (
                 ST_Intersects(
-                    {{= it.geomColumn }},
+                    tbl.{{= it.geomColumn }},
                     ST_Expand(
                         ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
                         {{= it.xyzResolution }} * {{= it.bufferSize}}
