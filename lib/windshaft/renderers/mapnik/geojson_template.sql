@@ -10,12 +10,12 @@ FROM (
                         {{ if (it.removeRepeatedPoints) { }}
                         ST_RemoveRepeatedPoints(
                             ST_MakeValid(tbl.{{= it.geomColumn }}),
-                            {{= it.xyzResolution }} * (1.0 / 20.0)
+                            {{= it.xyzResolution }}
                         ),
                         {{ } else { }}
                         ST_MakeValid(tbl.{{= it.geomColumn }}),
                         {{ } }}
-                        {{= it.xyzResolution }} * (1.0 / 20.0)
+                        {{= it.xyzResolution }}
                     )
                 ),
                 ST_Expand(
