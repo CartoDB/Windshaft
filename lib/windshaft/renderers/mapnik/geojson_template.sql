@@ -10,17 +10,17 @@ FROM (
                         {{ if (it.removeRepeatedPoints) { }}
                         st_removerepeatedpoints(
                             st_makevalid(tbl.{{= it.geomColumn }}),
-                            cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
+                            {{= it.xyzResolution }} * (1.0 / 20.0)
                         ),
                         {{ } else { }}
                         st_makevalid(tbl.{{= it.geomColumn }}),
                         {{ } }}
-                        cdb_xyz_resolution({{= it.zoom }}) * (1.0 / 20.0)
+                        {{= it.xyzResolution }} * (1.0 / 20.0)
                     )
                 ),
                 st_expand(
-                    cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
-                    cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
+                    ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
+                    {{= it.xyzResolution }} * {{= it.bufferSize}}
                 )
             ))::json AS geometry,
             {{ if (!it.columns || it.columns.length === 0) { }}
@@ -33,8 +33,8 @@ FROM (
                 st_intersects(
                     {{= it.geomColumn }},
                     st_expand(
-                        cdb_xyz_extent({{= it.coord.x }}, {{= it.coord.y }}, {{= it.zoom }}),
-                        cdb_xyz_resolution({{= it.zoom }}) * {{= it.bufferSize}}
+                        ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
+                        {{= it.xyzResolution }} * {{= it.bufferSize}}
                     )
                 )
             )
