@@ -4,21 +4,21 @@ FROM (
         array_to_json(array_agg(feature)) AS features
         FROM (
             SELECT 'Feature' AS TYPE,
-            st_asgeojson({{= it.clipFn }}(
-                st_makevalid(
-                    st_simplify(
+            ST_AsGeoJSON({{= it.clipFn }}(
+                ST_MakeValid(
+                    ST_Simplify(
                         {{ if (it.removeRepeatedPoints) { }}
-                        st_removerepeatedpoints(
-                            st_makevalid(tbl.{{= it.geomColumn }}),
+                        ST_RemoveRepeatedPoints(
+                            ST_MakeValid(tbl.{{= it.geomColumn }}),
                             {{= it.xyzResolution }} * (1.0 / 20.0)
                         ),
                         {{ } else { }}
-                        st_makevalid(tbl.{{= it.geomColumn }}),
+                        ST_MakeValid(tbl.{{= it.geomColumn }}),
                         {{ } }}
                         {{= it.xyzResolution }} * (1.0 / 20.0)
                     )
                 ),
-                st_expand(
+                ST_Expand(
                     ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
                     {{= it.xyzResolution }} * {{= it.bufferSize}}
                 )
@@ -30,9 +30,9 @@ FROM (
             {{ } }} AS properties
             FROM ({{= it.layerSql }}) AS tbl
             WHERE (
-                st_intersects(
+                ST_Intersects(
                     {{= it.geomColumn }},
-                    st_expand(
+                    ST_Expand(
                         ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
                         {{= it.xyzResolution }} * {{= it.bufferSize}}
                     )
