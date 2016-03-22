@@ -35,4 +35,5 @@ FROM (
                 )
             )
         ) AS feature
+        WHERE geometry IS NOT NULL
 ) AS featurecollection;
