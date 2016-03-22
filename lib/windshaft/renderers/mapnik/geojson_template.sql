@@ -29,7 +29,14 @@ __simplified_geometries AS (
     )
 ),
 __filtered_geometries AS (
-    SELECT * FROM __simplified_geometries WHERE NOT ST_IsEmpty(__the_geometry)
+    SELECT {{ if (it.columns && it.columns.length > 0) { }}
+        {{= it.columns }},
+    {{ } }}
+    CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
+        THEN null::geometry
+        ELSE __the_geometry
+    END AS __the_geometry
+    FROM __simplified_geometries
 )
 SELECT row_to_json(featurecollection) as geojson
 FROM (
