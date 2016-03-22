@@ -14,7 +14,7 @@ FROM (
                                 {{= it.xyzResolution }} * {{= it.bufferSize}}
                             )
                         ){{?it.removeRepeatedPoints}},
-                        {{= it.xyzResolution }} * {{= it.bufferSize}}
+                        {{= it.xyzResolution }} * {{= it.removeRepeatedPointsTolerance}}
                     ){{?}},
                     {{= it.xyzResolution }} * {{= it.simplifyDpRatio}}
                 )
