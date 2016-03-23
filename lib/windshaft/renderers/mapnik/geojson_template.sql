@@ -4,7 +4,7 @@ __dumped AS (
         {{= it.columns }},
     {{ } }}
     {{= it.geomColumn }},
-    (st_dump(ST_MakeValid({{= it.geomColumn }}))).geom __dumped_geometry
+    (ST_Dump(ST_MakeValid({{= it.geomColumn }}))).geom __dumped_geometry
     FROM ({{= it.layerSql }}) AS __cdb_query
     WHERE (
         ST_Intersects(
