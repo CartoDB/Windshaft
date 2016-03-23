@@ -42,15 +42,8 @@ __collected_geometries AS (
     SELECT {{ if (it.columns && it.columns.length > 0) { }}
         {{= it.columns }},
     {{ } }}
-    CASE WHEN ST_NPoints({{= it.geomColumn }}) > 1
+    CASE WHEN ST_NPoints({{= it.geomColumn }}) = 1
         THEN
-            ST_Collect(
-                CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
-                    THEN ST_Envelope(__dumped_geometry)
-                    ELSE __the_geometry
-                END
-            )
-        ELSE
             ST_GeometryN(
                 ST_Collect(
                     CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
@@ -59,6 +52,13 @@ __collected_geometries AS (
                     END
                 ),
                 1
+            )
+        ELSE
+            ST_Collect(
+                CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
+                    THEN ST_Envelope(__dumped_geometry)
+                    ELSE __the_geometry
+                END
             )
     END AS __the_geometry
     FROM __simplified_geometries
