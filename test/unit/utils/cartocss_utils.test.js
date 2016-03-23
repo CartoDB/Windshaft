@@ -211,5 +211,15 @@ describe('cartocss utils', function () {
             });
         });
 
+        it('numbers regression', function () {
+            var cartocss = [
+                '#regression {',
+                '  line-dasharray: 4, 4;',
+                '}'
+            ].join('\n');
+            var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
+            assert.deepEqual(columns, []);
+        });
+
     });
 });
