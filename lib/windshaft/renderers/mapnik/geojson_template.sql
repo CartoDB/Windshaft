@@ -1,13 +1,23 @@
 WITH
+__dumped AS (
+    SELECT {{ if (it.columns && it.columns.length > 0) { }}
+        {{= it.columns }},
+    {{ } }}
+    {{= it.geomColumn }},
+    (st_dump(ST_MakeValid({{= it.geomColumn }}))).geom __dumped_geometry
+    FROM ({{= it.layerSql }}) AS __cdb_query
+),
 __simplified_geometries AS (
     SELECT
     {{ if (it.columns && it.columns.length > 0) { }}
         {{= it.columns }},
     {{ } }}
+    {{= it.geomColumn }},
+    __dumped_geometry,
     ST_Simplify(
         {{?it.removeRepeatedPoints}}ST_RemoveRepeatedPoints({{?}}
             {{= it.clipFn }}(
-                ST_MakeValid(__cdb_query.{{= it.geomColumn }}),
+                __dumped_geometry,
                 ST_Expand(
                     ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
                     {{= it.xyzResolution }} * {{= it.bufferSize}}
@@ -17,10 +27,10 @@ __simplified_geometries AS (
         ){{?}},
         {{= it.xyzResolution }} * {{= it.simplifyDpRatio}}
     ) __the_geometry
-    FROM ({{= it.layerSql }}) AS __cdb_query
+    FROM __dumped
     WHERE (
         ST_Intersects(
-            __cdb_query.{{= it.geomColumn }},
+            __dumped_geometry,
             ST_Expand(
                 ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
                 {{= it.xyzResolution }} * {{= it.bufferSize}}
@@ -28,15 +38,34 @@ __simplified_geometries AS (
         )
     )
 ),
-__filtered_geometries AS (
+__collected_geometries AS (
     SELECT {{ if (it.columns && it.columns.length > 0) { }}
         {{= it.columns }},
     {{ } }}
-    CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
-        THEN null::geometry
-        ELSE __the_geometry
+    CASE WHEN ST_NPoints({{= it.geomColumn }}) > 1
+        THEN
+        ST_Collect(
+            CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
+                THEN ST_Envelope({{= it.geomColumn }})
+                ELSE __the_geometry
+            END
+        )
+        ELSE
+            ST_GeometryN(
+                ST_Collect(
+                    CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
+                        THEN ST_Envelope({{= it.geomColumn }})
+                        ELSE __the_geometry
+                    END
+                ),
+                1
+            )
     END AS __the_geometry
     FROM __simplified_geometries
+    GROUP BY {{ if (it.columns && it.columns.length > 0) { }}
+        {{= it.columns }},
+    {{ } }}
+    {{= it.geomColumn }}
 )
 SELECT row_to_json(featurecollection) as geojson
 FROM (
@@ -50,6 +79,6 @@ FROM (
             {{ } else { }}
                 row_to_json((SELECT l FROM (SELECT {{= it.columns }}) AS l))
             {{ } }} AS properties
-            FROM __filtered_geometries
+            FROM __collected_geometries
         ) AS feature
 ) AS featurecollection;

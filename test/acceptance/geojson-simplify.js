@@ -11,6 +11,10 @@ describe('geojson-simplify', function() {
         this.options = { format: 'geojson', layer: 0 };
     });
 
+    function mayBeBoundingBox(coordinates) {
+        assert.equal(coordinates.length, 5);
+    }
+
     it('should return all features but null geometries for empty/null after simplify', function (done) {
         this.testClient.getTile(0, 0, 0, this.options, function(err, geojsonTile) {
             assert.ok(!err, err);
@@ -18,10 +22,23 @@ describe('geojson-simplify', function() {
             assert.equal(geojsonTile.features.length, 3);
             assert.equal(geojsonTile.features[0].properties.name, 'Estonia');
             assert.notEqual(geojsonTile.features[0].geometry, null);
-            assert.equal(geojsonTile.features[1].properties.name, 'Monaco');
-            assert.equal(geojsonTile.features[1].geometry, null);
-            assert.equal(geojsonTile.features[2].properties.name, 'Maldives');
-            assert.equal(geojsonTile.features[2].geometry, null);
+
+            // Maldives and Monaco geometries will have bounding boxes for each of their geometries
+            // as real geometries are being removed by simplification
+
+            assert.equal(geojsonTile.features[1].properties.name, 'Maldives');
+            // keeps 67 polygons
+            assert.equal(geojsonTile.features[1].geometry.coordinates.length, 67);
+            // however all of them are just bounding boxes
+            assert.equal(geojsonTile.features[1].geometry.coordinates[0].length, 1);
+            geojsonTile.features[1].geometry.coordinates[0].forEach(mayBeBoundingBox);
+
+            assert.equal(geojsonTile.features[2].properties.name, 'Monaco');
+            // keeps 1 polygon
+            assert.equal(geojsonTile.features[2].geometry.coordinates.length, 1);
+            // but it a simple bbox one
+            assert.equal(geojsonTile.features[2].geometry.coordinates[0].length, 1);
+            geojsonTile.features[2].geometry.coordinates[0].forEach(mayBeBoundingBox);
 
             done();
         });
