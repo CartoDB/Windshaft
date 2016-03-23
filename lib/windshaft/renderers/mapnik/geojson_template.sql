@@ -6,6 +6,15 @@ __dumped AS (
     {{= it.geomColumn }},
     (st_dump(ST_MakeValid({{= it.geomColumn }}))).geom __dumped_geometry
     FROM ({{= it.layerSql }}) AS __cdb_query
+    WHERE (
+        ST_Intersects(
+            {{= it.geomColumn }},
+            ST_Expand(
+                ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
+                {{= it.xyzResolution }} * {{= it.bufferSize}}
+            )
+        )
+    )
 ),
 __simplified_geometries AS (
     SELECT
@@ -28,15 +37,6 @@ __simplified_geometries AS (
         {{= it.xyzResolution }} * {{= it.simplifyDpRatio}}
     ) __the_geometry
     FROM __dumped
-    WHERE (
-        ST_Intersects(
-            __dumped_geometry,
-            ST_Expand(
-                ST_MakeEnvelope({{= it.extent.xmin }}, {{= it.extent.ymin }}, {{= it.extent.xmax }}, {{= it.extent.ymax }}, {{= it.srid }}),
-                {{= it.xyzResolution }} * {{= it.bufferSize}}
-            )
-        )
-    )
 ),
 __collected_geometries AS (
     SELECT {{ if (it.columns && it.columns.length > 0) { }}
