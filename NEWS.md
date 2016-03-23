@@ -1,5 +1,6 @@
 # Version 1.16.1
 2016-mm-dd
+ - Improves column extraction from cartocss $466
 
 
 # Version 1.16.0
