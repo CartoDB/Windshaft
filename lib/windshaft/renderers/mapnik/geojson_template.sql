@@ -44,12 +44,12 @@ __collected_geometries AS (
     {{ } }}
     CASE WHEN ST_NPoints({{= it.geomColumn }}) > 1
         THEN
-        ST_Collect(
-            CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
-                THEN ST_Envelope(__dumped_geometry)
-                ELSE __the_geometry
-            END
-        )
+            ST_Collect(
+                CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
+                    THEN ST_Envelope(__dumped_geometry)
+                    ELSE __the_geometry
+                END
+            )
         ELSE
             ST_GeometryN(
                 ST_Collect(
