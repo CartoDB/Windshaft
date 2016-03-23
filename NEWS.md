@@ -4,7 +4,7 @@
 
 # Version 1.16.1
 2016-03-23
- - Improves column extraction from cartocss $466
+ - Improves column extraction from cartocss #466
 
 
 # Version 1.16.0
