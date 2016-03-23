@@ -46,7 +46,7 @@ __collected_geometries AS (
         THEN
         ST_Collect(
             CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
-                THEN ST_Envelope({{= it.geomColumn }})
+                THEN ST_Envelope(__dumped_geometry)
                 ELSE __the_geometry
             END
         )
@@ -54,7 +54,7 @@ __collected_geometries AS (
             ST_GeometryN(
                 ST_Collect(
                     CASE WHEN ST_IsEmpty(__the_geometry) OR __the_geometry IS NULL
-                        THEN ST_Envelope({{= it.geomColumn }})
+                        THEN ST_Envelope(__dumped_geometry)
                         ELSE __the_geometry
                     END
                 ),
