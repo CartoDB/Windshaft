@@ -13,7 +13,8 @@ describe('Rendering multiple geojson layers', function() {
         options: {
             sql: 'select * from test_table limit 2',
             cartocss_version: cartocssVersion,
-            cartocss: cartocss
+            cartocss: cartocss,
+            interactivity: 'cartodb_id'
         }
     };
 
@@ -22,7 +23,8 @@ describe('Rendering multiple geojson layers', function() {
         options: {
             sql: 'select * from test_table_2 limit 4',
             cartocss_version: cartocssVersion,
-            cartocss: cartocss
+            cartocss: cartocss,
+            interactivity: 'cartodb_id'
         }
     };
 
@@ -31,7 +33,8 @@ describe('Rendering multiple geojson layers', function() {
         options: {
             sql: 'select * from test_table_3 limit 3',
             cartocss_version: cartocssVersion,
-            cartocss: cartocss
+            cartocss: cartocss,
+            interactivity: 'cartodb_id'
         }
     };
 
