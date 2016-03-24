@@ -271,8 +271,8 @@ module.exports.makeValidGeojson = {
     {
       "type": "Feature",
       "geometry": {
-        "type": "LineString",
-        "coordinates": [
+        "type": "MultiLineString",
+        "coordinates": [[
           [
             0,
             0
@@ -281,9 +281,11 @@ module.exports.makeValidGeojson = {
             1,
             1
           ]
-        ]
+        ]]
       },
-      "properties": {}
+      "properties": {
+          "cartodb_id": 1
+      }
     },
     {
       "type": "Feature",
@@ -312,7 +314,9 @@ module.exports.makeValidGeojson = {
           ]
         ]
       },
-      "properties": {}
+      "properties": {
+          "cartodb_id": 2
+      }
     }
   ]
 };
