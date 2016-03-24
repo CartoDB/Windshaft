@@ -29,7 +29,7 @@ assert.deepEqualGeoJSON = function(actual, expected) {
         return assert.deepEqualGeoJSON(featureCollection, expectedFeatureCollections[idx]);
     });
 
-    var featuresByCartodbId = expected.features.reduce(cartodbIdFeatureReducer, {});
+    var featuresByCartodbId = actual.features.reduce(cartodbIdFeatureReducer, {});
     var expectedFeaturesByCartodbId = expected.features.reduce(cartodbIdFeatureReducer, {});
 
     Object.keys(featuresByCartodbId).forEach(function(cartodbId) {
@@ -52,6 +52,9 @@ assert.deepEqualGeoJSON = function(actual, expected) {
 };
 
 function cartodbIdFeatureReducer(byIdAcc, feature) {
+    if (!feature.properties.hasOwnProperty('cartodb_id')) {
+        throw new Error('Expected `cartodb_id` property not found in feature');
+    }
     byIdAcc[feature.properties.cartodb_id] = feature;
     return byIdAcc;
 }
