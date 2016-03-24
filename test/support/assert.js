@@ -24,13 +24,17 @@ assert.deepEqualGeoJSON = function(actual, expected) {
     assert.equal(actual.features.length, expected.features.length);
 
     var featureCollections = actual.features.filter(featureCollectionFilter);
-    var expectedFeatureCollections = actual.features.filter(featureCollectionFilter);
+    var expectedFeatureCollections = expected.features.filter(featureCollectionFilter);
     featureCollections.forEach(function(featureCollection, idx) {
-        return assert.deepEqualGeoJSON(featureCollection, expectedFeatureCollections[idx]);
+        assert.deepEqualGeoJSON(featureCollection, expectedFeatureCollections[idx]);
     });
 
-    var featuresByCartodbId = actual.features.reduce(cartodbIdFeatureReducer, {});
-    var expectedFeaturesByCartodbId = expected.features.reduce(cartodbIdFeatureReducer, {});
+    var featuresByCartodbId = actual.features
+        .filter(nonFeatureCollectionFilter)
+        .reduce(cartodbIdFeatureReducer, {});
+    var expectedFeaturesByCartodbId = expected.features
+        .filter(nonFeatureCollectionFilter)
+        .reduce(cartodbIdFeatureReducer, {});
 
     Object.keys(featuresByCartodbId).forEach(function(cartodbId) {
         var feature = featuresByCartodbId[cartodbId];
@@ -61,6 +65,10 @@ function cartodbIdFeatureReducer(byIdAcc, feature) {
 
 function featureCollectionFilter(feature) {
     return feature.type === 'FeatureCollection';
+}
+
+function nonFeatureCollectionFilter(feature) {
+    return !featureCollectionFilter(feature);
 }
 
 /**
