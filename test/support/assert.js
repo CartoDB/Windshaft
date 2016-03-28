@@ -41,7 +41,11 @@ assert.deepEqualGeoJSON = function(actual, expected) {
         var expectedFeature = expectedFeaturesByCartodbId[cartodbId];
         assert.ok(expectedFeature, 'missing expected feature for cartodb_id=' + cartodbId);
 
-        assert.deepEqual(feature.geometry, expectedFeature.geometry);
+        assert.deepEqual(
+            feature.geometry, expectedFeature.geometry,
+            'Error at cartodb_id=' + cartodbId + ': ' +
+                [feature.geometry, expectedFeature.geometry].map(JSON.stringify).join(' vs ')
+        );
 
         Object.keys(feature.properties).forEach(function(pKey) {
             if (pKey.match(/_at$/)) {
