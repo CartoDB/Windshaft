@@ -87,8 +87,8 @@ describe('Rendering geojsons', function() {
     describe('Make valid invalid geometries', function() {
       before(function () {
         this.mapConfig = TestClient.singleLayerMapConfig(
-          'SELECT 1 as cartodb_id, ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 1 1)\') As the_geom_webmercator ' +
-          ' UNION ALL SELECT 2 as cartodb_id, ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 1 1, 1 2, 1 1, 0 0))\') ' +
+          'SELECT 1 as cartodb_id, ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 100000 100000)\') As the_geom_webmercator ' +
+          ' UNION ALL SELECT 2 as cartodb_id, ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 100000 100000, 100000 200000, 100000 100000, 0 0))\') ' +
           ' As the_geom_webmercator', null, null, 'cartodb_id');
 
         this.testClient = new TestClient(this.mapConfig);
@@ -96,7 +96,7 @@ describe('Rendering geojsons', function() {
       });
 
       it('should return a geojson with points', function (done) {
-          this.testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+          this.testClient.getTile(7, 64, 63, this.options, function (err, geojsonTile) {
               assert.ok(!err, err);
               assert.deepEqualGeoJSON(geojsonTile, geojsonValue.makeValidGeojson);
               done();
