@@ -42,7 +42,7 @@ __collected_geometries AS (
     SELECT {{ if (it.columns && it.columns.length > 0) { }}
         {{= it.columns }},
     {{ } }}
-    CASE WHEN ST_NPoints({{= it.geomColumn }}) = 1
+    CASE WHEN ST_NumGeometries({{= it.geomColumn }}) = 1
         THEN
             ST_GeometryN(
                 ST_Collect(

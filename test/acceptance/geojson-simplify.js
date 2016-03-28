@@ -36,10 +36,9 @@ describe('geojson-simplify', function() {
             assert.equal(geojsonTile.features[2].properties.name, 'Monaco');
             // keeps 1 polygon
             assert.equal(geojsonTile.features[2].geometry.coordinates.length, 1);
-            // but it a simple bbox one
-            assert.equal(geojsonTile.features[2].geometry.type, 'MultiPolygon');
-            assert.equal(geojsonTile.features[2].geometry.coordinates[0].length, 1);
-            geojsonTile.features[2].geometry.coordinates[0].forEach(mayBeBoundingBox);
+            // but it a simple bbox one, and it stays as a simple polygon
+            assert.equal(geojsonTile.features[2].geometry.type, 'Polygon');
+            mayBeBoundingBox(geojsonTile.features[2].geometry.coordinates[0]);
 
             done();
         });
