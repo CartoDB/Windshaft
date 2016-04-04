@@ -3,7 +3,7 @@ __dumped AS (
     SELECT {{ if (it.columns && it.columns.length > 0) { }}
         {{= it.columns }},
     {{ } }}
-    {{= it.geomColumn }},
+    ST_MakeValid({{= it.geomColumn }}) {{= it.geomColumn }},
     (ST_Dump(ST_MakeValid({{= it.geomColumn }}))).geom __dumped_geometry
     FROM ({{= it.layerSql }}) AS __cdb_query
     WHERE (
