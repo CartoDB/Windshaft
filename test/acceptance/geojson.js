@@ -7,10 +7,20 @@ var geojsonValue = require('../support/geojson_value');
 describe('Rendering geojsons', function() {
 
     beforeEach(function () {
-        this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+        var interactivity = ['cartodb_id', 'name', 'address'].join(',');
+        this.mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, interactivity);
         this.testClient = new TestClient(this.mapConfig);
         this.options = { format: 'geojson', layer: 0 };
     });
+
+    function getFeatureByCartodbId(features, cartodbId) {
+        for (var i = 0, len = features.length; i < len; i++) {
+            if (features[i].properties.cartodb_id === cartodbId) {
+                return features[i];
+            }
+        }
+        return {};
+    }
 
     describe('single layer', function() {
 
@@ -75,20 +85,24 @@ describe('Rendering geojsons', function() {
     });
 
     describe('Make valid invalid geometries', function() {
-      before(function () {
-        this.mapConfig = TestClient.singleLayerMapConfig(
-          'SELECT ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 1 1)\') As the_geom_webmercator ' +
-          ' UNION ALL SELECT ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 1 1, 1 2, 1 1, 0 0))\') ' +
-          ' As the_geom_webmercator', null, null, null);
+        before(function () {
+            this.mapConfig = TestClient.singleLayerMapConfig(
+                'SELECT 1 as cartodb_id, ' +
+                'ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 100000 200000)\') As the_geom_webmercator ' +
+                'UNION ALL ' +
+                'SELECT 2 as cartodb_id, ' +
+                'ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 100000 100000, 100000 200000, 100000 100000, 0 0))\') ' +
+                'As the_geom_webmercator', null, null, 'cartodb_id'
+            );
 
         this.testClient = new TestClient(this.mapConfig);
         this.options = { format: 'geojson', layer: 0 };
       });
 
       it('should return a geojson with points', function (done) {
-          this.testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+          this.testClient.getTile(7, 64, 63, this.options, function (err, geojsonTile) {
               assert.ok(!err, err);
-              assert.deepEqual(geojsonTile, geojsonValue.makeValidGeojson);
+              assert.deepEqualGeoJSON(geojsonTile, geojsonValue.makeValidGeojson);
               done();
           });
       });
@@ -114,7 +128,7 @@ describe('Rendering geojsons', function() {
                                 }
                             }
                         },
-                        interactivity: "pop_min"
+                        interactivity: "cartodb_id,pop_min"
                     }
                 }]
             };
@@ -124,7 +138,8 @@ describe('Rendering geojsons', function() {
 
             testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
                 assert.ok(!err, err);
-                assert.deepEqual(geojsonTile.features[0].properties, {
+                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                    cartodb_id: 1109,
                     name: 'Mardin',
                     adm0name: 'Turkey',
                     pop_max: 71373,
@@ -143,6 +158,7 @@ describe('Rendering geojsons', function() {
                         sql: 'select * from populated_places_simple_reduced where pop_max > 0 and pop_max < 600000',
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.0.1',
+                        interactivity: 'cartodb_id',
                         widgets: {
                             pop_max_f: {
                                 type: 'formula',
@@ -161,7 +177,10 @@ describe('Rendering geojsons', function() {
 
             testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
                 assert.ok(!err, err);
-                assert.deepEqual(geojsonTile.features[0].properties, { pop_max: 71373 });
+                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                    cartodb_id: 1109,
+                    pop_max: 71373
+                });
                 done();
             });
         });
@@ -177,7 +196,8 @@ describe('Rendering geojsons', function() {
                             '#layer0 { text-name: [name]; }' +
                             '#layer0[pop_max>1000] {  text-name: [name]; }' +
                             '#layer0[adm0name=~".*Turkey*"] {  text-name: [name]; }',
-                        cartocss_version: '2.0.1'
+                        cartocss_version: '2.0.1',
+                        interactivity: 'cartodb_id'
                     }
                 }]
             };
@@ -187,7 +207,8 @@ describe('Rendering geojsons', function() {
 
             testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
                 assert.ok(!err, err);
-                assert.deepEqual(geojsonTile.features[0].properties, {
+                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                    cartodb_id: 1109,
                     pop_max:71373,
                     name:"Mardin",
                     adm0name:"Turkey"
