@@ -85,11 +85,15 @@ describe('Rendering geojsons', function() {
     });
 
     describe('Make valid invalid geometries', function() {
-      before(function () {
-        this.mapConfig = TestClient.singleLayerMapConfig(
-          'SELECT 1 as cartodb_id, ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 100000 100000)\') As the_geom_webmercator ' +
-          ' UNION ALL SELECT 2 as cartodb_id, ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 100000 100000, 100000 200000, 100000 100000, 0 0))\') ' +
-          ' As the_geom_webmercator', null, null, 'cartodb_id');
+        before(function () {
+            this.mapConfig = TestClient.singleLayerMapConfig(
+                'SELECT 1 as cartodb_id, ' +
+                'ST_GeomFromText(\'SRID=3857; LINESTRING(0 0, 100000 100000)\') As the_geom_webmercator ' +
+                'UNION ALL ' +
+                'SELECT 2 as cartodb_id, ' +
+                'ST_GeomFromText(\'SRID=3857; POLYGON((0 0, 100000 100000, 100000 200000, 100000 100000, 0 0))\') ' +
+                'As the_geom_webmercator', null, null, 'cartodb_id'
+            );
 
         this.testClient = new TestClient(this.mapConfig);
         this.options = { format: 'geojson', layer: 0 };
