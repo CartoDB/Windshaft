@@ -279,7 +279,7 @@ module.exports.makeValidGeojson = {
           ],
           [
             100000,
-            100000
+            200000
           ]
         ]
       },
