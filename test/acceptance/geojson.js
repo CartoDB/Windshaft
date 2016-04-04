@@ -149,6 +149,49 @@ describe('Rendering geojsons', function() {
             });
         });
 
+        it('should not duplicate columns', function(done) {
+            var widgetMapConfig = {
+                version: '1.5.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: ['#layer0 {',
+                            'marker-fill: red;',
+                            'marker-width: 10;',
+                            'text-name: [name];',
+                            '[pop_max>100000] { marker-fill: black; } ',
+                        '}'].join('\n'),
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            adm0name: {
+                                type: 'aggregation',
+                                options: {
+                                    column: 'adm0name',
+                                    aggregation: 'sum',
+                                    aggregationColumn: 'pop_max'
+                                }
+                            }
+                        },
+                        interactivity: "cartodb_id,pop_max"
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(widgetMapConfig);
+
+            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+                assert.ok(!err, err);
+                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                    cartodb_id: 1109,
+                    name: 'Mardin',
+                    adm0name: 'Turkey',
+                    pop_max: 71373
+                });
+                done();
+            });
+        });
+
         it('with formula widget, no interactivity and no cartocss columns', function(done) {
             var formulaWidgetMapConfig = {
                 version: '1.5.0',
