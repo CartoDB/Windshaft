@@ -1,9 +1,11 @@
 # Version 1.17.0
-2016-mm-dd
+2016-04-06
 
 New features:
- - Adds precision to ST_AsGeoJSON based on zoom
-
+ - GeoJSON renderer (#451):
+  - Adds precision to ST_AsGeoJSON based on zoom
+  - Handle interactivity columns as they might be arrays or strings
+  - Simplify geometries keeping at least their bbox
 
 # Version 1.16.1
 2016-03-23
