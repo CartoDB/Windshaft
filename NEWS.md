@@ -1,5 +1,8 @@
-# Version 1.16.2
+# Version 1.17.0
 2016-mm-dd
+
+New features:
+ - Adds precision to ST_AsGeoJSON based on zoom
 
 
 # Version 1.16.1
