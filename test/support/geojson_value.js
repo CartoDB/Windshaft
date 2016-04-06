@@ -8,8 +8,8 @@ module.exports.singlelayer = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -411852.28231158,
-          4927604.99065116
+          -411852,
+          4927605
         ]
       },
       "properties": {
@@ -25,8 +25,8 @@ module.exports.singlelayer = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -412880.540448036,
-          4928180.70372423
+          -412881,
+          4928181
         ]
       },
       "properties": {
@@ -42,8 +42,8 @@ module.exports.singlelayer = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -412947.443462004,
-          4927845.09853507
+          -412947,
+          4927845
         ]
       },
       "properties": {
@@ -59,8 +59,8 @@ module.exports.singlelayer = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -411867.7557208,
-          4926450.01033066
+          -411868,
+          4926450
         ]
       },
       "properties": {
@@ -76,8 +76,8 @@ module.exports.singlelayer = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -412326.392022869,
-          4928363.35380041
+          -412326,
+          4928363
         ]
       },
       "properties": {
@@ -99,11 +99,11 @@ module.exports.singlelayerPolygon = {
             "type": "Polygon",
             "coordinates": [
                 [
-                    [-20037508.3427892, -15538711.0963092],
-                    [-20037508.3427892, 15538711.0963092],
-                    [0, 15538711.0963092],
-                    [0, -15538711.0963092],
-                    [-20037508.3427892, -15538711.0963092]
+                    [-20037508, -15538711],
+                    [-20037508, 15538711],
+                    [0, 15538711],
+                    [0, -15538711],
+                    [-20037508, -15538711]
                 ]
             ]
         },
@@ -124,8 +124,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 "type":"Point",
-                "coordinates":[-411852.28231158,
-                4927604.99065116
+                "coordinates": [
+                    -411852,
+                    4927605
                 ]
             },
             properties: {
@@ -139,8 +140,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-412880.540448036,
-                    4928180.70372423
+                coordinates: [
+                    -412881,
+                    4928181
                 ]
             },
             properties: {
@@ -157,8 +159,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-411852.28231158,
-                    4927604.99065116
+                coordinates: [
+                    -411852,
+                    4927605
                 ]
             },
             properties: {
@@ -172,8 +175,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-412880.540448036,
-                    4928180.70372423
+                coordinates: [
+                    -412881,
+                    4928181
                 ]
             },
             properties: {
@@ -187,8 +191,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-412947.443462004,
-                    4927845.09853507
+                coordinates: [
+                    -412947,
+                    4927845
                 ]
             },
             properties: {
@@ -202,8 +207,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-411867.7557208,
-                    4926450.01033066
+                coordinates: [
+                    -411868,
+                    4926450
                 ]
             },
             properties: {
@@ -220,8 +226,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-411852.28231158,
-                    4927604.99065116
+                coordinates: [
+                    -411852,
+                    4927605
                 ]
             },
             properties: {
@@ -235,8 +242,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-412880.540448036,
-                    4928180.70372423
+                coordinates: [
+                    -412881,
+                    4928181
                 ]
             },
             properties: {
@@ -250,8 +258,9 @@ module.exports.multilayer = {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [-412947.443462004,
-                    4927845.09853507
+                coordinates: [
+                    -412947,
+                    4927845
                 ]
             },
             properties: {

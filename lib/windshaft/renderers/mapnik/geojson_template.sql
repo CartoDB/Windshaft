@@ -73,7 +73,7 @@ FROM (
         array_to_json(array_agg(feature)) AS features
         FROM (
             SELECT 'Feature' AS TYPE,
-            ST_AsGeoJSON(__the_geometry)::json AS geometry,
+            ST_AsGeoJSON(__the_geometry, {{=it.geojsonMaxDecimalDigits}})::json AS geometry,
             {{ if (!it.columns || it.columns.length === 0) { }}
                 '{}'::json
             {{ } else { }}
