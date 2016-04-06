@@ -23,17 +23,29 @@ assert.deepEqualGeoJSON = function(actual, expected) {
     assert.equal(actual.type, expected.type);
     assert.equal(actual.features.length, expected.features.length);
 
-    actual.features.forEach(function(feature, idx) {
-        assert.ok(expected.features[idx], 'missing expected feature for index=' + idx);
+    var featureCollections = actual.features.filter(featureCollectionFilter);
+    var expectedFeatureCollections = expected.features.filter(featureCollectionFilter);
+    featureCollections.forEach(function(featureCollection, idx) {
+        assert.deepEqualGeoJSON(featureCollection, expectedFeatureCollections[idx]);
+    });
 
-        var expectedFeature = expected.features[idx];
-        assert.equal(feature.type, expectedFeature.type);
+    var featuresByCartodbId = actual.features
+        .filter(nonFeatureCollectionFilter)
+        .reduce(cartodbIdFeatureReducer, {});
+    var expectedFeaturesByCartodbId = expected.features
+        .filter(nonFeatureCollectionFilter)
+        .reduce(cartodbIdFeatureReducer, {});
 
-        if (feature.type === 'FeatureCollection') {
-            return assert.deepEqualGeoJSON(feature, expectedFeature);
-        }
+    Object.keys(featuresByCartodbId).forEach(function(cartodbId) {
+        var feature = featuresByCartodbId[cartodbId];
+        var expectedFeature = expectedFeaturesByCartodbId[cartodbId];
+        assert.ok(expectedFeature, 'missing expected feature for cartodb_id=' + cartodbId);
 
-        assert.deepEqual(feature.geometry, expectedFeature.geometry);
+        assert.deepEqual(
+            feature.geometry, expectedFeature.geometry,
+            'Error at cartodb_id=' + cartodbId + ': ' +
+                [feature.geometry, expectedFeature.geometry].map(JSON.stringify).join(' vs ')
+        );
 
         Object.keys(feature.properties).forEach(function(pKey) {
             if (pKey.match(/_at$/)) {
@@ -46,6 +58,22 @@ assert.deepEqualGeoJSON = function(actual, expected) {
         });
     });
 };
+
+function cartodbIdFeatureReducer(byIdAcc, feature) {
+    if (!feature.properties.hasOwnProperty('cartodb_id')) {
+        throw new Error('Expected `cartodb_id` property not found in feature');
+    }
+    byIdAcc[feature.properties.cartodb_id] = feature;
+    return byIdAcc;
+}
+
+function featureCollectionFilter(feature) {
+    return feature.type === 'FeatureCollection';
+}
+
+function nonFeatureCollectionFilter(feature) {
+    return !featureCollectionFilter(feature);
+}
 
 /**
  * Takes an image data as an input and an image path and compare them using Mapnik's Image.compare in case the

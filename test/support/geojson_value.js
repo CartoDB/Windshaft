@@ -278,12 +278,14 @@ module.exports.makeValidGeojson = {
             0
           ],
           [
-            1,
-            1
+            100000,
+            200000
           ]
         ]
       },
-      "properties": {}
+      "properties": {
+          "cartodb_id": 1
+      }
     },
     {
       "type": "Feature",
@@ -296,23 +298,25 @@ module.exports.makeValidGeojson = {
               0
             ],
             [
-              1,
-              1
+              100000,
+              100000
             ]
           ],
           [
             [
-              1,
-              1
+              100000,
+              100000
             ],
             [
-              1,
-              2
+              100000,
+              200000
             ]
           ]
         ]
       },
-      "properties": {}
+      "properties": {
+          "cartodb_id": 2
+      }
     }
   ]
 };

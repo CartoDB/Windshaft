@@ -40,6 +40,10 @@ module.exports.renderer = {
             // Returning the portion of a geometry falling within a rectangle
             // It will only work if snapToGrid is enabled
             clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
+            // geometries will be simplified using ST_RemoveRepeatedPoints
+            // which cost is no more expensive than snapping and results are
+            // much closer to the original geometry
+            removeRepeatedPoints: false // this requires postgis >=2.2
         }
     },
     torque: {
