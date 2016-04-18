@@ -84,7 +84,7 @@ describe('Rendering geojsons', function() {
         });
     });
 
-    describe.skip('Make valid invalid geometries', function() {
+    describe('Invalid geometries', function() {
         before(function () {
             this.mapConfig = TestClient.singleLayerMapConfig(
                 'SELECT 1 as cartodb_id, ' +
@@ -99,10 +99,10 @@ describe('Rendering geojsons', function() {
         this.options = { format: 'geojson', layer: 0 };
       });
 
-      it('should return a geojson with points', function (done) {
-          this.testClient.getTile(7, 64, 63, this.options, function (err, geojsonTile) {
-              assert.ok(!err, err);
-              assert.deepEqualGeoJSON(geojsonTile, geojsonValue.makeValidGeojson);
+      it('should return an error geojson with points', function (done) {
+          this.testClient.getTile(7, 64, 63, this.options, function (err) {
+              assert.ok(err);
+              assert.ok(err.message.match(/geom .* is invalid/i));
               done();
           });
       });
