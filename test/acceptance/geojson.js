@@ -102,7 +102,7 @@ describe('Rendering geojsons', function() {
       it('should return an error geojson with points', function (done) {
           this.testClient.getTile(7, 64, 63, this.options, function (err) {
               assert.ok(err, 'Expected error for invalid geometry');
-              assert.ok(err.message.match(/geom .* is invalid/i), err.message);
+              assert.ok(err.message.match(/TopologyException/i), err.message);
               done();
           });
       });
