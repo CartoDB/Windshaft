@@ -84,7 +84,7 @@ describe('Rendering geojsons', function() {
         });
     });
 
-    describe('Make valid invalid geometries', function() {
+    describe.skip('Make valid invalid geometries', function() {
         before(function () {
             this.mapConfig = TestClient.singleLayerMapConfig(
                 'SELECT 1 as cartodb_id, ' +
