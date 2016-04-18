@@ -1,6 +1,9 @@
 # Version 1.17.1
 2016-mm-dd
 
+Enhancements:
+- GeoJSON renderer: removing ST_MakeValid, it might fail for some tiles but it's way better performance wise.
+
 
 # Version 1.17.0
 2016-04-06
