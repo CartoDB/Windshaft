@@ -1,6 +1,9 @@
 # Version 1.17.2
 2016-mm-dd
 
+Enhancements:
+ - Skip mapnik properties in geojson renderer
+
 
 # Version 1.17.1
 2016-04-18
