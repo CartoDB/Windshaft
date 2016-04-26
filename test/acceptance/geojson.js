@@ -260,5 +260,34 @@ describe('Rendering geojsons', function() {
             });
         });
 
+        it('should skip mapnik::geometry_type for properties', function(done) {
+            var formulaWidgetMapConfig = {
+                version: '1.5.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer0[\'mapnik::geometry_type\'=1] { marker-fill: red; marker-width: 10; }',
+                        cartocss_version: '2.0.1',
+                        interactivity: 'cartodb_id,pop_max,name,adm0name'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(formulaWidgetMapConfig);
+            this.options = { format: 'geojson', layer: 0 };
+
+            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+                assert.ok(!err, err);
+                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                    cartodb_id: 1109,
+                    pop_max:71373,
+                    name:"Mardin",
+                    adm0name:"Turkey"
+                });
+                done();
+            });
+        });
+
     });
 });
