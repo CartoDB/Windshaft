@@ -260,32 +260,39 @@ describe('Rendering geojsons', function() {
             });
         });
 
-        it('should skip mapnik::geometry_type for properties', function(done) {
-            var formulaWidgetMapConfig = {
-                version: '1.5.0',
-                layers: [{
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced',
-                        cartocss: '#layer0[\'mapnik::geometry_type\'=1] { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1',
-                        interactivity: 'cartodb_id,pop_max,name,adm0name'
-                    }
-                }]
-            };
+        var cartocssWithGeometryTypeScenarios = {
+            'mapnik::geometry_type': '#layer0[\'mapnik::geometry_type\'=1] { marker-fill: red; marker-width: 10; }',
+            'mapnik-geometry-type': '#layer0[\'mapnik-geometry-type\'=1] { marker-fill: red; marker-width: 10; }'
+        };
 
-            var testClient = new TestClient(formulaWidgetMapConfig);
-            this.options = { format: 'geojson', layer: 0 };
+        Object.keys(cartocssWithGeometryTypeScenarios).forEach(function(filterName) {
+            it('should skip ' + filterName + ' for properties', function(done) {
+                var formulaWidgetMapConfig = {
+                    version: '1.5.0',
+                    layers: [{
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: cartocssWithGeometryTypeScenarios[filterName],
+                            cartocss_version: '2.0.1',
+                            interactivity: 'cartodb_id,pop_max,name,adm0name'
+                        }
+                    }]
+                };
 
-            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
-                assert.ok(!err, err);
-                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
-                    cartodb_id: 1109,
-                    pop_max:71373,
-                    name:"Mardin",
-                    adm0name:"Turkey"
+                var testClient = new TestClient(formulaWidgetMapConfig);
+                this.options = { format: 'geojson', layer: 0 };
+
+                testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
+                    assert.ok(!err, err);
+                    assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
+                        cartodb_id: 1109,
+                        pop_max:71373,
+                        name:"Mardin",
+                        adm0name:"Turkey"
+                    });
+                    done();
                 });
-                done();
             });
         });
 
