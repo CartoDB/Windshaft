@@ -1,6 +1,8 @@
 # Version 1.17.3
-2016-mm-dd
+2016-04-27
 
+Enhancements:
+ - Columns defined in dataviews specification are taking into account to fill properties in geojson renderer
 
 # Version 1.17.2
 2016-04-26
