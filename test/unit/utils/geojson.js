@@ -2,10 +2,9 @@ require('../../support/test_helper.js');
 var geojsonUtils = require('../../../lib/windshaft/utils/geojson_utils');
 var assert = require('assert');
 
-
 describe('geojson-utils', function() {
 
-    function createOptions(interactivity) {
+    function createOptions(interactivity, extra) {
         var options = {
             sql: 'select * from populated_places_simple_reduced',
             cartocss: ['#layer0 {',
@@ -15,16 +14,8 @@ describe('geojson-utils', function() {
                 '[pop_max>100000] { marker-fill: black; } ',
             '}'].join('\n'),
             cartocss_version: '2.3.0',
-            widgets: {
-                adm0name: {
-                    type: 'aggregation',
-                    options: {
-                        column: 'adm0name',
-                        aggregation: 'sum',
-                        aggregationColumn: 'pop_max'
-                    }
-                }
-            }
+            widgets: extra.widgets ? extra.widgets : undefined,
+            dataviews: extra.dataviews ? extra.dataviews : undefined
         };
 
         if (interactivity) {
@@ -34,19 +25,70 @@ describe('geojson-utils', function() {
         return options;
     }
 
+    var widgetsDefinition = {
+        widgets: {
+            adm0name: {
+                type: 'aggregation',
+                options: {
+                    column: 'adm0name',
+                    aggregation: 'sum',
+                    aggregationColumn: 'pop_max'
+                }
+            }
+        }
+    };
 
-    it('should not duplicate column names', function() {
-        var properties = geojsonUtils.getGeojsonProperties(createOptions());
-        assert.deepEqual(properties, ['pop_max', 'name', 'adm0name']);
+    var dataviewsDefinition = {
+        dataviews: {
+            "area_histogram": {
+                "source": {
+                    "id": "a0"
+                },
+                "type": "histogram",
+                "options": {
+                    "column": "area"
+                }
+            }
+        }
+    };
+
+    describe('with widgets', function () {
+        it('should not duplicate column names', function() {
+            var properties = geojsonUtils.getGeojsonProperties(createOptions(null, widgetsDefinition));
+            assert.deepEqual(properties, ['pop_max', 'name', 'adm0name']);
+        });
+
+        it('should handle interactivity strings', function() {
+            var properties = geojsonUtils.getGeojsonProperties(createOptions('cartodb_id,pop_max', widgetsDefinition));
+            assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id', 'adm0name']);
+        });
+
+        it('should handle interactivity array', function() {
+            var properties = geojsonUtils.getGeojsonProperties(
+                createOptions(['cartodb_id', 'pop_max'], widgetsDefinition)
+            );
+            assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id', 'adm0name']);
+        });
     });
 
-    it('should handle interactivity strings', function() {
-        var properties = geojsonUtils.getGeojsonProperties(createOptions('cartodb_id,pop_max'));
-        assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id', 'adm0name']);
+    describe('with dataviews', function () {
+        it('should extract columns of dataviews', function() {
+            var properties = geojsonUtils.getGeojsonProperties(createOptions(null, dataviewsDefinition));
+            assert.deepEqual(properties, ['pop_max', 'name', 'area']);
+        });
     });
 
-    it('should handle interactivity array', function() {
-        var properties = geojsonUtils.getGeojsonProperties(createOptions(['cartodb_id', 'pop_max']));
-        assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id', 'adm0name']);
+    describe('with both dataviews and widgets', function () {
+
+        var widgetsAndDataviewDefinition = {
+            widgets: widgetsDefinition.widgets,
+            dataviews: dataviewsDefinition.dataviews,
+        };
+
+        it('should extract columns of both dataviews and widgets', function() {
+            var properties = geojsonUtils.getGeojsonProperties(createOptions(null, widgetsAndDataviewDefinition));
+            assert.deepEqual(properties, ['pop_max', 'name', 'adm0name', 'area']);
+        });
     });
+
 });
