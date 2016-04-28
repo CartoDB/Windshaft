@@ -1,6 +1,12 @@
 # Version 1.18.1
 2016-mm-dd
 
+New features:
+ - Adds support for buffer-size CartoCSS Map property in geojson tiles.
+
+Announcements:
+ - Upgrades carto to 0.15.1-cdb2
+
 
 # Version 1.18.0
 2016-mm-dd
