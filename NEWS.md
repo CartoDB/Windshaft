@@ -1,6 +1,8 @@
 # Version 1.18.1
 2016-mm-dd
 
+ - Adds support for buffer-size CartoCSS Map property in geojson tiles.
+
 
 # Version 1.18.0
 2016-mm-dd
