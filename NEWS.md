@@ -9,13 +9,9 @@ Announcements:
 
 
 # Version 1.18.0
-2016-mm-dd
-
-
-# Version 1.18.0
 2016-04-27
 
-Enhancements:
+New features::
  - Handles columns defined in layer options to fill properties to render GeoJSON format
 
 
