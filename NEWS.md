@@ -1,5 +1,5 @@
 # Version 1.19.0
-2016-mm-dd
+2016-04-28
 
 New features:
  - Adds support for buffer-size CartoCSS Map property in geojson tiles.
