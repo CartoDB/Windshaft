@@ -1,6 +1,8 @@
 # Version 1.19.1
 2016-mm-dd
 
+Announcements:
+ - Upgrades node-mapnik to 1.4.15-cdb7
 
 # Version 1.19.0
 2016-04-28
