@@ -36,7 +36,7 @@ jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/ test/
 
-test-all: jshint test
+test-all: test jshint
 
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test
