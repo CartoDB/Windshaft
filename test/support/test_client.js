@@ -49,7 +49,6 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
 
     this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
     this.attributesBackend = new windshaft.backend.Attributes();
-    this.widgetBackend = new windshaft.backend.Widget();
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
