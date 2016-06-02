@@ -51,4 +51,24 @@ describe('geojson-utils', function() {
         var properties = geojsonUtils.getGeojsonProperties(createOptions(null, []));
         assert.deepEqual(properties, ['pop_max', 'name']);
     });
+
+    it('should ignore no-string values', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null, ['cartodb_id', 'pop_min', 1]));
+        assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
+    });
+
+    it('should ignore null values', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null, ['cartodb_id', 'pop_min', null]));
+        assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
+    });
+
+    it('should ignore undefined values', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null,['cartodb_id',undefined,'pop_min']));
+        assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
+    });
+
+    it('should ignore empty values', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null,['cartodb_id', '' ,'pop_min']));
+        assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
+    });
 });
