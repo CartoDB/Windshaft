@@ -1,5 +1,19 @@
-# Version 1.19.1
+# Version 2.0.1
 2016-mm-dd
+
+
+# Version 2.0.0
+2016-06-02
+
+Announcements:
+ - Removes support for widgets/filters introduced in version 1.7.0.
+
+
+# Version 1.20.0
+2016-06-02
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb8](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb8)
 
 
 # Version 1.19.0

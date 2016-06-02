@@ -49,7 +49,6 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
 
     this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
     this.attributesBackend = new windshaft.backend.Attributes();
-    this.widgetBackend = new windshaft.backend.Widget();
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
@@ -100,47 +99,6 @@ TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback)
         return callback(err, attributes, stats);
     });
 };
-
-TestClient.prototype.getWidget = function(layer, widgetName, override, callback) {
-    if (!callback) {
-        callback = override;
-        override = {};
-    }
-    var params = {
-        dbname: 'windshaft_test',
-        layer: layer,
-        widgetName: widgetName
-    };
-    var provider = new DummyMapConfigProvider(this.config, params);
-    this.widgetBackend.getWidget(provider, _.extend(override, params), callback);
-};
-
-TestClient.prototype.widgetSearch = function(layer, widgetName, userQuery, override, callback) {
-    if (!callback) {
-        callback = override;
-        override = {};
-    }
-    var params = {
-        dbname: 'windshaft_test',
-        layer: layer,
-        widgetName: widgetName,
-        q: userQuery
-    };
-    var provider = new DummyMapConfigProvider(this.config, params);
-    this.widgetBackend.search(provider, _.extend(override, params), callback);
-};
-
-TestClient.prototype.setLayersFiltersParamsSync = function(filters) {
-    this.config.setFiltersParamsSync({ layers: filters });
-};
-
-TestClient.prototype.setLayersFiltersParams = function(filters, callback) {
-    var params = {
-        dbname: 'windshaft_test'
-    };
-    this.config.setFiltersParams({ layers: filters }, params, callback);
-};
-
 
 TestClient.prototype.createLayergroup = function(options, callback) {
     if (!callback) {
