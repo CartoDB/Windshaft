@@ -1,5 +1,5 @@
 # Version 2.0.0
-2016-mm-dd
+2016-06-02
 
 Announcements:
  - Removes support for widgets/filters introduced in version 1.7.0.
