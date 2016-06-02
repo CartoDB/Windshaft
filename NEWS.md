@@ -1,5 +1,5 @@
 # Version 1.20.0
-2016-mm-dd
+2016-06-02
 
 Announcements:
  - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb8](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb8)
