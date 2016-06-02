@@ -10,6 +10,7 @@ New features:
 
 Announcements:
  - Upgrades carto to 0.15.1-cdb2
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb8](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb8)
 
 
 # Version 1.18.0
