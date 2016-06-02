@@ -1,5 +1,5 @@
 # Version 2.0.1
-2016-mm-dd
+2016-06-02
 
 Bug fixes:
  - Geojson renderer: columns option should ignore nulls #481
