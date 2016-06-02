@@ -116,7 +116,7 @@ describe('Rendering geojsons', function() {
 
         Object.keys(cartocssWithGeometryTypeScenarios).forEach(function(filterName) {
             it('should skip ' + filterName + ' for properties', function(done) {
-                var formulaWidgetMapConfig = {
+                var mapnikGeometryMapConfig = {
                     version: '1.5.0',
                     layers: [{
                         type: 'mapnik',
@@ -129,7 +129,7 @@ describe('Rendering geojsons', function() {
                     }]
                 };
 
-                var testClient = new TestClient(formulaWidgetMapConfig);
+                var testClient = new TestClient(mapnikGeometryMapConfig);
                 this.options = { format: 'geojson', layer: 0 };
 
                 testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {

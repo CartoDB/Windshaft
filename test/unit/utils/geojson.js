@@ -27,30 +27,28 @@ describe('geojson-utils', function() {
         return options;
     }
 
-    describe('with widgets', function () {
-        it('should not duplicate column names', function() {
-            var properties = geojsonUtils.getGeojsonProperties(createOptions());
-            assert.deepEqual(properties, ['pop_max', 'name']);
-        });
+    it('should not duplicate column names', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions());
+        assert.deepEqual(properties, ['pop_max', 'name']);
+    });
 
-        it('should handle interactivity strings', function() {
-            var properties = geojsonUtils.getGeojsonProperties(createOptions('cartodb_id,pop_max'));
-            assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id']);
-        });
+    it('should handle interactivity strings', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions('cartodb_id,pop_max'));
+        assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id']);
+    });
 
-        it('should handle interactivity array', function() {
-            var properties = geojsonUtils.getGeojsonProperties(createOptions(['cartodb_id', 'pop_max']));
-            assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id']);
-        });
+    it('should handle interactivity array', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(['cartodb_id', 'pop_max']));
+        assert.deepEqual(properties, ['pop_max', 'name', 'cartodb_id']);
+    });
 
-        it('should handle columns array', function() {
-            var properties = geojsonUtils.getGeojsonProperties(createOptions(null, ['cartodb_id', 'pop_min']));
-            assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
-        });
+    it('should handle columns array', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null, ['cartodb_id', 'pop_min']));
+        assert.deepEqual(properties, ['cartodb_id', 'pop_min', 'pop_max', 'name']);
+    });
 
-        it('should handle empty columns array', function() {
-            var properties = geojsonUtils.getGeojsonProperties(createOptions(null, []));
-            assert.deepEqual(properties, ['pop_max', 'name']);
-        });
+    it('should handle empty columns array', function() {
+        var properties = geojsonUtils.getGeojsonProperties(createOptions(null, []));
+        assert.deepEqual(properties, ['pop_max', 'name']);
     });
 });
