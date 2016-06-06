@@ -146,4 +146,55 @@ describe('Rendering geojsons', function() {
         });
 
     });
+
+    it('query can hold substitution tokens', function(done) {
+        var tokenNames = ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height'];
+        var tokens = tokenNames.map(function(token) {
+            return "!" + token + "! as " + token;
+        });
+
+        var sql = 'select *, ' + tokens.join(', ') + ', ST_AsText(!bbox!) as bbox_text from test_table limit 1';
+        var propertiesColumns = tokenNames.concat('bbox_text');
+
+        var mapConfig = {
+            version: '1.4.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: sql,
+                        cartocss: '#layer { marker-fill: red; }',
+                        cartocss_version: '2.3.0',
+                        columns: propertiesColumns
+                    }
+                }
+            ]
+        };
+
+        var expectedProperties = {
+            bbox_text: ['POLYGON((',
+                '-20037508.5 -20037508.5,',
+                '-20037508.5 20037508.5,',
+                '20037508.5 20037508.5,',
+                '20037508.5 -20037508.5,',
+                '-20037508.5 -20037508.5',
+            '))'].join(''),
+            scale_denominator: 559082268.4151787,
+            pixel_width: 156543.03515625,
+            pixel_height: 156543.03515625
+        };
+
+        var testClient = new TestClient(mapConfig);
+        testClient.getTile(0, 0, 0, {layer: 0, format: 'geojson'}, function(err, geojsonTile) {
+
+            assert.ok(!err, err);
+            assert.equal(geojsonTile.features.length, 1);
+            assert.deepEqual(Object.keys(geojsonTile.features[0].properties), propertiesColumns);
+            Object.keys(expectedProperties).forEach(function(prop) {
+                assert.equal(geojsonTile.features[0].properties[prop], expectedProperties[prop]);
+            });
+
+            done();
+        });
+    });
 });
