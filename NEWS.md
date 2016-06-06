@@ -1,5 +1,5 @@
 # Version 2.1.0
-2016-mm-dd
+2016-06-06
 
 Improvements:
  - Adds support for substitution tokens in geojson tiles
