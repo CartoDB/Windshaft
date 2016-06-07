@@ -1,6 +1,9 @@
 # Version 2.1.1
 2016-mm-dd
 
+Announcements:
+ - Upgrades grainstore to 1.2.0
+
 
 # Version 2.1.0
 2016-06-06
