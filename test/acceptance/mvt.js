@@ -265,6 +265,89 @@ describe('mvt', function() {
                 });
             });
         });
+
+        it('should be able to access layer names by layer id', function(done) {
+            var mapConfig =  {
+                version: '1.3.0',
+                layers: [
+                    {
+                        type: 'plain',
+                        options: {
+                            color: 'red'
+                        }
+                    },
+                    {
+                        id: "test-name",
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table limit 2',
+                            cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    },
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table limit 3 offset 2',
+                            cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    },
+                    {
+                        id: "test-name-top",
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table',
+                            cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]
+            };
+            var testClient = new TestClient(mapConfig);
+            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
+                assert.ok(!err, err);
+
+                var vtile = new mapnik.VectorTile(13, 4011, 3088);
+                vtile.setData(mvtTile);
+                vtile.parse(function () {
+                    assert.equal(vtile.painted(), true);
+                    assert.equal(vtile.empty(), false);
+
+                    var result = vtile.toJSON();
+                    assert.equal(result.length, 3);
+
+                    var layer0 = result[0];
+                    assert.equal(layer0.name, 'test-name');
+                    assert.equal(layer0.features.length, 2);
+
+                    var layer1 = result[1];
+                    assert.equal(layer1.name, 'layer1');
+                    assert.equal(layer1.features.length, 3);
+
+                    var layer2 = result[2];
+                    assert.equal(layer2.name, 'test-name-top');
+                    assert.equal(layer2.features.length, 5);
+
+                    var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
+                    assert.deepEqual(layer0.features.map(function (f) {
+                        return f.properties.name;
+                    }), layer0ExpectedNames);
+
+                    var layer1ExpectedNames = ['El Rey del Tallarín', 'El Lacón', 'El Pico'];
+                    assert.deepEqual(layer1.features.map(function (f) {
+                        return f.properties.name;
+                    }), layer1ExpectedNames);
+
+                    var layer2ExpectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
+                    assert.deepEqual(layer2.features.map(function (f) {
+                        return f.properties.name;
+                    }), layer2ExpectedNames);
+
+                    done();
+                });
+            });
+        });
     });
 
 });
