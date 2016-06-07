@@ -1,5 +1,8 @@
-# Version 2.1.1
+# Version 2.2.0
 2016-mm-dd
+
+Improvements:
+ - Allow to set id per layer #485
 
 Announcements:
  - Upgrades grainstore to 1.2.0
