@@ -1,5 +1,5 @@
 # Version 2.2.0
-2016-mm-dd
+2016-06-07
 
 Improvements:
  - Allow to set id per layer #485
