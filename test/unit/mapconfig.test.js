@@ -62,5 +62,26 @@ describe('mapconfig', function() {
         done();
     });
 
+    it('interactivity array gets converted into comma joined string', function(done) {
+        var mapConfig = MapConfig.create({
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select 1 a, 2 b, null::geometry the_geom',
+                        cartocss: '#layer{}',
+                        cartocss_version: '2.3.0',
+                        interactivity: ['a', 'b']
+                    }
+                }
+            ]
+        });
+
+        var layer = mapConfig.getLayer(0);
+        assert.equal(layer.options.interactivity, 'a,b');
+        done();
+    });
+
 });
 
