@@ -213,9 +213,11 @@ describe('Create mapnik layergroup', function() {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[0].type, 'http');
+            assert.ok(!layergroup.metadata.layers[0].meta.cartocss);
             assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
+            assert.equal(layergroup.metadata.layers[1].meta.cartocss, cartocss);
             done();
         });
     });
