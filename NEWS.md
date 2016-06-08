@@ -1,8 +1,11 @@
-# Version 2.2.1
+# Version 2.3.0
 2016-mm-dd
 
-Improvements:
- - Expose layer id in metadata
+Enhancements:
+ - Only adds cartocss to meta for layers where it makes sense.
+
+New features:
+ - Expose layer id in metadata.
 
 
 # Version 2.2.0
