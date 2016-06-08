@@ -1,5 +1,5 @@
 # Version 2.3.0
-2016-mm-dd
+2016-06-08
 
 Enhancements:
  - Only adds cartocss to meta for layers where it makes sense.
