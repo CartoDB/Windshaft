@@ -1,6 +1,9 @@
 # Version 2.2.1
 2016-mm-dd
 
+Improvements:
+ - Expose layer id in metadata
+
 
 # Version 2.2.0
 2016-06-07
