@@ -83,5 +83,41 @@ describe('mapconfig', function() {
         done();
     });
 
-});
+    it('.getLayerId() shoud return an id for the given layer', function () {
+        var rawMapConfig = {
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select 1 a, 2 b, null::geometry the_geom',
+                        cartocss: '#layer{}',
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
 
+        var layerId = MapConfig.getLayerId(rawMapConfig, 0);
+        assert.equal(layerId, 'layer0');
+    });
+
+    it('.getLayerId() shoud return an id for the given layer with id', function () {
+        var rawMapConfig = {
+            version: '1.3.0',
+            layers: [{
+                id: 'test-name',
+                type: 'mapnik',
+                options: {
+                    sql: 'select 1 a, 2 b, null::geometry the_geom',
+                    cartocss: '#layer{}',
+                    cartocss_version: '2.3.0'
+                }
+            }]
+        };
+
+        var layerId = MapConfig.getLayerId(rawMapConfig, 0);
+        assert.equal(layerId, 'test-name');
+    });
+
+});
