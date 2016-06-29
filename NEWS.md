@@ -1,7 +1,7 @@
 # Version 2.3.1
 2016-mm-dd
 
-- Errors returns the layer-id to give more info about what's going on.
+- Errors return the layer-id to give more info about what's going on.
 
 
 # Version 2.3.0
