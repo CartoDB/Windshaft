@@ -1,7 +1,8 @@
-# Version 2.3.1
-2016-mm-dd
+# Version 2.4.0
+2016-06-29
 
-- Errors return the layer-id to give more info about what's going on.
+Enhancements:
+  - Errors during MapConfig's instantiation return the layer-id to give more info about what's going on.
 
 
 # Version 2.3.0
