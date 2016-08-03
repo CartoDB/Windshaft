@@ -1,11 +1,12 @@
 require('../support/test_helper');
 
-// var assert = require('../support/assert');
+var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
 describe('mapnik layer filtering', function() {
+    var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
 
@@ -126,10 +127,15 @@ describe('mapnik layer filtering', function() {
         ]
     };
 
-    var layerFilter = [1,2,3,4].join(',');
-    it('should filter all mapnik layers on ' + layerFilter + '/1/0/0.png', function (done) {
+    function getAssertFilepath(layers) {
+        return './test/fixtures/mapnik/mapnik-filtering-layers-' + layers.join('.') + '-zxy-1.0.0.png';
+    }
+
+    var layerFilter = [1,2,3,4];
+    var layerFilterParam = layerFilter.join(',');
+    it('should filter all mapnik layers on ' + layerFilterParam + '/1/0/0.png', function (done) {
         var options = {
-            layer: layerFilter
+            layer: layerFilterParam
         };
 
         testClient.getTile(1, 0, 0, options, function(err, tile) {
@@ -137,14 +143,22 @@ describe('mapnik layer filtering', function() {
                 return done(err);
             }
 
-            done(null, tile);
+            var filepath = getAssertFilepath(layerFilter);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
         });
     });
 
-    var layerFilterFirstMapnik = [1,2,4].join(',');
-    it('should filter first mapnik layer on ' + layerFilterFirstMapnik + '/1/0/0.png', function (done) {
+    var layerFilterFirstMapnik = [1,2,4];
+    var layerFilterFirstMapnikParam = layerFilterFirstMapnik.join(',');
+    it('should filter first mapnik layer on ' + layerFilterFirstMapnikParam + '/1/0/0.png', function (done) {
         var options = {
-            layer: layerFilterFirstMapnik
+            layer: layerFilterFirstMapnikParam
         };
 
         testClient.getTile(1, 0, 0, options, function(err, tile) {
@@ -152,14 +166,22 @@ describe('mapnik layer filtering', function() {
                 return done(err);
             }
 
-            done(null, tile);
+            var filepath = getAssertFilepath(layerFilterFirstMapnik);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
         });
     });
 
-    var layerFilterSecondMapnik = [1,3,4].join(',');
-    it('should filter second mapnik layers on ' + layerFilterSecondMapnik + '/1/0/0.png', function(done) {
+    var layerFilterSecondMapnik = [1,3,4];
+    var layerFilterSecondMapnikParam = layerFilterSecondMapnik.join(',');
+    it('should filter second mapnik layers on ' + layerFilterSecondMapnikParam + '/1/0/0.png', function(done) {
         var options = {
-            layer: layerFilterSecondMapnik
+            layer: layerFilterSecondMapnikParam
         };
 
         testClient.getTile(1, 0, 0, options, function(err, tile) {
@@ -167,14 +189,22 @@ describe('mapnik layer filtering', function() {
                 return done(err);
             }
 
-            done(null, tile);
+            var filepath = getAssertFilepath(layerFilterSecondMapnik);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
         });
     });
 
-    var layerFilterMapnik = [2,3].join(',');
-    it('should filter only mapnik layers on ' + layerFilterMapnik + '/1/0/0.png', function (done) {
+    var layerFilterMapnik = [2,3];
+    var layerFilterMapnikParam = layerFilterMapnik.join(',');
+    it('should filter only mapnik layers on ' + layerFilterMapnikParam + '/1/0/0.png', function (done) {
         var options = {
-            layer: layerFilterMapnik
+            layer: layerFilterMapnikParam
         };
 
         testClient.getTile(1, 0, 0, options, function(err, tile) {
@@ -182,7 +212,61 @@ describe('mapnik layer filtering', function() {
                 return done(err);
             }
 
-            done(null, tile);
+            var filepath = getAssertFilepath(layerFilterMapnik);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
         });
     });
+
+    var layerFilterPlainMapnik = [0,2];
+    var layerFilterPlainMapnikParam = layerFilterPlainMapnik.join(',');
+    it('should filter plain and mapnik layers on ' + layerFilterPlainMapnikParam + '/1/0/0.png', function (done) {
+        var options = {
+            layer: layerFilterPlainMapnikParam
+        };
+
+        testClient.getTile(1, 0, 0, options, function(err, tile) {
+            if (err) {
+                return done(err);
+            }
+
+            var filepath = getAssertFilepath(layerFilterPlainMapnik);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
+        });
+    });
+
+    var layerFilterPlainMapnik2 = [0,3];
+    var layerFilterPlainMapnik2Param = layerFilterPlainMapnik2.join(',');
+    it('should filter plain & mapnik layers on ' + layerFilterPlainMapnik2Param + '/1/0/0.png', function (done) {
+        var options = {
+            layer: layerFilterPlainMapnik2Param
+        };
+
+        testClient.getTile(1, 0, 0, options, function(err, tile) {
+            if (err) {
+                return done(err);
+            }
+
+            var filepath = getAssertFilepath(layerFilterPlainMapnik2);
+            assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function (err) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
+        });
+    });
+
 });
