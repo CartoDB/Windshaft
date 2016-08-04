@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('mapnik layer filtering', function() {
+describe.only('mapnik layer filtering', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
@@ -128,12 +128,13 @@ describe('mapnik layer filtering', function() {
     };
 
     var filteredLayersSuite = [
-        [1,2,3,4],
-        [1,2,4],
-        [1,3,4],
-        [2,3],
-        [0,2],
-        [0,3]
+        [1, 2, 3, 4],
+        [1, 2, 4],
+        [1, 3, 4],
+        [2, 3],
+        [3, 2], // ordering doesn't matter
+        [0, 2],
+        [0, 3]
     ];
 
     function getAssertFilepath(layers) {
