@@ -32,12 +32,14 @@ describe('mapnik layer filtering', function() {
         version: '1.2.0',
         layers: [
             {
+                id: 'plain0',
                 type: 'plain',
                 options: {
                     color: '#fabada'
                 }
             },
             {
+                id: 'http0',
                 type: 'http',
                 options: {
                     urlTemplate: 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png',
@@ -45,6 +47,7 @@ describe('mapnik layer filtering', function() {
                 }
             },
             {
+                id: 'mapnik0',
                 type: 'mapnik',
                 options: {
                     sql: 'SELECT * FROM populated_places_simple_reduced',
@@ -53,6 +56,7 @@ describe('mapnik layer filtering', function() {
                 }
             },
             {
+                id: 'mapnik1',
                 type: 'mapnik',
                 options: {
                     sql: 'SELECT * FROM populated_places_simple_reduced',
@@ -61,6 +65,7 @@ describe('mapnik layer filtering', function() {
                 }
             },
             {
+                id: 'torque0',
                 type: 'torque',
                 options: {
                     sql: "SELECT * FROM populated_places_simple_reduced",
@@ -89,6 +94,7 @@ describe('mapnik layer filtering', function() {
                 }
             },
             {
+                id: 'http1',
                 type: 'http',
                 options: {
                     urlTemplate: 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png',
@@ -96,6 +102,7 @@ describe('mapnik layer filtering', function() {
                 }
             },
             {
+                id: 'torque1',
                 type: 'torque',
                 options: {
                     sql: "SELECT * FROM populated_places_simple_reduced " +
@@ -134,7 +141,11 @@ describe('mapnik layer filtering', function() {
         [2, 3],
         [3, 2], // ordering doesn't matter
         [0, 2],
-        [0, 3]
+        [0, 3],
+        ['mapnik0', 'mapnik1'],
+        ['mapnik1', 'mapnik0'],
+        ['plain0', 'mapnik0'],
+        ['plain0', 'mapnik1'],
     ];
 
     function getAssertFilepath(layers) {
@@ -164,4 +175,32 @@ describe('mapnik layer filtering', function() {
             });
         });
     });
+
+    var errorFilteredLayersSuite = [
+        ['wrongFilter0', 'mapnik1'],
+        ['mapnik1', 'wrongFilter0'],
+        ['mapnik', 'mapnik1'],
+        ['blend', 'mapnik1'],
+        ['mapnik1', 'http'],
+        ['mapnik1', 'torque', 'plain0'],
+        ['cartodb'],
+        ['torque0', 'raster'],
+        ['torque1', 'plain', 'plain0']
+    ];
+
+    errorFilteredLayersSuite.forEach(function(filteredLayers) {
+        var filteredLayersParam = filteredLayers.join(',');
+        it('should return error for bad layer filtering ' + filteredLayersParam + '/1/0/0.png', function (done) {
+            var options = {
+                layer: filteredLayersParam
+            };
+
+            testClient.getTile(1, 0, 0, options, function(err) {
+                assert.ok(err);
+                assert.equal(err.message, 'Invalid layer filtering');
+                done();
+            });
+        });
+    });
+
 });
