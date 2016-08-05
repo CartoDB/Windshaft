@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('mapnik layer filtering', function() {
+describe('layer filtering', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
@@ -149,12 +149,12 @@ describe('mapnik layer filtering', function() {
     ];
 
     function getAssertFilepath(layers) {
-        return './test/fixtures/mapnik/mapnik-filtering-layers-' + layers.join('.') + '-zxy-1.0.0.png';
+        return './test/fixtures/layers/filter-layers-' + layers.join('.') + '-zxy-1.0.0.png';
     }
 
     filteredLayersSuite.forEach(function(filteredLayers) {
         var filteredLayersParam = filteredLayers.join(',');
-        it('should filter mapnik layers on ' + filteredLayersParam + '/1/0/0.png', function (done) {
+        it('should filter layers on ' + filteredLayersParam + '/1/0/0.png', function (done) {
             var options = {
                 layer: filteredLayersParam
             };
