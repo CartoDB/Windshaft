@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe.only('mapnik layer filtering', function() {
+describe('mapnik layer filtering', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
