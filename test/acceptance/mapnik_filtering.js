@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('mapnik layer filtering', function() {
+describe.only('mapnik layer filtering', function() {
     var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
@@ -143,7 +143,7 @@ describe('mapnik layer filtering', function() {
         [0, 2],
         [0, 3],
         ['mapnik0', 'mapnik1'],
-        ['mapnik1', 'mapnik0'],
+        ['mapnik1', 'mapnik0'], // ordering doesn't matter
         ['plain0', 'mapnik0'],
         ['plain0', 'mapnik1'],
     ];
@@ -185,7 +185,9 @@ describe('mapnik layer filtering', function() {
         ['mapnik1', 'torque', 'plain0'],
         ['cartodb'],
         ['torque0', 'raster'],
-        ['torque1', 'plain', 'plain0']
+        ['torque1', 'plain', 'plain0'],
+        [0, 'mapnik1'], // mixing layer index and identifier should not work
+        ['mapnik1', 0]
     ];
 
     errorFilteredLayersSuite.forEach(function(filteredLayers) {
