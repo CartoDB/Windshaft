@@ -1,6 +1,10 @@
 # Version 2.4.1
 2016-mm-dd
 
+Announcements:
+ - Use github's git URL for dependencies instead of tarballs.
+
+
 # Version 2.4.0
 2016-06-29
 
