@@ -1,6 +1,9 @@
 # Version 2.4.2
 2016-mm-dd
 
+Announcements:
+ - Use S3 bucket for mapnik module.
+
 
 # Version 2.4.1
 2016-08-11
