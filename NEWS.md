@@ -1,5 +1,8 @@
-# Version 2.4.3
-2016-mm-dd
+# Version 2.5.0
+2016-08-17
+
+Announcements:
+ - Allow to show & hide mapnik layers filtering by indexes in URL.
 
 
 # Version 2.4.2
