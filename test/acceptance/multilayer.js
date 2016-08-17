@@ -99,6 +99,7 @@ describe('multilayer', function() {
     it("layergroup with 2 layers, each with its style (grid.json, layer 1)", function(done) {
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, {layer: 1, format: 'grid.json'}, function (err, tile) {
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2, done);
         });
     });

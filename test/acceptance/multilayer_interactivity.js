@@ -19,6 +19,7 @@ describe('multilayer interactivity and layers order', function() {
             };
             var testClient = new TestClient(mapConfig);
             testClient.createLayergroup(function(err, layergroup) {
+                assert.ifError(err);
                 var layergroupId = layergroup.layergroupid;
                 assert.ok(layergroupId);
                 assert.equal(layergroup.metadata.layers.length, mapConfig.layers.length);
