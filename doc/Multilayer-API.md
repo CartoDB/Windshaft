@@ -220,9 +220,6 @@ torque layer type.
  Example: `GET :base_url_mapconfig/:TOKEN/0,3,4/{z}/{x}/{y}.png`
  Some notes about filtering:
   * Invalid index values or out of bound indexes will end in `Invalid layer filtering` errors.
-  * Once a mapnik layer is selected all mapnik layers will get blended. As this may change in the future **it is
-  recommended** to always select all mapnik layers if you want to select at least one so you will get a consistent
-  behaviour in the future.
   * Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
   consistent behaviour in the future.
