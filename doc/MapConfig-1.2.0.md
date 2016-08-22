@@ -51,9 +51,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
                // It should select at least the columns specified in ``geom_column``,
                // ``interactivity`` and  ``attributes`` configurations below.
                //
-               // For ``mapnik`` and ``torque`` layers it can contain substitution tokens !bbox!,
-               // !pixel_width!, !scale_denominator!, and !pixel_height!, see implication of that in the
-               // ``attributes`` configuration below.
+               // For ``mapnik`` and ``torque`` layers it can contain substitution tokens `!bbox!`,
+               // `!pixel_width!`, `!scale_denominator!`, and `!pixel_height!`.
                //
                sql: 'select * from table',
 
