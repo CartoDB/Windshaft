@@ -1,7 +1,7 @@
 MapConfig is a document used to create maps in Windshaft,
 via the [MultiLayer API](Multilayer-API.md)
 
-Latest version of the document: [MapConfig-1.5.0](MapConfig-1.5.0.md)
+Latest version of the document: [MapConfig-1.5.0](MapConfig-1.5.0.md).
 
 The identifier of created maps can then be used to fetch different resources
 (availability of which depends on the map configuration):
