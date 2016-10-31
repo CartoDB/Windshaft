@@ -1,5 +1,5 @@
 # Version 2.6.0
-2016-mm-dd
+2016-10-31
 
 Enhancements:
  - Expose layer index if map validation fails.
