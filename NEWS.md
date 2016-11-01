@@ -1,5 +1,8 @@
 # Version 2.6.1
-2016-mm-dd
+2016-11-01
+
+Bug fixes:
+ - Fix bad behavior in map validator, now validates layer by layer to indicate which one fails.
 
 
 # Version 2.6.0
