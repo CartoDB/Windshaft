@@ -1,6 +1,9 @@
 # Version 2.6.2
 2016-mm-dd
 
+Bug fixes:
+ - Now validates all mapnik layers and if it fails then checks layer by layer to indicate which one fails.
+
 
 # Version 2.6.1
 2016-11-01
