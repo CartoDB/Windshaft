@@ -131,11 +131,6 @@ describe('multilayer error cases', function() {
     });
 
     it("post'ing style with non existent column (address) in filter returns 400 with error", function(done) {
-        // FIXME: mapnik puts "address" column for each query of the layer, actually address is defined in test_table
-        // but not in test_big_poly:
-        // SELECT ST_AsBinary("the_geom") AS geom,"address" FROM (select * from test_big_poly limit 1) as cdbq
-        //  WHERE "the_geom"
-        //    && ST_MakeEnvelope(-179.9999999753647,85.05112871548387,-179.9999992460496,85.0511287783995,4326)
         var layergroup =  {
             version: '1.0.1',
             layers: [
