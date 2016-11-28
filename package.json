@@ -22,7 +22,7 @@
     "dependencies": {
         "abaculus": "2.0.1",
         "canvas": "1.6.2",
-        "carto": "0.16.3",
+        "carto": "cartodb/carto#0.15.1-cdb2",
         "cartodb-psql": "~0.6.1",
         "debug": "~2.2.0",
         "dot": "~1.0.2",
