@@ -142,6 +142,8 @@ describe('blend layer filtering', function() {
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTile(1, 0, 0, {layer: layerFilter}, function(err, tile) {
+                assert.ifError(err);
+
                 assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err);
                     done();
