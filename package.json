@@ -21,7 +21,7 @@
     ],
     "dependencies": {
         "abaculus": "2.0.1",
-        "canvas": "cartodb/node-canvas#1.2.7-cdb1",
+        "canvas": "1.6.2",
         "carto": "0.16.3",
         "cartodb-psql": "~0.6.1",
         "debug": "~2.2.0",
@@ -34,7 +34,7 @@
         "semver": "~5.0.3",
         "sphericalmercator": "1.0.3",
         "step": "~0.0.6",
-        "tilelive": "~4.5.3",
+        "tilelive": "5.12.2",
         "tilelive-bridge": "2.3.1",
         "tilelive-mapnik": "0.6.18",
         "torque.js": "~2.11.0",
