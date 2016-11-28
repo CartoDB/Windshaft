@@ -145,7 +145,7 @@ describe('blend layer filtering', function() {
                 assert.ifError(err);
 
                 assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     done();
                 });
             });
