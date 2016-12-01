@@ -26,7 +26,7 @@
         "cartodb-psql": "~0.6.1",
         "debug": "~2.2.0",
         "dot": "~1.0.2",
-        "grainstore": "1.2.0",
+        "grainstore": "1.3.0",
         "mapnik": "https://s3.amazonaws.com/cartodb-node-binary/mapnik/v1.4.15-cdb10/1.4.15-cdb10.tgz",
         "queue-async": "~1.0.7",
         "redis-mpool": "~0.4.0",
