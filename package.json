@@ -30,7 +30,7 @@
         "mapnik": "https://s3.amazonaws.com/cartodb-node-binary/mapnik/v1.4.15-cdb10/1.4.15-cdb10.tgz",
         "queue-async": "~1.0.7",
         "redis-mpool": "~0.4.0",
-        "request": "2.62.0",
+        "request": "2.74.0",
         "semver": "~5.0.3",
         "sphericalmercator": "1.0.3",
         "step": "~0.0.6",
