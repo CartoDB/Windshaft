@@ -9,6 +9,7 @@ addons:
       - libcairo2-dev
       - libjpeg8-dev
       - libgif-dev
+      - libpango1.0-dev
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
