@@ -162,7 +162,7 @@ describe('mvt', function() {
             });
         });
 
-        it.skip('select one layer', function(done) {
+        it('select one layer', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig);
             testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
@@ -189,12 +189,12 @@ describe('mvt', function() {
             });
         });
 
-        it.skip('select multiple mapnik layers', function(done) {
+        it('select multiple mapnik layers', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig);
             testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt'}, multipleLayersValidation(done));
         });
 
-        it.skip('filter some mapnik layers', function(done) {
+        it('filter some mapnik layers', function(done) {
             var mapConfig =  {
                 version: '1.3.0',
                 layers: [
@@ -248,7 +248,7 @@ describe('mvt', function() {
                     assert.equal(layer0.features.length, 2);
 
                     var layer1 = result[1];
-                    assert.equal(layer1.name, 'layer1');
+                    assert.equal(layer1.name, 'layer2');
                     assert.equal(layer1.features.length, 5);
 
                     var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
