@@ -1,13 +1,13 @@
-sudo: false
-
 addons:
-  postgresql: "9.3"
+  postgresql: "9.5"
   apt:
     packages:
+      - postgresql-9.5-postgis-2.3
       - pkg-config
       - libcairo2-dev
       - libjpeg8-dev
       - libgif-dev
+      - libpango1.0-dev
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
