@@ -1,6 +1,9 @@
 # Version 2.6.4
 2016-mm-dd
 
+Announcements:
+ - Upgrades grainstore to [1.4.0](https://github.com/CartoDB/grainstore/releases/tag/1.4.0).
+
 
 # Version 2.6.3
 2016-12-01
