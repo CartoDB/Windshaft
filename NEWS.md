@@ -1,6 +1,9 @@
 # Version 2.6.5
 2016-mm-dd
 
+Announcements:
+ - Upgrades request dependency.
+
 
 # Version 2.6.4
 2016-12-13
