@@ -59,5 +59,5 @@ module.exports.windshaft_port = 8080;
 module.exports.enable_cors = true;
 module.exports.enabledFeatures = {
     // whether in mapconfig is available stats & metadata for each layer
-    layerMetadata: true
+    layerMetadata: false
 };

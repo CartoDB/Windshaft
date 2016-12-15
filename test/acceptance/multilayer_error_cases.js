@@ -130,7 +130,7 @@ describe('multilayer error cases', function() {
       });
     });
 
-    it("post'ing style with non existent column in filter returns 400 with error", function(done) {
+    it("post'ing style with non existent column (address) in filter returns 400 with error", function(done) {
         var layergroup =  {
             version: '1.0.1',
             layers: [
@@ -153,6 +153,34 @@ describe('multilayer error cases', function() {
         testClient.createLayergroup(function(err) {
             assert.ok(err);
             assert.ok(err.message.match(/column "address" does not exist/m));
+            done();
+        });
+    });
+
+    it("post'ing style with non existent column for its own layer in filter returns 400 with error", function(done) {
+        var layergroup =  {
+            version: '1.0.1',
+            layers: [
+                { options: {
+                    sql: 'select * from test_table limit 1',
+                    cartocss: '#test_table::outline[nonexistent="one"], [nonexistent="two"] { marker-fill: red; }',
+                    cartocss_version: '2.0.2',
+                    interactivity: [ 'cartodb_id' ]
+                } },
+                { options: {
+                    sql: 'select * from test_big_poly limit 1',
+                    cartocss: '#test_big_poly { marker-fill:blue }',
+                    cartocss_version: '2.0.2',
+                    interactivity: [ 'cartodb_id' ]
+                } }
+            ]
+        };
+
+        var testClient = new TestClient(layergroup);
+        testClient.createLayergroup(function(err) {
+            assert.ok(err);
+            assert.ok(err.message.match(/column "nonexistent" does not exist/m));
+            assert.equal(err.layerIndex, 0);
             done();
         });
     });

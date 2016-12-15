@@ -4,6 +4,15 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
 describe('Create mapnik layergroup', function() {
+    before(function() {
+        this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
+        global.environment.enabledFeatures.layerMetadata = true;
+    });
+
+    after(function() {
+        global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
+    });
+
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
 
@@ -52,6 +61,16 @@ describe('Create mapnik layergroup', function() {
         options: {
             urlTemplate: 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
             subdomains: ['a','b','c']
+        }
+    };
+
+    var mapnikLayerGeomColumn = {
+        type: 'mapnik',
+        options: {
+            sql: 'select *, the_geom as my_geom from test_table_3 limit 2',
+            geom_column: 'my_geom',
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
         }
     };
 
@@ -218,6 +237,23 @@ describe('Create mapnik layergroup', function() {
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
             assert.equal(layergroup.metadata.layers[1].meta.cartocss, cartocss);
+            done();
+        });
+    });
+
+    it('should work with different geom_column', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                mapnikLayerGeomColumn
+            ]
+        });
+
+        testClient.createLayergroup(function(err, layergroup) {
+            assert.ok(!err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            // we don't care about stats here as is an aliased column
+            assert.ok(layergroup.metadata.layers[0].meta.stats[0].hasOwnProperty('features'));
             done();
         });
     });

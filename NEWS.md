@@ -1,5 +1,47 @@
-# Version 2.5.1
+# Version 2.6.6
 2016-mm-dd
+
+
+# Version 2.6.5
+2016-12-13
+
+Announcements:
+ - Upgrades request dependency.
+
+
+# Version 2.6.4
+2016-12-13
+
+Announcements:
+ - Upgrades grainstore to [1.4.0](https://github.com/CartoDB/grainstore/releases/tag/1.4.0).
+
+
+# Version 2.6.3
+2016-12-01
+
+Announcements:
+ - Upgrades grainstore to [1.3.0](https://github.com/CartoDB/grainstore/releases/tag/1.3.0).
+
+
+# Version 2.6.2
+2016-11-05
+
+Bug fixes:
+ - Now validates all mapnik layers and if it fails then checks layer by layer to indicate which one fails.
+
+
+# Version 2.6.1
+2016-11-01
+
+Bug fixes:
+ - Fix bad behavior in map validator, now validates layer by layer to indicate which one fails.
+
+
+# Version 2.6.0
+2016-10-31
+
+Enhancements:
+ - Expose layer index if map validation fails.
 
 
 # Version 2.5.0
