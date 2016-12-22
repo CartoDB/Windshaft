@@ -29,7 +29,7 @@
         "grainstore": "cartodb/grainstore#carto-0.16.3",
         "mapnik": "3.5.14",
         "queue-async": "~1.0.7",
-        "redis-mpool": "cartodb/node-redis-mpool#master",
+        "redis-mpool": "0.4.1",
         "request": "~2.79.0",
         "semver": "~5.0.3",
         "sphericalmercator": "1.0.4",
