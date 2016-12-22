@@ -8,9 +8,11 @@ addons:
       - libjpeg8-dev
       - libgif-dev
       - libpango1.0-dev
+      - g++-4.9
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
+  - CXX=g++-4.9
 
 language: node_js
 node_js:
