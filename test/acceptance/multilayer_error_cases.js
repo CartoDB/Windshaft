@@ -2,6 +2,8 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+var semver = require('semver');
+var mapnik = require('mapnik');
 
 describe('multilayer error cases', function() {
 
@@ -211,7 +213,13 @@ describe('multilayer error cases', function() {
         var testClient = new TestClient(bogusStyleMapConfig);
         testClient.createLayergroup(function(err) {
             assert.ok(err);
-            assert.equal(err.message, 'style0:1:9 Invalid code: xxxxx;');
+
+            if (semver.satisfies(mapnik.versions.mapnik, '2.3.x')) {
+                assert.equal(err.message, 'style0:1:9 Invalid code: xxxxx;');
+            } else if (semver.satisfies(mapnik.versions.mapnik, '3.0.x')) {
+                assert.equal(err.message, '<css input>:1:13: Unknown word');
+            }
+
             done();
         });
     });
