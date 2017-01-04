@@ -211,7 +211,7 @@ describe('multilayer error cases', function() {
         var testClient = new TestClient(bogusStyleMapConfig);
         testClient.createLayergroup(function(err) {
             assert.ok(err);
-            assert.equal(err.message, 'style0:1:9 Invalid code: xxxxx;');
+            assert.equal(err.message, '<css input>:1:13: Unknown word');
             done();
         });
     });
