@@ -28,6 +28,7 @@
         "dot": "~1.0.2",
         "grainstore": "cartodb/grainstore#carto-0.16.3",
         "mapnik": "3.5.14",
+        "postcss": "^5.2.8",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
         "request": "~2.79.0",
