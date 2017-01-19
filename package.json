@@ -21,7 +21,7 @@
     ],
     "dependencies": {
         "abaculus": "cartodb/abaculus#2.0.3-cdb1",
-        "canvas": "cartodb/node-canvas#cdb-1.6.x",
+        "canvas": "cartodb/node-canvas#1.6.2-cdb1",
         "carto": "cartodb/carto#0.15.1-cdb2",
         "cartodb-psql": "0.7.0",
         "debug": "~2.2.0",
