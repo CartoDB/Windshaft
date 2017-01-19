@@ -20,7 +20,7 @@
         "Raul Ochoa <rochoa@cartodb.com>"
     ],
     "dependencies": {
-        "abaculus": "cartodb/abaculus#cdb-2.x",
+        "abaculus": "cartodb/abaculus#2.0.3-cdb1",
         "canvas": "cartodb/node-canvas#cdb-1.6.x",
         "carto": "cartodb/carto#0.15.1-cdb2",
         "cartodb-psql": "0.7.0",
