@@ -199,7 +199,7 @@ describe('cartocss transformation', function () {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {
-                    grainstore: _.extend(TestClient.grainstoreOptions, { mapnik_version: scenario.mapnikVersion })
+                    grainstore: _.defaults({ mapnik_version: scenario.mapnikVersion }, TestClient.grainstoreOptions)
                 }
             };
 
@@ -231,13 +231,12 @@ describe('cartocss transformation', function () {
         mapnikVersion: '2.3.0'
     }];
 
-
     errorScenarios.forEach(function (scenario) {
         it(scenario.description,  function (done) {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {
-                    grainstore: _.extend(TestClient.grainstoreOptions, { mapnik_version: scenario.mapnikVersion })
+                    grainstore: _.defaults({ mapnik_version: scenario.mapnikVersion }, TestClient.grainstoreOptions)
                 }
             };
 
