@@ -50,15 +50,14 @@ describe('timer', function() {
         assert.deepEqual(timer.getTimes(), {});
     });
 
-    it('should report time as 0 when end called before start', function() {
+    it('should not report time when end called before start', function() {
         var timer = new Timer();
         timer.end(label);
 
         timer.start(label);
 
         var stats = timer.getTimes();
-        assert.equal(Object.keys(stats).length, 1);
-        assert.equal(stats[label], 0);
+        assert.equal(Object.keys(stats).length, 0);
     });
 
     it('should report several stats when more than one label is started and ended', function() {
