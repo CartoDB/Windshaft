@@ -23,7 +23,7 @@
         "abaculus": "cartodb/abaculus#1.1.0-cdb7",
         "canvas": "cartodb/node-canvas#1.2.7-cdb1",
         "carto": "cartodb/carto#0.15.1-cdb2",
-        "cartodb-psql": "~0.6.1",
+        "cartodb-psql": "~0.7.1",
         "debug": "~2.2.0",
         "dot": "~1.0.2",
         "grainstore": "1.4.0",
