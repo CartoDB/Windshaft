@@ -52,7 +52,7 @@
         "test": "make test-all"
     },
     "engines": {
-        "node": ">=0.8 <0.11",
+        "node": ">=0.10",
         "npm": ">=1.2.1"
     }
 }
