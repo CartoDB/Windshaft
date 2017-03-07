@@ -43,7 +43,6 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
     }
 
     this.config = windshaft.model.MapConfig.create(mapConfig);
-    
     this.rendererFactory = new windshaft.renderer.Factory(options);
     this.rendererCache = new windshaft.cache.RendererCache(this.rendererFactory);
 
