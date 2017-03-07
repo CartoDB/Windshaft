@@ -25,8 +25,7 @@ var test = _.extend(development, {
             }
         }
     }),
-    windshaft_port: 8083,
-    mapnik_version: undefined
+    windshaft_port: 8083
 });
 
 module.exports = test;
