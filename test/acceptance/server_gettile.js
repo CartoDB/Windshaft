@@ -140,7 +140,7 @@ describe('server_gettile', function() {
       debug("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
       it.skip(test_strict_lbl,  test_strictness);
     }
-    else if (!semver.satisfies(mapnik.versions.mapnik, '3.0.x')){
+    else if (!semver.satisfies(mapnik.versions.mapnik, '3.x')){
       it(test_strict_lbl,  test_strictness);
     }
 
