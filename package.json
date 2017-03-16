@@ -20,23 +20,23 @@
         "Raul Ochoa <rochoa@cartodb.com>"
     ],
     "dependencies": {
-        "abaculus": "cartodb/abaculus#1.1.0-cdb7",
-        "canvas": "cartodb/node-canvas#1.2.7-cdb1",
-        "carto": "cartodb/carto#0.15.1-cdb2",
-        "cartodb-psql": "~0.7.1",
+        "abaculus": "cartodb/abaculus#2.0.3-cdb1",
+        "canvas": "cartodb/node-canvas#1.6.2-cdb2",
+        "carto": "cartodb/carto#0.15.1-cdb3",
+        "cartodb-psql": "0.7.1",
         "debug": "~2.2.0",
         "dot": "~1.0.2",
-        "grainstore": "~1.6.0",
-        "mapnik": "https://s3.amazonaws.com/cartodb-node-binary/mapnik/v1.4.15-cdb10/1.4.15-cdb10.tgz",
+        "grainstore": "1.6.0",
+        "mapnik": "3.5.14",
         "queue-async": "~1.0.7",
-        "redis-mpool": "~0.4.0",
+        "redis-mpool": "0.4.1",
         "request": "~2.79.0",
         "semver": "~5.0.3",
-        "sphericalmercator": "1.0.3",
+        "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
-        "tilelive": "~4.5.3",
-        "tilelive-bridge": "cartodb/tilelive-bridge#1.3.0-cdb7",
-        "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.15-cdb9",
+        "tilelive": "5.12.2",
+        "tilelive-bridge": "cartodb/tilelive-bridge#2.3.1-cdb1",
+        "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb1",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
     },
@@ -45,14 +45,14 @@
         "istanbul": "~0.4.0",
         "jshint": "~2.6.0",
         "mocha": "~1.21.4",
-        "redis": "^2.4.2"
+        "redis": "~2.4.2"
     },
     "scripts": {
         "preinstall": "make pre-install",
         "test": "make test-all"
     },
     "engines": {
-        "node": ">=0.8 <0.11",
+        "node": ">=0.10",
         "npm": ">=1.2.1"
     }
 }

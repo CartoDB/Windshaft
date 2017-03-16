@@ -205,7 +205,7 @@ describe('torque', function() {
       };
 
         var testClient = new TestClient(mapconfig);
-        testClient.createLayergroup({dbport: 1234567}, function(err) {
+        testClient.createLayergroup({dbport: 54777}, function(err) {
             assert.ok(err);
             assert.equal(err.message, "TorqueRenderer: cannot connect to the database");
             done();

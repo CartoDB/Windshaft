@@ -112,12 +112,14 @@ describe('server_gettile', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/99
-    it("unused directives are tolerated",  function(done){
-        var style = "#test_table{point-transform: 'scale(100)';}";
-        var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
-        new TestClient(TestClient.singleLayerMapConfig(sql, style))
-            .getTile(0, 0, 0, imageCompareFn('test_default_mapnik_point.png', done));
-    });
+    if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
+        it("unused directives are tolerated",  function(done){
+            var style = "#test_table{point-transform: 'scale(100)';}";
+            var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
+            new TestClient(TestClient.singleLayerMapConfig(sql, style))
+                .getTile(0, 0, 0, imageCompareFn('test_default_mapnik_point.png', done));
+        });
+    }
 
     // See http://github.com/CartoDB/Windshaft/issues/100
     var test_strictness = function(done) {
@@ -138,7 +140,7 @@ describe('server_gettile', function() {
       debug("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
       it.skip(test_strict_lbl,  test_strictness);
     }
-    else {
+    else if (!semver.satisfies(mapnik.versions.mapnik, '3.x')){
       it(test_strict_lbl,  test_strictness);
     }
 
