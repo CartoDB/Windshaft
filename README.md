@@ -33,11 +33,11 @@ More examples built on top of Windshaft can be found in [CartoDB's gallery](http
 
 Dependencies
 ------------
-* Node >=0.8
-* npm >=1.2.1 <2.0.0
-* Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
-* PostgreSQL >8.3.x, PostGIS >1.5.x
-* Redis >2.2.x
+* Node >= 6.9
+* npm >= 3.10
+* Mapnik 3.x. See [Installing Mapnik](#installing-mapnik).
+* PostgreSQL > 8.3.x, PostGIS > 1.5.x
+* Redis > 2.2.x
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
 Dependencies installation example:
@@ -77,18 +77,6 @@ can also use other alternatives:
  - **Source**: https://github.com/mapnik/mapnik
  - **OSX**: https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
  - **Linux**: https://github.com/mapnik/mapnik/wiki/LinuxInstallation
-
-Recommended options to build from source:
-
- - **node-mapnik**: from [1.x branch](https://github.com/CartoDB/node-mapnik/tree/1.x), current tagged version is
- [1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/tree/1.4.15-cdb5), which is
- [what windshaft uses](https://github.com/CartoDB/Windshaft/blob/1.5.0/package.json#L31).
- - **mapnik**: node-mapnik uses a fixed version of mapnik, which currently is
- [9d40bb2](https://github.com/CartoDB/mapnik/commit/9d40bb2), check
- [build_against_sdk.sh#L100-L101@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/blob/1.4.15-cdb5/scripts/build_against_sdk.sh#L100-L101).
-
-We maintain a set of [scripts/recipes to package mapnik sdk and node-mapnik](https://github.com/CartoDB/node-mapnik-packaging-recipes).
-It can help to understand what you really need to package mapnik + node-mapnik to be used from windshaft[-cartodb].
 
 Tests
 -----
