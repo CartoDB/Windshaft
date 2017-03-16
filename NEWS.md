@@ -1,5 +1,8 @@
-# Version 2.7.1
+# Version 2.8.0
 2017-mm-dd
+
+New features:
+ - Honour "srid" option in mapnik layer.
 
 Announcements:
  - Upgrades grainstore to [1.6.0](https://github.com/CartoDB/grainstore/releases/tag/1.6.0).
