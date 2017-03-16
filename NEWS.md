@@ -1,5 +1,18 @@
-# Version 2.8.1
-2017-mm-dd
+# Version 3.0.0
+2017-03-16
+
+Announcements:
+ - Supports Node v6.9.x
+ - Drops support for Node v0.10.x
+ - Upgrades mapnik to 3.5.14
+ - Upgrades tilelive to 5.12.2
+ - Upgrades tilelive-bridge to 2.3.1-cdb1
+ - Upgrades tilelive-mapnik to 0.6.18-cdb1
+ - Upgrades sphericalmercator to 1.0.4
+ - Upgrades abaculus to 2.0.3-cdb1
+ - Upgrades canvas to 1.6.2-cdb2
+ - Upgrades carto to 0.15.1-cdb3
+ - Upgrades redis-mpool to 0.4.1
 
 
 # Version 2.8.0
