@@ -1,5 +1,5 @@
 # Version 2.8.0
-2017-mm-dd
+2017-03-16
 
 **Deprecation warning**: v2.8.0 is the last release that supports Node v0.10.x. Next mayor release will support Node v6.9.x and further versions.
 
