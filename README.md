@@ -1,4 +1,5 @@
-Windshaft map tiler
+
+indshaft map tiler
 ===================
 
 A Node.js map tile library for PostGIS and torque.js, with CartoCSS styling.
@@ -33,12 +34,15 @@ More examples built on top of Windshaft can be found in [CartoDB's gallery](http
 
 Dependencies
 ------------
+
+### Tiler dependencies
+
 * Node >=0.8
 * npm >=1.2.1 <2.0.0
 * Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](#installing-mapnik).
-* PostgreSQL >8.3.x, PostGIS >1.5.x
-* Redis >2.2.x
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
+* PostgreSQL >8.3.x
+* Redis >2.2.x
 
 Dependencies installation example:
 
@@ -47,6 +51,15 @@ sudo add-apt-repository -y ppa:cartodb/cairo
 sudo apt-get update
 sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
 ```
+
+### PostgerSQL datasource dependencies
+
+Databases used as datasources for maps need to be
+prepared to contain:
+
+* PostGIS >1.5.x
+* cartodb-postgresql
+  (really only `CDB_QueryTables` and `CDB_QueryStatements` functions)
 
 Install
 -------
