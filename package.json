@@ -17,7 +17,8 @@
         "Simon Tokumine <simon@vizzuality.com>",
         "Javi Santana <jsantana@vizzuality.com>",
         "Sandro Santilli <strk@vizzuality.com>",
-        "Raul Ochoa <rochoa@cartodb.com>"
+        "Raul Ochoa <rochoa@cartodb.com>",
+        "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
         "abaculus": "cartodb/abaculus#2.0.3-cdb1",
