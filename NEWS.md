@@ -1,5 +1,631 @@
-# Version 0.37.6
-2015-mm-dd
+# Version 2.8.1
+2017-mm-dd
+
+
+# Version 2.8.0
+2017-03-16
+
+**Deprecation warning**: v2.8.0 is the last release that supports Node v0.10.x. Next mayor release will support Node v6.9.x and further versions.
+
+New features:
+ - Honour "srid" option in mapnik layer.
+
+Announcements:
+ - Upgrades grainstore to [1.6.0](https://github.com/CartoDB/grainstore/releases/tag/1.6.0).
+
+
+# Version 2.7.0
+2017-02-20
+
+Announcements:
+ - Upgrades cartodb-psql to [0.7.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.7.1).
+
+
+# Version 2.6.5
+2016-12-13
+
+Announcements:
+ - Upgrades request dependency.
+
+
+# Version 2.6.4
+2016-12-13
+
+Announcements:
+ - Upgrades grainstore to [1.4.0](https://github.com/CartoDB/grainstore/releases/tag/1.4.0).
+
+
+# Version 2.6.3
+2016-12-01
+
+Announcements:
+ - Upgrades grainstore to [1.3.0](https://github.com/CartoDB/grainstore/releases/tag/1.3.0).
+
+
+# Version 2.6.2
+2016-11-05
+
+Bug fixes:
+ - Now validates all mapnik layers and if it fails then checks layer by layer to indicate which one fails.
+
+
+# Version 2.6.1
+2016-11-01
+
+Bug fixes:
+ - Fix bad behavior in map validator, now validates layer by layer to indicate which one fails.
+
+
+# Version 2.6.0
+2016-10-31
+
+Enhancements:
+ - Expose layer index if map validation fails.
+
+
+# Version 2.5.0
+2016-08-17
+
+Announcements:
+ - Allow to show & hide mapnik layers filtering by indexes in URL.
+
+
+# Version 2.4.2
+2016-08-12
+
+Announcements:
+ - Use S3 bucket for mapnik module.
+
+
+# Version 2.4.1
+2016-08-11
+
+Announcements:
+ - Use github's git URL for dependencies instead of tarballs.
+
+
+# Version 2.4.0
+2016-06-29
+
+Enhancements:
+  - Errors during MapConfig's instantiation return the layer-id to give more info about what's going on.
+
+
+# Version 2.3.0
+2016-06-08
+
+Enhancements:
+ - Only adds cartocss to meta for layers where it makes sense.
+
+New features:
+ - Expose layer id in metadata.
+
+
+# Version 2.2.0
+2016-06-07
+
+Improvements:
+ - Allow to set id per layer #485
+
+Announcements:
+ - Upgrades grainstore to 1.2.0
+
+
+# Version 2.1.0
+2016-06-06
+
+Improvements:
+ - Adds support for substitution tokens in geojson tiles
+
+
+# Version 2.0.1
+2016-06-02
+
+Bug fixes:
+ - Geojson renderer: columns option should ignore nulls #481
+
+
+# Version 2.0.0
+2016-06-02
+
+Announcements:
+ - Removes support for widgets/filters introduced in version 1.7.0.
+
+
+# Version 1.20.0
+2016-06-02
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb8](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb8)
+
+
+# Version 1.19.0
+2016-04-28
+
+New features:
+ - Adds support for buffer-size CartoCSS Map property in geojson tiles.
+
+Announcements:
+ - Upgrades carto to 0.15.1-cdb2
+
+
+# Version 1.18.0
+2016-04-27
+
+New features::
+ - Handles columns defined in layer options to fill properties to render GeoJSON format
+
+
+# Version 1.17.3
+2016-04-27
+
+Enhancements:
+ - Columns defined in dataviews specification are taking into account to fill properties in geojson renderer
+
+
+# Version 1.17.2
+2016-04-26
+
+Enhancements:
+ - Skip mapnik properties in geojson renderer
+
+
+# Version 1.17.1
+2016-04-18
+
+Enhancements:
+- GeoJSON renderer: removing ST_MakeValid, it might fail for some tiles but it's way better performance wise.
+
+
+# Version 1.17.0
+2016-04-06
+
+New features:
+ - GeoJSON renderer (#451):
+  - Adds precision to ST_AsGeoJSON based on zoom
+  - Handle interactivity columns as they might be arrays or strings
+  - Simplify geometries keeping at least their bbox
+
+# Version 1.16.1
+2016-03-23
+ - Improves column extraction from cartocss #466
+
+
+# Version 1.16.0
+2016-03-16
+
+Announcements:
+ - Now GeoJSON Renderer fills properties with columns that are required in CartoCSS, Widgets and Interactivity.
+
+
+# Version 1.15.0
+2016-03-15
+
+Announcements:
+ - Added cartocss to metadata of layergroup[#462]
+
+
+# Version 1.14.0
+2016-03-14
+
+Announcements:
+ - Removed experimental support for turbo-cartocss [#459]
+
+# Version 1.13.2
+2016-02-25
+
+Enhancements:
+ - Ignore turbo-cartocss error when it fails and continue to carto parser
+
+
+# Version 1.13.1
+2016-02-24
+
+Enhancements:
+ - Do not use st_makevalid for && envelope
+
+
+# Version 1.13.0
+2016-02-24
+
+Enhancements:
+ - Improved experimental support for turbo-cartocss with number of buckets #442
+
+
+# Version 1.12.0
+2016-02-23
+
+New features:
+ - Experimental support for turbo-cartocss #438
+
+
+# Version 1.11.1
+2016-02-22
+
+Enhancements:
+ - Geojson make valid #437
+
+
+# Version 1.11.0
+2016-02-18
+
+New features:
+ - Histogram can be retrieved with a fix number of bins #433
+
+
+# Version 1.10.1
+2016-02-15
+
+Enhancements:
+ - Removes console.* calls
+
+
+# Version 1.10.0
+2016-02-15
+
+New features:
+ - Async filter params #431
+
+Enhancements:
+ - Geojson buffer fixed to 32px #430
+
+
+# Version 1.9.0
+2016-02-09
+
+New features:
+- Provisional internal query-rewriting interface for Windshaft-cartodb tests
+
+
+# Version 1.8.3
+2016-02-08
+
+Enhancements:
+ - Widgets histogram improvements: type casting when required #428
+ - Widgets async queries #427
+
+
+# Version 1.8.2
+2016-02-04
+
+Bug fixes:
+ - Use datasource from layer id to compute mapnik layers metadata
+
+
+# Version 1.8.1
+2016-02-04
+
+Announcements:
+ - Upgrades grainstore to [1.1.1](https://github.com/CartoDB/grainstore/releases/tag/1.1.1)
+
+
+# Version 1.8.0
+2016-02-04
+
+New features:
+ - Supported GeoJSON format for MVT tiles #421
+
+
+# Version 1.7.0
+2016-01-20
+
+New features:
+ - Allow to use Substitution tokens with attributes service #416
+
+Unsupported:
+ - Histograms, aggregations, formulas, and lists
+ - Filters
+
+Note: API for unsupported list might change in the future, use at your own peril.
+
+
+# Version 1.6.1
+2015-11-23
+
+Announcements:
+ - Upgrades tilelive-mapnik to not cache solid grids
+
+
+# Version 1.6.0
+2015-11-11
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb6](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb6)
+
+
+# Version 1.5.0
+2015-10-29
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb5](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb5)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
+
+
+# Version 1.4.0
+2015-10-28
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb4](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb4)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
+
+
+# Version 1.3.0
+2015-10-28
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb3](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb3)
+ - Upgrades all mapnik dependants to upgrade their mapnik dependency
+
+
+# Version 1.2.0
+2015-10-21
+
+New features:
+ - Adds support for `png32` format in mapnik layers (#344)
+
+
+# Version 1.1.1
+2015-10-21
+
+Enhancements:
+ - Removes step dependency in RendererCache
+
+
+# Version 1.1.0
+2015-10-09
+
+New features:
+ - Adds support for substitution tokens in Torque (#392)
+   Supported substitution tokens are: `!bbox!`, `!pixel_width!`, `!pixel_height!`, and `!scale_denominator!`.
+
+
+# Version 1.0.1
+2015-09-30
+
+Bug fixes:
+ - Lowercasing dbparams in MapConfig to be backwards compatible
+
+
+# Version 1.0.0
+2015-09-30
+
+From Semantic Versioning:
+> Major version zero (0.y.z) is for initial development. Anything may change at any time. The public
+API should not be considered stable.
+
+As we are following Semantic Versioning and we didn't release any major > 0 we could change anything with next minor
+bump but I would like to make this version 1.0.0 so this stays as the first public API.
+
+A lot of things have changed/moved/disappeared, internal API has nothing to do with previous one.
+
+List of changes:
+
+ - RendererCache now works with MapConfig providers (~~needs documentation~~).
+ - Backends hold a RendererCache, so they also work with MapConfig providers
+ - More specific backends: tiles, previews, map, validator, attributes
+ - Express no longer a dependency
+ - Makefile picks tests with `find`, no need to add files manually
+ - Example contains a basic server similar to original windshaft's server
+ - Test environment now extends development
+ - Mapnik factory no longer supports snapToGrid and clipByBox2d
+ - RendererFactory now supports a `mapnik` filter to retrieve all mapnik layers
+ - Starts using debug to no output to stdout by default
+ - Removes stats code: profiler, client, reporter
+ - Major rewrite of tests to not rely on server
+ - Support for `MVT` format in mapnik renderer
+ - Official support for `plain` layer type: options include `color` and `imageUrl`.
+   * Check [doc/MapConfig-1.4.0.md](doc/MapConfig-1.4.0.md#24-plain-layers-options) for more details.
+
+
+# Version 0.51.0
+2015-08-27
+
+New features:
+ - When gc extension is enabled with `--expose_gc` flag, RendererCache will invoke gc 1 out of 10 times it runs.
+
+
+# Version 0.50.0
+2015-08-25
+
+Enhancements:
+ - Implements close mechanism for torque renderer to free canvas' images
+ - Base adaptor exposes and calls renderers' close if available
+ - Blend renderer calls close on all renderers
+
+Bug fixes:
+ - Honor RenderCache ttl option
+
+Announcements:
+ - Do not report png cache size on renderers
+ - Uses [cartodb/node-canvas@1.2.7-cdb1](https://github.com/CartoDB/node-canvas/releases/tag/1.2.7-cdb1)
+
+
+# Version 0.49.0
+2015-08-18
+
+New features:
+ - Exposes tilelive-mapnik internal metatile cache configuration
+
+Bug fixes:
+ - Renderer stats for pool and cache now reports from all renderers
+
+Announcements:
+ - Changes abaculus and tilelive-mapnik to use `cdb` branch
+
+
+# Version 0.48.0
+2015-07-15
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb2](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb2)
+ - Upgrades abaculus and tilelive-mapnik to also use node-mapnik@1.4.15-cdb2
+
+
+# Version 0.47.0
+2015-07-05
+
+Enhancements:
+ - Upgrades grainstore to [1.0.0](https://github.com/CartoDB/grainstore/releases/tag/1.0.0)
+ - Upgrades redis-mpool to [0.4.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.4.0)
+
+
+# Version 0.46.1
+2015-07-02
+
+Enhancements:
+ - Blend renderer doesn't blend if there is only one tile to blend
+
+
+# Version 0.46.0
+2015-07-02
+
+Announcements:
+ - Removes `beforeTileRender` and `afterTileRender` triggers, use version `~0.45.0` to keep them
+
+Enhancements:
+ - Checks for ETIMEDOUT error code so timeouts do not turn into empty image in http layers (#360)
+ - Allows to set metatile based on the format
+
+
+# Version 0.45.0
+2015-06-18
+
+Enhancements:
+ - Handles coordinates out of range errors returning an empty image
+ - Blend rendering fallback to empty image when http layer request fails
+ - Checks the type of torque-specific CSS rules
+ - Unifies error response format to `{ "errors": ["messages"] }`
+
+Announcements:
+ - Removes LocalizedResourcePurger to avoid issues with cached assets
+   See https://github.com/CartoDB/Windshaft/issues/339#issuecomment-104684003
+
+
+# Version 0.44.1
+2015-06-01
+
+Enhancements:
+ - Performance improvement while retrieving metadata for layergroups
+   Does not create renderers for layers with no metadata
+
+
+# Version 0.44.0
+2015-05-26
+
+New features
+ - Blend rendering now allows to filter the layers to render
+   Layer argument in URL accepts comma separated layer indexes, so now it's possible to do requests like:
+   `GET /{layergroupid}/0,3,4/{z}/{x}/{y}.png` and will blend just layers 0, 3 and 4, skipping 1 and 2.
+   See [Multilayer-API.md](doc/Multilayer-API.md) for more details.
+ - Layergroup creation returns metadata for all layers (#338)
+   Keeps backwards compatibility for torque metadata
+ - Renderer selection based on layer (#336)
+   Before the renderer selection was based on the format
+   For instance that meant it wasn't possible to request layer in png because that was returning just mapnik layers
+
+
+# Version 0.43.0
+2015-04-29
+
+New features
+ - Static map backend to retrieve preview images.
+   Implementation extracted from static maps controller.
+
+Bug fixes:
+ - Do not use headers from abaculus in combination with sendWithHeaders
+   That was overriding Cache-Control header in static images
+
+
+# Version 0.42.2
+2015-04-16
+
+Enhancements:
+ - Improve mapnik renderer stats
+
+
+# Version 0.42.1
+2015-04-15
+
+Bug fixes:
+ - Do not profile during map validation (#318)
+
+Enhancements:
+ - Wrap x coordinate based on zoom level to avoid negative x coordinates
+
+
+# Version 0.42.0
+2015-04-09
+
+New features:
+ - `tms` option for `http` layers to invert Y axis in TMS services
+
+Bug fixes:
+ - Proper stats client instead of stubbed one
+
+
+# Version 0.41.0
+2015-04-07
+
+New features:
+ - onTileErrorStrategy can be injected into adaptors to intercept tile errors and change behaviour
+ - beforeRendererCreate hook in RenderCache to add options when creating a new Renderer
+
+Announcements:
+ - Renderer factories changed getRenderer signature, check [renderers/README](./lib/windshaft/renderers/README.md)
+ - Remove tile / style endpoints AKA old API (#259). Most likely this will evolve into a 1.0.0 release.
+ If you **want to keep using those endpoints** the best option is to **freeze windshaft version @0.40.0**.
+   - Changes includes:
+     * Before/after state change hooks for styles removed
+     * Render cache now based on dbname + token
+     * processRendererCache hook removed
+     * Changes a lot of tests to use layergroup
+     * New features in testClient to support kind of transactions with layergroups
+
+Bug fixes:
+ - Layergroup creation via GET returns with status 200 for JSONP (#302)
+
+
+# Version 0.40.0
+2015-03-11
+
+New features:
+ - Adds stats from tilelive-mapnik to step-profiler: it discerns about rendering and encoding times
+ - Profiler proxy now with add method
+
+Announcements:
+ - Upgrades step-profiler and tilelive-mapnik to handle new metrics
+
+
+# Version 0.39.0
+2015-03-09
+
+New features:
+ - Allow buffer-size in torque server side rendering (#292)
+
+Bugfixes:
+ - Support for torque heatmaps server side rendering (#294)
+
+Enhancements:
+ - Upgrades tilelive-mapnik@0.6.15 to use fromString async method to create map objects
+ - Upgrades torque.js@2.11.0
+
+
+# Version 0.38.2
+2015-02-26
+
+Announcements:
+ - Upgrades node-canvas 1.2.1
+
+
+# Version 0.38.1
+2015-02-25
+
+Announcements:
+ - Upgrades node-canvas 1.2.0
+
+
+# Version 0.38.0
+2015-02-23
 
 Bugfixes:
  - Adds qualifyURL function as option for the Point renderer (#272)
@@ -377,7 +1003,7 @@ Enhancements:
  Enhancements:
 
  - Do not send 0 timings to statsd (fixes "Bad line: 0,ms" messages)
- - Do not call req2params more then once on MapConfig creation (#157) 
+ - Do not call req2params more then once on MapConfig creation (#157)
  - Do not invalidate renderer caches when NO cache_buster is given (#158)
  - Call afterLayergroupCreate only after MapConfig verification (#159)
  - Drop LRU cache for "seen" layergroups (#160)
@@ -469,7 +1095,7 @@ Enhancements:
 
  Bug fixes:
 
- - Fix coordinate order in TorqueRenderer.getTile 
+ - Fix coordinate order in TorqueRenderer.getTile
 
 # Version 0.16.0
 2014-02-04
@@ -576,7 +1202,7 @@ Enhancements:
 2013-08-13
 
  - Rewrite mapnik XML parsing error to start with style name (#73)
- - Fix error on empty CartoCSS 
+ - Fix error on empty CartoCSS
 
 # Version 0.13.1
 2013-07-18
@@ -605,7 +1231,7 @@ Enhancements:
 2013-06-28
 
  - Allow setting layergroup token ttl via config variable
-   grainstore.default_layergroup_ttl 
+   grainstore.default_layergroup_ttl
  - Only check layergroup configuration when first seen (#77)
  - Use tile 30/0/0 for testing layergroups, override with maxzoom (#78)
 
@@ -669,7 +1295,7 @@ Enhancements:
    - Drop  /layergroup/:token/:z/:x/:y.grid.json route
    - Add /layergroup/:token/:layer/:z/:x/:y.grid.json route
    - Add /layergroup route to create maps via GET (#69)
-   - Add map config to afterLayergroupCreate hook signature 
+   - Add map config to afterLayergroupCreate hook signature
 
 # Version 0.10.0
 2013-03-29
@@ -799,7 +1425,7 @@ Enhancements:
 # Version 0.5.5
 2012-08-07
 
- - Use custom tilelive-mapnik to workaround ever-growing memory use 
+ - Use custom tilelive-mapnik to workaround ever-growing memory use
  - Expose setStyle and delStyle methods
  - Add afterStyleChange and afterStyleDelete callbacks
 
@@ -815,11 +1441,11 @@ Enhancements:
 This release drops the requirement of a field already in epsg:3857
 (aka "the_geom_webmercator");
 
- - Raise grainstore dependency to ~0.3.1 to allow for safe 
+ - Raise grainstore dependency to ~0.3.1 to allow for safe
    wgs84 to webmercator reprojection in mapnik.
  - Update tests to use mapnik reprojection.
  - Improve testing tool to accept tolerances
- - Shrinkwrap carto 0.8.1 and mapnik-reference 3.1.0 
+ - Shrinkwrap carto 0.8.1 and mapnik-reference 3.1.0
 
 # Version 0.5.2
 2012-07-20
@@ -830,7 +1456,7 @@ This release drops the requirement of a field already in epsg:3857
 # Version 0.5.1
 2012-07-12
 
- - Raise underscore dependency to ~1.3 
+ - Raise underscore dependency to ~1.3
  - Loosen grainstore dependency to >= 0.2.3 < 0.4
  - Loosen hiredis dependency to ~0.1.12
 
@@ -839,7 +1465,7 @@ This release drops the requirement of a field already in epsg:3857
 
  NOTE: this release drops support for node-0.4.x
 
- - Requires node-0.6 (#10) 
+ - Requires node-0.6 (#10)
  - Add npm-shrinkwrap.json file to lock dependencies versions
  - Add support for mapnik 2.1.x (#14)
  - Stop depending on the tilelive-mapnik-cartodb fork of tilelive-mapnik (#26)
@@ -870,7 +1496,7 @@ This release drops the requirement of a field already in epsg:3857
    - Do not hang anymore
    - Fix invalid MML syntax
    - More verbose failures
- - Improved documentation 
+ - Improved documentation
  - Raise grainstore dependency to 0.2.2
 
 # Version 0.4.6
@@ -947,4 +1573,3 @@ This release drops the requirement of a field already in epsg:3857
 
 # Version 0.0.2
 2011-09-04
-

@@ -90,7 +90,7 @@ OPTIONS :base_url_mapconfig
 
 Should be a POST to `:base_url_mapconfig` with the layergroup definition in the
 body (content-type application/json) or a GET from `:base_url_mapconfig` with
-the [layergroup definition](MapConfig-specification) in a `config` parameter.
+the [layergroup definition](MapConfig-specification.md) in a `config` parameter.
 
 For example:
 
@@ -123,8 +123,40 @@ The response should be like:
 
 ```
 {
+    // {String} The layergroup identifier that allows to request resources
     "layergroupid": ":TOKEN",
-    "last_updated": "1970-01-01T00:00:00.000Z",
+    // {Object} Metadata associated to the layergroup
+    "metadata": {
+        // {Array} a list of metadata for each layer
+        "layers": [
+            {
+                // mandatory
+                // {String} the type of the renderer, as in a layergroup
+                // Valid types in Windshaft: "mapnik", "torque", "http", "plain"
+                "type": "mapnik",
+                // mandatory
+                // {Object} it will be always present, even if empty
+                "meta": {
+                    // as many JSON valid key => value pairs
+                    // what you might find here is renderer-specific
+                }
+            }
+        ],
+        // torque metadata in case there is at least one torque layer
+        "torque": {
+            // the index of the torque layer inside the layergroup
+            "1": {
+                // {Number} min value for time column (in millis for time columns of date type)
+                "start": 1325372640000,
+                // {Number} max value for time column (in millis). Must be greater or equal than start
+                "end": 1356994560000,
+                // {Number} number of aggregated data steps
+                "data_steps": 145571,
+                // {String} time column type, can be "date" or "number"
+                "column_type": "date"
+            }
+        }
+    }
 }
 ```
 
@@ -158,22 +190,42 @@ default it supports resolution={1,2}, with `@2x` the image will be 512x512
 pixels instead of 256x256 pixels.
 
 
-## Fetch tile for a layer
+## Fetch *tiles* for a layer
 `GET :base_url_mapconfig/:TOKEN/:LAYER/{z}/{x}/{y}.{format}`
 
 Where `{format}` could be:
 
-  - http.png
-  - torque.json, torque.bin, torque.png
+  - png
+  - grid.json
+  - torque.json, torque.bin
 
 Currently the specified `:LAYER` must support the requested `{format}`, so if
-you request a `torque.png` as `format` the `:LAYER` should be defined as a
+you request a `torque.json` as `format` the `:LAYER` should be defined as a
 torque layer type.
 
-
-## Fetch grids
+### grid.json example
 
 `GET :base_url_mapconfig/:TOKEN/:LAYER/{z}/{x}/{y}.grid.json`
+
+
+## Fetch tiles for a group of (blended) layers
+
+`GET :base_url_mapconfig/:TOKEN/:LAYER_FILTER/{z}/{x}/{y}.png`
+
+`:LAYER_FILTER` supports two formats:
+
+ - **all**: it will blend all layers in the layergroup.
+ Example: `GET :base_url_mapconfig/:TOKEN/all/{z}/{x}/{y}.png`
+ - **filtering by layer index** using commas: something like `0,3,4` will filter and blend layers 0,3,4.
+ Example: `GET :base_url_mapconfig/:TOKEN/0,3,4/{z}/{x}/{y}.png`
+ Some notes about filtering:
+  * Invalid index values or out of bound indexes will end in `Invalid layer filtering` errors.
+  * Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
+  may change in the future **it is recommended** to always select the layers in ascending order so you will get a
+  consistent behaviour in the future.
+
+**Important**: currently format is limited to `png`. That means that all renderers in the layergroup must support that
+format to be able to blend them.
 
 
 ## Fetch static preview

@@ -1,6 +1,6 @@
 # 1. Purpose
 
-This specification describes 
+This specification describes
 [MapConfig](MapConfig-specification) format version 1.2.0.
 
 
@@ -48,13 +48,12 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
                // REQUIRED
                // string, SQL to be performed on user database to fetch the data to be rendered.
                //
-               // It should select at least the columns specified in ``geom_column``, 
+               // It should select at least the columns specified in ``geom_column``,
                // ``interactivity`` and  ``attributes`` configurations below.
                //
-               // For ``mapnik`` layers it can contain substitution tokens !bbox!,
-               // !pixel_width! and !pixel_height!, see implication of that in the 
-               // ``attributes`` configuration below.
-               // 
+               // For ``mapnik`` and ``torque`` layers it can contain substitution tokens `!bbox!`,
+               // `!pixel_width!`, `!scale_denominator!`, and `!pixel_height!`.
+               //
                sql: 'select * from table',
 
                // OPTIONAL
@@ -105,15 +104,13 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
                // string array, contains fields renderer inside grid.json
                // all the params should be exposed by the results of executing the query in sql attribute
                interactivity: [ 'field1', 'field2', .. ]
-               
+
                // OPTIONAL
                // values returned by attributes service (disabled if no config is given)
-               // NOTE: enabling the attribute service is forbidden if the "sql" option contains
-               //       substitution token that make it dependent on zoom level or viewport extent.
                attributes: {
                  // REQUIRED
                  // used as key value to fetch columns
-                 id: 'identifying_column', 
+                 id: 'identifying_column',
 
                  // REQUIRED
                  // string list of columns returned by attributes service
@@ -126,7 +123,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 # Extensions
 
 The document may be extended for specific uses.
-For example, Windshaft-CartoDB defines the addition of a "stats_tag" element
+For example, Windshaft-CartoDB defines the addition of a "stat_tag" element
 in the config. See https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API
 
 Specification for how to name extensions is yet to be defined as of this version

@@ -34,8 +34,17 @@ echo "...Configuring Windshaft test database"
 echo "...Recreating windshaft_test database"
 dropdb windshaft_test | 2>&1
 createdb -EUTF8 windshaft_test || die "Could not create test database"
+
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
+
+for i in CDB_XYZ CDB_QueryStatements CDB_QueryTables
+do
+  echo "...Installing $i"
+  #curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/$i.sql -o sql/$i.sql
+  cat sql/$i.sql | psql -v ON_ERROR_STOP=1 windshaft_test || exit 1
+done
+
 dropdb windshaft_test2 | 2>&1
 createdb -T windshaft_test -E UTF8 windshaft_test2 || die "Could not create test database 2"
 
@@ -46,5 +55,12 @@ psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/windshaft.test.sql ||
 echo "...Populating windshaft_test database with reduced populated places data"
 psql --set ON_ERROR_STOP=1 -d windshaft_test -f ./fixtures/populated_places_simple_reduced.sql ||
   die "Cound not populate test database"
+
+psql -c 'VACUUM ANALYZE test_table;' windshaft_test ||
+  die "Could not generate stats for test_table in windshaft database"
+psql -c 'VACUUM ANALYZE test_table_2;' windshaft_test ||
+  die "Could not generate stats for test_table_2 in windshaft database"
+psql -c 'VACUUM ANALYZE test_table_3;' windshaft_test ||
+    die "Could not generate stats for test_table_3 in windshaft database"
 
 echo "...Test database configuration complete"

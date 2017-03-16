@@ -3,3 +3,5 @@ test/performance/stresstest*
 .idea
 redis.pid
 test.log
+npm-debug.log
+coverage/

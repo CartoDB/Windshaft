@@ -63,9 +63,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // It should select at least the columns specified in ``geom_column``,
     // ``interactivity`` and  ``attributes`` configurations below.
     //
-    // For ``mapnik`` layers it can contain substitution tokens !bbox!,
-    // !pixel_width! and !pixel_height!, see implication of that in the
-    // ``attributes`` configuration below.
+    // It can contain substitution tokens `!bbox!`, `!pixel_width!`, `!scale_denominator!`,
+    // and `!pixel_height!`.
     //
     sql: 'select * from table',
 
@@ -120,8 +119,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
-    // NOTE: enabling the attribute service is forbidden if the "sql" option contains
-    //       substitution token that make it dependent on zoom level or viewport extent.
     attributes: {
         // REQUIRED
         // used as key value to fetch columns
@@ -213,8 +210,13 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // {Array<String>} it will be used to retrieve from different subdomains.
     // It will consistently replace {s} from `urlTemplate`.
     // Defaults to ['a', 'b', 'c'] when {s} is present in `urlTemplate`, [] otherwise.
-    // It only applies to `http` type
-    subdomains: ['a', 'b', 'c']
+    subdomains: ['a', 'b', 'c'],
+
+    // OPTIONAL
+    // {Boolean} will indicate either the tile is in TMS service format or not
+    // If true, it inverses Y axis numbering for tiles
+    // Defaults to `false`
+    tms: false
 }
 ```
 
@@ -222,7 +224,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 # Extensions
 
 The document may be extended for specific uses.
-For example, Windshaft-CartoDB defines the addition of a "stats_tag" element
+For example, Windshaft-CartoDB defines the addition of a "stat_tag" element
 in the config. See https://github.com/CartoDB/Windshaft-cartodb/wiki/MultiLayer-API
 
 Specification for how to name extensions is yet to be defined as of this version
