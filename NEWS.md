@@ -1,5 +1,5 @@
 # Version 3.0.1
-2017-mm-dd
+2017-03-21
 
 Bug fixes:
  - Use `binary` encoding for generating MapConfig.id.
