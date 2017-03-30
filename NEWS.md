@@ -1,6 +1,9 @@
 # Version 3.0.2
 2017-mm-dd
 
+Bug fixes:
+ - Only release renderer if exists.
+
 Announcements:
  - Remove forced GC cycle after renderer removal.
 
