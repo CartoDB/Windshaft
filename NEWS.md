@@ -1,4 +1,4 @@
-# Version 3.0.2
+# Version 3.1.0
 2017-mm-dd
 
 Bug fixes:
