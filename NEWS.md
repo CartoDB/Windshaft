@@ -1,5 +1,5 @@
 # Version 3.1.0
-2017-mm-dd
+2017-03-30
 
 Bug fixes:
  - Only release renderer if exists.
