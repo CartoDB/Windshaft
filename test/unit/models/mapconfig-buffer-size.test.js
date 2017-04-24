@@ -27,7 +27,7 @@ describe('mapconfig buffer-size', function() {
     it('should return generic buffer-size when no format is specified', function() {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
-            bufferSize: 64,
+            buffersize: 64,
             layers: [
                 CARTODB_LAYER
             ]
@@ -39,7 +39,7 @@ describe('mapconfig buffer-size', function() {
     it('should return buffer-size for png format', function() {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
-            bufferSize: {
+            buffersize: {
                 png: 64
             },
             layers: [
@@ -53,7 +53,7 @@ describe('mapconfig buffer-size', function() {
     it('should return buffer-size for any format when generic buffer-size is defined', function() {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
-            bufferSize: 64,
+            buffersize: 64,
             layers: [
                 CARTODB_LAYER
             ]
@@ -66,7 +66,7 @@ describe('mapconfig buffer-size', function() {
     it('should not return buffer-size when just png is defined and another format is required', function() {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
-            bufferSize: {
+            buffersize: {
                 png: 64
             },
             layers: [
