@@ -35,27 +35,27 @@ describe('renderer-mapnik-factory', function() {
         var factory = new MapnikRendererFactory({ mapnik: {
             bufferSize: 128
         }});
-        assert.equal(factory.getMetatile('png'), 128);
+        assert.equal(factory.getBufferSize('png'), 128);
     });
 
     it('should use provided formatBufferSize value', function() {
         var factory = new MapnikRendererFactory({mapnik: {
-            metatile: 64,
+            bufferSize: 64,
             formatBufferSize: {
                 png: 128
             }
         }});
-        assert.equal(factory.getMetatile('png'), 128);
+        assert.equal(factory.getBufferSize('png'), 128);
     });
 
     it('should use provided buffer-size value', function() {
         var factory = new MapnikRendererFactory({mapnik: {
-            metatile: 64,
+            bufferSize: 64,
             formatBufferSize: {
                 png: 128
             }
         }});
-        assert.equal(factory.getMetatile('mvt'), 64);
+        assert.equal(factory.getBufferSize('mvt'), 64);
     });
 
 });
