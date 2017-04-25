@@ -28,14 +28,14 @@ describe('renderer-mapnik-factory', function() {
 
     it('should use default buffer-size value', function() {
         var factory = new MapnikRendererFactory({});
-        assert.equal(factory.getBufferSize('png'), 64);
+        assert.equal(factory.getBufferSizeFromOptions('png'), 64);
     });
 
     it('should use provided buffer-size value', function() {
         var factory = new MapnikRendererFactory({ mapnik: {
             bufferSize: 128
         }});
-        assert.equal(factory.getBufferSize('png'), 128);
+        assert.equal(factory.getBufferSizeFromOptions('png'), 128);
     });
 
     it('should use provided formatBufferSize value', function() {
@@ -45,7 +45,7 @@ describe('renderer-mapnik-factory', function() {
                 png: 128
             }
         }});
-        assert.equal(factory.getBufferSize('png'), 128);
+        assert.equal(factory.getBufferSizeFromOptions('png'), 128);
     });
 
     it('should use provided buffer-size value', function() {
@@ -55,7 +55,7 @@ describe('renderer-mapnik-factory', function() {
                 png: 128
             }
         }});
-        assert.equal(factory.getBufferSize('mvt'), 64);
+        assert.equal(factory.getBufferSizeFromOptions('mvt'), 64);
     });
 
 });
