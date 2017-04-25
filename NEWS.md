@@ -1,5 +1,5 @@
 # Version 3.1.1
-2017-mm-dd
+2017-04-25
 
 Bug fixes:
  - Don't default formats in formatMetatile configuration #545.
