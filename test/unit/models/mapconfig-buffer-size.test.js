@@ -24,23 +24,13 @@ describe('mapconfig buffer-size', function() {
     });
 
 
-    it('should return generic buffer-size when no format is specified', function() {
-        var mapConfig = MapConfig.create({
-            version: '1.6.0',
-            buffersize: 64,
-            layers: [
-                CARTODB_LAYER
-            ]
-        });
-
-        assert.equal(mapConfig.getBufferSize(), 64);
-    });
-
-    it('should return buffer-size for png format', function() {
+    it('should return buffer-size for png, mvt and grid.json formats', function() {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
             buffersize: {
-                png: 64
+                png: 64,
+                mvt: 0,
+                'grid.json': 128
             },
             layers: [
                 CARTODB_LAYER
@@ -48,19 +38,8 @@ describe('mapconfig buffer-size', function() {
         });
 
         assert.equal(mapConfig.getBufferSize('png'), 64);
-    });
-
-    it('should return buffer-size for any format when generic buffer-size is defined', function() {
-        var mapConfig = MapConfig.create({
-            version: '1.6.0',
-            buffersize: 64,
-            layers: [
-                CARTODB_LAYER
-            ]
-        });
-
-        assert.equal(mapConfig.getBufferSize('png'), 64);
-        assert.equal(mapConfig.getBufferSize('mvt'), 64);
+        assert.equal(mapConfig.getBufferSize('mvt'), 0);
+        assert.equal(mapConfig.getBufferSize('grid.json'), 128);
     });
 
     it('should not return buffer-size when just png is defined and another format is required', function() {
