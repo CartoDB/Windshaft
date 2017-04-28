@@ -4,29 +4,7 @@ var assert = require('assert');
 var MapnikRendererFactory = require('../../../lib/windshaft/renderers/mapnik/factory');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('renderer-mapnik-factory', function() {
-    var mapConfig = MapConfig.create({
-        layers: [
-            {
-                type: 'plain',
-                options: {
-                    color: 'red'
-                }
-            },
-            {
-                type: 'plain',
-                options: {
-                    color: 'green'
-                }
-            },
-            {
-                type: 'plain',
-                options: {
-                    color: 'blue'
-                }
-            }
-        ]
-    });
+describe('renderer-mapnik-factory metatile', function() {
 
     it('should use default metatile value', function() {
         var factory = new MapnikRendererFactory({});
@@ -48,6 +26,31 @@ describe('renderer-mapnik-factory', function() {
             }
         }});
         assert.equal(factory.getMetatile('png'), 4);
+    });
+});
+
+describe('renderer-mapnik-factory buffer-size', function() {
+    var mapConfig = MapConfig.create({
+        layers: [
+            {
+                type: 'plain',
+                options: {
+                    color: 'red'
+                }
+            },
+            {
+                type: 'plain',
+                options: {
+                    color: 'green'
+                }
+            },
+            {
+                type: 'plain',
+                options: {
+                    color: 'blue'
+                }
+            }
+        ]
     });
 
     it('should use default buffer-size value', function() {
@@ -93,7 +96,11 @@ describe('renderer-mapnik-factory', function() {
 
     it('should use value provided by mapConfig for png and mvt', function() {
         var mapConfig = MapConfig.create({
-            buffersize: 128,
+            buffersize: {
+                png: 128,
+                mvt: 0,
+                'grid.json': 64
+            },
             layers: [
                 {
                     type: 'plain',
@@ -111,8 +118,8 @@ describe('renderer-mapnik-factory', function() {
             }
         }});
         assert.equal(factory.getBufferSize(mapConfig,'png'), 128);
-        assert.equal(factory.getBufferSize(mapConfig,'mvt'), 128);
-        assert.equal(factory.getBufferSize(mapConfig,'grid.json'), 128);
+        assert.equal(factory.getBufferSize(mapConfig,'mvt'), 0);
+        assert.equal(factory.getBufferSize(mapConfig,'grid.json'), 64);
     });
 
     it('should use value provided by mapConfig for png and mvt', function() {
