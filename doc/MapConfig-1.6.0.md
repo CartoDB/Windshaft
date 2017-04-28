@@ -37,9 +37,6 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // Extra tolerance around the map (in pixels) used to ensure labels crossing tile boundaries are equally rendered 
     // in each tile (e.g. cut in each tile).
-    // 
-    // To configure `buffer-size` for any tile format: 
-    //  - buffersize: 128
     //
     // To configure `buffer-size` per tile format:
     //  - buffersize: {
@@ -47,6 +44,10 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     //      'grid.json': 64,
     //      'mvt': 0
     //    }
+    //
+    // Buffer-size also can be configured through `cartocss`, in these cases the priority to apply the right `buffer-size` is:
+    //  - Raster: cartocss >> map-config >> default
+    //  - Vector: map-config >> default
     //
     // default: undefined
     buffersize: {
