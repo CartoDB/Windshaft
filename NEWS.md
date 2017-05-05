@@ -1,5 +1,5 @@
 # Version 3.1.2
-2017-mm-dd
+2017-05-05
 
 Announcements:
  - Upgrade cartodb-psql to [0.8.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.8.0).
