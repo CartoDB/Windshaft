@@ -92,7 +92,7 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
             done();
         });
     });
@@ -109,9 +109,9 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-            assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[0].featureCount, 5);
             done();
         });
     });
@@ -129,11 +129,11 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-            assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[0].featureCount, 5);
             assert.equal(layergroup.metadata.layers[2].id, mapnikBasicLayerId(2));
-            assert.equal(layergroup.metadata.layers[2].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[2].meta.stats[0].featureCount, 5);
             done();
         });
     });
@@ -149,8 +149,8 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
-            assert.equal(layergroup.metadata.layers[0].meta.stats[1].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[1].featureCount, 5);
             done();
         });
     });
@@ -167,11 +167,11 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
-            assert.equal(layergroup.metadata.layers[0].meta.stats[1].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[1].featureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-            assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
-            assert.equal(layergroup.metadata.layers[1].meta.stats[1].features, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[0].featureCount, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[1].featureCount, 5);
             done();
         });
     });
@@ -188,11 +188,11 @@ describe('Create mapnik layergroup', function() {
         testClient.createLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
             assert.ok(!layergroup.metadata.layers[0].meta.stats[1]);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-            assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
-            assert.equal(layergroup.metadata.layers[1].meta.stats[1].features, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[0].featureCount, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[1].featureCount, 5);
             assert.ok(!layergroup.metadata.layers[1].meta.stats[2]);
             assert.ok(!layergroup.metadata.layers[2]);
             done();
@@ -212,7 +212,7 @@ describe('Create mapnik layergroup', function() {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
-            assert.equal(layergroup.metadata.layers[0].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats[0].featureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[1].type, 'http');
             done();
@@ -233,7 +233,7 @@ describe('Create mapnik layergroup', function() {
             assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[0].type, 'http');
             assert.ok(!layergroup.metadata.layers[0].meta.cartocss);
-            assert.equal(layergroup.metadata.layers[1].meta.stats[0].features, 5);
+            assert.equal(layergroup.metadata.layers[1].meta.stats[0].featureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
             assert.equal(layergroup.metadata.layers[1].meta.cartocss, cartocss);
@@ -253,7 +253,7 @@ describe('Create mapnik layergroup', function() {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             // we don't care about stats here as is an aliased column
-            assert.ok(layergroup.metadata.layers[0].meta.stats[0].hasOwnProperty('features'));
+            assert.ok(layergroup.metadata.layers[0].meta.stats[0].hasOwnProperty('featureCount'));
             done();
         });
     });
