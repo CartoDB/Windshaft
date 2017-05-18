@@ -1,5 +1,16 @@
-# Version 3.1.3
+# Version 3.2.1
 2017-mm-dd
+
+
+# Version 3.2.0
+2017-05-18
+
+Announcements:
+ - Use different buffer-size values for different tile formats.
+ - Official support for `buffer-size` at layergroup level.
+   * Check [doc/MapConfig-1.6.0.md](doc/MapConfig-1.6.0.md) for more details.
+ - Upgrade tilelive-bridge to [2.3.1-cdb2](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb2).
+ - Upgrade tilelive-mapnik to [0.6.18-cdb2](https://github.com/CartoDB/tilelive-mapnik/releases/tag/0.6.18-cdb2).
 
 
 # Version 3.1.2
