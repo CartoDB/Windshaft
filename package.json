@@ -28,7 +28,7 @@
         "debug": "~2.2.0",
         "dot": "~1.0.2",
         "grainstore": "~1.6.0",
-        "mapnik": "3.5.14",
+        "mapnik": "cartodb/node-mapnik#query-variables",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
         "request": "~2.79.0",
