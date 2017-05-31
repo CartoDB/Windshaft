@@ -1,5 +1,5 @@
 # Version 3.2.1
-2017-mm-dd
+2017-05-32
 
 Bug fixes:
  - Removed dead code while extracting layer metadata stats #551.
