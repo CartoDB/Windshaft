@@ -28,7 +28,9 @@ describe('stats.MapnikTimer', function() {
             var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table'));
             testClient.getTile(13, 4011, 3088, {cache_buster: 'wadus'}, function (err, tile, img, headers) {
                 assert.ok(!err);
-                assert.notEqual(windshaft.stats.MapnikTimer.flush());
+                var flush_output = windshaft.stats.MapnikTimer.flush();
+                assert.ok(/total_map_rendering/.test(flush_output));
+                assert.ok(/postgis_datasource::features_with_context::get_resultset/.test(flush_output));
                 done();
             });
 
