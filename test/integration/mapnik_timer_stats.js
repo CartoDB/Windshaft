@@ -18,7 +18,7 @@ describe('stats.MapnikTimer', function() {
 
     describe('flush() when no map is rendered', function() {
         it('returns nothing when no map is rendered', function(done) {
-            assert.equal(windshaft.stats.MapnikTimer.flush(), '');
+            assert.deepEqual(windshaft.stats.MapnikTimer.flush(), {});
             done();
         });
     });
@@ -28,9 +28,11 @@ describe('stats.MapnikTimer', function() {
             var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table'));
             testClient.getTile(13, 4011, 3088, {cache_buster: 'wadus'}, function (err, tile, img, headers) {
                 assert.ok(!err);
-                var flush_output = windshaft.stats.MapnikTimer.flush();
-                assert.ok(/total_map_rendering/.test(flush_output));
-                assert.ok(/postgis_datasource::features_with_context::get_resultset/.test(flush_output));
+                var stats = windshaft.stats.MapnikTimer.flush();
+                assert.ok(stats['total_map_rendering'].cpu_time > 0);
+                assert.ok(stats['total_map_rendering'].wall_time > 0);
+                assert.ok(stats['postgis_datasource::features_with_context::get_resultset'].cpu_time > 0);
+                assert.ok(stats['postgis_datasource::features_with_context::get_resultset'].wall_time > 0);
                 done();
             });
 
