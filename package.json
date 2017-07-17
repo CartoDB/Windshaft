@@ -28,7 +28,7 @@
         "debug": "~2.2.0",
         "dot": "~1.0.2",
         "grainstore": "~1.6.0",
-        "mapnik": "cartodb/node-mapnik#3.5.x-grid-variables",
+        "mapnik": "cartodb/node-mapnik#3.5.x-mvt-variables",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
         "request": "~2.79.0",
@@ -36,7 +36,7 @@
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
         "tilelive": "5.12.2",
-        "tilelive-bridge": "cartodb/tilelive-bridge#2.3.1-cdb2",
+        "tilelive-bridge": "cartodb/tilelive-bridge#cdb-2.x-query-variables",
         "tilelive-mapnik": "cartodb/tilelive-mapnik#query-variables",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
