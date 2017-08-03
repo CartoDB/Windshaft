@@ -21,14 +21,14 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "abaculus": "cartodb/abaculus#2.0.3-cdb1",
+        "abaculus": "cartodb/abaculus#2.0.3-cdb-1-1000x",
         "canvas": "cartodb/node-canvas#1.6.2-cdb2",
         "carto": "cartodb/carto#0.15.1-cdb3",
         "cartodb-psql": "0.8.0",
         "debug": "~2.2.0",
         "dot": "~1.0.2",
         "grainstore": "~1.6.0",
-        "mapnik": "cartodb/node-mapnik#3.5.x-grid-variables",
+        "mapnik": "cartodb/node-mapnik#v3.5.14-1000x",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
         "request": "~2.79.0",
@@ -36,8 +36,8 @@
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
         "tilelive": "5.12.2",
-        "tilelive-bridge": "cartodb/tilelive-bridge#2.3.1-cdb2",
-        "tilelive-mapnik": "cartodb/tilelive-mapnik#query-variables",
+        "tilelive-bridge": "cartodb/tilelive-bridge#cdb-2.x-1000x",
+        "tilelive-mapnik": "cartodb/tilelive-mapnik#cdb-0.x-1000x",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
     },
