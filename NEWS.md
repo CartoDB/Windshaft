@@ -1,3 +1,12 @@
+# Version 3.3.0
+2017-mm-dd
+
+Announcements:
+ - Upgrade tilelive-bridge to [2.3.1-cdb4](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb4).
+ - Upgrade tilelive-mapnik to [0.6.18-cdb3](https://github.com/CartoDB/tilelive-mapnik/releases/tag/0.6.18-cdb2).
+ - Upgrade cartodb-psql to [0.9.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.9.0).
+
+
 # Version 3.2.2
 2017-07-20
 
