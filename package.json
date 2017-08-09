@@ -36,8 +36,8 @@
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
         "tilelive": "5.12.2",
-        "tilelive-bridge": "cartodb/tilelive-bridge#query-timeout",
-        "tilelive-mapnik": "cartodb/tilelive-mapnik#custom-timeout",
+        "tilelive-bridge": "cartodb/tilelive-bridge#2.3.1-cdb4",
+        "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb3",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
     },
