@@ -1,5 +1,5 @@
 # Version 3.3.0
-2017-mm-dd
+2017-08-09
 
 Announcements:
  - Upgrade tilelive-bridge to [2.3.1-cdb4](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb4).
