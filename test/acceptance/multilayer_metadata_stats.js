@@ -25,11 +25,10 @@ describe('multilayer metadata disabled', function() {
             var testClient = new TestClient(mapConfig);
 
             testClient.createLayergroup(function(err, layergroup) {
+                assert.ifError(err);
                 layergroup.metadata.layers.forEach(function (layer) {
                     if (layer.type !== 'torque' && layer.type !== 'mapnik') {
-                        assert.ok('stats' in layer.meta);
                     } else if (layer.type !== 'torque') {
-                        assert.ok('stats' in layer.meta);
                         assert.ok('cartocss' in layer.meta);
                     } else {
                         assert.ok('cartocss' in layer.meta);

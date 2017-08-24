@@ -98,7 +98,6 @@ describe('static_maps', function() {
         var defaultParams = {
             dbname: 'windshaft_test',
             token: crypto.createHash('md5').update(JSON.stringify(layergroup)).digest('hex'),
-            dbuser: 'postgres',
             format: 'png',
             layer: 'all'
         };

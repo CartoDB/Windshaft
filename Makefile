@@ -1,10 +1,10 @@
 SHELL=/bin/bash
 
-pre-install:
-	@$(SHELL) ./scripts/check-node-canvas.sh
-
 all:
 	@$(SHELL) ./scripts/install.sh
+
+pre-install:
+	@$(SHELL) ./scripts/check-node-canvas.sh
 
 clean:
 	@rm -rf node_modules/*

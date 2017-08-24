@@ -9,6 +9,9 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
 function rmdir_recursive_sync(dirname) {
+  if (!fs.existsSync(dirname)) {
+      return;
+  }
   var files = fs.readdirSync(dirname);
   for (var i=0; i<files.length; ++i) {
     var f = dirname + "/" + files[i];

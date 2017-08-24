@@ -109,157 +109,6 @@ describe('Rendering geojsons', function() {
     });
 
     describe('use only needed columns', function() {
-        it('with aggregation widget, interactivity and cartocss columns', function(done) {
-            var widgetMapConfig = {
-                version: '1.5.0',
-                layers: [{
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; text-name: [name] }',
-                        cartocss_version: '2.0.1',
-                        widgets: {
-                            adm0name: {
-                                type: 'aggregation',
-                                options: {
-                                    column: 'adm0name',
-                                    aggregation: 'sum',
-                                    aggregationColumn: 'pop_max'
-                                }
-                            }
-                        },
-                        interactivity: "cartodb_id,pop_min"
-                    }
-                }]
-            };
-
-            var testClient = new TestClient(widgetMapConfig);
-            this.options = { format: 'geojson', layer: 0 };
-
-            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
-                assert.ok(!err, err);
-                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
-                    cartodb_id: 1109,
-                    name: 'Mardin',
-                    adm0name: 'Turkey',
-                    pop_max: 71373,
-                    pop_min: 57586
-                });
-                done();
-            });
-        });
-
-        it('should not duplicate columns', function(done) {
-            var widgetMapConfig = {
-                version: '1.5.0',
-                layers: [{
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced',
-                        cartocss: ['#layer0 {',
-                            'marker-fill: red;',
-                            'marker-width: 10;',
-                            'text-name: [name];',
-                            '[pop_max>100000] { marker-fill: black; } ',
-                        '}'].join('\n'),
-                        cartocss_version: '2.3.0',
-                        widgets: {
-                            adm0name: {
-                                type: 'aggregation',
-                                options: {
-                                    column: 'adm0name',
-                                    aggregation: 'sum',
-                                    aggregationColumn: 'pop_max'
-                                }
-                            }
-                        },
-                        interactivity: "cartodb_id,pop_max"
-                    }
-                }]
-            };
-
-            var testClient = new TestClient(widgetMapConfig);
-
-            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
-                assert.ok(!err, err);
-                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
-                    cartodb_id: 1109,
-                    name: 'Mardin',
-                    adm0name: 'Turkey',
-                    pop_max: 71373
-                });
-                done();
-            });
-        });
-
-        it('with formula widget, no interactivity and no cartocss columns', function(done) {
-            var formulaWidgetMapConfig = {
-                version: '1.5.0',
-                layers: [{
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced where pop_max > 0 and pop_max < 600000',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
-                        cartocss_version: '2.0.1',
-                        interactivity: 'cartodb_id',
-                        widgets: {
-                            pop_max_f: {
-                                type: 'formula',
-                                options: {
-                                    column: 'pop_max',
-                                    operation: 'count'
-                                }
-                            }
-                        }
-                    }
-                }]
-            };
-
-            var testClient = new TestClient(formulaWidgetMapConfig);
-            this.options = { format: 'geojson', layer: 0 };
-
-            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
-                assert.ok(!err, err);
-                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
-                    cartodb_id: 1109,
-                    pop_max: 71373
-                });
-                done();
-            });
-        });
-
-        it('with cartocss with multiple expressions', function(done) {
-            var formulaWidgetMapConfig = {
-                version: '1.5.0',
-                layers: [{
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced where pop_max > 0 and pop_max < 600000',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; }' +
-                            '#layer0 { text-name: [name]; }' +
-                            '#layer0[pop_max>1000] {  text-name: [name]; }' +
-                            '#layer0[adm0name=~".*Turkey*"] {  text-name: [name]; }',
-                        cartocss_version: '2.0.1',
-                        interactivity: 'cartodb_id'
-                    }
-                }]
-            };
-
-            var testClient = new TestClient(formulaWidgetMapConfig);
-            this.options = { format: 'geojson', layer: 0 };
-
-            testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
-                assert.ok(!err, err);
-                assert.deepEqual(getFeatureByCartodbId(geojsonTile.features, 1109).properties, {
-                    cartodb_id: 1109,
-                    pop_max:71373,
-                    name:"Mardin",
-                    adm0name:"Turkey"
-                });
-                done();
-            });
-        });
-
         var cartocssWithGeometryTypeScenarios = {
             'mapnik::geometry_type': '#layer0[\'mapnik::geometry_type\'=1] { marker-fill: red; marker-width: 10; }',
             'mapnik-geometry-type': '#layer0[\'mapnik-geometry-type\'=1] { marker-fill: red; marker-width: 10; }'
@@ -267,7 +116,7 @@ describe('Rendering geojsons', function() {
 
         Object.keys(cartocssWithGeometryTypeScenarios).forEach(function(filterName) {
             it('should skip ' + filterName + ' for properties', function(done) {
-                var formulaWidgetMapConfig = {
+                var mapnikGeometryMapConfig = {
                     version: '1.5.0',
                     layers: [{
                         type: 'mapnik',
@@ -280,7 +129,7 @@ describe('Rendering geojsons', function() {
                     }]
                 };
 
-                var testClient = new TestClient(formulaWidgetMapConfig);
+                var testClient = new TestClient(mapnikGeometryMapConfig);
                 this.options = { format: 'geojson', layer: 0 };
 
                 testClient.getTile(0, 0, 0, this.options, function (err, geojsonTile) {
@@ -296,5 +145,56 @@ describe('Rendering geojsons', function() {
             });
         });
 
+    });
+
+    it('query can hold substitution tokens', function(done) {
+        var tokenNames = ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height'];
+        var tokens = tokenNames.map(function(token) {
+            return "!" + token + "! as " + token;
+        });
+
+        var sql = 'select *, ' + tokens.join(', ') + ', ST_AsText(!bbox!) as bbox_text from test_table limit 1';
+        var propertiesColumns = tokenNames.concat('bbox_text');
+
+        var mapConfig = {
+            version: '1.4.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: sql,
+                        cartocss: '#layer { marker-fill: red; }',
+                        cartocss_version: '2.3.0',
+                        columns: propertiesColumns
+                    }
+                }
+            ]
+        };
+
+        var expectedProperties = {
+            bbox_text: ['POLYGON((',
+                '-20037508.5 -20037508.5,',
+                '-20037508.5 20037508.5,',
+                '20037508.5 20037508.5,',
+                '20037508.5 -20037508.5,',
+                '-20037508.5 -20037508.5',
+            '))'].join(''),
+            scale_denominator: 559082268.4151787,
+            pixel_width: 156543.03515625,
+            pixel_height: 156543.03515625
+        };
+
+        var testClient = new TestClient(mapConfig);
+        testClient.getTile(0, 0, 0, {layer: 0, format: 'geojson'}, function(err, geojsonTile) {
+
+            assert.ok(!err, err);
+            assert.equal(geojsonTile.features.length, 1);
+            assert.deepEqual(Object.keys(geojsonTile.features[0].properties), propertiesColumns);
+            Object.keys(expectedProperties).forEach(function(prop) {
+                assert.equal(geojsonTile.features[0].properties[prop], expectedProperties[prop]);
+            });
+
+            done();
+        });
     });
 });

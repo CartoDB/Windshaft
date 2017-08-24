@@ -1,5 +1,230 @@
-# Version 1.19.1
-2016-mm-dd
+# Version 3.3.2
+2017-mm-dd
+
+# Version 3.3.1
+2017-08-13
+
+Announcements:
+ - Upgrade cartodb-psql to [0.10.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.1).
+
+
+# Version 3.3.0
+2017-08-09
+
+Announcements:
+ - Upgrade tilelive-bridge to [2.3.1-cdb4](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb4).
+ - Upgrade tilelive-mapnik to [0.6.18-cdb3](https://github.com/CartoDB/tilelive-mapnik/releases/tag/0.6.18-cdb2).
+ - Upgrade cartodb-psql to [0.9.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.9.0).
+
+
+# Version 3.2.2
+2017-07-20
+
+Announcements:
+ - Upgrade tilelive-bridge to [2.3.1-cdb3](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb3).
+
+
+# Version 3.2.1
+2017-05-31
+
+Bug fixes:
+ - Removed dead code while extracting layer metadata stats #551.
+
+
+# Version 3.2.0
+2017-05-18
+
+Announcements:
+ - Use different buffer-size values for different tile formats.
+ - Official support for `buffer-size` at layergroup level.
+   * Check [doc/MapConfig-1.6.0.md](doc/MapConfig-1.6.0.md) for more details.
+ - Upgrade tilelive-bridge to [2.3.1-cdb2](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb2).
+ - Upgrade tilelive-mapnik to [0.6.18-cdb2](https://github.com/CartoDB/tilelive-mapnik/releases/tag/0.6.18-cdb2).
+
+
+# Version 3.1.2
+2017-05-05
+
+Announcements:
+ - Upgrade cartodb-psql to [0.8.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.8.0).
+
+
+# Version 3.1.1
+2017-04-25
+
+Bug fixes:
+ - Don't default formats in formatMetatile configuration #545.
+
+
+# Version 3.1.0
+2017-03-30
+
+Bug fixes:
+ - Only release renderer if exists.
+
+Announcements:
+ - Remove forced GC cycle after renderer removal.
+
+
+# Version 3.0.1
+2017-03-21
+
+Bug fixes:
+ - Use `binary` encoding for generating MapConfig.id.
+
+
+# Version 3.0.0
+2017-03-16
+
+Announcements:
+ - Supports Node v6.9.x
+ - Drops support for Node v0.10.x
+ - Upgrades mapnik to 3.5.14
+ - Upgrades tilelive to 5.12.2
+ - Upgrades tilelive-bridge to 2.3.1-cdb1
+ - Upgrades tilelive-mapnik to 0.6.18-cdb1
+ - Upgrades sphericalmercator to 1.0.4
+ - Upgrades abaculus to 2.0.3-cdb1
+ - Upgrades canvas to 1.6.2-cdb2
+ - Upgrades carto to 0.15.1-cdb3
+ - Upgrades redis-mpool to 0.4.1
+
+
+# Version 2.8.0
+2017-03-16
+
+**Deprecation warning**: v2.8.0 is the last release that supports Node v0.10.x. Next mayor release will support Node v6.9.x and further versions.
+
+New features:
+ - Honour "srid" option in mapnik layer.
+
+Announcements:
+ - Upgrades grainstore to [1.6.0](https://github.com/CartoDB/grainstore/releases/tag/1.6.0).
+
+
+# Version 2.7.0
+2017-02-20
+
+Announcements:
+ - Upgrades cartodb-psql to [0.7.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.7.1).
+
+
+# Version 2.6.5
+2016-12-13
+
+Announcements:
+ - Upgrades request dependency.
+
+
+# Version 2.6.4
+2016-12-13
+
+Announcements:
+ - Upgrades grainstore to [1.4.0](https://github.com/CartoDB/grainstore/releases/tag/1.4.0).
+
+
+# Version 2.6.3
+2016-12-01
+
+Announcements:
+ - Upgrades grainstore to [1.3.0](https://github.com/CartoDB/grainstore/releases/tag/1.3.0).
+
+
+# Version 2.6.2
+2016-11-05
+
+Bug fixes:
+ - Now validates all mapnik layers and if it fails then checks layer by layer to indicate which one fails.
+
+
+# Version 2.6.1
+2016-11-01
+
+Bug fixes:
+ - Fix bad behavior in map validator, now validates layer by layer to indicate which one fails.
+
+
+# Version 2.6.0
+2016-10-31
+
+Enhancements:
+ - Expose layer index if map validation fails.
+
+
+# Version 2.5.0
+2016-08-17
+
+Announcements:
+ - Allow to show & hide mapnik layers filtering by indexes in URL.
+
+
+# Version 2.4.2
+2016-08-12
+
+Announcements:
+ - Use S3 bucket for mapnik module.
+
+
+# Version 2.4.1
+2016-08-11
+
+Announcements:
+ - Use github's git URL for dependencies instead of tarballs.
+
+
+# Version 2.4.0
+2016-06-29
+
+Enhancements:
+  - Errors during MapConfig's instantiation return the layer-id to give more info about what's going on.
+
+
+# Version 2.3.0
+2016-06-08
+
+Enhancements:
+ - Only adds cartocss to meta for layers where it makes sense.
+
+New features:
+ - Expose layer id in metadata.
+
+
+# Version 2.2.0
+2016-06-07
+
+Improvements:
+ - Allow to set id per layer #485
+
+Announcements:
+ - Upgrades grainstore to 1.2.0
+
+
+# Version 2.1.0
+2016-06-06
+
+Improvements:
+ - Adds support for substitution tokens in geojson tiles
+
+
+# Version 2.0.1
+2016-06-02
+
+Bug fixes:
+ - Geojson renderer: columns option should ignore nulls #481
+
+
+# Version 2.0.0
+2016-06-02
+
+Announcements:
+ - Removes support for widgets/filters introduced in version 1.7.0.
+
+
+# Version 1.20.0
+2016-06-02
+
+Announcements:
+ - Upgrades mapnik to [cartodb/node-mapnik@1.4.15-cdb8](https://github.com/CartoDB/node-mapnik/releases/tag/1.4.15-cdb8)
 
 
 # Version 1.19.0

@@ -1,23 +1,20 @@
-sudo: false
-
 addons:
-  postgresql: "9.3"
+  postgresql: "9.5"
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - postgresql-9.5-postgis-2.3
       - pkg-config
       - libcairo2-dev
       - libjpeg8-dev
       - libgif-dev
+      - libpango1.0-dev
+      - g++-4.9
 
 env:
-  - NPROCS=1 JOBS=1 PGUSER=postgres
+  - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
 
 language: node_js
 node_js:
-  - "0.10"
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#cartodb"
-    use_notice: true
+  - "6"
