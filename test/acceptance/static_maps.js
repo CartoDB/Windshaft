@@ -136,13 +136,17 @@ describe('static_maps', function() {
 
     it('resize tiles bigger than 256px', function (done) {
         var renderer = new Renderer(urlHost + retinaUrlPath, [], {});
+        /* jshint unused: vars */
         renderer.getTile(0, 0, 0, function(err, buffer, headers, stats){
             mapnik.Image.fromBytes(buffer, function(err, image) {
                 assert.ifError(err);
                 assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');
 
                 var referenceImage = mapnik.Image.fromBytesSync(fs.readFileSync(filepathRetina,  { encoding: null }));
-                assert.imagesAreSimilarIgnoreDimensions(image, referenceImage, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, similarity) {
+                assert.imagesAreSimilarIgnoreDimensions(image, 
+                                                        referenceImage, 
+                                                        IMAGE_EQUALS_TOLERANCE_PER_MIL, 
+                                                        function(err, similarity) {
                     assert.ifError(err);
                     done();        
                 });
