@@ -1,8 +1,8 @@
 # Version 3.3.2
-2017-08-29
+2017-08-31
 
 Bug-fixes:
-- Fix exported image generation when basemap tiles are bigger than 256px (@2x, 512px, etc)
+- Fix static map image generation when basemap tiles are bigger than 256px (@2x, 512px, etc)
 
 # Version 3.3.1
 2017-08-13
