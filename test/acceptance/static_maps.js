@@ -4,19 +4,30 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var http = require('http');
 var fs = require('fs');
+var Renderer = require('../../lib/windshaft/renderers/http/renderer');
+var mapnik = require('mapnik');
+var assert = require('../support/assert');
 
 describe('static_maps', function() {
 
-    var validUrlTemplate = 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png';
-    var invalidUrlTemplate = 'http://127.0.0.1:8033/INVALID/{z}/{x}/{y}.png';
+    var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
+
+    var urlHost = 'http://127.0.0.1:8033';
+    var validUrlTemplate = urlHost + '/{s}/{z}/{x}/{y}.png';
+    var invalidUrlTemplate = urlHost + '/INVALID/{z}/{x}/{y}.png';
+    var retinaUrlPath = '/@2x';
+
+    var filepathRegular = __dirname + '/../fixtures/http/basemap.png';
+    var filepathRetina = __dirname + '/../fixtures/http/mapbox-tile@2x.png';
 
     var httpRendererResourcesServer;
 
     before(function(done) {
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer( function(request, response) {
-            var filename = __dirname + '/../fixtures/http/basemap.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+            var filenpath = request.url === retinaUrlPath ? filepathRetina : filepathRegular;
+
+            fs.readFile(filenpath, {encoding: 'binary'}, function(err, file) {
                 response.writeHead(200);
                 response.write(file, "binary");
                 response.end();
@@ -123,4 +134,19 @@ describe('static_maps', function() {
         });
     });
 
+    it('resize tiles bigger than 256px', function (done) {
+        var renderer = new Renderer(urlHost + retinaUrlPath, [], {});
+        renderer.getTile(0, 0, 0, function(err, buffer, headers, stats){
+            mapnik.Image.fromBytes(buffer, function(err, image) {
+                assert.ifError(err);
+                assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');
+
+                var referenceImage = mapnik.Image.fromBytesSync(fs.readFileSync(filepathRetina,  { encoding: null }));
+                assert.imagesAreSimilarIgnoreDimensions(image, referenceImage, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err, similarity) {
+                    assert.ifError(err);
+                    done();        
+                });
+            });
+        });
+    });
 });
