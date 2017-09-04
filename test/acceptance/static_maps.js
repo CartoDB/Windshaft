@@ -143,13 +143,15 @@ describe('static_maps', function() {
                 assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');
 
                 var referenceImage = mapnik.Image.fromBytesSync(fs.readFileSync(filepathRetina,  { encoding: null }));
-                assert.imagesAreSimilarIgnoreDimensions(image, 
-                                                        referenceImage, 
-                                                        IMAGE_EQUALS_TOLERANCE_PER_MIL, 
-                                                        function(err, similarity) {
-                    assert.ifError(err);
-                    done();        
-                });
+                assert.imagesAreSimilarIgnoreDimensions(
+                    image, 
+                    referenceImage, 
+                    IMAGE_EQUALS_TOLERANCE_PER_MIL, 
+                    function(err, similarity) {
+                        assert.ifError(err);
+                        done();        
+                    }
+                );
             });
         });
     });
