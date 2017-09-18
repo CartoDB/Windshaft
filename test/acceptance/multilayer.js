@@ -360,18 +360,40 @@ describe('multilayer', function() {
         });
     });
 
-    function fontLayergroup(fontName) {
+    function fontLayergroup(fontName, text) {
+        text = text || 'wadus';
         return {
             version: '1.0.1',
             layers: [
                 { options: {
-                    sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-                    cartocss: '#s { text-name: [n]; text-face-name: "' + fontName + '"; }',
+                    sql: "select '" + text + "' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                    cartocss: [
+                        '#s {',
+                        '  text-name: [n];',
+                        '  text-face-name: "' + fontName + '";',
+                        '  text-wrap-character: " ";',
+                        '  text-wrap-width: 10;',
+                        '}'
+                    ].join('\n'),
                     cartocss_version: '2.1.0'
                 } }
             ]
         };
     }
+
+    it('text-wrap-character', function(done) {
+        var textName = 'This is a long text that should break into several lines';
+        new TestClient(fontLayergroup('DejaVu Sans Book', textName)).getTile(0, 0, 0, function (err, tile) {
+            assert.ok(!err);
+            assert.ok(tile);
+            assert.imageEqualsFile(
+                tile,
+                './test/fixtures/text-wrap-character.png',
+                IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                done
+            );
+        });
+    });
 
     // See https://github.com/CartoDB/Windshaft/issues/94
     it("unknown text-face-name", function(done) {
