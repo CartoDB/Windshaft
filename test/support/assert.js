@@ -149,6 +149,31 @@ function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
     }
 }
 
+// images should have the same aspect ratio
+assert.imagesAreSimilarIgnoreDimensions = function(testImage, referenceImage, tolerance, callback) {
+    var biggestImage = null;
+    var smallestImage = null;
+
+    if (testImage.height() > referenceImage.height()) {
+        biggestImage = testImage;
+        smallestImage = referenceImage;
+    } else if (testImage.height() < referenceImage.height()) {
+        biggestImage = referenceImage;
+        smallestImage = testImage;
+    }
+
+    if (biggestImage) {
+        biggestImage.premultiplySync();
+        // lanczos method has the best quality 
+        biggestImage.resize(smallestImage.width(), smallestImage.height(), {scaling_method: mapnik.imageScaling.lanczos}, function(err, biggestImage) {
+            imagesAreSimilar(biggestImage, smallestImage, tolerance, callback);
+        });
+    } else {
+        imagesAreSimilar(testImage, referenceImage, tolerance, callback);
+    }
+
+}
+
 function Celldiff(x, y, ev, ov) {
     this.x = x;
     this.y = y;
