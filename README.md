@@ -19,8 +19,7 @@ own auth/metrics/caching/scaling on top of decent core components. Same
 old story: high cohesion, low coupling makes us happy.
 See [Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb).
 
-Windshaft is a library used by [cartodb.com](https://cartodb.com/),
-an Open Source Geospatial Database on the Cloud.
+Windshaft is a library used by [CARTO](https://carto.com/), a location intelligence and data visualization tool.
 
 
 Some examples
@@ -28,7 +27,7 @@ Some examples
 ![Playing with colors by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_0.png) ![Circumpolar Arctic Vegetation by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_1.png)
 ![Bolivia deforestation by @saleiva](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_2.png) ![Traffic accidents by @rochoa](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_3.png)
 
-More examples built on top of Windshaft can be found in [CartoDB's gallery](http://cartodb.com/gallery/).
+More examples built on top of Windshaft can be found in [CARTO's gallery](http://carto.com/gallery/).
 
 
 Dependencies
