@@ -1,9 +1,31 @@
-# Version 3.2.2
+# Version 3.3.2
 2017-mm-dd
+
+# Version 3.3.1
+2017-08-13
+
+Announcements:
+ - Upgrade cartodb-psql to [0.10.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.1).
+
+
+# Version 3.3.0
+2017-08-09
+
+Announcements:
+ - Upgrade tilelive-bridge to [2.3.1-cdb4](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb4).
+ - Upgrade tilelive-mapnik to [0.6.18-cdb3](https://github.com/CartoDB/tilelive-mapnik/releases/tag/0.6.18-cdb2).
+ - Upgrade cartodb-psql to [0.9.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.9.0).
+
+
+# Version 3.2.2
+2017-07-20
+
+Announcements:
+ - Upgrade tilelive-bridge to [2.3.1-cdb3](https://github.com/CartoDB/tilelive-bridge/releases/tag/2.3.1-cdb3).
 
 
 # Version 3.2.1
-2017-05-32
+2017-05-31
 
 Bug fixes:
  - Removed dead code while extracting layer metadata stats #551.
