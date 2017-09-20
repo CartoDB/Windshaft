@@ -158,7 +158,7 @@ describe('mvt', function () {
             var testClient = new TestClient(mixedLayersMapConfig);
             testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt' }, function (err) {
                 assert.ok(err);
-                assert.equal(err.message, 'Unsupported format mvt');
+                assert.equal(err.message, 'Unsupported format');
                 done();
             });
         });
