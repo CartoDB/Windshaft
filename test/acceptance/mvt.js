@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var mapnik = require('mapnik');
 
-describe.only('mvt', function () {
+describe('mvt', function () {
 
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
