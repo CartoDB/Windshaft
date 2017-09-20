@@ -4,13 +4,13 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var mapnik = require('mapnik');
 
-describe('mvt', function() {
+describe.only('mvt', function () {
 
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig);
 
-        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
             var vectorTile = new mapnik.VectorTile(13, 4011, 3088);
             vectorTile.setData(mvtTile);
             assert.equal(vectorTile.painted(), true);
@@ -34,7 +34,7 @@ describe('mvt', function() {
 
     });
 
-    var multipleLayersMapConfig =  {
+    var multipleLayersMapConfig = {
         version: '1.3.0',
         layers: [
             {
@@ -42,7 +42,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 2',
                     cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -50,19 +51,21 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 3 offset 2',
                     cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             }
         ]
     };
 
-    var mixedLayersMapConfig =  {
+    var mixedLayersMapConfig = {
         version: '1.3.0',
         layers: [
             {
                 type: 'plain',
                 options: {
-                    color: 'red'
+                    color: 'red',
+                    interactivity: ['name']
                 }
             },
             {
@@ -70,7 +73,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 2',
                     cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -78,7 +82,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 3 offset 2',
                     cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -132,35 +137,35 @@ describe('mvt', function() {
         };
     }
 
-    it('multiple layers', function(done) {
+    it('multiple layers', function (done) {
         var testClient = new TestClient(multipleLayersMapConfig);
-        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, multipleLayersValidation(done));
     });
 
-    it('multiple layers do not specify `mapnik` as layer, use undefined', function(done) {
+    it('multiple layers do not specify `mapnik` as layer, use undefined', function (done) {
         var testClient = new TestClient(multipleLayersMapConfig);
-        testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt'}, multipleLayersValidation(done));
+        testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt' }, multipleLayersValidation(done));
     });
 
-    describe('multiple layers with other types', function() {
+    describe('multiple layers with other types', function () {
 
-        it('happy case', function(done) {
+        it('happy case', function (done) {
             var testClient = new TestClient(mixedLayersMapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
+            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, multipleLayersValidation(done));
         });
 
-        it('invalid mvt layer', function(done) {
+        it('invalid mvt layer', function (done) {
             var testClient = new TestClient(mixedLayersMapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt'}, function(err) {
+            testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt' }, function (err) {
                 assert.ok(err);
                 assert.equal(err.message, 'Unsupported format mvt');
                 done();
             });
         });
 
-        it('select one layer', function(done) {
+        it('select one layer', function (done) {
             var testClient = new TestClient(mixedLayersMapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt' }, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
@@ -183,13 +188,13 @@ describe('mvt', function() {
             });
         });
 
-        it('select multiple mapnik layers', function(done) {
+        it('select multiple mapnik layers', function (done) {
             var testClient = new TestClient(mixedLayersMapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt'}, multipleLayersValidation(done));
+            testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt' }, multipleLayersValidation(done));
         });
 
-        it('filter some mapnik layers', function(done) {
-            var mapConfig =  {
+        it('filter some mapnik layers', function (done) {
+            var mapConfig = {
                 version: '1.3.0',
                 layers: [
                     {
@@ -203,7 +208,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 2',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -211,7 +217,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 3 offset 2',
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -219,13 +226,14 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     }
                 ]
             };
             var testClient = new TestClient(mapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt'}, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt' }, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
@@ -258,8 +266,8 @@ describe('mvt', function() {
             });
         });
 
-        it('should be able to access layer names by layer id', function(done) {
-            var mapConfig =  {
+        it('should be able to access layer names by layer id', function (done) {
+            var mapConfig = {
                 version: '1.3.0',
                 layers: [
                     {
@@ -274,7 +282,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 2',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -282,7 +291,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 3 offset 2',
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -291,13 +301,14 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     }
                 ]
             };
             var testClient = new TestClient(mapConfig);
-            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
