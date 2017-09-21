@@ -266,6 +266,8 @@ describe('mvt', function () {
             });
         });
 
+        //TODO test token substitution
+
         it('should be able to access layer names by layer id', function (done) {
             var mapConfig = {
                 version: '1.3.0',
