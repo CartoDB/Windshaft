@@ -12,8 +12,8 @@ describe('mvt (pgsql)', function () {
     mvtTest(true);
 });
 
-function mvtTest(usePgSQL) {
-    const options = { mvt: { usePgSQL: usePgSQL } };
+function mvtTest(usePostGIS) {
+    const options = { mvt: { usePostGIS: usePostGIS } };
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig, options);
@@ -166,7 +166,7 @@ function mvtTest(usePgSQL) {
             var testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt'}, function(err) {
                 assert.ok(err);
-                assert.ok(err.message.startsWith('Unsupported format'));
+                assert.equal(err.message, 'Unsupported format mvt');
                 done();
             });
         });
