@@ -1,4 +1,8 @@
+sudo: required
+dist: trusty
+
 before_install:
+  sudo apt-get update -qq
   sudo apt-get -y install \
     pkg-config \
     libcairo2-dev \
