@@ -1,16 +1,22 @@
-addons:
-  postgresql: "9.5"
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - postgresql-9.5-postgis-2.3
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
-      - libpango1.0-dev
-      - g++-4.9
+before_install:
+  sudo apt-get -y install \
+    pkg-config \
+    libcairo2-dev \
+    libjpeg8-dev \
+    libgif-dev \
+    libpango1.0-dev \
+    g++-4.9 \
+    libxml2-dev \
+    libgdal-dev \
+    libproj-dev \
+    postgresql-server-dev-9.5
+  wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz
+  tar xvfz postgis-2.4.0rc3.tar.gz
+  cd postgis-2.4.0rc3
+  ./configure
+  make
+  sudo make install
+
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
