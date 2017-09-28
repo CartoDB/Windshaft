@@ -293,10 +293,10 @@ describe('torque', function() {
         var testClient = new TestClient(mapConfig);
         testClient.getTile(0, 0, 0, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
             SubstitutionTokens.replace = replaceFn;
+
             assert.ok(!err, err);
-            torqueTile[0].vals__uint8.sort();
-            torqueTile[0].dates__uint16.sort();
-            assert.deepEqual(torqueTile, [{ x__uint8: 128, y__uint8: 128, vals__uint8: [2,3], dates__uint16: [0,1] }]);
+            assert.deepEqual(torqueTile, [{ x__uint8: 128, y__uint8: 128, vals__uint8: [2,3], dates__uint16: [1,0] }]);
+
             assert.equal(expectedSubstitutionTokens.length, 0);
 
             done();
