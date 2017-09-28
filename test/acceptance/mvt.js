@@ -42,7 +42,7 @@ function mvtTest(usePgSQL) {
 
     });
 
-    var multipleLayersMapConfig = {
+    var multipleLayersMapConfig =  {
         version: '1.3.0',
         layers: [
             {
@@ -66,7 +66,7 @@ function mvtTest(usePgSQL) {
         ]
     };
 
-    var mixedLayersMapConfig = {
+    var mixedLayersMapConfig =  {
         version: '1.3.0',
         layers: [
             {
@@ -145,35 +145,35 @@ function mvtTest(usePgSQL) {
         };
     }
 
-    it('multiple layers', function (done) {
+    it('multiple layers', function(done) {
         var testClient = new TestClient(multipleLayersMapConfig, options);
-        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, multipleLayersValidation(done));
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
     });
 
-    it('multiple layers do not specify `mapnik` as layer, use undefined', function (done) {
+    it('multiple layers do not specify `mapnik` as layer, use undefined', function(done) {
         var testClient = new TestClient(multipleLayersMapConfig, options);
-        testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt' }, multipleLayersValidation(done));
+        testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt'}, multipleLayersValidation(done));
     });
 
-    describe('multiple layers with other types', function () {
+    describe('multiple layers with other types', function() {
 
-        it('happy case', function (done) {
+        it('happy case', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, multipleLayersValidation(done));
+            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
         });
 
-        it('invalid mvt layer', function (done) {
+        it('invalid mvt layer', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt' }, function (err) {
+            testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt'}, function(err) {
                 assert.ok(err);
                 assert.ok(err.message.startsWith('Unsupported format'));
                 done();
             });
         });
 
-        it('select one layer', function (done) {
+        it('select one layer', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt' }, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
@@ -196,13 +196,13 @@ function mvtTest(usePgSQL) {
             });
         });
 
-        it('select multiple mapnik layers', function (done) {
+        it('select multiple mapnik layers', function(done) {
             var testClient = new TestClient(mixedLayersMapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt' }, multipleLayersValidation(done));
+            testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt'}, multipleLayersValidation(done));
         });
 
-        it('filter some mapnik layers', function (done) {
-            var mapConfig = {
+        it('filter some mapnik layers', function(done) {
+            var mapConfig =  {
                 version: '1.3.0',
                 layers: [
                     {
@@ -241,7 +241,7 @@ function mvtTest(usePgSQL) {
                 ]
             };
             var testClient = new TestClient(mapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt' }, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
@@ -276,7 +276,7 @@ function mvtTest(usePgSQL) {
 
         //TODO test token substitution
 
-        it('should be able to access layer names by layer id', function (done) {
+        it('should be able to access layer names by layer id', function(done) {
             var mapConfig = {
                 version: '1.3.0',
                 layers: [
@@ -318,7 +318,7 @@ function mvtTest(usePgSQL) {
                 ]
             };
             var testClient = new TestClient(mapConfig, options);
-            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
+            testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(13, 4011, 3088);
