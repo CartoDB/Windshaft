@@ -7,7 +7,7 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - postgresql-9.5-postgis-2.3
+      - postgresql-9.5
       - pkg-config
       - libcairo2-dev
       - libjpeg8-dev
@@ -24,13 +24,13 @@ addons:
       - libxml2-dev
       - libgdal-dev
       - libproj-dev
-      -  postgresql-server-dev-9.3
+      - postgresql-server-dev-9.5
 
 before_install:
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/protobuf-c-compiler_1.2.1-1_amd64.deb
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/libprotobuf-c1_1.2.1-1_amd64.deb
-  - sudo dpkg -i protobuf-c-compiler_1.2.1-1_amd64.deb
-  - sudo dpkg -i libprotobuf-c1_1.2.1-1_amd64.deb
+  - sudo echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse" >> /etc/apt/sources.list
+  - sudo apt-get update
+  - sudo apt-get build-dep libprotobuf-c-dev protobuf-c-compiler
+  - sudo apt-get -b source -t xenial libprotobuf-c-dev protobuf-c-compiler
   - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
   - ./configure
   - make
