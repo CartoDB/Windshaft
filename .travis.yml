@@ -25,6 +25,8 @@ addons:
       - libgdal-dev
       - libproj-dev
       - postgresql-server-dev-9.5
+      - gcc-5
+      - g++-5
 
 before_install:
   - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/protobuf-c-compiler_1.2.1-1_amd64.deb
@@ -38,8 +40,8 @@ before_install:
   - sudo dpkg -i libprotobuf-c-dev_1.2.1-1_amd64.deb
   - sudo dpkg -i protobuf-c-compiler_1.2.1-1_amd64.deb
   - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
-  - ./configure
-  - make
+  - CXX=g++-5 ./configure
+  - CXX=g++-5 make
   - sudo make install
   - cd .. && rm -rf ./postgis-2.4.0rc3/
 
