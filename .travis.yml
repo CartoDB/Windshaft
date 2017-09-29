@@ -27,7 +27,7 @@ addons:
       - postgresql-server-dev-9.5
 
 before_install:
-  - sudo echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse" >> /etc/apt/sources.list
+  - echo deb-src http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse"  | sudo tee -a /etc/apt/sources.list
   - sudo apt-get update
   - sudo apt-get build-dep libprotobuf-c-dev protobuf-c-compiler
   - sudo apt-get -b source -t xenial libprotobuf-c-dev protobuf-c-compiler
