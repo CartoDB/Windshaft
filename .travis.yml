@@ -31,9 +31,11 @@ before_install:
   - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/libprotobuf-c1_1.2.1-1_amd64.deb
   - wget http://mirrors.kernel.org/ubuntu/pool/main/p/protobuf/libprotobuf9v5_2.6.1-1.3_amd64.deb
   - wget http://mirrors.kernel.org/ubuntu/pool/main/p/protobuf/libprotoc9v5_2.6.1-1.3_amd64.deb
+  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/libprotobuf-c-dev_1.2.1-1_amd64.deb
   - sudo dpkg -i libprotobuf-c1_1.2.1-1_amd64.deb
   - sudo dpkg -i libprotobuf9v5_2.6.1-1.3_amd64.deb
   - sudo dpkg -i libprotoc9v5_2.6.1-1.3_amd64.deb
+  - sudo dpkg -i libprotobuf-c-dev_1.2.1-1_amd64.deb
   - sudo dpkg -i protobuf-c-compiler_1.2.1-1_amd64.deb
   - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
   - ./configure
