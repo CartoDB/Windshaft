@@ -27,10 +27,10 @@ addons:
       - postgresql-server-dev-9.5
 
 before_install:
-  - echo deb-src http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse"  | sudo tee -a /etc/apt/sources.list
+  - echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted universe multiverse"  | sudo tee -a /etc/apt/sources.list
   - sudo apt-get update
-  - sudo apt-get build-dep libprotobuf-c-dev protobuf-c-compiler
-  - sudo apt-get -b source -t xenial libprotobuf-c-dev protobuf-c-compiler
+  - sudo apt-get build-dep -y libprotobuf-c-dev protobuf-c-compiler
+  - sudo apt-get -y -b source -t xenial libprotobuf-c-dev protobuf-c-compiler
   - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
   - ./configure
   - make
