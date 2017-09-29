@@ -1,3 +1,6 @@
+sudo: required
+dist: trusty
+
 addons:
   postgresql: "9.5"
   apt:
@@ -11,6 +14,24 @@ addons:
       - libgif-dev
       - libpango1.0-dev
       - g++-4.9
+      - libgdal1h
+      - libgeos-3.4.2
+      - pkg-config
+      - libcairo2-dev
+      - libjpeg8-dev
+      - libgif-dev
+      - libpango1.0-dev
+      - libxml2-dev
+      - libgdal-dev
+      - libproj-dev
+      -  postgresql-server-dev-9.3
+
+before_install:
+  - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
+  - ./configure
+  - make
+  - sudo make install
+  - cd .. && rm -rf ./postgis-2.4.0rc3/
 
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
@@ -18,4 +39,3 @@ env:
 language: node_js
 node_js:
   - "6"
-dist: precise
