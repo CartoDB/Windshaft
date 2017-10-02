@@ -1,52 +1,14 @@
 sudo: required
 dist: trusty
 
-addons:
-  postgresql: "9.5"
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - postgresql-9.5
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
-      - libpango1.0-dev
-      - g++-4.9
-      - libgdal1h
-      - libgeos-3.4.2
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
-      - libpango1.0-dev
-      - libxml2-dev
-      - libgdal-dev
-      - libproj-dev
-      - postgresql-server-dev-9.5
-      - gcc-5
-      - g++-5
+services:
+  - docker
 
 before_install:
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/protobuf-c-compiler_1.2.1-1_amd64.deb
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/libprotobuf-c1_1.2.1-1_amd64.deb
-  - wget http://mirrors.kernel.org/ubuntu/pool/main/p/protobuf/libprotobuf9v5_2.6.1-1.3_amd64.deb
-  - wget http://mirrors.kernel.org/ubuntu/pool/main/p/protobuf/libprotoc9v5_2.6.1-1.3_amd64.deb
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/protobuf-c/libprotobuf-c-dev_1.2.1-1_amd64.deb
-  - sudo dpkg -i libprotobuf-c1_1.2.1-1_amd64.deb
-  - sudo dpkg -i libprotobuf9v5_2.6.1-1.3_amd64.deb
-  - sudo dpkg -i libprotoc9v5_2.6.1-1.3_amd64.deb
-  - sudo dpkg -i libprotobuf-c-dev_1.2.1-1_amd64.deb
-  - sudo dpkg -i protobuf-c-compiler_1.2.1-1_amd64.deb
-  - wget http://download.osgeo.org/postgis/source/postgis-2.4.0rc3.tar.gz && tar xvfz postgis-2.4.0rc3.tar.gz && cd postgis-2.4.0rc3
-  - CXX=g++-5 ./configure
-  - CXX=g++-5 make
-  - sudo make install
-  - cd .. && rm -rf ./postgis-2.4.0rc3/
+  - docker pull dmanzanares/windshaft-testing
 
-env:
-  - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
+script:
+  - docker run -v `pwd`:/srv dmanzanares/windshaft-testing
 
 language: node_js
 node_js:
