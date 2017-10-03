@@ -36,6 +36,10 @@ function mvtTest(usePostGIS) {
                 return f.properties.name;
             });
             assert.deepEqual(names, expectedNames);
+            
+            if (usePostGIS){                
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+            }
 
             done();
         });
@@ -141,6 +145,11 @@ function mvtTest(usePostGIS) {
                 return f.properties.name;
             }), layer1ExpectedNames);
 
+            if (usePostGIS){                
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+            }
+
             done();
         };
     }
@@ -191,6 +200,11 @@ function mvtTest(usePostGIS) {
                 var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
                 var names = layer0.features.map(function (f) { return f.properties.name; });
                 assert.deepEqual(names, layer0ExpectedNames);
+                console.log(Object.keys(layer0.features[0].properties))
+                
+                if (usePostGIS){                
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                }
 
                 done();
             });
@@ -269,6 +283,11 @@ function mvtTest(usePostGIS) {
                 assert.deepEqual(layer1.features.map(function (f) {
                     return f.properties.name;
                 }), layer1ExpectedNames);
+
+                if (usePostGIS){                
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                }
 
                 done();
             });
@@ -355,6 +374,12 @@ function mvtTest(usePostGIS) {
                 assert.deepEqual(layer2.features.map(function (f) {
                     return f.properties.name;
                 }), layer2ExpectedNames);
+
+                if (usePostGIS){
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                    assert.ok(layer2.features.every(feature => Object.keys(feature.properties).length === 1), 'Should have only the necessary columns');
+                }
 
                 done();
             });
