@@ -9,3 +9,5 @@ before_install:
 
 script:
   - docker run -v `pwd`:/srv dmanzanares/windshaft-testing
+
+language: generic
