@@ -25,6 +25,7 @@ RUN echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 
 RUN apt-get -y purge $DEV_DEPENDENCIES
+RUN apt-get -y autoremove
 
 WORKDIR /srv
 CMD /etc/init.d/postgresql start && node -v && export NPROCS=1 && export JOBS=1 && export CXX=g++-4.9 && npm install && export PGUSER=postgres && npm test
