@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 
-ENV DEV_DEPENDENCIES curl gcc wget protobuf-c-compiler
-ENV RUN_DEPENDENCIES locales make libpixman-1-dev pkg-config postgresql-9.5 libcairo2-dev  libjpeg8-dev libgif-dev libpango1.0-dev libgdal1i libgeos-dev libxml2-dev libgdal-dev libproj-dev postgresql-server-dev-9.5 redis-server nodejs g++-4.9 libprotobuf-c-dev git
+ENV DEV_DEPENDENCIES curl wget protobuf-c-compiler
+ENV RUN_DEPENDENCIES locales make libpixman-1-dev pkg-config postgresql-9.5 libcairo2-dev  libjpeg8-dev libgif-dev libpango1.0-dev libgdal1i libgeos-dev libxml2-dev libgdal-dev libproj-dev postgresql-server-dev-9.5 redis-server nodejs gcc-4.9 g++-4.9 libprotobuf-c-dev git
 
 
 RUN apt-get -y update
