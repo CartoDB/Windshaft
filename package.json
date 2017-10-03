@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "3.3.3",
+    "version": "3.3.4",
     "main": "./lib/windshaft/index.js",
     "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
     "keywords": [
@@ -25,13 +25,13 @@
         "canvas": "cartodb/node-canvas#1.6.2-cdb2",
         "carto": "cartodb/carto#0.15.1-cdb3",
         "cartodb-psql": "^0.10.1",
-        "debug": "~2.2.0",
+        "debug": "^3.1.0",
         "dot": "~1.0.2",
         "grainstore": "~1.6.0",
         "mapnik": "3.5.14",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
-        "request": "~2.79.0",
+        "request": "^2.83.0",
         "semver": "~5.0.3",
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
