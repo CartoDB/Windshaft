@@ -1,7 +1,7 @@
 # Version 3.3.3
-2017-mm-dd
+2017-10-03
 
-Announcements: 
+Announcements:
 - Upgrade debug to 3.1.0
 - Upgrade request to 2.83.0
 
