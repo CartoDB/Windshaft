@@ -2,7 +2,7 @@ require('../../support/test_helper.js');
 var LayerColumns = require('../../../lib/windshaft/utils/layer-columns');
 var assert = require('assert');
 
-describe('geojson-utils', function() {
+describe('mvt-utils', function() {
 
     function createOptions(interactivity, columns) {
         var options = {
