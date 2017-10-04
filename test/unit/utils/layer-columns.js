@@ -1,5 +1,5 @@
 require('../../support/test_helper.js');
-var geojsonUtils = require('../../../lib/windshaft/utils/geojson_utils');
+var geojsonUtils = require('../../../lib/windshaft/utils/layer-columns');
 var assert = require('assert');
 
 describe('geojson-utils', function() {
