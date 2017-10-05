@@ -1,21 +1,13 @@
-addons:
-  postgresql: "9.5"
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - postgresql-9.5-postgis-2.3
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
-      - libpango1.0-dev
-      - g++-4.9
+sudo: required
+dist: trusty
 
-env:
-  - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
+services:
+  - docker
 
-language: node_js
-node_js:
-  - "6"
-dist: precise
+before_install:
+  - docker pull dmanzanares/windshaft-testing
+
+script:
+  - docker run -v `pwd`:/srv dmanzanares/windshaft-testing
+
+language: generic

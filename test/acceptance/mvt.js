@@ -4,13 +4,21 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var mapnik = require('mapnik');
 
-describe('mvt', function() {
+describe('mvt (mapnik)', function () {
+    mvtTest(false);
+});
 
+describe('mvt (pgsql)', function () {
+    mvtTest(true);
+});
+
+function mvtTest(usePostGIS) {
+    const options = { mvt: { usePostGIS: usePostGIS } };
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
-        var testClient = new TestClient(mapConfig);
+        var testClient = new TestClient(mapConfig, options);
 
-        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
             var vectorTile = new mapnik.VectorTile(13, 4011, 3088);
             vectorTile.setData(mvtTile);
             assert.equal(vectorTile.painted(), true);
@@ -28,6 +36,11 @@ describe('mvt', function() {
                 return f.properties.name;
             });
             assert.deepEqual(names, expectedNames);
+            
+            if (usePostGIS){                
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
+                        'Should have only the necessary columns');
+            }
 
             done();
         });
@@ -42,7 +55,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 2',
                     cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -50,7 +64,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 3 offset 2',
                     cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             }
         ]
@@ -62,7 +77,8 @@ describe('mvt', function() {
             {
                 type: 'plain',
                 options: {
-                    color: 'red'
+                    color: 'red',
+                    interactivity: ['name']
                 }
             },
             {
@@ -70,7 +86,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 2',
                     cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -78,7 +95,8 @@ describe('mvt', function() {
                 options: {
                     sql: 'select * from test_table limit 3 offset 2',
                     cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    interactivity: ['name']
                 }
             },
             {
@@ -128,29 +146,36 @@ describe('mvt', function() {
                 return f.properties.name;
             }), layer1ExpectedNames);
 
+            if (usePostGIS){                
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
+                        'Should have only the necessary columns');
+                assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
+                        'Should have only the necessary columns');
+            }
+
             done();
         };
     }
 
     it('multiple layers', function(done) {
-        var testClient = new TestClient(multipleLayersMapConfig);
+        var testClient = new TestClient(multipleLayersMapConfig, options);
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
     });
 
     it('multiple layers do not specify `mapnik` as layer, use undefined', function(done) {
-        var testClient = new TestClient(multipleLayersMapConfig);
+        var testClient = new TestClient(multipleLayersMapConfig, options);
         testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt'}, multipleLayersValidation(done));
     });
 
     describe('multiple layers with other types', function() {
 
         it('happy case', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig);
+            var testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
         });
 
         it('invalid mvt layer', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig);
+            var testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt'}, function(err) {
                 assert.ok(err);
                 assert.equal(err.message, 'Unsupported format mvt');
@@ -159,7 +184,7 @@ describe('mvt', function() {
         });
 
         it('select one layer', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig);
+            var testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
@@ -178,13 +203,18 @@ describe('mvt', function() {
                 var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
                 var names = layer0.features.map(function (f) { return f.properties.name; });
                 assert.deepEqual(names, layer0ExpectedNames);
+                
+                if (usePostGIS){                
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                }
 
                 done();
             });
         });
 
         it('select multiple mapnik layers', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig);
+            var testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt'}, multipleLayersValidation(done));
         });
 
@@ -203,7 +233,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 2',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -211,7 +242,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 3 offset 2',
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -219,12 +251,13 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     }
                 ]
             };
-            var testClient = new TestClient(mapConfig);
+            var testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
@@ -254,12 +287,21 @@ describe('mvt', function() {
                     return f.properties.name;
                 }), layer1ExpectedNames);
 
+                if (usePostGIS){                
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                }
+
                 done();
             });
         });
 
+        //TODO test token substitution
+
         it('should be able to access layer names by layer id', function(done) {
-            var mapConfig =  {
+            var mapConfig = {
                 version: '1.3.0',
                 layers: [
                     {
@@ -274,7 +316,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 2',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -282,7 +325,8 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table limit 3 offset 2',
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     },
                     {
@@ -291,12 +335,13 @@ describe('mvt', function() {
                         options: {
                             sql: 'select * from test_table',
                             cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0'
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
                         }
                     }
                 ]
             };
-            var testClient = new TestClient(mapConfig);
+            var testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
@@ -335,9 +380,18 @@ describe('mvt', function() {
                     return f.properties.name;
                 }), layer2ExpectedNames);
 
+                if (usePostGIS){
+                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                    assert.ok(layer2.features.every(feature => Object.keys(feature.properties).length === 1),
+                            'Should have only the necessary columns');
+                }
+
                 done();
             });
         });
     });
 
-});
+}

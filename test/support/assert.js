@@ -10,55 +10,6 @@ var debug = require('debug')('windshaft:assert');
 
 var assert = module.exports = exports = require('assert');
 
-/**
- * Check to GeoJSON are deeply equal.
- *
- * Properties check dates using new Date().getTime().
- * All properties with key matching `/_at$/` regex will be validated as dates.
- *
- * @param actual The GeoJSON to validate
- * @param expected GeoJSON reference
- */
-assert.deepEqualGeoJSON = function(actual, expected) {
-    assert.equal(actual.type, expected.type);
-    assert.equal(actual.features.length, expected.features.length);
-
-    var featureCollections = actual.features.filter(featureCollectionFilter);
-    var expectedFeatureCollections = expected.features.filter(featureCollectionFilter);
-    featureCollections.forEach(function(featureCollection, idx) {
-        assert.deepEqualGeoJSON(featureCollection, expectedFeatureCollections[idx]);
-    });
-
-    var featuresByCartodbId = actual.features
-        .filter(nonFeatureCollectionFilter)
-        .reduce(cartodbIdFeatureReducer, {});
-    var expectedFeaturesByCartodbId = expected.features
-        .filter(nonFeatureCollectionFilter)
-        .reduce(cartodbIdFeatureReducer, {});
-
-    Object.keys(featuresByCartodbId).forEach(function(cartodbId) {
-        var feature = featuresByCartodbId[cartodbId];
-        var expectedFeature = expectedFeaturesByCartodbId[cartodbId];
-        assert.ok(expectedFeature, 'missing expected feature for cartodb_id=' + cartodbId);
-
-        assert.deepEqual(
-            feature.geometry, expectedFeature.geometry,
-            'Error at cartodb_id=' + cartodbId + ': ' +
-                [feature.geometry, expectedFeature.geometry].map(JSON.stringify).join(' vs ')
-        );
-
-        Object.keys(feature.properties).forEach(function(pKey) {
-            if (pKey.match(/_at$/)) {
-                var actualDate = new Date(feature.properties[pKey]);
-                var expectedDate = new Date(expectedFeature.properties[pKey]);
-                assert.equal(actualDate.getTime(), expectedDate.getTime());
-            } else {
-                assert.equal(feature.properties[pKey], expectedFeature.properties[pKey]);
-            }
-        });
-    });
-};
-
 function cartodbIdFeatureReducer(byIdAcc, feature) {
     if (!feature.properties.hasOwnProperty('cartodb_id')) {
         throw new Error('Expected `cartodb_id` property not found in feature');

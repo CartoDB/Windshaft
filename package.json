@@ -50,7 +50,12 @@
     },
     "scripts": {
         "preinstall": "make pre-install",
-        "test": "make test-all"
+        "test": "make test-all",
+        "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
+        "docker-pull": "docker pull cartoimages/windshaft-testing",
+        "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing",
+        "docker-build": "docker build -t cartoimages/windshaft-testing .",
+        "docker-publish": "docker push cartoimages/windshaft-testing"
     },
     "engines": {
         "node": ">=6.9",

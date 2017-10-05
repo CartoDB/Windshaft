@@ -85,15 +85,6 @@ describe('renderer-mapnik-factory buffer-size', function() {
         assert.equal(factory.getBufferSize(mapConfig,'mvt'), 64);
     });
 
-    it('should use value provided for geojson', function() {
-        var factory = new MapnikRendererFactory({
-            geojson: {
-                bufferSize: 256
-            }
-        });
-        assert.equal(factory.getBufferSize(mapConfig,'geojson', {bufferSize: 256}), 256);
-    });
-
     it('should use value provided by mapConfig for png and mvt', function() {
         var mapConfig = MapConfig.create({
             buffersize: {
@@ -149,28 +140,4 @@ describe('renderer-mapnik-factory buffer-size', function() {
         assert.equal(factory.getBufferSize(mapConfig,'mvt'), 128);
         assert.equal(factory.getBufferSize(mapConfig,'grid.json'), 128);
     });
-
-    it('should use value provided by mapConfig for geojson', function() {
-        var mapConfig = MapConfig.create({
-            buffersize: {
-                png: 64,
-                mvt: 64,
-                'geojson': 128
-            },
-            layers: [
-                {
-                    type: 'plain',
-                    options: {
-                        color: 'red'
-                    }
-           }]
-        });
-        var factory = new MapnikRendererFactory({
-            geojson: {
-                bufferSize: 256
-            }
-        });
-        assert.equal(factory.getBufferSize(mapConfig,'geojson', {bufferSize: 256}), 128);
-    });
-
 });
