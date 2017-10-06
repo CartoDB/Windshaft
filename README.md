@@ -10,7 +10,7 @@ A Node.js map tile library for PostGIS and torque.js, with CartoCSS styling.
 
 * Can render arbitrary SQL queries
 * Generates image and UTFGrid interactivity tiles
-* Accepts, stores, serves, and applies map styles written in [CartoCSS](https://github.com/mapbox/carto/blob/master/docs/latest.md)
+* Accepts, stores, serves, and applies map styles written in [CartoCSS](https://cartocss.readthedocs.io/en/latest/)
 * Supports re-projections
 
 Being a dynamic map renderer, windshaft commits some map server 'sins' in
