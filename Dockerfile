@@ -28,4 +28,5 @@ RUN apt-get -y purge $DEV_DEPENDENCIES
 RUN apt-get -y autoremove
 
 WORKDIR /srv
+EXPOSE 5858
 CMD /etc/init.d/postgresql start && node -v && export NPROCS=1 && export JOBS=1 && export CXX=g++-4.9 && npm install && export PGUSER=postgres && npm test
