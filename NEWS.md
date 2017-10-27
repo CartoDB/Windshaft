@@ -1,5 +1,5 @@
 # Version 4.0.0
-2017-mm-dd
+2017-10-11
 
 Breaking changes:
  - Removes support for geojson tiles.
