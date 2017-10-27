@@ -1,5 +1,5 @@
 # Version 4.0.1
-2017-mm-dd
+2017-10-27
 
 Bug-fixes:
  - Add support for gziped responses coming from marker-file urls #571
