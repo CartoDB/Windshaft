@@ -8,9 +8,11 @@ describe('mvt (mapnik)', function () {
     mvtTest(false);
 });
 
-describe('mvt (pgsql)', function () {
-    mvtTest(true);
-});
+if (process.env.POSTGIS_VERSION === '2.4') {
+    describe('mvt (pgsql)', function () {
+        mvtTest(true);
+    });
+}
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
@@ -36,8 +38,8 @@ function mvtTest(usePostGIS) {
                 return f.properties.name;
             });
             assert.deepEqual(names, expectedNames);
-            
-            if (usePostGIS){                
+
+            if (usePostGIS){
                 assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
                         'Should have only the necessary columns');
             }
@@ -146,7 +148,7 @@ function mvtTest(usePostGIS) {
                 return f.properties.name;
             }), layer1ExpectedNames);
 
-            if (usePostGIS){                
+            if (usePostGIS){
                 assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
                         'Should have only the necessary columns');
                 assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
@@ -203,8 +205,8 @@ function mvtTest(usePostGIS) {
                 var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
                 var names = layer0.features.map(function (f) { return f.properties.name; });
                 assert.deepEqual(names, layer0ExpectedNames);
-                
-                if (usePostGIS){                
+
+                if (usePostGIS){
                     assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
                             'Should have only the necessary columns');
                 }
@@ -287,7 +289,7 @@ function mvtTest(usePostGIS) {
                     return f.properties.name;
                 }), layer1ExpectedNames);
 
-                if (usePostGIS){                
+                if (usePostGIS){
                     assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
                             'Should have only the necessary columns');
                     assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
