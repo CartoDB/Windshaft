@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
 describe('vector aggregation', function () {
-    it.only('should create a single layer map w/o cartocss', function (done) {
+    it('should create a single layer map w/o cartocss', function (done) {
         this.testClient = new TestClient({
             version: '1.6.0',
             layers: [
