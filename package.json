@@ -44,7 +44,7 @@
     "devDependencies": {
         "express": "~2.5.11",
         "istanbul": "~0.4.0",
-        "jshint": "~2.6.0",
+        "jshint": "~2.9.5",
         "mocha": "~1.21.4",
         "redis": "~2.4.2"
     },
