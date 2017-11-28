@@ -3,6 +3,7 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
+const INVALID_FORMAT_ERROR = 'Invalid format, there is no CartoCSS defined';
 const INCOMPATIBLE_LAYERS_ERROR = `
     The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)
 `;
@@ -113,7 +114,7 @@ describe('vector aggregation', function () {
 
         this.testClient.getTile(0, 0, 0, { format: 'png' }, (err) => {
             assert.ok(err);
-            assert.equal('Invalid format, there is no CartoCSS defined', err.message);
+            assert.equal(INVALID_FORMAT_ERROR, err.message);
             assert.equal(400, err.http_status);
 
             done();
