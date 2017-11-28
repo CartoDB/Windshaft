@@ -3,8 +3,19 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
-const INCOMPATIBLE_LAYERS_ERROR =
-'The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)';
+const INCOMPATIBLE_LAYERS_ERROR = `
+    The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)
+`;
+const POLYGONS_SQL = `
+    select
+        st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry as the_geom
+    from generate_series(-3, 3) x
+`;
+const POINTS_SQL = `
+    select
+        st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom
+    from generate_series(-3, 3) x
+`;
 
 describe('vector aggregation', function () {
     it('should create a single layer map w/o cartocss', function (done) {
@@ -14,7 +25,7 @@ describe('vector aggregation', function () {
                 {
                     type: 'cartodb',
                     options: {
-                        sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom'
+                        sql: POINTS_SQL
                     }
                 }
             ]
@@ -39,13 +50,13 @@ describe('vector aggregation', function () {
                 {
                     type: 'cartodb',
                     options: {
-                        sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom'
+                        sql: POINTS_SQL
                     }
                 },
                 {
                     type: 'cartodb',
                     options: {
-                        sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom',
+                        sql: POINTS_SQL,
                         cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                         cartocss_version: '2.0.2',
                     }
@@ -85,4 +96,28 @@ describe('vector aggregation', function () {
             done();
         });
     });
+
+    it('should fail when requesting a raster format tile for a vector layergroup', function (done) {
+        this.testClient = new TestClient({
+            version: '1.6.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: POLYGONS_SQL,
+
+                    }
+                }
+            ]
+        });
+
+        this.testClient.getTile(0, 0, 0, { format: 'png' }, (err) => {
+            assert.ok(err);
+            assert.equal('Invalid format, there is no CartoCSS defined', err.message);
+            assert.equal(400, err.http_status);
+
+            done();
+        });
+    });
+
 });
