@@ -119,5 +119,4 @@ describe('vector aggregation', function () {
             done();
         });
     });
-
 });
