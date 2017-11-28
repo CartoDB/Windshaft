@@ -73,7 +73,7 @@ describe('vector aggregation', function () {
             ]
         });
 
-        this.testClient.getTile(0, 0, 0, (err, mvtTile) => {
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, mvtTile) => {
             if (err) {
                 return done(err);
             }
@@ -82,6 +82,7 @@ describe('vector aggregation', function () {
             vtile.setData(mvtTile);
             assert.equal(vtile.painted(), true);
             assert.equal(vtile.empty(), false);
+            done();
         });
     });
 });
