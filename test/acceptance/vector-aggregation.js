@@ -4,9 +4,8 @@ const assert = require('../support/assert');
 const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
 const INVALID_FORMAT_ERROR = 'Invalid format, there is no CartoCSS defined';
-const INCOMPATIBLE_LAYERS_ERROR = `
-    The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)
-`;
+const INCOMPATIBLE_LAYERS_ERROR =
+`The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)`;
 const POLYGONS_SQL = `
     select
         st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry as the_geom
