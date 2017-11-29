@@ -3,7 +3,7 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
-const INVALID_FORMAT_ERROR = 'Invalid format, there is no CartoCSS defined';
+const INVALID_FORMAT_ERROR = 'Invalid format: only mvt format is available for layers without CartoCSS defined';
 const INCOMPATIBLE_LAYERS_ERROR =
 `The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)`;
 const POLYGONS_SQL = `
