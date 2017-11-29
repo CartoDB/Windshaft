@@ -6,17 +6,21 @@ const TestClient = require('../support/test_client');
 const INVALID_FORMAT_ERROR = 'Invalid format: only mvt format is available for layers without CartoCSS defined';
 const INCOMPATIBLE_LAYERS_ERROR =
 `The layergroup contains incompatible layers: don\'t mix styled layers with non styled layers (without cartocss)`;
-const POLYGONS_SQL = `
-    select
-        st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry as the_geom
-    from generate_series(-3, 3) x
-`;
-const POINTS_SQL = `
-    select
-        st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom
-    from generate_series(-3, 3) x
+const POINTS_SQL_1 = `
+select
+    st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
+    st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+    x as value
+from generate_series(-3, 3) x
 `;
 
+const POINTS_SQL_2 = `
+select
+    st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326) as the_geom,
+    st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
+    x as value
+from generate_series(-3, 3) x
+`;
 
 describe('mvt (mapnik)', function () {
     mvtTest(false);
@@ -39,7 +43,7 @@ function mvtTest(usePostGIS) {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL
+                            sql: POINTS_SQL_1
                         }
                     }
                 ]
@@ -64,13 +68,13 @@ function mvtTest(usePostGIS) {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL
+                            sql: POINTS_SQL_1
                         }
                     },
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL,
+                            sql: POINTS_SQL_2,
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                             cartocss_version: '2.0.2',
                         }
@@ -92,7 +96,7 @@ function mvtTest(usePostGIS) {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom'
+                            sql: POINTS_SQL_1
                         }
                     }
                 ]
@@ -118,7 +122,7 @@ function mvtTest(usePostGIS) {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POLYGONS_SQL,
+                            sql: POINTS_SQL_2,
 
                         }
                     }
@@ -134,4 +138,4 @@ function mvtTest(usePostGIS) {
             });
         });
     });
-};
+}
