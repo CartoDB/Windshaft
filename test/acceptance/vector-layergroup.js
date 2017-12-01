@@ -3,7 +3,7 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
-const INVALID_FORMAT_ERROR = 'Invalid format: only mvt format is available for layers without CartoCSS defined';
+const invalidFormatErrorTemplate = format => `Unsupported format: 'cartocss' option is missing for ${format}`;
 const INCOMPATIBLE_LAYERS_ERROR = 'The `mapnik` or `cartodb` layers must be consistent:' +
     ' `cartocss` option is either present or voided in all layers. Mixing is not allowed.';
 const POINTS_SQL_1 = `
@@ -131,7 +131,7 @@ function mvtTest(usePostGIS) {
 
             this.testClient.getTile(0, 0, 0, { format: 'png' }, (err) => {
                 assert.ok(err);
-                assert.equal(INVALID_FORMAT_ERROR, err.message);
+                assert.equal(invalidFormatErrorTemplate('png'), err.message);
                 assert.equal(400, err.http_status);
 
                 done();
