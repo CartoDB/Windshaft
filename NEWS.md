@@ -1,5 +1,8 @@
-# Version 4.0.2
-2017-mm-dd
+# Version 4.1.0
+2017-12-04
+
+ - Allow to request MVT tiles without CartoCSS
+ - Upgrade grainstore to version 1.7.0
 
 
 # Version 4.0.1
