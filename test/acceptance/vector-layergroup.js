@@ -61,7 +61,7 @@ function mvtTest(usePostGIS) {
             });
         });
 
-        it('should fail whether layergroup cantains incompatible layers', function (done) {
+        it('should fail whether mapconfig cantains incompatible layers', function (done) {
             this.testClient = new TestClient({
                 version: '1.6.0',
                 layers: [
