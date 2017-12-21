@@ -21,7 +21,10 @@ function mvtTest(usePostGIS) {
         var testClient = new TestClient(mapConfig, options);
 
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
+            assert.ifError(err);
+
             var vectorTile = new mapnik.VectorTile(13, 4011, 3088);
+
             vectorTile.setData(mvtTile);
             assert.equal(vectorTile.painted(), true);
             assert.equal(vectorTile.empty(), false);
