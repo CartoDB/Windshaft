@@ -1,13 +1,19 @@
 FROM ubuntu:xenial
 
+# Use UTF8 to avoid encoding problems with pgsql
+ENV LANG C.UTF-8
+
 # Add external repos
 RUN set -ex \
     && apt-get update \
     && apt-get install -y \
       curl \
       software-properties-common \
+      locales \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash
+    && curl -sL https://deb.nodesource.com/setup_6.x | bash \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8
 
 # Install dependencies and PostGIS 2.4 from sources
 RUN set -ex \
@@ -28,7 +34,6 @@ RUN set -ex \
       libproj-dev \
       libprotobuf-c-dev \
       libxml2-dev \
-      locales \
       make \
       nodejs \
       pkg-config \
@@ -49,17 +54,11 @@ RUN set -ex \
     && apt-get purge -y wget protobuf-c-compiler \
     && apt-get autoremove -y
 
-# Use UTF8 to avoid encoding problems with pgsql
-ENV LANG C.UTF-8
-RUN set -ex \
-    && locale-gen en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8
-
 # Configure PostgreSQL
 RUN set -ex \
     && echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf \
     && echo "local     all       all                     trust" >  /etc/postgresql/9.5/main/pg_hba.conf \
-    && echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/9.5/main/pg_hba.conf \ 
+    && echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/9.5/main/pg_hba.conf \
     && echo "host      all       all       ::1/128       trust" >> /etc/postgresql/9.5/main/pg_hba.conf
 
 WORKDIR /srv
