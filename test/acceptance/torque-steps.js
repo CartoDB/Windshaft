@@ -2,7 +2,6 @@ require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test_client');
-const sql = require('fs').readFileSync(`${__dirname}/torque-steps.sql`, { encoding: 'utf8' });
 
 describe('torque steps', function () {
 
