@@ -49,7 +49,6 @@ function mvtTest(usePostGIS) {
 
             done();
         });
-
     });
 
     var multipleLayersMapConfig =  {
