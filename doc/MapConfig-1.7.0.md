@@ -12,7 +12,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // Version of this spec to use for validation.
     // Defaults to "1.0.0".
-    version: "1.6.0",
+    version: "1.7.0",
 
     // OPTIONAL
     // default map extent, in map projection
@@ -113,7 +113,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     //  Mapnik: https://github.com/mapnik/mapnik-reference/blob/master/2.3.0/reference.json
     cartocss: '#layer { ... }',
 
-    // REQUIRED
+    // OPTIONAL
     // string, CartoCSS style version of cartocss attribute
     //
     // Version semantic is specific to the layer type.
