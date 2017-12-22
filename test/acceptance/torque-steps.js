@@ -33,7 +33,7 @@ describe('torque steps', function () {
         -torque-aggregation-function: "sum(v)";
     }
     #layer {
-        marker-width: 5 * [value];
+        marker-width: 20 + (5 * [value]);
         marker-fill: #F00;
     }`;
 
