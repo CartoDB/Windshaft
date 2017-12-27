@@ -51,6 +51,103 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    it('should return tiles with column "name" defined in mapconfig', function (done) {
+        const mapConfig = {
+            version: '1.6.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table limit 2',
+                        columns: ['name']
+                    }
+                }
+            ]
+        };
+
+        const testClient = new TestClient(mapConfig, options);
+        testClient.getTile(13, 4011, 3088, { format: 'mvt'}, function (err, mvtTile) {
+            assert.ifError(err);
+
+            var vtile = new mapnik.VectorTile(13, 4011, 3088);
+            vtile.setData(mvtTile);
+            assert.equal(vtile.painted(), true);
+            assert.equal(vtile.empty(), false);
+
+            var result = vtile.toJSON();
+            assert.equal(result.length, 1);
+
+            var layer0 = result[0];
+            assert.equal(layer0.name, 'layer0');
+            assert.equal(layer0.features.length, 2);
+
+            const numberOfRetrievedColumns = usePostGIS ? 1 : 3;
+
+            assert.ok(
+                layer0.features.every(feature => Object.keys(feature.properties).length === numberOfRetrievedColumns),
+                `Should have only the necessary columns (${numberOfRetrievedColumns} properties)`
+            );
+
+            assert.ok(
+                layer0.features.every(feature => typeof feature.properties.name === 'string'),
+                'Should have the column "name" defined'
+            );
+
+            done();
+        });
+    });
+
+    it('should return tiles with columns "name" & "address" defined in mapconfig', function (done) {
+        const mapConfig = {
+            version: '1.6.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table limit 2',
+                        columns: ['name', 'address']
+                    }
+                }
+            ]
+        };
+
+        const testClient = new TestClient(mapConfig, options);
+        testClient.getTile(13, 4011, 3088, { format: 'mvt'}, function (err, mvtTile) {
+            assert.ifError(err);
+
+            var vtile = new mapnik.VectorTile(13, 4011, 3088);
+            vtile.setData(mvtTile);
+            assert.equal(vtile.painted(), true);
+            assert.equal(vtile.empty(), false);
+
+            var result = vtile.toJSON();
+            assert.equal(result.length, 1);
+
+            var layer0 = result[0];
+            assert.equal(layer0.name, 'layer0');
+            assert.equal(layer0.features.length, 2);
+
+            const numberOfRetrievedColumns = usePostGIS ? 2 : 3;
+
+            assert.ok(
+                layer0.features.every(feature => Object.keys(feature.properties).length === numberOfRetrievedColumns),
+                `Should have only the necessary columns (${numberOfRetrievedColumns} properties)`
+            );
+
+            assert.ok(
+                layer0.features.every(feature => typeof feature.properties.name === 'string'),
+                'Should have the column "name" defined'
+            );
+
+            assert.ok(
+                layer0.features.every(feature => typeof feature.properties.address === 'string'),
+                'Should have the column "address" defined'
+            );
+
+            done();
+        });
+    });
+
     var multipleLayersMapConfig =  {
         version: '1.3.0',
         layers: [
