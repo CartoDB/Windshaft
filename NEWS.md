@@ -1,6 +1,9 @@
 # Version 4.1.1
 2017-mm-dd
 
+Bug-fixes:
+ - Fix support for single layer id filters #584.
+
 
 # Version 4.1.0
 2017-12-04
