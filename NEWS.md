@@ -3,6 +3,7 @@
 
 New features:
  - Support layer minzoom and maxzoom in Mapnik/CartoDB layers #585.
+ - PostGIS vector renderer: be able to retrieve required columns #583.
 
 Announcements:
  - Upgrade grainstore to version 1.8.0.
