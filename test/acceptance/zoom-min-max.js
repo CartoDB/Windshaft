@@ -6,7 +6,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
 
-describe('minzoom and maxzoom', () => {
+describe('minzoom and maxzoom', function() {
 
     const getMapConfig = (minzoomA, maxzoomA, minzoomB, maxzoomB) => {
         return {
@@ -181,13 +181,13 @@ describe('minzoom and maxzoom', () => {
         },
     ];
 
-    describe('raster tiles', () => {
+    describe('raster tiles', function() {
 
         const IMAGE_TOLERANCE_PER_MIL = 5;
 
         const fixturePath = name => `./test/fixtures/zoom-min-max/${name}.png`;
 
-        scenarios.forEach(scenario => {
+        scenarios.forEach(function(scenario) {
             it(scenario.desc, function(done) {
                 const mapconfig = getMapConfig(
                     scenario.minZoomA,
@@ -209,7 +209,7 @@ describe('minzoom and maxzoom', () => {
         });
     });
 
-    describe('vector tiles', () => {
+    describe('vector tiles', function() {
 
         const layersValidator = (z, x, y, expectedLayers, done) => {
             return (err, mvtTile) => {
@@ -244,11 +244,11 @@ describe('minzoom and maxzoom', () => {
             suiteConfigurations.push({ mvt: { usePostGIS: true } });
         }
 
-        suiteConfigurations.forEach(clientOptions => {
-            describe(`${JSON.stringify(clientOptions)}`, () => {
+        suiteConfigurations.forEach(function(clientOptions) {
+            describe(`${JSON.stringify(clientOptions)}`, function() {
 
-                scenarios.forEach(scenario => {
-                    it(scenario.desc, done => {
+                scenarios.forEach(function(scenario) {
+                    it(scenario.desc, function(done) {
                         const mapconfig = getMapConfig(
                             scenario.minZoomA,
                             scenario.maxZoomA,
