@@ -121,6 +121,16 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     cartocss_version: '2.0.1',
 
     // OPTIONAL
+    // minzoom to render. From this zoom tiles will not use this layer.
+    // default: 0
+    minzoom: 3,
+
+    // OPTIONAL
+    // maxzoom to render. From this zoom tiles will not use this layer.
+    // default: undefined (infinite)
+    maxzoom: 18,
+
+    // OPTIONAL
     // name of the column containing the geometry
     // Defaults to 'the_geom_webmercator'
     geom_column: 'the_geom_webmercator',
@@ -300,6 +310,7 @@ of MapConfig.
 
 ## 1.7.0
 
+ - Add support for minzoom and maxzoom in mapnik/cartodb layers.
  - Add support for vector-only configurations (with no CartoCSS)
 
 ## 1.6.0
