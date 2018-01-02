@@ -1,5 +1,8 @@
-# Version 4.1.2
+# Version 4.2.0
 2018-mm-dd
+
+New features:
+ - Support layer minzoom and maxzoom in Mapnik/CartoDB layers #585.
 
 Announcements:
  - Upgrade grainstore to version 1.8.0.
