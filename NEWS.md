@@ -1,5 +1,8 @@
 # Version 4.1.2
-2017-mm-dd
+2018-mm-dd
+
+Announcements:
+ - Upgrade grainstore to version 1.8.0.
 
 
 # Version 4.1.1

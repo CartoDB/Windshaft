@@ -27,7 +27,7 @@
         "cartodb-psql": "^0.10.1",
         "debug": "^3.1.0",
         "dot": "~1.0.2",
-        "grainstore": "cartodb/grainstore#support-layer-minzoom-and-maxzoom",
+        "grainstore": "~1.8.0",
         "mapnik": "3.5.14",
         "queue-async": "~1.0.7",
         "redis-mpool": "0.4.1",
