@@ -1,5 +1,5 @@
 # Version 4.2.0
-2018-mm-dd
+2018-01-02
 
 New features:
  - Support layer minzoom and maxzoom in Mapnik/CartoDB layers #585.
