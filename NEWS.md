@@ -1,5 +1,16 @@
-# Version 4.1.2
-2017-mm-dd
+# Version 4.2.1
+2018-mm-dd
+
+
+# Version 4.2.0
+2018-01-02
+
+New features:
+ - Support layer minzoom and maxzoom in Mapnik/CartoDB layers #585.
+ - PostGIS vector renderer: be able to retrieve required columns #583.
+
+Announcements:
+ - Upgrade grainstore to version 1.8.0.
 
 - Fix broken torque tests for PG9.6+
 
