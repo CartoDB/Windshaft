@@ -224,6 +224,12 @@ describe('torque boundary points', function() {
 
             testClient.getTile(z, x, y, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
                 var i = 0;
+                torqueTile.sort(function(a,b) {
+                    if (a.x__uint8 === b.x__uint8) {
+                        return (a.y__uint8 > b.y__uint8);
+                    }
+                    return (a.x__uint8 < b.x__uint8);
+                });
                 tileRequest.expects.forEach(function(expected) {
                     assert.equal(
                         torqueTile[i].x__uint8,

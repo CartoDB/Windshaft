@@ -1,6 +1,8 @@
 # Version 4.2.1
 2018-mm-dd
 
+Bug fixes:
+- Fix broken torque tests for PG9.6+
 
 # Version 4.2.0
 2018-01-02
