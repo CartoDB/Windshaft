@@ -5,7 +5,7 @@ var TestClient = require('../support/test_client');
 var http = require('http');
 var fs = require('fs');
 var Renderer = require('../../lib/windshaft/renderers/http/renderer');
-var mapnik = require('mapnik');
+var mapnik = require('@carto/mapnik');
 var assert = require('../support/assert');
 
 describe('static_maps', function() {

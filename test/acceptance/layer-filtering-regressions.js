@@ -1,6 +1,6 @@
 require('../support/test_helper');
 
-const mapnik = require('mapnik');
+const mapnik = require('@carto/mapnik');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test_client');
