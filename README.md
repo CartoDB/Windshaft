@@ -81,13 +81,13 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run `npm test`.
+To execute them, run `yarn test`.
 
 You'll need to be sure your PGUSER (or your libpq default) is
 set to a "superuser" PostgreSQL account, for example:
 
 ```shell
-PGUSER=postgres npm test
+PGUSER=postgres yarn test
 ```
 
 
