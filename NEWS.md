@@ -1,8 +1,22 @@
-# Version 4.2.1
-2018-mm-dd
+# Version 4.3.0
+2018-01-11
 
 Bug fixes:
-- Fix broken torque tests for PG9.6+
+ - Fix broken torque tests for PG9.6+
+
+New features:
+ - Now mapnik has support for fine-grained metrics.
+ - Variables can be passed for later substitution in postgis datasource.
+
+Announcements:
+ - Upgrade mapnik to @carto/mapnik 3.6.2-carto.1, which uses carto lib mapnik v3.0.15.2 underneath. See https://github.com/CartoDB/mapnik/blob/v3.0.15-carto/CHANGELOG.carto.md and https://github.com/CartoDB/mapnik/blob/v3.0.15-carto/CHANGELOG.carto.md
+ - Upgrade tilelive-bridge to @carto/tilelive-bridge 2.5.1-cdb1. See https://github.com/CartoDB/tilelive-bridge/blob/cdb-2.x/CHANGELOG.carto.md
+ - Upgrade tilelive-mapnik to 0.6.18-cdb4
+ - Upgrade abaculus to 2.0.3-cdb2
+ - Upgrade grainstore to 1.8.1
+ - Use yarn instead of npm
+ - Use the script docker-test.sh for travis builds
+
 
 # Version 4.2.0
 2018-01-02

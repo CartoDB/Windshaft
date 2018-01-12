@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
 var step = require('step');
-var mapnik = require('mapnik');
+var mapnik = require('@carto/mapnik');
 var http = require('http');
 
 var debug = require('debug')('windshaft:test');

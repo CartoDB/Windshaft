@@ -8,6 +8,6 @@ before_install:
   - docker pull cartoimages/windshaft-testing
 
 script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-testing
+  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh
 
 language: generic

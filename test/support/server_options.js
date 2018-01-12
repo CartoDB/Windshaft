@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var mapnik = require('mapnik');
+var mapnik = require('@carto/mapnik');
 
 module.exports = (function(opts) {
 

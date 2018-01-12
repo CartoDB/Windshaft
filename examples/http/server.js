@@ -2,7 +2,7 @@ var debug = require('debug')('windshaft:server');
 var express = require('express');
 var RedisPool = require('redis-mpool');
 var _ = require('underscore');
-var mapnik = require('mapnik');
+var mapnik = require('@carto/mapnik');
 
 var windshaft = require('../../lib/windshaft');
 
