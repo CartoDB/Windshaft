@@ -96,5 +96,62 @@ describe('raster', function() {
         });
     });
 
+    it("returns Mapnik metrics if requested", function(done) {
+
+        var mapconfig =  {
+            version: '1.2.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: "select ST_AsRaster(" +
+                            " ST_MakeEnvelope(-100,-40, 100, 40, 4326), " +
+                            " 1.0, -1.0, '8BUI', 127) as rst",
+                        geom_column: 'rst',
+                        geom_type: 'raster',
+                        cartocss: '#layer { raster-opacity:1.0 }',
+                        cartocss_version: '2.0.1',
+                    }
+                }
+            ]
+        };
+
+        var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
+        testClient.getTile(0, 0, 0, function(err, tile, img, headers, stats) {
+            assert.ok(!err);
+            assert(stats.Mapnik);
+            done();
+        });
+    });
+
+    it("Doesn't returns Mapnik metrics if set to false", function(done) {
+
+        var mapconfig =  {
+            version: '1.2.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: "select ST_AsRaster(" +
+                            " ST_MakeEnvelope(-100,-40, 100, 40, 4326), " +
+                            " 1.0, -1.0, '8BUI', 127) as rst",
+                        geom_column: 'rst',
+                        geom_type: 'raster',
+                        cartocss: '#layer { raster-opacity:1.0 }',
+                        cartocss_version: '2.0.1',
+                    }
+                }
+            ]
+        };
+
+        var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : false } } });
+        testClient.getTile(0, 0, 0, function(err, tile, img, headers, stats) {
+            assert.ok(!err);
+            assert(!stats.Mapnik);
+            done();
+        });
+    });
+
+
 });
 

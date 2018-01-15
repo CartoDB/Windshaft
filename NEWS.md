@@ -1,8 +1,8 @@
-# Version 4.4.1
-2018-mm-dd
+# Version 4.5.0
+2018-02-06
 
 Announcements:
-
+ - Add option to request Mapnik metrics.
 
 # Version 4.4.0
 2018-02-05
@@ -27,7 +27,6 @@ Announcements:
 
 Announcements:
  - Upgrade mapnik to @carto/mapnik 3.6.2-carto.2, which uses carto lib mapnik v3.0.15.3 underneath and fixes a performance regression in rendering of labels.
-
 
 # Version 4.3.0
 2018-01-11
