@@ -30,7 +30,7 @@
         "grainstore": "~1.8.1",
         "@carto/mapnik": "3.6.2-carto.1",
         "queue-async": "~1.0.7",
-        "redis-mpool": "0.4.1",
+        "redis-mpool": "cartodb/node-redis-mpool#redis4",
         "request": "^2.83.0",
         "semver": "~5.0.3",
         "sphericalmercator": "1.0.4",
@@ -46,7 +46,7 @@
         "istanbul": "~0.4.0",
         "jshint": "~2.9.5",
         "mocha": "~1.21.4",
-        "redis": "~2.4.2"
+        "redis": "~2.8.0"
     },
     "scripts": {
         "preinstall": "make pre-install",
