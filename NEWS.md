@@ -4,6 +4,8 @@ yyyy-mm-dd
 Bug fixes:
  - 
 
+Announcements:
+ - Reverted all the changes related to migrating from mapnik to @carto/mapnik in 4.3.0 until we fix a performance regression.
 
 # Version 4.3.0
 2018-01-11

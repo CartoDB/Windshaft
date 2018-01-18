@@ -7,7 +7,7 @@ var fs = require('fs');
 var windshaft = require('../../lib/windshaft');
 var DummyMapConfigProvider = require('../../lib/windshaft/models/providers/dummy_mapconfig_provider');
 
-var mapnik = require('@carto/mapnik');
+var mapnik = require('mapnik');
 //var RedisPool = require('redis-mpool');
 
 describe('static_maps', function() {

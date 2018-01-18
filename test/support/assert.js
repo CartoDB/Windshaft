@@ -5,7 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
-var mapnik = require('@carto/mapnik');
+var mapnik = require('mapnik');
 var debug = require('debug')('windshaft:assert');
 
 var assert = module.exports = exports = require('assert');

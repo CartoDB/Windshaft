@@ -1,6 +1,6 @@
 require('../support/test_helper');
 
-var mapnik = require('@carto/mapnik');
+var mapnik = require('mapnik');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
