@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var mapnik = require('@carto/mapnik');
+var mapnik = require('mapnik');
 var RedisPool = require('redis-mpool');
 
 var windshaft = require('../../lib/windshaft');

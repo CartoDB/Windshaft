@@ -1,7 +1,7 @@
 require('../support/test_helper');
 
 const assert = require('../support/assert');
-const mapnik = require('@carto/mapnik');
+const mapnik = require('mapnik');
 const TestClient = require('../support/test_client');
 const invalidFormatErrorTemplate = format => `Unsupported format: 'cartocss' option is missing for ${format}`;
 const INCOMPATIBLE_LAYERS_ERROR = 'The `mapnik` or `cartodb` layers must be consistent:' +
