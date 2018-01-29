@@ -2,7 +2,7 @@ require('../../support/test_helper.js');
 
 var assert = require('assert');
 var fs = require('fs');
-var Image = require('mapnik').Image;
+var Image = require('@carto/mapnik').Image;
 
 var ImageRenderer = require('../../../lib/windshaft/renderers/plain/image_renderer');
 
