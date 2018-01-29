@@ -1,3 +1,10 @@
+# Version 4.3.2
+yyyy-mm-dd
+
+Bug fixes:
+ -
+
+
 # Version 4.3.1
 2018-01-29
 
