@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
-var mapnik = require('mapnik');
+var mapnik = require('@carto/mapnik');
 
 describe('mvt (mapnik)', function () {
     mvtTest(false);
