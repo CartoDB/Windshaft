@@ -1,11 +1,9 @@
 # Version 4.3.1
-yyyy-mm-dd
-
-Bug fixes:
- - 
+2018-01-29
 
 Announcements:
  - Upgrade mapnik to @carto/mapnik 3.6.2-carto.2, which uses carto lib mapnik v3.0.15.3 underneath and fixes a performance regression in rendering of labels.
+
 
 # Version 4.3.0
 2018-01-11
