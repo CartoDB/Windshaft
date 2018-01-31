@@ -1,12 +1,8 @@
 # Version 4.3.2
-yyyy-mm-dd
+2018-01-31
 
 Announcements:
  - Support layer 'cache-features' in Mapnik/CartoDB layers.
-
-Bug fixes:
- -
-
 
 # Version 4.3.1
 2018-01-29
