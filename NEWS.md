@@ -1,9 +1,8 @@
 # Version 4.3.3
-2018-XX-XX
+2018-01-31
 
 Announcements:
  - Do not expose 'cache-features' in Mapconfig (can only be set via configuration)
-
 
 # Version 4.3.2
 2018-01-31
