@@ -166,6 +166,12 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     interactivity: [ 'field1', 'field2', .. ]
 
     // OPTIONAL
+    // Cache the features for all the styles in a layer, instead of making a database
+    // request per style
+    // default: true
+    'cache-features': true,
+
+    // OPTIONAL
     // values returned by attributes service (disabled if no config is given)
     attributes: {
         // REQUIRED
@@ -312,6 +318,7 @@ of MapConfig.
 
  - Add support for minzoom and maxzoom in mapnik/cartodb layers.
  - Add support for vector-only configurations (with no CartoCSS)
+ - Add support for 'cache-features' in mapnik/cartodb layers.
 
 ## 1.6.0
 
