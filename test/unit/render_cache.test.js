@@ -130,13 +130,13 @@ describe('render_cache', function() {
         });
     });
 
-    it('Works with cache-features = false in layer', function(done){
+    it('Ignores cache-features = false in layer', function(done){
         var render_cache = makeRenderCache();
 
         render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get()._uri.xml.indexOf('cache-features="false"') > -1);
+            assert(renderer.get()._uri.xml.indexOf('cache-features="true"') > -1);
             done();
         });
     });
