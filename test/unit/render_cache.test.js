@@ -40,7 +40,8 @@ describe('render_cache', function() {
                 options: {
                     sql: 'select 2 id, null::geometry the_geom',
                     cartocss: '#layer { }',
-                    cartocss_version: '2.3.0'
+                    cartocss_version: '2.3.0',
+                    'cache-features': false
                 }
             }
         ]
@@ -107,6 +108,38 @@ describe('render_cache', function() {
         });
     });
 
+    it('Works with cache-features (Default = true)', function(done){
+        var render_cache = makeRenderCache();
+
+        render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
+            assert.ok(renderer, err);
+            assert.ok(renderer.get(), err);
+            assert(renderer.get()._uri.xml.indexOf('cache-features="true"') > -1);
+            done();
+        });
+    });
+
+    it('Works with cache-features = false as parameter', function(done){
+        var render_cache = makeRenderCache();
+
+        render_cache.getRenderer(createMapConfigProvider({'cache-features':false}), function(err, renderer){
+            assert.ok(renderer, err);
+            assert.ok(renderer.get(), err);
+            assert(renderer.get()._uri.xml.indexOf('cache-features="false"') > -1);
+            done();
+        });
+    });
+
+    it('Ignores cache-features = false in layer', function(done){
+        var render_cache = makeRenderCache();
+
+        render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function(err, renderer){
+            assert.ok(renderer, err);
+            assert.ok(renderer.get(), err);
+            assert(renderer.get()._uri.xml.indexOf('cache-features="true"') > -1);
+            done();
+        });
+    });
 
     it('can generate > 1 tilelive object', function(done){
         var render_cache = makeRenderCache();

@@ -1,8 +1,26 @@
-# Version 4.3.1
-yyyy-mm-dd
+# Version 4.3.4
+2018-XX-XX
 
-Bug fixes:
- - 
+Announcements:
+ -
+
+# Version 4.3.3
+2018-01-31
+
+Announcements:
+ - Do not expose 'cache-features' in Mapconfig (can only be set via configuration)
+
+# Version 4.3.2
+2018-01-31
+
+Announcements:
+ - Support layer 'cache-features' in Mapnik/CartoDB layers.
+
+# Version 4.3.1
+2018-01-29
+
+Announcements:
+ - Upgrade mapnik to @carto/mapnik 3.6.2-carto.2, which uses carto lib mapnik v3.0.15.3 underneath and fixes a performance regression in rendering of labels.
 
 
 # Version 4.3.0

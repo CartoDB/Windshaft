@@ -93,6 +93,6 @@ else
 fi
 ret=$?
 
-cleanup
+#cleanup
 
 exit $ret

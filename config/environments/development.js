@@ -44,7 +44,8 @@ module.exports.renderer = {
             // which cost is no more expensive than snapping and results are
             // much closer to the original geometry
             removeRepeatedPoints: false // this requires postgis >=2.2
-        }
+        },
+        'cache-features': true
     },
     torque: {
         dbPoolParams: {
