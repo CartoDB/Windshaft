@@ -1,8 +1,8 @@
-# Version 4.3.4
-2018-XX-XX
+# Version 4.4.0
+2018-02-05
 
 Announcements:
- -
+ - Upgrade redis-mpool to 0.5.0.
 
 # Version 4.3.3
 2018-01-31
