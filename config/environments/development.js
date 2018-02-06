@@ -45,7 +45,8 @@ module.exports.renderer = {
             // much closer to the original geometry
             removeRepeatedPoints: false // this requires postgis >=2.2
         },
-        'cache-features': true
+        'cache-features': true,
+        metrics: false
     },
     torque: {
         dbPoolParams: {
