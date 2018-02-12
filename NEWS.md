@@ -1,8 +1,8 @@
 # Version 4.5.1
-2018-XX-XX
+2018-02-12
 
 Announcements:
- - Mapnik metrics: Use several individual objects instead of children 
+ - Mapnik metrics: Use several individual objects instead of children
 
 # Version 4.5.0
 2018-02-06
