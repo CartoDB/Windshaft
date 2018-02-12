@@ -1,11 +1,4 @@
-# Version 4.5.2
-2018-XX-XX
-
-Announcements:
- -
-
-
-# Version 4.5.1
+# Version 4.5.1 // 4.5.2
 2018-02-12
 
 Announcements:
