@@ -2,7 +2,7 @@
 2018-XX-XX
 
 Announcements:
- -
+ - Mapnik metrics: Apply top metrics to all posibilities (formats / error strategies)
 
 
 # Version 4.5.1 // 4.5.2
