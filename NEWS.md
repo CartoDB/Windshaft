@@ -1,9 +1,8 @@
 # Version 4.5.3
-2018-XX-XX
+2018-02-13
 
 Announcements:
  - Mapnik metrics: Apply top metrics to all posibilities (formats / error strategies)
-
 
 # Version 4.5.1 // 4.5.2
 2018-02-12
