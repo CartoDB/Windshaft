@@ -1,4 +1,5 @@
 FROM ubuntu:xenial
+LABEL version="1.0"
 
 # Use UTF8 to avoid encoding problems with pgsql
 ENV LANG C.UTF-8
@@ -14,7 +15,7 @@ RUN set -ex \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8
-
+    
 # Install dependencies and PostGIS 2.4 from sources
 RUN set -ex \
     && apt-get update \
@@ -51,6 +52,18 @@ RUN set -ex \
     && make install \
     && cd .. \
     && rm -rf postgis-2.4.0 \
+    && wget http://download.redis.io/redis-stable.tar.gz \
+    && tar xvzf redis-stable.tar.gz \
+    && cd redis-stable \
+    && make \
+    && make install \
+    && cd .. \
+    && rm redis-stable.tar.gz \
+    && rm -R redis-stable \
+    && cd /lib \
+    && wget https://github.com/brandur/redis-cell/releases/download/v0.2.1/redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
+    && tar xvzf redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
+    && rm redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
     && apt-get purge -y wget protobuf-c-compiler \
     && apt-get autoremove -y
 
