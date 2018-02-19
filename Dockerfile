@@ -62,7 +62,7 @@ RUN set -ex \
     && rm -R redis-stable \
     && wget https://github.com/brandur/redis-cell/releases/download/v0.2.1/redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
     && tar xvzf redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
-    && mv libredis_cell.so /lib/libredis_cell.so
+    && mv libredis_cell.so /lib/libredis_cell.so \
     && rm redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
     && apt-get purge -y wget protobuf-c-compiler \
     && apt-get autoremove -y
