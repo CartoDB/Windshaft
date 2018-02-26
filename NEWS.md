@@ -2,7 +2,7 @@
 2018-02-13
 
 Announcements:
- -
+ - Update @carto/mapnik to `3.6.2-carto.3`
 
 # Version 4.5.3
 2018-02-13
