@@ -4,6 +4,7 @@
 Announcements:
  - Update @carto/mapnik to `3.6.2-carto.3`
  - Update @carto/tilelive-bridge to `2.5.1-cdb2`
+ - Update abaculus to `2.0.3-cdb3`
 
 
 # Version 4.5.3
