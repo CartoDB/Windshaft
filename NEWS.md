@@ -3,6 +3,8 @@
 
 Announcements:
  - Update @carto/mapnik to `3.6.2-carto.3`
+ - Update @carto/tilelive-bridge to `2.5.1-cdb2`
+
 
 # Version 4.5.3
 2018-02-13
