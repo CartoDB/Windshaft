@@ -8,6 +8,7 @@ Announcements:
  - Update tilelive-mapnik to `0.6.18-cdb6`
  - Update dot to `1.1.2`
  - Switch from deprecated queue-async to d3-queue `3.0.7`
+ - Update semver to `5.5.0`
 
 
 # Version 4.5.3

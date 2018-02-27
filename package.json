@@ -33,7 +33,7 @@
         "grainstore": "1.8.2",
         "redis-mpool": "^0.5.0",
         "request": "^2.83.0",
-        "semver": "~5.0.3",
+        "semver": "~5.5.0",
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
         "tilelive": "5.12.2",
