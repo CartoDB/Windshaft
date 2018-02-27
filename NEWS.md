@@ -15,6 +15,7 @@ Announcements:
  - Update torque.js to `2.16.2`
  - Update express to `4.16.2`
  - Update istanbul to `0.4.5`
+ - Update mocha to `5.0.1`
 
 
 # Version 4.5.3
