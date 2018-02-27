@@ -35,7 +35,7 @@
         "redis-mpool": "^0.5.0",
         "request": "^2.83.0",
         "semver": "~5.5.0",
-        "step": "~0.0.6",
+        "step": "1.0.0",
         "tilelive": "5.12.2",
         "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb6",
         "torque.js": "~2.11.0",

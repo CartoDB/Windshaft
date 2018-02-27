@@ -10,6 +10,7 @@ Announcements:
  - Switch from deprecated queue-async to d3-queue `3.0.7`
  - Update semver to `5.5.0`
  - Update sphericalmercator to `1.0.5`
+ - Update step to `1.0.0`
 
 
 # Version 4.5.3
