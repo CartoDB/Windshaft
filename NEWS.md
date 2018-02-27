@@ -2,7 +2,21 @@
 2018-02-13
 
 Announcements:
- -
+ - Update @carto/mapnik to `3.6.2-carto.3`
+ - Update @carto/tilelive-bridge to `2.5.1-cdb2`
+ - Update abaculus to `2.0.3-cdb3`
+ - Update tilelive-mapnik to `0.6.18-cdb6`
+ - Update dot to `1.1.2`
+ - Switch from deprecated queue-async to d3-queue `3.0.7`
+ - Update semver to `5.5.0`
+ - Update sphericalmercator to `1.0.5`
+ - Update step to `1.0.0`
+ - Update tilelive to `6.0.0`
+ - Update torque.js to `2.16.2`
+ - Update express to `4.16.2`
+ - Update istanbul to `0.4.5`
+ - Update mocha to `5.0.1`
+
 
 # Version 4.5.3
 2018-02-13
