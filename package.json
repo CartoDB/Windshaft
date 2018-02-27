@@ -28,7 +28,7 @@
         "carto": "cartodb/carto#0.15.1-cdb3",
         "cartodb-psql": "^0.10.1",
         "debug": "^3.1.0",
-        "dot": "~1.0.2",
+        "dot": "~1.1.2",
         "grainstore": "1.8.2",
         "queue-async": "~1.0.7",
         "redis-mpool": "^0.5.0",

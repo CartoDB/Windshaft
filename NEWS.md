@@ -6,6 +6,7 @@ Announcements:
  - Update @carto/tilelive-bridge to `2.5.1-cdb2`
  - Update abaculus to `2.0.3-cdb3`
  - Update tilelive-mapnik to `0.6.18-cdb6`
+ - Update dot to `1.1.2`
 
 
 # Version 4.5.3
