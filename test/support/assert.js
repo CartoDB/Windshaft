@@ -48,7 +48,8 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
         if (err) {
             var testImageFilePath = randomImagePath();
             testImage.save(testImageFilePath);
-            debug("Images didn't match, test image is %s, expected is %s", testImageFilePath, referenceImageFilePath);
+            debug(`Images didn't match. Test result: file://${testImageFilePath} Expected: file://${referenceImageFilePath}`);
+            debug(`Create a GIF with: convert -delay 50 -loop 0 ${testImageFilePath} ${referenceImageFilePath} /tmp/diff.gif`);
         }
         callback(err);
     });
