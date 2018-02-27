@@ -14,6 +14,7 @@ Announcements:
  - Update tilelive to `6.0.0`
  - Update torque.js to `2.16.2`
  - Update express to `4.16.2`
+ - Update istanbul to `0.4.5`
 
 
 # Version 4.5.3
