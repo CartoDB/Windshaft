@@ -11,6 +11,7 @@ Announcements:
  - Update semver to `5.5.0`
  - Update sphericalmercator to `1.0.5`
  - Update step to `1.0.0`
+ - Update tilelive to `6.0.0`
 
 
 # Version 4.5.3

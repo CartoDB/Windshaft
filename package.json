@@ -24,6 +24,7 @@
         "@carto/mapnik": "3.6.2-carto.3",
         "@carto/tilelive-bridge": "cartodb/tilelive-bridge#2.5.1-cdb2",
         "@mapbox/sphericalmercator": "^1.0.5",
+        "@mapbox/tilelive": "^6.0.0",
         "abaculus": "cartodb/abaculus#2.0.3-cdb3",
         "canvas": "cartodb/node-canvas#1.6.2-cdb2",
         "carto": "cartodb/carto#0.15.1-cdb3",
@@ -36,7 +37,6 @@
         "request": "^2.83.0",
         "semver": "~5.5.0",
         "step": "1.0.0",
-        "tilelive": "5.12.2",
         "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb6",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
