@@ -20,7 +20,10 @@ describe('attributes', function() {
                 {
                     type: 'mapnik',
                     options: {
-                        sql: sql || "select 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                        sql: sql || "SELECT * FROM (" +
+                                "(SELECT 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom) UNION ALL " +
+                                "(SELECT 2 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom) UNION ALL " +
+                                "(SELECT 2 as i, 6 as n, 'SRID=4326;POINT(0 3)'::geometry as the_geom)) _a1",
                         attributes: {
                             id: id || 'i',
                             columns: columns || ['n']
@@ -58,16 +61,37 @@ describe('attributes', function() {
 
     });
 
+    it("can be fetched with duplicated id if as all attributes are the same ", function(done) {
+
+        var testClient = new TestClient(createMapConfig());
+        testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 2, function (err, attributes) {
+            assert.ok(!err);
+            assert.deepEqual(attributes, { n: 6 });
+            done();
+        });
+
+    });
+
+    it("cannot be fetched with duplicated id if not all attributes are the same ", function(done) {
+
+        var testClient = new TestClient(createMapConfig(null, null, ['the_geom']));
+        testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 2, function (err) {
+            assert.ok(err);
+            assert.equal(err.message, "Multiple features (2) identified by 'i' = 2 in layer 1");
+            done();
+        });
+
+    });
+
     it("cannot fetch attributes for non-existent feature id", function(done) {
 
         var testClient = new TestClient(createMapConfig());
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, -666, function (err) {
             assert.ok(err);
-            assert.equal(err.message, '0 features in layer 1 are identified by fid -666');
+            assert.equal(err.message, "Multiple features (0) identified by 'i' = -666 in layer 1");
             assert.equal(err.http_status, 404);
             done();
         });
-
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
