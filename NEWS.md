@@ -3,6 +3,7 @@
 
 Announcements:
  - AttributesBackend: Allow multiple points if all the attributes are the same
+ - Update tilelive-mapnik#0.6.18-cdb7 (Avoids node-mapnik conflict)
 
 # Version 4.5.3
 2018-02-13

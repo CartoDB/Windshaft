@@ -37,7 +37,7 @@
         "sphericalmercator": "1.0.4",
         "step": "~0.0.6",
         "tilelive": "5.12.2",
-        "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb5",
+        "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb7",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
     },
