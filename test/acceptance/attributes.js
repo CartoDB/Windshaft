@@ -128,17 +128,15 @@ describe('attributes', function() {
         var substitutionTokenSql = [
             "SELECT",
             "    1 as i,",
-            "    '!scale_denominator!' as scale_denominator,",
-            "    '!bbox!' as bbox,",
-            "    '!pixel_width!' as pixel_width,",
-            "    '!pixel_height!' as pixel_height,",
+            "    !scale_denominator! as scale_denominator,",
+            "    !pixel_width! as pixel_width,",
+            "    !pixel_height! as pixel_height,",
             "    6 as n,",
             "    'SRID=4326;POINT(0 0)'::geometry as the_geom"
         ].join('\n');
 
         var expectedAttributes = {
             scale_denominator: '0',
-            bbox: 'ST_MakeEnvelope(-20037508.34,-20037508.34,20037508.34,20037508.34,3857)',
             pixel_width: '1',
             pixel_height: '1',
             n: 6
