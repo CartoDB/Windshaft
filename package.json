@@ -22,7 +22,7 @@
     ],
     "dependencies": {
         "@carto/mapnik": "3.6.2-carto.2",
-        "@carto/tilelive-bridge": "cartodb/tilelive-bridge#2.5.1-cdb1",
+        "@carto/tilelive-bridge": "cartodb/tilelive-bridge#2.5.1-cdb3",
         "abaculus": "cartodb/abaculus#2.0.3-cdb2",
         "canvas": "cartodb/node-canvas#1.6.2-cdb2",
         "carto": "cartodb/carto#0.15.1-cdb3",
