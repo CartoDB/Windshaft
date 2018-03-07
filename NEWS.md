@@ -1,8 +1,9 @@
 # Version 4.5.4
-2018-02-13
+2018-XX-XX
 
 Announcements:
- -
+ - AttributesBackend: Allow multiple points if all the attributes are the same
+ - Avoids mapnik conflict: Update tilelive-mapnik#0.6.18-cdb7, tilelive-bridge#2.5.1-cdb3
 
 # Version 4.5.3
 2018-02-13
