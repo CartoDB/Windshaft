@@ -1,8 +1,8 @@
 # Version 4.5.4
-2018-02-13
+2018-XX-XX
 
 Announcements:
- -
+ - AttributesBackend: Allow multiple points if all the attributes are the same
 
 # Version 4.5.3
 2018-02-13
