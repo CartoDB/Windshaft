@@ -1,8 +1,8 @@
 # Version 4.5.6
-2018-XX-XX
+2018-03-12
 
 Announcements:
- -
+ - AttributesBackend: Support distinct and json_agg
 
 # Version 4.5.5
 2018-03-12
