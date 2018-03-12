@@ -1,8 +1,8 @@
 # Version 4.5.5
-2018-XX-XX
+2018-03-12
 
 Announcements:
- -
+ - Update request to 2.85.0
 
 # Version 4.5.4
 2018-03-09
