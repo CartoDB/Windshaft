@@ -61,6 +61,18 @@ describe('attributes', function() {
 
     });
 
+
+    it("can be fetched with json_agg column", function(done) {
+        var sql = "SELECT 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom, " +
+                  "json_agg(row_to_json((SELECT r FROM (SELECT 1 as d, 'Samuel' as name) r),true)) as data";
+        var testClient = new TestClient(createMapConfig(sql, 'i', ['n', 'data']));
+        testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
+            assert.ok(!err);
+            assert.deepEqual(attributes, { n: 6, data: [ { d: 1, name: 'Samuel' } ] });
+            done();
+        });
+    });
+
     it("can be fetched with duplicated id if as all attributes are the same ", function(done) {
 
         var testClient = new TestClient(createMapConfig());
@@ -70,6 +82,22 @@ describe('attributes', function() {
             done();
         });
 
+    });
+
+    it("can be fetched with duplicated id if as all attributes are the same with json_agg", function(done) {
+
+        var sql = "SELECT 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom, " +
+                  "json_agg(row_to_json((SELECT r FROM (SELECT 1 as d, 'Samuel' as name) r),true)) as data " +
+                  "UNION ALL " +
+                  "SELECT 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom, " +
+                  "json_agg(row_to_json((SELECT r FROM (SELECT 1 as d, 'Samuel' as name) r),true)) as data";
+
+        var testClient = new TestClient(createMapConfig(sql, 'i', ['n', 'data']));
+        testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
+            assert.ok(!err);
+            assert.deepEqual(attributes, { n: 6, data: [ { d: 1, name: 'Samuel' } ] });
+            done();
+        });
     });
 
     it("cannot be fetched with duplicated id if not all attributes are the same ", function(done) {
