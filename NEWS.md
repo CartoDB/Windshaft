@@ -1,5 +1,5 @@
 # Version 4.5.7
-2018-03-13
+2018-03-14
 
 Announcements:
  - Fix bug when parsing incomplete Mapnik metrics
