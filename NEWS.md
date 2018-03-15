@@ -1,5 +1,5 @@
 # Version 4.6.0
-2018-mm-dd
+2018-03-15
 
 Announcements:
  - Update @carto/mapnik to 3.6.2-carto.4. Also update tilelive-mapnik, tilelive-bridge and abaculus accordingly. That version includes a cache for rasterized symbols. See https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto4
