@@ -51,6 +51,14 @@ RUN set -ex \
     && make install \
     && cd .. \
     && rm -rf postgis-2.4.0 \
+    && wget http://download.redis.io/releases/redis-4.0.8.tar.gz \
+    && tar xvzf redis-4.0.8.tar.gz \
+    && cd redis-4.0.8 \
+    && make \
+    && make install \
+    && cd .. \
+    && rm redis-4.0.8.tar.gz \
+    && rm -R redis-4.0.8 \
     && apt-get purge -y wget protobuf-c-compiler \
     && apt-get autoremove -y
 
