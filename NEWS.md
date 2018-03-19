@@ -2,7 +2,7 @@
 2018-mm-dd
 
 Announcements:
- - Adding Redis v4 ikn Dockerfile
+ - Adding Redis v4 in Dockerfile
 
 # Version 4.6.0
 2018-03-15
