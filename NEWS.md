@@ -1,8 +1,47 @@
-# Version 4.5.4
-2018-02-13
+# Version 4.6.1
+2018-mm-dd
 
 Announcements:
- -
+
+
+# Version 4.6.0
+2018-03-15
+
+Announcements:
+ - Update @carto/mapnik to 3.6.2-carto.4. Also update tilelive-mapnik, tilelive-bridge and abaculus accordingly. That version includes a cache for rasterized symbols. See https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto4
+ - PostGIS: Variables in postgis SQL queries must now additionally be wrapped in `!` (refs [#29](https://github.com/CartoDB/mapnik/issues/29), [mapnik/#3618](https://github.com/mapnik/mapnik/pull/3618)):
+```sql
+-- Before
+SELECT ... WHERE trait = @variable
+
+-- Now
+SELECT ... WHERE trait = !@variable!
+```
+
+# Version 4.5.7
+2018-03-14
+
+Announcements:
+ - Fix bug when parsing incomplete Mapnik metrics
+
+# Version 4.5.6
+2018-03-12
+
+Announcements:
+ - AttributesBackend: Support distinct and json_agg
+
+# Version 4.5.5
+2018-03-12
+
+Announcements:
+ - Update request to 2.85.0
+
+# Version 4.5.4
+2018-03-09
+
+Announcements:
+ - AttributesBackend: Allow multiple points if all the attributes are the same
+ - Avoids mapnik conflict: Update tilelive-mapnik#0.6.18-cdb7, tilelive-bridge#2.5.1-cdb3
 
 # Version 4.5.3
 2018-02-13
