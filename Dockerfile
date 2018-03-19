@@ -15,7 +15,7 @@ RUN set -ex \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8
-    
+
 # Install dependencies and PostGIS 2.4 from sources
 RUN set -ex \
     && apt-get update \
@@ -60,10 +60,6 @@ RUN set -ex \
     && cd .. \
     && rm redis-stable.tar.gz \
     && rm -R redis-stable \
-    && wget https://github.com/brandur/redis-cell/releases/download/v0.2.1/redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
-    && tar xvzf redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
-    && mv libredis_cell.so /lib/libredis_cell.so \
-    && rm redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz \
     && apt-get purge -y wget protobuf-c-compiler \
     && apt-get autoremove -y
 
