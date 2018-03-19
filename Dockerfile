@@ -1,5 +1,4 @@
 FROM ubuntu:xenial
-LABEL version="1.0"
 
 # Use UTF8 to avoid encoding problems with pgsql
 ENV LANG C.UTF-8
