@@ -126,77 +126,77 @@ describe('metrics', function() {
     });
     });
 
-    it("Geometry counts", function(done) {
+     describe('Geometry counts', function() {
+
+        it("works with different geometry types", function(done) {
 
             var mapconfig =  {
                 version: '1.2.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            sql:/* 3 POINTS */
-                                "SELECT 11 as c, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 12 as c, ST_SetSRID(ST_MakePoint(-75.10434, 42.315),4326) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 13 as c, ST_SetSRID(ST_MakePoint(-75.10434, 45.335),4326) as tgw" +
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        sql:/* 3 POINTS */
+                            "SELECT 11 as c, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 12 as c, ST_SetSRID(ST_MakePoint(-75.10434, 42.315),4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 13 as c, ST_SetSRID(ST_MakePoint(-75.10434, 45.335),4326) as tgw" +
 
-                                /* 2 MULTIPOINTS */
-                                " UNION ALL " +
-                                "SELECT 21 as c, 'MULTIPOINT((-72.10 44.31), (40.41 -3.70))'::geometry as tgw" +
-                                " UNION ALL " +
-                                "SELECT 22 as c, 'MULTIPOINT((-73.10 42.31), (40.41 -3.70))'::geometry as tgw" +
+                            /* 2 MULTIPOINTS */
+                            " UNION ALL " +
+                            "SELECT 21 as c, 'MULTIPOINT((-72.10 44.31), (40.41 -3.70))'::geometry as tgw" +
+                            " UNION ALL " +
+                            "SELECT 22 as c, 'MULTIPOINT((-73.10 42.31), (40.41 -3.70))'::geometry as tgw" +
 
-                                /* 2 LINESTRINGS */
-                                " UNION ALL " +
-                                "SELECT 31 as c, ST_MakeLine(" +
-                                    "ST_SetSRID(ST_MakePoint(-71.10434, 42.315), 4326)," +
-                                    "ST_SetSRID(ST_MakePoint(-73.10434, 44.315), 4326)) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 32 as c, ST_MakeLine(" +
-                                    "ST_SetSRID(ST_MakePoint(-76.10434, 42.315), 4326)," +
-                                    "ST_SetSRID(ST_MakePoint(-72.10434, 44.315), 4326)) as tgw" +
+                            /* 2 LINESTRINGS */
+                            " UNION ALL " +
+                            "SELECT 31 as c, ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-71.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-73.10434, 44.315), 4326)) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 32 as c, ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-76.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-72.10434, 44.315), 4326)) as tgw" +
 
-                                /* 2 MULTILINESTRING */
-                                " UNION ALL " +
-                                "SELECT 41 as c, ST_Multi(ST_MakeLine(" +
-                                    "ST_SetSRID(ST_MakePoint(-71.10434, 42.315), 4326)," +
-                                    "ST_SetSRID(ST_MakePoint(-73.10434, 44.315), 4326))) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 42 as c, ST_Multi(ST_MakeLine(" +
-                                    "ST_SetSRID(ST_MakePoint(-76.10434, 42.315), 4326)," +
-                                    "ST_SetSRID(ST_MakePoint(-72.10434, 44.315), 4326))) as tgw" +
+                            /* 2 MULTILINESTRING */
+                            " UNION ALL " +
+                            "SELECT 41 as c, ST_Multi(ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-71.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-73.10434, 44.315), 4326))) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 42 as c, ST_Multi(ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-76.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-72.10434, 44.315), 4326))) as tgw" +
 
-                                /* 4 POLYGONS */
-                                " UNION ALL " +
-                                "SELECT 51 as c, ST_MakeEnvelope(-100,-40, 100, 40, 4326) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 52 as c, ST_MakeEnvelope(-100,-45, 100, 40, 4326) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 53 as c, ST_MakeEnvelope(-100,-45, 120, 40, 4326) as tgw" +
-                                " UNION ALL " +
-                                "SELECT 54 as c, ST_MakeEnvelope(-100,-45, 100, 44, 4326) as tgw" +
+                            /* 4 POLYGONS */
+                            " UNION ALL " +
+                            "SELECT 51 as c, ST_MakeEnvelope(-100,-40, 100, 40, 4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 52 as c, ST_MakeEnvelope(-100,-45, 100, 40, 4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 53 as c, ST_MakeEnvelope(-100,-45, 120, 40, 4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 54 as c, ST_MakeEnvelope(-100,-45, 100, 44, 4326) as tgw" +
 
-                                /* 3 MUTIPOLYGON */
-                                " UNION ALL " +
-                                "SELECT 61 as c, ST_Multi(ST_MakeEnvelope(-100,-45, 100, 44, 4326)) as tgw"+
-                                " UNION ALL " +
-                                "SELECT 62 as c, ST_Multi(ST_MakeEnvelope(-130,-45, 3100, 44, 4326)) as tgw"+
-                                " UNION ALL " +
-                                "SELECT 63 as c, ST_Multi(ST_MakeEnvelope(-102,-45, 100, 44, 4326)) as tgw" +
+                            /* 3 MUTIPOLYGON */
+                            " UNION ALL " +
+                            "SELECT 61 as c, ST_Multi(ST_MakeEnvelope(-100,-45, 100, 44, 4326)) as tgw"+
+                            " UNION ALL " +
+                            "SELECT 62 as c, ST_Multi(ST_MakeEnvelope(-130,-45, 3100, 44, 4326)) as tgw"+
+                            " UNION ALL " +
+                            "SELECT 63 as c, ST_Multi(ST_MakeEnvelope(-102,-45, 100, 44, 4326)) as tgw" +
 
-                                /* 1 GEOMETRYCOLLECTION */
-                                " UNION ALL " +
-                                "SELECT 71 as c, "+
-                                "'GEOMETRYCOLLECTION(CIRCULARSTRING(22.022 15.040,22.202 15.040,22.022 15.040))" +
-                                "'::geometry as tgw",
+                            /* 1 GEOMETRYCOLLECTION */
+                            " UNION ALL " +
+                            "SELECT 71 as c, "+
+                            "'GEOMETRYCOLLECTION(CIRCULARSTRING(22.022 15.040,22.202 15.040,22.022 15.040))" +
+                            "'::geometry as tgw",
 
-                            geom_column: 'tgw',
-                            cartocss: '#layer { raster-opacity:1.0 }',
-                            cartocss_version: '2.0.1'
-                        }
+                        geom_column: 'tgw',
+                        cartocss: '#layer { raster-opacity:1.0 }',
+                        cartocss_version: '2.0.1'
                     }
-                ]
+                }]
             };
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
@@ -213,34 +213,32 @@ describe('metrics', function() {
             });
         });
 
-    it("Geometry counts with raster shows as unknown", function(done) {
+        it("shows unknown with raster", function(done) {
 
             var mapconfig =  {
-            version: '1.2.0',
-            layers: [
-                {
+                version: '1.2.0',
+                layers: [{
                     type: 'cartodb',
                     options: {
                         sql: /* 4 RASTERs */
-                                "SELECT 81 as c, " +
-                                "ST_AsRaster(ST_MakeEnvelope(-100,-40, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
-                                " UNION ALL " +
-                                "SELECT 82 as c, " +
-                                "ST_AsRaster(ST_MakeEnvelope(-100,-45, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
-                                " UNION ALL " +
-                                "SELECT 83 as c, " +
-                                "ST_AsRaster(ST_MakeEnvelope(-100,-45, 120, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
-                                " UNION ALL " +
-                                "SELECT 84 as c, " +
-                                "ST_AsRaster(ST_MakeEnvelope(-100,-45, 100, 44, 4326), 1.0, -1.0, '8BUI', 127) as rst",
+                            "SELECT 81 as c, " +
+                            "ST_AsRaster(ST_MakeEnvelope(-100,-40, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
+                            " UNION ALL " +
+                            "SELECT 82 as c, " +
+                            "ST_AsRaster(ST_MakeEnvelope(-100,-45, 100, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
+                            " UNION ALL " +
+                            "SELECT 83 as c, " +
+                            "ST_AsRaster(ST_MakeEnvelope(-100,-45, 120, 40, 4326), 1.0, -1.0, '8BUI', 127) as rst" +
+                            " UNION ALL " +
+                            "SELECT 84 as c, " +
+                            "ST_AsRaster(ST_MakeEnvelope(-100,-45, 100, 44, 4326), 1.0, -1.0, '8BUI', 127) as rst",
                         geom_column: 'rst',
                         geom_type: 'raster',
                         cartocss: '#layer { raster-opacity:1.0 }',
                         cartocss_version: '2.0.1'
                     }
-                }
-            ]
-        };
+                }]
+            };
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
