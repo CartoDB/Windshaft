@@ -46,7 +46,11 @@ module.exports.renderer = {
             removeRepeatedPoints: false // this requires postgis >=2.2
         },
         'cache-features': true,
-        metrics: false
+        metrics: false,
+
+        markers_symbolizer_caches: {
+            disabled: false
+        }
     },
     torque: {
         dbPoolParams: {
