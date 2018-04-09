@@ -128,6 +128,36 @@ describe('metrics', function() {
     });
     });
 
+    //TODO: Pending fix in tilelive-mapnik
+    it.skip("works with metatiles", function(done) {
+
+        var mapconfig =  {
+            version: '1.2.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: "select 1 as cartodb_id, " +
+                            " ST_MakeEnvelope(-100,-40, 100, 40, 4326) " +
+                            " as the_geom_webmercator",
+                        geom_column: 'the_geom_webmercator',
+                        cartocss: '#layer { raster-opacity:1.0 }',
+                        cartocss_version: '2.0.1'
+                    }
+                }
+            ]
+        };
+
+        var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metatile: 2, metrics : true } } });
+        testClient.getTile(1, 1, 1, {format: 'png'}, function(err, tile, img, headers, stats) {
+            assert.ok(!err);
+            assert(!stats.hasOwnProperty('Mapnik'));
+            assert(stats.hasOwnProperty('Mk_Setup'));
+            assert(stats.hasOwnProperty('Mk_Render'));
+            done();
+        });
+    });
+
      describe('Geometry counts', function() {
 
         it("works with different geometry types", function(done) {
