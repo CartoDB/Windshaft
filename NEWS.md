@@ -4,6 +4,7 @@
 Announcements:
  - Adding Redis v4 in Dockerfile
  - Update @carto/mapnik to [`3.6.2-carto.7`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto7). Also update tilelive-mapnik, tilelive-bridge and abaculus accordingly. It brings some improvements for markers symbolizer caches as well as more performance metrics and configuration options.
+ - Add a config option to disable `markers_symbolizer_caches`.
 
 # Version 4.6.0
 2018-03-15
