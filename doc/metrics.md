@@ -57,6 +57,23 @@ Again, each inner timer may have several inner timers, some of them are displaye
 - **windshaft.tiles.*{format}*.error**: per format number of tiles request that failed
 - **windshaft.tiles.*{format}*.success**: per format number of tiles request that succeeded
 
+## MAPNIK
+Currently any measure taken in Mapnik is also returned, with 'Mk_' prepended. Here is a list of the ones currently being used:
+
+### Timers:
+- **Mk_All**: The full amount of time (ms) spent in the Mapnik library (doesn't include any time spent in the node modules)
+- **Mk_Setup**: Time spent in the tasks needed to start the rendering (mainly DB).
+- **Mk_Datasource**: Time spent only the DB calls (included in 'Mk_Setup').
+- **Mk_Render**: Time spent rendering
+- **Mk_Render_Style:**: Time spent rendering the styles (included in 'Mk_Render').
+- **Mk_Agg_PXXS**: Time spent in the Agg renderer with the symbolizer 'XX', where 'XX' can be: 'Build', 'Debug', 'Dot', 'Group', 'LinePattern', 'Line', 'Marker', 'Point', 'Polygon', 'PolygonPattern', 'Raster', 'Shield', 'Text'.
+- **Mk_Grid_PXXS**: Time spent in the Grid renderer with the symbolizer 'XX', where 'XX' can be: 'Build', 'Group', 'LinePattern', 'Line', 'Marker', 'Point', 'Polygon', 'PolygonPattern', 'Raster', 'Shield', 'Text'.
+
+### Counters:
+- **Mk_Features_cnt_XX**: Number of features rendered of type 'XX', where 'XX' can be: 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection', 'Unknown'.
+- **Mk_Agg_PMS_AttrCache_Miss** and **Agg_PMS_EllipseCache_Miss**: In the render marker symbolizer, they count the cache misses for the attributes cache (and ellipse if applicable). Note: The hits can be calculated by substracting the number of features to this value.
+- **Mk_Agg_PMS_ImageCache_Miss** and **Agg_PMS_ImageCache_Ignored**: For the Agg renderer and Marker Symbolizer, they count the number of cache misses ('_Miss') and ignores ('_Ignored') which could be due to the cache being deactivated or the attributes not being cacheable (e.g. using scaling).
+
 \* ***{format}*** is one of the following:
 * png
 * grid_json
