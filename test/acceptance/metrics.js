@@ -459,4 +459,66 @@ describe('metrics', function() {
             });
         });
     });
+
+    describe('Render marker symbolizer - Image cache', function() {
+
+        it("counts correctly with standard cartocss", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, 10) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 1; marker-fill: #4dee83 }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 10);
+                assert.equal(stats.Mk_Agg_PMS_ImageCache_Miss, 1);
+                done();
+            });
+        });
+
+        it("counts as ignored if the image isn't cacheable (scaling on)", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT 11 as c, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 12 as c, ST_SetSRID(ST_MakePoint(-75.10434, 42.315),4326) as tgw" +
+                            " UNION ALL " +
+                            "SELECT 13 as c, ST_SetSRID(ST_MakePoint(-75.10434, 45.335),4326) as tgw",
+                        geom_column: 'tgw',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 1; marker-fill: #4dee83; marker-transform:scale(2,2) }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 3);
+                assert.equal(stats.Mk_Agg_PMS_ImageCache_Ignored, 3);
+                done();
+            });
+        });
+    });
+
 });
