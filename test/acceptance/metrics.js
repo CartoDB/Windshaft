@@ -2,6 +2,8 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+var fs = require('fs');
+var http = require('http');
 
 describe('metrics', function() {
 
@@ -248,5 +250,213 @@ describe('metrics', function() {
             });
         });
 
+    });
 
+    // NOTE: Since the tests are run in the same process and the cache is global
+    // make sure to have an unique cartocss style per test to avoid interferences
+    describe('Render marker symbolizer - Attributes cache', function() {
+
+        var overriddenOptions = {
+            mapnik : { mapnik : {
+                metrics : true,
+                markers_symbolizer_caches : {
+                    disabled : false
+                },
+                variables : {
+                    'cdb-width' : 10,
+                    'Series_Size' : 5
+                }
+            }}
+        };
+
+        it("counts correctly with standard cartocss", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, 10) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 1; marker-fill: #4dee83; }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 10);
+                assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
+                done();
+            });
+        });
+
+        //Disabled pending render-time variable support in tilelive-mapnik and Windshaft
+        it.skip("counts correctly with variable sql", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, !@Series_Size!) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 2; marker-fill: #4dee83; }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 5);
+                assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
+                done();
+            });
+        });
+
+        it("counts as misses with uncacheable attributes", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, 10) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* The style has a variable */
+                        cartocss: "#layer { marker-width: '@cdb-width'; marker-fill: #4dee83; }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 10);
+                assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 10);
+                done();
+            });
+        });
+
+        it("counts ellipse cache misses", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, 10) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 4; marker-fill: #4de383; }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 10);
+                assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
+                assert.equal(stats.Mk_Agg_PMS_EllipseCache_Miss, 1);
+                done();
+            });
+        });
+
+        it("Doesn't use ellipse cache when using arrow markers", function(done) {
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 2 lines */
+                        sql:"SELECT 31 as c, ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-71.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-73.10434, 44.315), 4326)) as the_geom_webmercator" +
+                            " UNION ALL " +
+                            "SELECT 32 as c, ST_MakeLine(" +
+                                "ST_SetSRID(ST_MakePoint(-76.10434, 42.315), 4326)," +
+                                "ST_SetSRID(ST_MakePoint(-72.10434, 44.315), 4326)) as the_geom_webmercator",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-width: 5; marker-fill: #4de383; marker-type: arrow }",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_LineString, 2);
+                assert(!stats.hasOwnProperty('Mk_Agg_PMS_EllipseCache_Miss'));
+                done();
+            });
+        });
+
+        it("Doesn't use ellipse cache when using custom markers", function(done) {
+
+            var resourcesServer = http.createServer( function(request, response) {
+                var filename = __dirname + '/../fixtures/markers' + request.url;
+                fs.readFile(filename, "binary", function(err, file) {
+                    if ( err ) {
+                        response.writeHead(404, {'Content-Type': 'text/plain'});
+                        response.write("404 Not Found\n");
+                    } else {
+                        response.writeHead(200);
+                        response.write(file, "binary");
+                    }
+                    response.end();
+                });
+            });
+            resourcesServer.listen(8083);
+            this.markerFileUrl = `http://localhost:8083/maki/circle-24.png`;
+
+            var mapconfig =  {
+                version: '1.2.0',
+                layers: [{
+                    type: 'mapnik',
+                    options: {
+                        /* 10 points */
+                        sql:"SELECT row_number() over() as cartodb_id, " +
+                            "ST_SetSRID(ST_MakePoint(3.609695,37.182749),4326) AS the_geom_webmercator " +
+                            "FROM generate_series(1, 10) qseries",
+                        geom_column: 'the_geom_webmercator',
+                        /* All points with the using the marker symbolizer */
+                        cartocss: "#layer { marker-type:'ellipse'; marker-file: url(" +  this.markerFileUrl + ")}",
+                        cartocss_version: '2.0.1'
+                    }
+                }]
+            };
+
+            var testClient = new TestClient(mapconfig, overriddenOptions);
+            testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
+                assert.ok(!err);
+                assert.equal(stats.Mk_Features_cnt_Point, 10);
+                assert(!stats.hasOwnProperty('Mk_Agg_PMS_EllipseCache_Miss'));
+                resourcesServer.close(done);
+            });
+        });
+    });
 });
