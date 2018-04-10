@@ -128,8 +128,7 @@ describe('metrics', function() {
     });
     });
 
-    //TODO: Pending fix in tilelive-mapnik
-    it.skip("works with metatiles", function(done) {
+    it("works with metatiles", function(done) {
 
         var mapconfig =  {
             version: '1.2.0',
@@ -327,8 +326,7 @@ describe('metrics', function() {
             });
         });
 
-        //Disabled pending render-time variable support in tilelive-mapnik and Windshaft
-        it.skip("counts correctly with variable sql", function(done) {
+        it("counts correctly with variable sql", function(done) {
 
             var mapconfig =  {
                 version: '1.2.0',
