@@ -496,3 +496,46 @@ function mvtTest(usePostGIS) {
     });
 
 }
+
+
+describe('mvt_bug', function () {
+
+    var SQL = [
+        "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326) AS the_geom, " +
+                "FALSE as status2, 0 as data",
+
+        "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326) AS the_geom, " +
+                "0 as data, FALSE as status2"
+    ];
+    const mapConfig = {
+        version: '1.7.0',
+        layers: [
+            {
+                type: 'cartodb',
+                options: {
+                }
+            }
+        ]
+    };
+
+    SQL.forEach(function(sql){
+        it('bool and int iteration ' + sql, function (done) {
+            mapConfig.layers[0].options.sql = sql;
+            this.testClient = new TestClient(mapConfig);
+            this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+                assert.ok(!err);
+
+                var vtile = new mapnik.VectorTile(0, 0, 0);
+                vtile.setData(mvtTile);
+                var result = vtile.toJSON();
+
+                var layer0 = result[0];
+                assert.equal(layer0.features.length, 1);
+                assert.strictEqual(layer0.features[0].properties.status2, false);
+                assert.strictEqual(layer0.features[0].properties.data, 0);
+
+                done();
+            });
+        });
+    });
+});
