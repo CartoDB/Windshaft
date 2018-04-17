@@ -1,8 +1,8 @@
 # Version 4.7.1
-2018-XX-XX
+2018-17-04
 
 Announcements:
- -
+ - Update @carto/mapnik to [`3.6.2-carto.8`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto8) and tilelive-mapnik, tilelive-bridge, abaculus accordingly. It brings a fix for mapnik-vector-tile to avoid mixing properties with the same value but different type.
 
 # Version 4.7.0
 2018-04-10
