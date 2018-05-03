@@ -1,5 +1,4 @@
 sudo: required
-dist: xenial
 
 services:
   - docker
@@ -8,6 +7,6 @@ before_install:
   - docker pull cartoimages/engine-xenial-pg101
 
 script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
+  - npm run docker-test
 
 language: generic
