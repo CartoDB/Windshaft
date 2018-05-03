@@ -51,11 +51,8 @@
     "scripts": {
         "preinstall": "make pre-install",
         "test": "make test-all",
-        "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
-        "docker-pull": "docker pull cartoimages/windshaft-testing",
-        "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
-        "docker-build": "docker build -t cartoimages/windshaft-testing .",
-        "docker-publish": "docker push cartoimages/windshaft-testing"
+        "docker-test": "docker run -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
+        "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash"
     },
     "engines": {
         "node": ">=6.9",

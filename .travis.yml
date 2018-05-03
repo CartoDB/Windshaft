@@ -1,13 +1,13 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 services:
   - docker
 
 before_install:
-  - docker pull cartoimages/windshaft-testing
+  - docker pull cartoimages/engine-xenial-pg101
 
 script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh
+  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
 
 language: generic
