@@ -1,13 +1,12 @@
 sudo: required
-dist: trusty
 
 services:
   - docker
 
 before_install:
-  - docker pull cartoimages/windshaft-testing
+  - docker pull carto/nodejs6-xenial-pg101
 
 script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh
+  - npm run docker-test
 
 language: generic
