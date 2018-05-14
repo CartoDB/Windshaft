@@ -1,3 +1,9 @@
+# Version 4.7.4
+2018-XX-XX
+
+Announcements:
+ -
+
 # Version 4.7.3
 2018-05-14
 
