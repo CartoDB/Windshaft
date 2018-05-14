@@ -1,15 +1,21 @@
-# Version 4.7.2
-2018-08-05
+# Version 4.7.3
+2018-XX-XX
 
 Announcements:
- - Set @carto/mapnik to [`3.6.2-carto.9`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto9) and tilelive-mapnik, tilelive-bridge, abaculus accordingly.
+ - Set @carto/mapnik to [`3.6.2-carto.10`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto10) and tilelive-mapnik, tilelive-bridge and abaculus accordingly.
+
+# Version 4.7.2
+2018-05-08
+
+Announcements:
+ - Set @carto/mapnik to [`3.6.2-carto.9`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto9) and tilelive-mapnik, tilelive-bridge and abaculus accordingly.
  - MVT: Disable simplify_distance to avoid multiple simplifications (Postgis query and mapnik-vector-tile).
 
 # Version 4.7.1
 2018-04-17
 
 Announcements:
- - Update @carto/mapnik to [`3.6.2-carto.8`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto8) and tilelive-mapnik, tilelive-bridge, abaculus accordingly. It brings a fix for mapnik-vector-tile to avoid mixing properties with the same value but different type.
+ - Update @carto/mapnik to [`3.6.2-carto.8`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto8) and tilelive-mapnik, tilelive-bridge and abaculus accordingly. It brings a fix for mapnik-vector-tile to avoid mixing properties with the same value but different type.
 
 # Version 4.7.0
 2018-04-10
