@@ -1,5 +1,5 @@
 # Version 4.7.3
-2018-XX-XX
+2018-05-14
 
 Announcements:
  - Set @carto/mapnik to [`3.6.2-carto.10`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto10) and tilelive-mapnik, tilelive-bridge and abaculus accordingly.
