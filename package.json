@@ -46,7 +46,7 @@
         "istanbul": "0.4.5",
         "jshint": "2.9.5",
         "mocha": "3.5.3",
-        "redis": "~2.8.0"
+        "redis": "2.8.0"
     },
     "scripts": {
         "preinstall": "make pre-install",
