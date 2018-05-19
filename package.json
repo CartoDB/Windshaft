@@ -30,7 +30,7 @@
         "debug": "^3.1.0",
         "dot": "1.1.2",
         "grainstore": "1.9.0",
-        "queue-async": "~1.0.7",
+        "queue-async": "1.1.0",
         "redis-mpool": "^0.5.0",
         "request": "2.85.0",
         "semver": "~5.0.3",
