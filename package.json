@@ -38,7 +38,7 @@
         "step": "1.0.0",
         "tilelive": "5.12.3",
         "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb14",
-        "torque.js": "~2.11.0",
+        "torque.js": "2.16.2",
         "underscore": "~1.6.0"
     },
     "devDependencies": {
