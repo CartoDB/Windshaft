@@ -45,7 +45,7 @@
         "express": "~2.5.11",
         "istanbul": "~0.4.0",
         "jshint": "~2.9.5",
-        "mocha": "~1.21.4",
+        "mocha": "3.5.3",
         "redis": "~2.8.0"
     },
     "scripts": {
