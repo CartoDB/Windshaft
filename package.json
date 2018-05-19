@@ -36,7 +36,7 @@
         "semver": "5.5.0",
         "sphericalmercator": "1.0.5",
         "step": "1.0.0",
-        "tilelive": "5.12.2",
+        "tilelive": "5.12.3",
         "tilelive-mapnik": "cartodb/tilelive-mapnik#0.6.18-cdb14",
         "torque.js": "~2.11.0",
         "underscore": "~1.6.0"
