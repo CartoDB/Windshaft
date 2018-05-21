@@ -1,8 +1,22 @@
-# Version 4.7.4
+# Version 4.8.0
 2018-XX-XX
 
 Announcements:
- -
+ - Update deps:
+   - cartodb-psql: 0.10.2
+   - dot: 1.1.2
+   - queue-async: 1.1.0
+   - request: 2.87.0
+   - semver: 5.5.0,
+   - sphericalmercator: 1.0.5,
+   - step: 1.0.0
+   - tilelive: 5.12.3
+   - torque.js: 2.16.2
+ - Update dev deps:
+   - express: 4.16.3
+   - istanbul: 0.4.5
+   - mocha: 3.5.3
+ - Support `yarn.lock` file
 
 # Version 4.7.3
 2018-05-14
