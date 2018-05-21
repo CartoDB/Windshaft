@@ -32,7 +32,7 @@
         "grainstore": "1.9.0",
         "queue-async": "1.1.0",
         "redis-mpool": "0.5.0",
-        "request": "2.86.0",
+        "request": "2.87.0",
         "semver": "5.5.0",
         "sphericalmercator": "1.0.5",
         "step": "1.0.0",
