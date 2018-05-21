@@ -1,5 +1,5 @@
 # Version 4.8.0
-2018-XX-XX
+2018-05-21
 
 Announcements:
  - Update deps:
