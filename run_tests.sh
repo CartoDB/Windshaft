@@ -79,7 +79,7 @@ if test x"$OPT_CREATE" = xyes; then
   echo ${PID_REDIS} > ${BASEDIR}/redis.pid
 
   echo "Preparing the environment"
-  cd ${BASEDIR}/test; sh prepare_test || die "database preparation failure"; cd -
+  cd ${BASEDIR}/test; source prepare_test || die "database preparation failure"; cd -
 fi
 
 PATH=node_modules/.bin/:$PATH

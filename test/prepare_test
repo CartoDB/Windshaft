@@ -23,6 +23,20 @@ if [ -n "${pgPORT}" ]; then
   echo "PGPORT: [$PGPORT]"
 fi
 
+# Sets the env variable POSTGIS_VERSION as Major * 10000 + Minor * 100 + Patch
+# For example, for 2.4.5 ~> 20405
+auto_postgis_version() {
+    local POSTGIS_STR=$(psql -c "Select default_version from pg_available_extensions WHERE name = 'postgis';" -t);
+    local pg_version=$(echo $POSTGIS_STR | awk -F '.' '{print $1 * 10000 + $2 * 100 + $3}')
+
+    echo $pg_version
+}
+
+if [ -z "$POSTGIS_VERSION" ]; then
+    export POSTGIS_VERSION=$(auto_postgis_version)
+    echo "POSTGIS_VERSION: [$POSTGIS_VERSION]"
+fi
+
 die() {
         msg=$1
         echo "${msg}" >&2
