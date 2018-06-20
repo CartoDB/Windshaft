@@ -55,13 +55,15 @@ describe('torque tiles at 0,0 point', function() {
             what: 'tl',
             x: 3,
             y: 3,
-            expects: []
+            expects: [],
+            expects_fixed: [{"x__uint8":1,"y__uint8":0,"vals__uint8":[1],"dates__uint16":[0]}]
         },
         {
             what: 'tr',
             x: 4,
             y: 3,
-            expects: []
+            expects: [],
+            expects_fixed: [{"x__uint8":0,"y__uint8":0,"vals__uint8":[1],"dates__uint16":[0]}]
         },
         {
             what: 'bl',
@@ -80,7 +82,12 @@ describe('torque tiles at 0,0 point', function() {
     tiles.forEach(function(tile) {
         it(tile.what, function(done) {
             testClient.getTile(3, tile.x, tile.y, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
-                assert.deepEqual(torqueTile, tile.expects);
+                try {
+                    assert.deepEqual(torqueTile, tile.expects);
+                } catch (ex) {
+                    // With Proj 5.1 this bug has been fixed and the point appears in all tiles
+                    assert.deepEqual(torqueTile, tile.expects_fixed);
+                }
                 done();
             });
         });
