@@ -12,7 +12,11 @@ if (process.env.POSTGIS_VERSION >= '20400') {
     describe('mvt (pgsql)', function () {
         mvtTest(true);
     });
+    describe('compare mvt renderers', function (){
+        describe_compare_renderer();
+    });
 }
+
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
@@ -42,111 +46,14 @@ function mvtTest(usePostGIS) {
             });
             assert.deepEqual(names, expectedNames);
 
-            if (usePostGIS){
-                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
-                        'Should have only the necessary columns');
-            }
+            assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
+                    `Should contain the columns requested in the sql query as properties`);
 
             done();
         });
     });
 
-    it('should return tiles with column "name" defined in mapconfig', function (done) {
-        const mapConfig = {
-            version: '1.6.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 2',
-                        columns: ['name']
-                    }
-                }
-            ]
-        };
-
-        const testClient = new TestClient(mapConfig, options);
-        testClient.getTile(13, 4011, 3088, { format: 'mvt'}, function (err, mvtTile) {
-            assert.ifError(err);
-
-            var vtile = new mapnik.VectorTile(13, 4011, 3088);
-            vtile.setData(mvtTile);
-            assert.equal(vtile.painted(), true);
-            assert.equal(vtile.empty(), false);
-
-            var result = vtile.toJSON();
-            assert.equal(result.length, 1);
-
-            var layer0 = result[0];
-            assert.equal(layer0.name, 'layer0');
-            assert.equal(layer0.features.length, 2);
-
-            const numberOfRetrievedColumns = usePostGIS ? 1 : 3;
-
-            assert.ok(
-                layer0.features.every(feature => Object.keys(feature.properties).length === numberOfRetrievedColumns),
-                `Should have only the necessary columns (${numberOfRetrievedColumns} properties)`
-            );
-
-            assert.ok(
-                layer0.features.every(feature => typeof feature.properties.name === 'string'),
-                'Should have the column "name" defined'
-            );
-
-            done();
-        });
-    });
-
-    it('should return tiles with columns "name" & "address" defined in mapconfig', function (done) {
-        const mapConfig = {
-            version: '1.6.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from test_table limit 2',
-                        columns: ['name', 'address']
-                    }
-                }
-            ]
-        };
-
-        const testClient = new TestClient(mapConfig, options);
-        testClient.getTile(13, 4011, 3088, { format: 'mvt'}, function (err, mvtTile) {
-            assert.ifError(err);
-
-            var vtile = new mapnik.VectorTile(13, 4011, 3088);
-            vtile.setData(mvtTile);
-            assert.equal(vtile.painted(), true);
-            assert.equal(vtile.empty(), false);
-
-            var result = vtile.toJSON();
-            assert.equal(result.length, 1);
-
-            var layer0 = result[0];
-            assert.equal(layer0.name, 'layer0');
-            assert.equal(layer0.features.length, 2);
-
-            const numberOfRetrievedColumns = usePostGIS ? 2 : 3;
-
-            assert.ok(
-                layer0.features.every(feature => Object.keys(feature.properties).length === numberOfRetrievedColumns),
-                `Should have only the necessary columns (${numberOfRetrievedColumns} properties)`
-            );
-
-            assert.ok(
-                layer0.features.every(feature => typeof feature.properties.name === 'string'),
-                'Should have the column "name" defined'
-            );
-
-            assert.ok(
-                layer0.features.every(feature => typeof feature.properties.address === 'string'),
-                'Should have the column "address" defined'
-            );
-
-            done();
-        });
-    });
+    // Should work with custom geom column
 
     var multipleLayersMapConfig =  {
         version: '1.3.0',
@@ -247,12 +154,10 @@ function mvtTest(usePostGIS) {
                 return f.properties.name;
             }), layer1ExpectedNames);
 
-            if (usePostGIS){
-                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
-                        'Should have only the necessary columns');
-                assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
-                        'Should have only the necessary columns');
-            }
+            assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
+                    'Should contain the columns requested in the sql query as properties');
+            assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 3),
+                    'Should contain the columns requested in the sql query as properties');
 
             done();
         };
@@ -305,10 +210,8 @@ function mvtTest(usePostGIS) {
                 var names = layer0.features.map(function (f) { return f.properties.name; });
                 assert.deepEqual(names, layer0ExpectedNames);
 
-                if (usePostGIS){
-                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                }
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
 
                 done();
             });
@@ -388,12 +291,10 @@ function mvtTest(usePostGIS) {
                     return f.properties.name;
                 }), layer1ExpectedNames);
 
-                if (usePostGIS){
-                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                }
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
+                assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
 
                 done();
             });
@@ -481,65 +382,256 @@ function mvtTest(usePostGIS) {
                     return f.properties.name;
                 }), layer2ExpectedNames);
 
-                if (usePostGIS){
-                    assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                    assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                    assert.ok(layer2.features.every(feature => Object.keys(feature.properties).length === 1),
-                            'Should have only the necessary columns');
-                }
+                assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
+                assert.ok(layer1.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
+                assert.ok(layer2.features.every(feature => Object.keys(feature.properties).length === 3),
+                        'Should contain the columns requested in the sql query as properties');
 
                 done();
             });
         });
+    });
+
+    describe('respects data types', function () {
+
+        var SQL = [
+            {   name    : "[bool, int]",
+                sql     : "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326)" +
+                            " AS the_geom, FALSE as status2, 0 as data"
+            },
+            {
+                name    : "[int, bool]",
+                sql     : "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326)" +
+                            " AS the_geom, 0 as data, FALSE as status2"
+                }
+        ];
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                    }
+                }
+            ]
+        };
+
+        SQL.forEach(function(tuple){
+            it('bool and int iteration ' + tuple.name, function (done) {
+                mapConfig.layers[0].options.sql = tuple.sql;
+                this.testClient = new TestClient(mapConfig);
+                this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+                    assert.ok(!err);
+
+                    var vtile = new mapnik.VectorTile(0, 0, 0);
+                    vtile.setData(mvtTile);
+                    var result = vtile.toJSON();
+
+                    var layer0 = result[0];
+                    assert.equal(layer0.features.length, 1);
+                    assert.strictEqual(layer0.features[0].properties.status2, false);
+                    assert.strictEqual(layer0.features[0].properties.data, 0);
+
+                    done();
+                });
+            });
+        });
+    });
+}
+
+// Check if 2 MVT features are equivalent
+// Does not compare feature.id since it's optional (Mapnik sets it, St_AsMVT doesn't)
+function mvtFeature_cmp(feature1, feature2) {
+    assert.equal(feature1.type, feature2.type);
+    assert.deepEqual(feature1.properties, feature2.properties);
+
+    //TODO: Improve this
+    assert.deepEqual(feature1.geometry, feature2.geometry);
+}
+
+// Check if 2 MVT layers are equivalent
+function mvtLayer_cmp(layer1, layer2) {
+    assert.equal(layer1.name, layer2.name);
+    assert.equal(layer1.version, layer2.version);
+    assert.equal(layer1.extent, layer2.extent);
+
+    if (!layer1.features) {
+        assert.ifError(layer2.features);
+        return;
+    }
+
+    assert.equal(layer1.features.length, layer2.features.length);
+
+    layer1.features.forEach(f1 => {
+        // We look for a feature with the same cartodb_id as the order isn't guaranteed
+        assert.ok(f1.properties && f1.properties.cartodb_id,
+                "Comparison requires properties with cartodb_id. Got: " + JSON.stringify(f1));
+        let f2 = layer2.features.find(feature => f1.properties.cartodb_id === feature.properties.cartodb_id);
+        assert.ok(f2, "Could not find feature with cartodb_id '" + f1.properties.cartodb_id +  "'");
+        mvtFeature_cmp(f1, f2);
+    });
+}
+
+
+// Check if 2 MVT tiles are equivalent
+function mvt_cmp(tileData1, tileData2) {
+    let vtile1 = new mapnik.VectorTile(0, 0, 0);
+    vtile1.setData(tileData1);
+
+    let vtile2 = new mapnik.VectorTile(0, 0, 0);
+    vtile2.setData(tileData2);
+
+    // Check emptyness to shortcircuit if needed
+    if (vtile1.empty()) {
+        assert.ok(vtile2.empty());
+        return;
+    }
+
+    // Both should be valid
+    let valid = vtile1.reportGeometryValiditySync();
+    assert.equal(valid.length, 0, "Found invalid geometries: " + valid);
+    valid = vtile2.reportGeometryValiditySync();
+    assert.equal(valid.length, 0, "Found invalid geometries: " + valid);
+
+    // Layer (number, name, size)
+    const t1 = vtile1.toJSON();
+    const t2 = vtile2.toJSON();
+    assert.equal(t1.length, t2.length);
+
+    t1.forEach(layer1 => {
+        // We look for a layer with the same name as the order isn't guaranteed
+        let layer2 = t2.find(layer => layer.name === layer1.name);
+        assert.ok(layer2, "Could not find layer named '" + layer1.name + "'");
+        mvtLayer_cmp(layer1, layer2);
     });
 
 }
 
 
-describe('respects data types', function () {
+// Compares the output returned by both renderers (mapnik and pg_mvt) given the same input
+function describe_compare_renderer() {
 
-    var SQL = [
-        {   name    : "[bool, int]",
-            sql     : "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326)" +
-                        " AS the_geom, FALSE as status2, 0 as data"
+    const TEST_LIST = [
+        {
+            name: 'Single layer',
+            tile : { z : 13, x: 4011, y: 3088 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table'
+                        }
+                    }
+                ]
+            }
         },
         {
-            name    : "[int, bool]",
-            sql     : "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326)" +
-                        " AS the_geom, 0 as data, FALSE as status2"
+            name: 'Multiple layers',
+            tile : { z : 13, x: 4011, y: 3088 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table limit 2',
+                            cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
+                        }
+                    },
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table limit 3 offset 2',
+                            cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                            cartocss_version: '2.3.0',
+                            interactivity: ['name']
+                        }
+                    }
+                ]
             }
+        },
+        {
+            name: 'Single layer - Repeated rows',
+            tile : { z : 13, x: 4011, y: 3088 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'Select * from test_table UNION ALL Select * from test_table '
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            name: 'Empty geometry',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column : 'the_geom_webmercator',
+                            sql: "SELECT 2 AS cartodb_id, null as the_geom_webmercator"
+                        }
+                    }
+                ]
+            },
+            expected_error : "Error: Tile does not exist"
+        },
+        {
+            name: 'Single point',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, " +
+"'SRID=3857;POINT(-293823.936728 5022065.632393)'::geometry as the_geom"
+                        }
+                    }
+                ]
+            }
+        },
     ];
-    const mapConfig = {
-        version: '1.7.0',
-        layers: [
-            {
-                type: 'cartodb',
-                options: {
-                }
-            }
-        ]
-    };
 
-    SQL.forEach(function(tuple){
-        it('bool and int iteration ' + tuple.name, function (done) {
-            mapConfig.layers[0].options.sql = tuple.sql;
-            this.testClient = new TestClient(mapConfig);
-            this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-                assert.ok(!err);
+    TEST_LIST.forEach(test => {
+        it(test.name, function (done) {
 
-                var vtile = new mapnik.VectorTile(0, 0, 0);
-                vtile.setData(mvtTile);
-                var result = vtile.toJSON();
+            const testClientMapnik = new TestClient(test.mapConfig, { mvt: { usePostGIS: false } });
+            const testClientPg_mvt = new TestClient(test.mapConfig, { mvt: { usePostGIS: true } });
+            const options = { format : 'mvt' };
 
-                var layer0 = result[0];
-                assert.equal(layer0.features.length, 1);
-                assert.strictEqual(layer0.features[0].properties.status2, false);
-                assert.strictEqual(layer0.features[0].properties.data, 0);
+            testClientMapnik.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err1, mapnikMVT) {
+                testClientPg_mvt.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err2, pgMVT) {
+                    if (err1 || err2) {
+                        assert.ok(err1);
+                        assert.ok(err2);
+                        if (test.expected_error) {
+                            assert.equal(err1, test.expected_error);
+                            assert.equal(err2, test.expected_error);
+                        }
+                    } else {
+                        mvt_cmp(mapnikMVT, pgMVT);
+                    }
 
-                done();
+                    done();
+                });
             });
         });
     });
-});
+}
