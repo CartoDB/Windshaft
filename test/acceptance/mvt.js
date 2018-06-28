@@ -4,19 +4,11 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var mapnik = require('@carto/mapnik');
 
-describe('mvt (mapnik)', function () {
-    mvtTest(false);
-});
+const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
 
-if (process.env.POSTGIS_VERSION >= '20400') {
-    describe('mvt (pgsql)', function () {
-        mvtTest(true);
-    });
-    describe('compare mvt renderers', function (){
-        describe_compare_renderer();
-    });
-}
-
+describe('mvt (mapnik)', () => { mvtTest(false); });
+describe_pg('mvt (pgsql)', () => { mvtTest(true); });
+describe_pg('Compare mvt renderers', () => { describe_compare_renderer(); });
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
@@ -589,7 +581,7 @@ function describe_compare_renderer() {
             expected_error : "Error: Tile does not exist"
         },
         {
-            name: 'Single point',
+            name: 'Point',
             tile : { z : 0, x: 0, y: 0 },
             mapConfig : {
                 version: '1.7.0',
@@ -600,17 +592,80 @@ function describe_compare_renderer() {
                             geom_column: 'the_geom',
                             srid: 3857,
                             sql:
-"SELECT 2 AS cartodb_id, " +
-"'SRID=3857;POINT(-293823.936728 5022065.632393)'::geometry as the_geom"
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POINT(-293823.936728 5022065.632393)" +
+"'::geometry as the_geom"
                         }
                     }
                 ]
             }
         },
+        {
+            name: 'Multipoint',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823.936728 5022065.632393, 3374847.672847 8386059.247223)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            name: 'Multipoint repeated (consecutive)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823.936728 5022065.632393, -293823.936728 5022065.632393, -293823.936728 5022065.632393)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            name: 'Multipoint repeated (non consecutive)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823.936728 5022065.632393, 3374847.672847 8386059.247223, " +
+"-293823.936728 5022065.632393, -293823.936728 5022065.632393)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+            known_issue : "Mapnik doesn't remove non consecutive points"
+        },
     ];
 
     TEST_LIST.forEach(test => {
-        it(test.name, function (done) {
+        (test.known_issue ? it.skip : it)(test.name, function (done) {
 
             const testClientMapnik = new TestClient(test.mapConfig, { mvt: { usePostGIS: false } });
             const testClientPg_mvt = new TestClient(test.mapConfig, { mvt: { usePostGIS: true } });
