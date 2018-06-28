@@ -593,7 +593,7 @@ function describe_compare_renderer() {
                             srid: 3857,
                             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"POINT(-293823.936728 5022065.632393)" +
+"POINT(-293823 5022065)" +
 "'::geometry as the_geom"
                         }
                     }
@@ -613,7 +613,7 @@ function describe_compare_renderer() {
                             srid: 3857,
                             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823.936728 5022065.632393, 3374847.672847 8386059.247223)" +
+"MULTIPOINT(-293823 5022065, 3374847 8386059)" +
 "'::geometry as the_geom"
                         }
                     }
@@ -633,7 +633,7 @@ function describe_compare_renderer() {
                             srid: 3857,
                             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823.936728 5022065.632393, -293823.936728 5022065.632393, -293823.936728 5022065.632393)" +
+"MULTIPOINT(-293823 5022065, -293823 5022065, -293823 5022065)" +
 "'::geometry as the_geom"
                         }
                     }
@@ -653,14 +653,115 @@ function describe_compare_renderer() {
                             srid: 3857,
                             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823.936728 5022065.632393, 3374847.672847 8386059.247223, " +
-"-293823.936728 5022065.632393, -293823.936728 5022065.632393)" +
+"MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
 "'::geometry as the_geom"
                         }
                     }
                 ]
             },
             known_issue : "Mapnik doesn't remove non consecutive points"
+        },
+        {
+            name: 'Linestring',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, 3374847 8386059)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            name: 'Linestring (zero length)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, -293823 5022065)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            name: 'Linestring (repeated points)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, 3374847 8386059, 3374847 8386059)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            name: 'Linestring simplify connected segments',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(0 20037508.3, 0 0, 0 10037508.3, 0 -10037508.3, 0 -20037508.3)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+            known_issue : "Mapnik doesn't do it"
+        },
+        {
+            name: 'Linestring join segments',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(0 20037508.3, 0 0, 0 -20037508.3)" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            },
+            known_issue : "Mapnik doesn't do it"
         },
     ];
 
