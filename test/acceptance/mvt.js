@@ -433,14 +433,46 @@ function mvtTest(usePostGIS) {
     });
 }
 
+function mvtInteger(parameterInteger) {
+    return ((parameterInteger >> 1) ^ (-(parameterInteger & 1)));
+}
+
+// This is a very basic decoder to be able to compare 2 geometries
+// Currently it just extracts the declared points of a geometry, without
+// considering at all its type (or the finishing point of a polygon)
+function mvtExtractComponents(geometry) {
+    let points = [ { x : 0, y : 0 }];
+    let cmd_points = 0;
+    for (let i = 0; i < geometry.length; i++) {
+        if (cmd_points === 0) {
+            // Read the next command and extract the number of points pending
+            cmd_points = geometry[i] >> 3;
+        } else {
+            cmd_points--;
+            // The point coordinates are in relation to the previous one
+            points.push({
+                x : mvtInteger(geometry[i]) + points[points.length - 1].x,
+                y : mvtInteger(geometry[++i]) + points[points.length - 1].y
+            });
+        }
+    }
+
+    return points.slice(1).sort((p1, p2) => {
+        return (p1.x < p2.x) || ((p1.x === p2.x) && (p1.y < p2.y));
+    });
+}
+
 // Check if 2 MVT features are equivalent
 // Does not compare feature.id since it's optional (Mapnik sets it, St_AsMVT doesn't)
 function mvtFeature_cmp(feature1, feature2) {
     assert.equal(feature1.type, feature2.type);
     assert.deepEqual(feature1.properties, feature2.properties);
 
-    //TODO: Improve this
-    assert.deepEqual(feature1.geometry, feature2.geometry);
+    assert.equal(feature1.geometry.length, feature2.geometry.length);
+    const f1_points = mvtExtractComponents(feature1.geometry);
+    const f2_points = mvtExtractComponents(feature2.geometry);
+    //TODO: Accept small variances (related to rounding)
+    assert.deepEqual(f1_points, f2_points);
 }
 
 // Check if 2 MVT layers are equivalent
@@ -817,6 +849,26 @@ function describe_compare_renderer() {
                             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "MULTILINESTRING((-293823 5022065, -1917652 9627396),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            name: 'Polygon (CW)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508))" +
 "'::geometry as the_geom"
                         }
                     }
