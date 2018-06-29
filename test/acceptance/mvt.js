@@ -537,7 +537,7 @@ function mvt_cmp(tileData1, tileData2) {
 // Compares the output returned by both renderers (mapnik and pg_mvt) given the same input
 function describe_compare_renderer() {
 
-    const TEST_LIST = [
+    const LAYER_TESTS = [
         {
             name: 'Single layer',
             tile : { z : 13, x: 4011, y: 3088 },
@@ -594,291 +594,11 @@ function describe_compare_renderer() {
                     }
                 ]
             }
-        },
-        {
-            name: 'Empty geometry',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column : 'the_geom_webmercator',
-                            sql: "SELECT 2 AS cartodb_id, null as the_geom_webmercator"
-                        }
-                    }
-                ]
-            },
-            expected_error : "Error: Tile does not exist"
-        },
-        {
-            name: 'Point',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"POINT(-293823 5022065)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Multipoint',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823 5022065, 3374847 8386059)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            },
-        },
-        {
-            name: 'Multipoint (repeated consecutive)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823 5022065, -293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Multipoint (repeated non consecutive)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            },
-            known_issue : "Mapnik doesn't remove non consecutive points"
-        },
-        {
-            name: 'Linestring',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(-293823 5022065, 3374847 8386059)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Linestring (zero length)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(-293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Linestring (repeated points)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(-293823 5022065, 3374847 8386059, 3374847 8386059)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Linestring (simplify connected segments)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(0 20037508.3, 0 0, 0 10037508.3, 0 -10037508.3, 0 -20037508.3)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            },
-            known_issue : "Mapnik doesn't do it"
-        },
-        {
-            name: 'Linestring (join segments)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(0 20037508.3, 0 0, 0 -20037508.3)" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            },
-            known_issue : "Mapnik doesn't do it"
-        },
-        {
-            name: 'Multilinestring',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTILINESTRING((-293823 5022065, 3374847 8386059),(-293823 5022065, -1917652 9627396))" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Multilinestring (zero length)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTILINESTRING((-293823 5022065, -293823 5022065),(-293823 5022065, -1917652 9627396))" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Multilinestring (simplify duplicated lines)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"MULTILINESTRING((-293823 5022065, -1917652 9627396),(-293823 5022065, -1917652 9627396))" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            name: 'Polygon (CW)',
-            tile : { z : 0, x: 0, y: 0 },
-            mapConfig : {
-                version: '1.7.0',
-                layers: [
-                    {
-                        type: 'mapnik',
-                        options: {
-                            geom_column: 'the_geom',
-                            srid: 3857,
-                            sql:
-"SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508))" +
-"'::geometry as the_geom"
-                        }
-                    }
-                ]
-            }
-        },
+        }
     ];
 
-    TEST_LIST.forEach(test => {
-        (test.known_issue ? it.skip : it)(test.name, function (done) {
+    LAYER_TESTS.forEach(test => {
+        it(test.name, function (done) {
 
             const testClientMapnik = new TestClient(test.mapConfig, { mvt: { usePostGIS: false } });
             const testClientPg_mvt = new TestClient(test.mapConfig, { mvt: { usePostGIS: true } });
@@ -902,4 +622,167 @@ function describe_compare_renderer() {
             });
         });
     });
+
+    const GEOM_TESTS = [
+
+        {
+            name: 'Null geometry',
+            sql: "SELECT 2 AS cartodb_id, null as the_geom",
+            expected_error : "Error: Tile does not exist"
+        },
+        {
+            name: 'Empty tile',
+            tile : { z : 18, x: 0, y: 0 },
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POINT(-293823 5022065)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Point',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POINT(-293823 5022065)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multipoint',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823 5022065, 3374847 8386059)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multipoint (repeated consecutive)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823 5022065, -293823 5022065, -293823 5022065)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multipoint (repeated non consecutive)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik doesn't remove non consecutive points"
+        },
+        {
+            name: 'Linestring',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, 3374847 8386059)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Linestring (zero length)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, -293823 5022065)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Linestring (repeated points)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(-293823 5022065, 3374847 8386059, 3374847 8386059)" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Linestring (simplify connected segments)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(0 20037508.3, 0 0, 0 10037508.3, 0 -10037508.3, 0 -20037508.3)" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik doesn't do it"
+        },
+        {
+            name: 'Linestring (join segments)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"LINESTRING(0 20037508.3, 0 0, 0 -20037508.3)" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik doesn't do it"
+        },
+        {
+            name: 'Multilinestring',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, 3374847 8386059),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multilinestring (zero length)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, -293823 5022065),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multilinestring (simplify duplicated lines)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, -1917652 9627396),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CW)',
+            tile : { z : 0, x: 0, y: 0 },
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CCW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+    ];
+
+    GEOM_TESTS.forEach(test => {
+        (test.known_issue ? it.skip : it)(test.name, function (done) {
+            const mapConfig = {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql: test.sql
+                        }
+                    }
+                ]
+            };
+
+            const testClientMapnik = new TestClient(mapConfig, { mvt: { usePostGIS: false } });
+            const testClientPg_mvt = new TestClient(mapConfig, { mvt: { usePostGIS: true } });
+            const options = { format : 'mvt' };
+            const z = test.tile && test.tile.z ? test.tile.z : 0;
+            const x = test.tile && test.tile.x ? test.tile.x : 0;
+            const y = test.tile && test.tile.y ? test.tile.y : 0;
+
+            testClientMapnik.getTile(z, x, y, options, function (err1, mapnikMVT) {
+                testClientPg_mvt.getTile(z, x, y, options, function (err2, pgMVT) {
+                    if (err1 || err2) {
+                        assert.ok(err1);
+                        assert.ok(err2);
+                        if (test.expected_error) {
+                            assert.equal(err1, test.expected_error);
+                            assert.equal(err2, test.expected_error);
+                        }
+                    } else {
+                        mvt_cmp(mapnikMVT, pgMVT);
+                    }
+
+                    done();
+                });
+            });
+        });
+    });
+
+
 }
