@@ -621,7 +621,7 @@ function describe_compare_renderer() {
             },
         },
         {
-            name: 'Multipoint repeated (consecutive)',
+            name: 'Multipoint (repeated consecutive)',
             tile : { z : 0, x: 0, y: 0 },
             mapConfig : {
                 version: '1.7.0',
@@ -638,10 +638,10 @@ function describe_compare_renderer() {
                         }
                     }
                 ]
-            },
+            }
         },
         {
-            name: 'Multipoint repeated (non consecutive)',
+            name: 'Multipoint (repeated non consecutive)',
             tile : { z : 0, x: 0, y: 0 },
             mapConfig : {
                 version: '1.7.0',
@@ -679,7 +679,7 @@ function describe_compare_renderer() {
                         }
                     }
                 ]
-            },
+            }
         },
         {
             name: 'Linestring (zero length)',
@@ -699,7 +699,7 @@ function describe_compare_renderer() {
                         }
                     }
                 ]
-            },
+            }
         },
         {
             name: 'Linestring (repeated points)',
@@ -719,10 +719,10 @@ function describe_compare_renderer() {
                         }
                     }
                 ]
-            },
+            }
         },
         {
-            name: 'Linestring simplify connected segments',
+            name: 'Linestring (simplify connected segments)',
             tile : { z : 0, x: 0, y: 0 },
             mapConfig : {
                 version: '1.7.0',
@@ -743,7 +743,7 @@ function describe_compare_renderer() {
             known_issue : "Mapnik doesn't do it"
         },
         {
-            name: 'Linestring join segments',
+            name: 'Linestring (join segments)',
             tile : { z : 0, x: 0, y: 0 },
             mapConfig : {
                 version: '1.7.0',
@@ -762,6 +762,66 @@ function describe_compare_renderer() {
                 ]
             },
             known_issue : "Mapnik doesn't do it"
+        },
+        {
+            name: 'Multilinestring',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, 3374847 8386059),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            name: 'Multilinestring (zero length)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, -293823 5022065),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            name: 'Multilinestring (simplify duplicated lines)',
+            tile : { z : 0, x: 0, y: 0 },
+            mapConfig : {
+                version: '1.7.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            geom_column: 'the_geom',
+                            srid: 3857,
+                            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTILINESTRING((-293823 5022065, -1917652 9627396),(-293823 5022065, -1917652 9627396))" +
+"'::geometry as the_geom"
+                        }
+                    }
+                ]
+            }
         },
     ];
 
