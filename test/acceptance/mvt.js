@@ -469,7 +469,9 @@ function mvtFeature_cmp(feature1, feature2) {
     assert.equal(feature1.type, feature2.type);
     assert.deepEqual(feature1.properties, feature2.properties);
 
-    assert.equal(feature1.geometry.length, feature2.geometry.length);
+    assert.equal(feature1.geometry.length, feature2.geometry.length,
+        (feature1.geometry.length > feature2.geometry.length ? "Mapnik's" : "Postgres'") +
+                " feature has a geometry made of more points");
     const f1_points = mvtExtractComponents(feature1.geometry);
     const f2_points = mvtExtractComponents(feature2.geometry);
     //TODO: Accept small variances (related to rounding)
@@ -487,7 +489,9 @@ function mvtLayer_cmp(layer1, layer2) {
         return;
     }
 
-    assert.equal(layer1.features.length, layer2.features.length);
+    assert.equal(layer1.features.length, layer2.features.length,
+        (layer1.features.length > layer2.features.length ? "Mapnik" : "Postgres") +
+                " layer has more features");
 
     layer1.features.forEach(f1 => {
         // We look for a feature with the same cartodb_id as the order isn't guaranteed
@@ -523,7 +527,8 @@ function mvt_cmp(tileData1, tileData2) {
     // Layer (number, name, size)
     const t1 = vtile1.toJSON();
     const t2 = vtile2.toJSON();
-    assert.equal(t1.length, t2.length);
+    assert.equal(t1.length, t2.length,
+        (t1.length > t2.length ? "Mapnik" : "Postgres") + " tile has more layers");
 
     t1.forEach(layer1 => {
         // We look for a layer with the same name as the order isn't guaranteed
@@ -746,8 +751,54 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
-"(-10037508 10037508, 10037508 10037508, 10037508 -10037508, -10037508 -10037508, -10037508 10037508))" +
+"(-18037508 18037508, 18037508 18037508, 18037508 -18037508, -18037508 -18037508, -18037508 18037508))" +
 "'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CW - CCW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
+"(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CCW - CW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508)," +
+"(-18037508 18037508, 18037508 18037508, 18037508 -18037508, -18037508 -18037508, -18037508 18037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CCW - CCW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508)," +
+"(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CW - CW - CW - CW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
+"(-18037508 18037508, 18037508 18037508, 18037508 -18037508, -18037508 -18037508, -18037508 18037508)," +
+"(-16037508 16037508, 16037508 16037508, 16037508 -16037508, -16037508 -16037508, -16037508 16037508)," +
+"(-14037508 14037508, 14037508 14037508, 14037508 -14037508, -14037508 -14037508, -14037508 14037508))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik drops extra inner rings"
+        },
+        {
+            name: 'Polygon (CCW - CCW - CCW - CCW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508)," +
+"(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508)," +
+"(-16037508 16037508, -16037508 -16037508, 16037508 -16037508, 16037508 16037508, -16037508 16037508)," +
+"(-14037508 14037508, -14037508 -14037508, 14037508 -14037508, 14037508 14037508, -14037508 14037508))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik drops extra inner rings"
         },
     ];
 
