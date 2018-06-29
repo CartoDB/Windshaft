@@ -446,6 +446,7 @@ function mvtExtractComponents(geometry) {
     for (let i = 0; i < geometry.length; i++) {
         if (cmd_points === 0) {
             // Read the next command and extract the number of points pending
+            if (geometry[i] === 15) continue; // Ignore ClosePath
             cmd_points = geometry[i] >> 3;
         } else {
             cmd_points--;
@@ -458,7 +459,7 @@ function mvtExtractComponents(geometry) {
     }
 
     return points.slice(1).sort((p1, p2) => {
-        return (p1.x < p2.x) || ((p1.x === p2.x) && (p1.y < p2.y));
+        return (p1.x > p2.x) || ((p1.x === p2.x) && (p1.y > p2.y));
     });
 }
 
@@ -692,7 +693,7 @@ function describe_compare_renderer() {
             name: 'Linestring (simplify connected segments)',
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(0 20037508.3, 0 0, 0 10037508.3, 0 -10037508.3, 0 -20037508.3)" +
+"LINESTRING(0 20037508, 0 0, 0 10037508, 0 -10037508, 0 -20037508)" +
 "'::geometry as the_geom",
             known_issue : "Mapnik doesn't do it"
         },
@@ -700,7 +701,7 @@ function describe_compare_renderer() {
             name: 'Linestring (join segments)',
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
-"LINESTRING(0 20037508.3, 0 0, 0 -20037508.3)" +
+"LINESTRING(0 20037508, 0 0, 0 -20037508)" +
 "'::geometry as the_geom",
             known_issue : "Mapnik doesn't do it"
         },
@@ -738,6 +739,14 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (CW - CW)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
+"(-10037508 10037508, 10037508 10037508, 10037508 -10037508, -10037508 -10037508, -10037508 10037508))" +
 "'::geometry as the_geom"
         },
     ];
