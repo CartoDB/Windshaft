@@ -912,6 +912,23 @@ function describe_compare_renderer() {
 "'::geometry as the_geom",
             known_issue : "Mapnik doesn't remove the extra"
         },
+        {
+            name: 'Geometrycollection (Homogeneous)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"GEOMETRYCOLLECTION(POINT(-14037508 14037508), POINT(-20037508 20037508))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik uses multiple features. Postgis casts it to multipoint"
+        },
+        {
+            name: 'Geometrycollection (Heterogeneous)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;GEOMETRYCOLLECTION(" +
+"POLYGON((-14037508 14037508, 14037508 14037508, 14037508 -14037508, -14037508 -14037508, -14037508 14037508)), " +
+"LINESTRING(-20037508 20037508, 20037508 20037508)" +
+")'::geometry as the_geom",
+            known_issue : "Mapnik uses multiple features. Postgis drops the line"
+        },
     ];
 
     GEOM_TESTS.forEach(test => {
