@@ -521,11 +521,14 @@ function mvt_cmp(tileData1, tileData2) {
         return;
     }
 
-    // Both should be valid
+    // Both should be equaly invalid
     let valid = vtile1.reportGeometryValiditySync();
-    assert.equal(valid.length, 0, "Mapnik: Found invalid geometries: " + JSON.stringify(valid));
-    valid = vtile2.reportGeometryValiditySync();
-    assert.equal(valid.length, 0, "Postgis: Found invalid geometries: " + JSON.stringify(valid));
+    let valid2 = vtile2.reportGeometryValiditySync();
+    if (valid && !valid2) {
+        assert.equal(valid.length, 0, "Mapnik: Found invalid geometries: " + JSON.stringify(valid));
+    } else if (!valid && valid2) {
+        assert.equal(valid2.length, 0, "Postgis: Found invalid geometries: " + JSON.stringify(valid));
+    }
 
     // Layer (number, name, size)
     const t1 = vtile1.toJSON();
@@ -874,6 +877,40 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508,20037508 20037508,20037508 0,0 0,0 20037508,-20037508 0,-20037508 20037508))" +
 "'::geometry as the_geom"
+        },
+        {
+            name: 'Multipolygon',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOLYGON(((-20037508 20037508, 0 20037508, 0 -20037508, -20037508 -20037508, -20037508 20037508)),"+
+"((10000 16037508, 16037508 16037508, 16037508 -16037508, 10000 -16037508, 10000 16037508)))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multipolygon (Intersect)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOLYGON(((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)),"+
+"((-16037508 16037508, 16037508 16037508, 16037508 -16037508, -16037508 -16037508, -16037508 16037508)))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Multipolygon (Tangent)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOLYGON(((-20037508 20037508, 0 20037508, 0 -20037508, -20037508 -20037508, -20037508 20037508)),"+
+"((0 16037508, 16037508 16037508, 16037508 -16037508, 0 -16037508, 0 16037508)))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik doesn't join them into one"
+        },
+        {
+            name: 'Multipolygon (Repeated)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"MULTIPOLYGON(((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)),"+
+"((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik doesn't remove the extra"
         },
     ];
 
