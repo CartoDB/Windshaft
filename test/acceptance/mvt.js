@@ -45,8 +45,6 @@ function mvtTest(usePostGIS) {
         });
     });
 
-    // Should work with custom geom column
-
     var multipleLayersMapConfig =  {
         version: '1.3.0',
         layers: [
