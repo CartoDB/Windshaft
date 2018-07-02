@@ -441,12 +441,15 @@ function mvtInteger(parameterInteger) {
 // Currently it just extracts the declared points of a geometry, without
 // considering at all its type (or the finishing point of a polygon)
 function mvtExtractComponents(geometry) {
-    let points = [ { x : 0, y : 0 }];
+    let points = [ { x : 0, y : 0 } ];
     let cmd_points = 0;
     for (let i = 0; i < geometry.length; i++) {
         if (cmd_points === 0) {
             // Read the next command and extract the number of points pending
-            if (geometry[i] === 15) continue; // Ignore ClosePath
+            if (geometry[i] === 15) {
+                // Ignore ClosePath
+                continue;
+            }
             cmd_points = geometry[i] >> 3;
         } else {
             cmd_points--;
@@ -520,9 +523,9 @@ function mvt_cmp(tileData1, tileData2) {
 
     // Both should be valid
     let valid = vtile1.reportGeometryValiditySync();
-    assert.equal(valid.length, 0, "Found invalid geometries: " + valid);
+    assert.equal(valid.length, 0, "Mapnik: Found invalid geometries: " + JSON.stringify(valid));
     valid = vtile2.reportGeometryValiditySync();
-    assert.equal(valid.length, 0, "Found invalid geometries: " + valid);
+    assert.equal(valid.length, 0, "Postgis: Found invalid geometries: " + JSON.stringify(valid));
 
     // Layer (number, name, size)
     const t1 = vtile1.toJSON();
@@ -800,6 +803,78 @@ function describe_compare_renderer() {
 "'::geometry as the_geom",
             known_issue : "Mapnik drops extra inner rings"
         },
+        {
+            name: 'Polygon (Duplicates drops to 3 points)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 -20037508, 20037508 -20037508, 20037508 -20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (Duplicates but still valid)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, 20037508 -20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (Simplify)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 0, 20000000 0, 19985435 -500, 20037508 -500, " +
+"20037508 -20037508,-20037508 -20037508,-20037508 20037508))" +
+"'::geometry as the_geom",
+            known_issue : "Postgis does not fully simplify the geometry"
+        },
+        {
+            name: 'Polygon (Join segments)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 0, 20037508 -20037508, " +
+"-20037508 -20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (Area equal to zero [Line])',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 4037508, -20037508 0,-20037508 -4037508, " +
+"-20037508 -20037508, -20037508 20037508))" +
+"'::geometry as the_geom",
+            known_issue : "Postgis does not fully simplify the geometry (should be empty)"
+        },
+        {
+            name: 'Polygon (Area equal to zero [Ext ring == Internal ring])',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508), " +
+"(-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508))" +
+"'::geometry as the_geom",
+            known_issue : "Postgis does not fully simplify the geometry (should be empty)"
+        },
+        {
+            name: 'Polygon (Area equal to zero [All points equal])',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, -20037508 20037508, -20037508 20037508, -20037508 20037508, " +
+"-20037508 20037508, -20037508 20037508))" +
+"'::geometry as the_geom"
+        },
+        {
+            name: 'Polygon (Self intersection)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((20037508 20037508, -20037508 -20037508, 20037508 -20037508, -20037508 20037508, 20037508 20037508))" +
+"'::geometry as the_geom",
+            known_issue : "Mapnik drops the geometry completely"
+        },
+        {
+            name: 'Polygon (Self tangency)',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508,20037508 20037508,20037508 0,0 0,0 20037508,-20037508 0,-20037508 20037508))" +
+"'::geometry as the_geom"
+        },
     ];
 
     GEOM_TESTS.forEach(test => {
@@ -828,8 +903,8 @@ function describe_compare_renderer() {
             testClientMapnik.getTile(z, x, y, options, function (err1, mapnikMVT) {
                 testClientPg_mvt.getTile(z, x, y, options, function (err2, pgMVT) {
                     if (err1 || err2) {
-                        assert.ok(err1);
-                        assert.ok(err2);
+                        assert.ok(err1, "Mapnik didn't fail. Postgis error: " + err1);
+                        assert.ok(err2, "Postgis didn't fail. Mapnik error: " + err1);
                         if (test.expected_error) {
                             assert.equal(err1, test.expected_error);
                             assert.equal(err2, test.expected_error);
