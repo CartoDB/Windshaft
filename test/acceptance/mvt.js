@@ -616,14 +616,12 @@ function describe_compare_renderer() {
 
             testClientMapnik.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err1, mapnikMVT) {
                 testClientPg_mvt.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err2, pgMVT) {
-                    if (err1 || err2) {
-                        assert.ok(err1);
-                        assert.ok(err2);
-                        if (test.expected_error) {
-                            assert.equal(err1, test.expected_error);
-                            assert.equal(err2, test.expected_error);
-                        }
+                    if (test.expectedError) {
+                        assert.equal(err1, test.expectedError);
+                        assert.equal(err2, test.expectedError);
                     } else {
+                        assert.ok(!err1, err1);
+                        assert.ok(!err2, err2);
                         mvt_cmp(mapnikMVT, pgMVT);
                     }
 
@@ -633,12 +631,14 @@ function describe_compare_renderer() {
         });
     });
 
+    const emptyTileError = "Error: Tile does not exist";
+
     const GEOM_TESTS = [
 
         {
             name: 'Null geometry',
             sql: "SELECT 2 AS cartodb_id, null as the_geom",
-            expected_error : "Error: Tile does not exist"
+            expectedError : emptyTileError
         },
         {
             name: 'Empty tile',
@@ -646,7 +646,8 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POINT(-293823 5022065)" +
-"'::geometry as the_geom"
+"'::geometry as the_geom",
+            expectedError : emptyTileError
         },
         {
             name: 'Point',
@@ -675,7 +676,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik doesn't remove non consecutive points"
+            knownIssue : "Mapnik doesn't remove non consecutive points"
         },
         {
             name: 'Linestring',
@@ -689,7 +690,8 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(-293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom"
+"'::geometry as the_geom",
+            expectedError : emptyTileError
         },
         {
             name: 'Linestring (repeated points)',
@@ -704,7 +706,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 10037508, 0 -10037508, 0 -20037508)" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik doesn't do it"
+            knownIssue : "Mapnik doesn't do it"
         },
         {
             name: 'Linestring (join segments)',
@@ -712,7 +714,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 -20037508)" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik doesn't do it"
+            knownIssue : "Mapnik doesn't do it"
         },
         {
             name: 'Multilinestring',
@@ -791,7 +793,7 @@ function describe_compare_renderer() {
 "(-16037508 16037508, 16037508 16037508, 16037508 -16037508, -16037508 -16037508, -16037508 16037508)," +
 "(-14037508 14037508, 14037508 14037508, 14037508 -14037508, -14037508 -14037508, -14037508 14037508))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik drops extra inner rings"
+            knownIssue : "Mapnik drops extra inner rings"
         },
         {
             name: 'Polygon (CCW - CCW - CCW - CCW)',
@@ -802,14 +804,15 @@ function describe_compare_renderer() {
 "(-16037508 16037508, -16037508 -16037508, 16037508 -16037508, 16037508 16037508, -16037508 16037508)," +
 "(-14037508 14037508, -14037508 -14037508, 14037508 -14037508, 14037508 14037508, -14037508 14037508))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik drops extra inner rings"
+            knownIssue : "Mapnik drops extra inner rings"
         },
         {
             name: 'Polygon (Duplicates drops to 3 points)',
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, 20037508 -20037508, 20037508 -20037508, 20037508 -20037508, -20037508 20037508))" +
-"'::geometry as the_geom"
+"'::geometry as the_geom",
+            expectedError : emptyTileError
         },
         {
             name: 'Polygon (Duplicates but still valid)',
@@ -825,7 +828,7 @@ function describe_compare_renderer() {
 "POLYGON((-20037508 20037508, 20037508 20037508, 20037508 0, 20000000 0, 19985435 -500, 20037508 -500, " +
 "20037508 -20037508,-20037508 -20037508,-20037508 20037508))" +
 "'::geometry as the_geom",
-            known_issue : "Postgis does not fully simplify the geometry"
+            knownIssue : "Postgis does not fully simplify the geometry"
         },
         {
             name: 'Polygon (Join segments)',
@@ -842,7 +845,7 @@ function describe_compare_renderer() {
 "POLYGON((-20037508 20037508, -20037508 4037508, -20037508 0,-20037508 -4037508, " +
 "-20037508 -20037508, -20037508 20037508))" +
 "'::geometry as the_geom",
-            known_issue : "Postgis does not fully simplify the geometry (should be empty)"
+            knownIssue : "Postgis does not fully simplify the geometry (should be empty)"
         },
         {
             name: 'Polygon (Area equal to zero [Ext ring == Internal ring])',
@@ -851,7 +854,7 @@ function describe_compare_renderer() {
 "POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508), " +
 "(-20037508 20037508, -20037508 -20037508, 20037508 -20037508, 20037508 20037508, -20037508 20037508))" +
 "'::geometry as the_geom",
-            known_issue : "Postgis does not fully simplify the geometry (should be empty)"
+            knownIssue : "Postgis does not fully simplify the geometry (should be empty)"
         },
         {
             name: 'Polygon (Area equal to zero [All points equal])',
@@ -859,7 +862,8 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, -20037508 20037508, -20037508 20037508, -20037508 20037508, " +
 "-20037508 20037508, -20037508 20037508))" +
-"'::geometry as the_geom"
+"'::geometry as the_geom",
+            expectedError : emptyTileError
         },
         {
             name: 'Polygon (Self intersection)',
@@ -867,7 +871,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((20037508 20037508, -20037508 -20037508, 20037508 -20037508, -20037508 20037508, 20037508 20037508))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik drops the geometry completely"
+            knownIssue : "Mapnik drops the geometry completely"
         },
         {
             name: 'Polygon (Self tangency)',
@@ -899,7 +903,7 @@ function describe_compare_renderer() {
 "MULTIPOLYGON(((-20037508 20037508, 0 20037508, 0 -20037508, -20037508 -20037508, -20037508 20037508)),"+
 "((0 16037508, 16037508 16037508, 16037508 -16037508, 0 -16037508, 0 16037508)))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik doesn't join them into one"
+            knownIssue : "Mapnik doesn't join them into one"
         },
         {
             name: 'Multipolygon (Repeated)',
@@ -908,7 +912,7 @@ function describe_compare_renderer() {
 "MULTIPOLYGON(((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)),"+
 "((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik doesn't remove the extra"
+            knownIssue : "Mapnik doesn't remove the extra"
         },
         {
             name: 'Geometrycollection (Homogeneous)',
@@ -916,7 +920,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "GEOMETRYCOLLECTION(POINT(-14037508 14037508), POINT(-20037508 20037508))" +
 "'::geometry as the_geom",
-            known_issue : "Mapnik uses multiple features. Postgis casts it to multipoint"
+            knownIssue : "Mapnik uses multiple features. Postgis casts it to multipoint"
         },
         {
             name: 'Geometrycollection (Heterogeneous)',
@@ -925,12 +929,12 @@ function describe_compare_renderer() {
 "POLYGON((-14037508 14037508, 14037508 14037508, 14037508 -14037508, -14037508 -14037508, -14037508 14037508)), " +
 "LINESTRING(-20037508 20037508, 20037508 20037508)" +
 ")'::geometry as the_geom",
-            known_issue : "Mapnik uses multiple features. Postgis drops the line"
+            knownIssue : "Mapnik uses multiple features. Postgis drops the line"
         },
     ];
 
     GEOM_TESTS.forEach(test => {
-        (test.known_issue ? it.skip : it)(test.name, function (done) {
+        (test.knownIssue ? it.skip : it)(test.name, function (done) {
             const mapConfig = {
                 version: '1.7.0',
                 layers: [
@@ -954,14 +958,12 @@ function describe_compare_renderer() {
 
             testClientMapnik.getTile(z, x, y, options, function (err1, mapnikMVT) {
                 testClientPg_mvt.getTile(z, x, y, options, function (err2, pgMVT) {
-                    if (err1 || err2) {
-                        assert.ok(err1, "Mapnik didn't fail. Postgis error: " + err1);
-                        assert.ok(err2, "Postgis didn't fail. Mapnik error: " + err1);
-                        if (test.expected_error) {
-                            assert.equal(err1, test.expected_error);
-                            assert.equal(err2, test.expected_error);
-                        }
+                    if (test.expectedError) {
+                        assert.equal(err1, test.expectedError);
+                        assert.equal(err2, test.expectedError);
                     } else {
+                        assert.ok(!err1, err1);
+                        assert.ok(!err2, err2);
                         mvt_cmp(mapnikMVT, pgMVT);
                     }
 
