@@ -12,6 +12,17 @@ describe_pg('Compare mvt renderers', () => { describe_compare_renderer(); });
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
+    it('Error with table that does not exist', function (done) {
+        var mapConfig = TestClient.singleLayerMapConfig('select * from this_table_does_not_exist', null, null, 'name');
+        var testClient = new TestClient(mapConfig, options);
+
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err) {
+            assert.ok(err);
+            assert.ok(err.toString().match('(.*)"this_table_does_not_exist" does not exist(.*)'));
+            done();
+        });
+    });
+
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig, options);
