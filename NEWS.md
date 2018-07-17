@@ -3,6 +3,7 @@
 
 Announcements:
  - Add `.npmignore` to reduce size of npm package.
+ - Validate buffer-size in map-config model #637
 
 
 # Version 4.8.1
