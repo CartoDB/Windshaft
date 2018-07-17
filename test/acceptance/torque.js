@@ -81,8 +81,8 @@ describe('torque', function() {
         version: '1.1.0',
         layers: [
             { type: 'torque', options: {
-                sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
-                    "'1970-01-01'::date, 'POINT(1 1)'::geometry",
+                sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION ALL " +
+                     "select 2, '1970-01-01'::date, 'POINT(1 1)'::geometry",
                 geom_column: 'the_geom',
                 cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
                     '-torque-aggregation-function:\'count(id)\'; }',
@@ -194,7 +194,7 @@ describe('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, '1970-01-03'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
+               sql: "select 1 as id, '1970-01-03'::date as d, 'POINT(0 0)'::geometry as the_geom UNION ALL select 2, " +
                    "'1970-01-01'::date, 'POINT(1 1)'::geometry",
                geom_column: 'the_geom',
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
