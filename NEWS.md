@@ -1,5 +1,5 @@
 # Version 4.8.2
-2018-XX-XX
+2018-07-17
 
 Announcements:
  - Add `.npmignore` to reduce size of npm package.
