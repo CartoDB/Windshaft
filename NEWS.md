@@ -1,3 +1,9 @@
+# Version 4.8.3
+2018-07-19
+
+Announcements:
+ - Validation of attributes is omitteed when sql_raw is used #643
+
 # Version 4.8.2
 2018-07-17
 
