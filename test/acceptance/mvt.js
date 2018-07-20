@@ -475,6 +475,12 @@ function mvtExtractComponents(geometry) {
     });
 }
 
+// Compares (with a tolerance of +- 1) an array of points
+function mvtPointArray_cmp(arr1, arr2) {
+    arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1));
+    assert.equal(arr1.length, 0, "Items not found in Mapnik's: " + JSON.stringify(arr1));
+}
+
 // Check if 2 MVT features are equivalent
 // Does not compare feature.id since it's optional (Mapnik sets it, St_AsMVT doesn't)
 function mvtFeature_cmp(feature1, feature2) {
@@ -486,8 +492,8 @@ function mvtFeature_cmp(feature1, feature2) {
                 " feature has a geometry made of more points");
     const f1_points = mvtExtractComponents(feature1.geometry);
     const f2_points = mvtExtractComponents(feature2.geometry);
-    //TODO: Accept small variances (related to rounding)
-    assert.deepEqual(f1_points, f2_points);
+
+    mvtPointArray_cmp(f1_points, f2_points);
 }
 
 // Check if 2 MVT layers are equivalent
@@ -687,7 +693,6 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
 "'::geometry as the_geom",
-            knownIssue : "Mapnik doesn't remove non consecutive points"
         },
         {
             name: 'Linestring',
@@ -717,7 +722,6 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 10037508, 0 -10037508, 0 -20037508)" +
 "'::geometry as the_geom",
-            knownIssue : "Mapnik doesn't do it"
         },
         {
             name: 'Linestring (join segments)',
@@ -725,7 +729,6 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 -20037508)" +
 "'::geometry as the_geom",
-            knownIssue : "Mapnik doesn't do it"
         },
         {
             name: 'Multilinestring',
@@ -938,7 +941,7 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;GEOMETRYCOLLECTION(" +
 "POLYGON((-14037508 14037508, 14037508 14037508, 14037508 -14037508, -14037508 -14037508, -14037508 14037508)), " +
-"LINESTRING(-20037508 20037508, 20037508 20037508)" +
+"LINESTRING(-20037508 20037508, 20037508 20037508), POINT(0 0)" +
 ")'::geometry as the_geom",
             knownIssue : "Mapnik uses multiple features. Postgis drops the line"
         },
