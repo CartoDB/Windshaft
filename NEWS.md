@@ -1,8 +1,15 @@
-# Version 4.8.2
-2018-XX-XX
+# Version 4.8.3
+2018-07-19
 
 Announcements:
- -
+ - Validation of attributes is omitteed when sql_raw is used #643
+
+# Version 4.8.2
+2018-07-17
+
+Announcements:
+ - Add `.npmignore` to reduce size of npm package.
+ - Validate buffer-size in map-config model #637
 
 
 # Version 4.8.1
