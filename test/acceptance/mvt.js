@@ -1,8 +1,8 @@
 require('../support/test_helper');
 
-var assert = require('../support/assert');
-var TestClient = require('../support/test_client');
-var mapnik = require('@carto/mapnik');
+const assert = require('../support/assert');
+const TestClient = require('../support/test_client');
+const mapnik = require('@carto/mapnik');
 
 const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
 
@@ -692,7 +692,7 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "MULTIPOINT(-293823 5022065, 3374847 8386059, -293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom",
+"'::geometry as the_geom"
         },
         {
             name: 'Linestring',
@@ -721,14 +721,14 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 10037508, 0 -10037508, 0 -20037508)" +
-"'::geometry as the_geom",
+"'::geometry as the_geom"
         },
         {
             name: 'Linestring (join segments)',
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 -20037508)" +
-"'::geometry as the_geom",
+"'::geometry as the_geom"
         },
         {
             name: 'Multilinestring',
