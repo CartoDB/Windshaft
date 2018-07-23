@@ -1,3 +1,11 @@
+# Version 4.8.4
+2018-XX-XX
+
+Announcements:
+- pg-mvt renderer: Match current Mapnik behaviour (Filter column with known types, same default buffer size, accept geom_column ifferent than `the_geom_webmercator`).
+- pg-mvt renderer: Remove undocummented filtering by `layer.options.columns`.
+- MVT tests: Compare outputs from Mapnik and pg-mvt renderers.
+
 # Version 4.8.3
 2018-07-19
 
