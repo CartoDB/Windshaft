@@ -23,6 +23,29 @@ function mvtTest(usePostGIS) {
         });
     });
 
+
+    it('Works with columns with spaces', function (done) {
+        const sql = 'SELECT 1 AS "cartodb id", ' +
+                            "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom";
+        const mapConfig = TestClient.singleLayerMapConfig(sql, null, null, 'name');
+        mapConfig.layers[0].options.geom_column = 'the_geom';
+        mapConfig.layers[0].options.srid = 3857;
+
+        this.testClient = new TestClient(mapConfig, options);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+            assert.ok(!err, err);
+
+            const vtile = new mapnik.VectorTile(0, 0, 0);
+            vtile.setData(mvtTile);
+            const result = vtile.toJSON();
+
+            assert.equal(result[0].features.length, 1);
+            assert.strictEqual(result[0].features[0].properties["cartodb id"], 1);
+
+            done();
+        });
+    });
+
     it('single layer', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig, options);
