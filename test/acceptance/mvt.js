@@ -397,7 +397,7 @@ function mvtTest(usePostGIS) {
 
     describe('respects data types', function () {
 
-        var SQL = [
+        const SQL = [
             {   name    : "[bool, int]",
                 sql     : "SELECT 1 AS cartodb_id, ST_SetSRID(ST_MakePoint(-71.10434, 42.315),4326)" +
                             " AS the_geom, FALSE as status2, 0 as data"
@@ -414,6 +414,7 @@ function mvtTest(usePostGIS) {
                 {
                     type: 'cartodb',
                     options: {
+                        geom_column: 'the_geom',
                     }
                 }
             ]
@@ -422,15 +423,15 @@ function mvtTest(usePostGIS) {
         SQL.forEach(function(tuple){
             it('bool and int iteration ' + tuple.name, function (done) {
                 mapConfig.layers[0].options.sql = tuple.sql;
-                this.testClient = new TestClient(mapConfig);
+                this.testClient = new TestClient(mapConfig, options);
                 this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-                    assert.ok(!err);
+                    assert.ok(!err, err);
 
-                    var vtile = new mapnik.VectorTile(0, 0, 0);
+                    const vtile = new mapnik.VectorTile(0, 0, 0);
                     vtile.setData(mvtTile);
-                    var result = vtile.toJSON();
+                    const result = vtile.toJSON();
 
-                    var layer0 = result[0];
+                    const layer0 = result[0];
                     assert.equal(layer0.features.length, 1);
                     assert.strictEqual(layer0.features[0].properties.status2, false);
                     assert.strictEqual(layer0.features[0].properties.data, 0);
