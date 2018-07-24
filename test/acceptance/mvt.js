@@ -13,8 +13,9 @@ describe_pg('Compare mvt renderers', () => { describe_compare_renderer(); });
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
     it('Error with table that does not exist', function (done) {
-        var mapConfig = TestClient.singleLayerMapConfig('select * from this_table_does_not_exist', null, null, 'name');
-        var testClient = new TestClient(mapConfig, options);
+        const sql = 'select * from this_table_does_not_exist';
+        const mapConfig = TestClient.singleLayerMapConfig(sql, null, null, 'name');
+        const testClient = new TestClient(mapConfig, options);
 
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err) {
             assert.ok(err);
@@ -47,27 +48,27 @@ function mvtTest(usePostGIS) {
     });
 
     it('single layer', function (done) {
-        var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
-        var testClient = new TestClient(mapConfig, options);
+        const mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+        const testClient = new TestClient(mapConfig, options);
 
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
             assert.ifError(err);
 
-            var vectorTile = new mapnik.VectorTile(13, 4011, 3088);
+            const vectorTile = new mapnik.VectorTile(13, 4011, 3088);
 
             vectorTile.setData(mvtTile);
             assert.equal(vectorTile.painted(), true);
             assert.equal(vectorTile.empty(), false);
 
-            var result = vectorTile.toJSON();
+            const result = vectorTile.toJSON();
             assert.equal(result.length, 1);
 
-            var layer0 = result[0];
+            const layer0 = result[0];
             assert.equal(layer0.name, 'layer0');
             assert.equal(layer0.features.length, 5);
 
-            var expectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
-            var names = layer0.features.map(function (f) {
+            const expectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
+            const names = layer0.features.map(function (f) {
                 return f.properties.name;
             });
             assert.deepEqual(names, expectedNames);
@@ -79,7 +80,7 @@ function mvtTest(usePostGIS) {
         });
     });
 
-    var multipleLayersMapConfig =  {
+    const multipleLayersMapConfig =  {
         version: '1.3.0',
         layers: [
             {
@@ -103,7 +104,7 @@ function mvtTest(usePostGIS) {
         ]
     };
 
-    var mixedLayersMapConfig =  {
+    const mixedLayersMapConfig =  {
         version: '1.3.0',
         layers: [
             {
@@ -153,27 +154,27 @@ function mvtTest(usePostGIS) {
         return function (err, mvtTile) {
             assert.ok(!err, err);
 
-            var vtile = new mapnik.VectorTile(13, 4011, 3088);
+            const vtile = new mapnik.VectorTile(13, 4011, 3088);
             vtile.setData(mvtTile);
             assert.equal(vtile.painted(), true);
             assert.equal(vtile.empty(), false);
 
-            var result = vtile.toJSON();
+            const result = vtile.toJSON();
             assert.equal(result.length, 2);
 
-            var layer0 = result[0];
+            const layer0 = result[0];
             assert.equal(layer0.name, 'layer0');
             assert.equal(layer0.features.length, 2);
 
-            var layer1 = result[1];
+            const layer1 = result[1];
             assert.equal(layer1.name, 'layer1');
             assert.equal(layer1.features.length, 3);
 
-            var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
+            const layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
             assert.deepEqual(layer0.features.map(function (f) {
                 return f.properties.name;
             }), layer0ExpectedNames);
-            var layer1ExpectedNames = ['El Rey del Tallarín', 'El Lacón', 'El Pico'];
+            const layer1ExpectedNames = ['El Rey del Tallarín', 'El Lacón', 'El Pico'];
             assert.deepEqual(layer1.features.map(function (f) {
                 return f.properties.name;
             }), layer1ExpectedNames);
@@ -188,24 +189,24 @@ function mvtTest(usePostGIS) {
     }
 
     it('multiple layers', function(done) {
-        var testClient = new TestClient(multipleLayersMapConfig, options);
+        const testClient = new TestClient(multipleLayersMapConfig, options);
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
     });
 
     it('multiple layers do not specify `mapnik` as layer, use undefined', function(done) {
-        var testClient = new TestClient(multipleLayersMapConfig, options);
+        const testClient = new TestClient(multipleLayersMapConfig, options);
         testClient.getTile(13, 4011, 3088, { layer: undefined, format: 'mvt'}, multipleLayersValidation(done));
     });
 
     describe('multiple layers with other types', function() {
 
         it('happy case', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig, options);
+            const testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, multipleLayersValidation(done));
         });
 
         it('invalid mvt layer', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig, options);
+            const testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 0, format: 'mvt'}, function(err) {
                 assert.ok(err);
                 assert.equal(err.message, 'Unsupported format mvt');
@@ -214,24 +215,24 @@ function mvtTest(usePostGIS) {
         });
 
         it('select one layer', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig, options);
+            const testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
-                var vtile = new mapnik.VectorTile(13, 4011, 3088);
+                const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
                 assert.equal(vtile.painted(), true);
                 assert.equal(vtile.empty(), false);
 
-                var result = vtile.toJSON();
+                const result = vtile.toJSON();
                 assert.equal(result.length, 1);
 
-                var layer0 = result[0];
+                const layer0 = result[0];
                 assert.equal(layer0.name, 'layer0');
                 assert.equal(layer0.features.length, 2);
 
-                var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
-                var names = layer0.features.map(function (f) { return f.properties.name; });
+                const layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
+                const names = layer0.features.map(function (f) { return f.properties.name; });
                 assert.deepEqual(names, layer0ExpectedNames);
 
                 assert.ok(layer0.features.every(feature => Object.keys(feature.properties).length === 3),
@@ -242,12 +243,12 @@ function mvtTest(usePostGIS) {
         });
 
         it('select multiple mapnik layers', function(done) {
-            var testClient = new TestClient(mixedLayersMapConfig, options);
+            const testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: '1,2', format: 'mvt'}, multipleLayersValidation(done));
         });
 
         it('filter some mapnik layers', function(done) {
-            var mapConfig =  {
+            const mapConfig =  {
                 version: '1.3.0',
                 layers: [
                     {
@@ -285,32 +286,32 @@ function mvtTest(usePostGIS) {
                     }
                 ]
             };
-            var testClient = new TestClient(mapConfig, options);
+            const testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
-                var vtile = new mapnik.VectorTile(13, 4011, 3088);
+                const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
                 assert.equal(vtile.painted(), true);
                 assert.equal(vtile.empty(), false);
 
-                var result = vtile.toJSON();
+                const result = vtile.toJSON();
                 assert.equal(result.length, 2);
 
-                var layer0 = result[0];
+                const layer0 = result[0];
                 assert.equal(layer0.name, 'layer0');
                 assert.equal(layer0.features.length, 2);
 
-                var layer1 = result[1];
+                const layer1 = result[1];
                 assert.equal(layer1.name, 'layer2');
                 assert.equal(layer1.features.length, 5);
 
-                var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
+                const layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
                 assert.deepEqual(layer0.features.map(function (f) {
                     return f.properties.name;
                 }), layer0ExpectedNames);
 
-                var layer1ExpectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
+                const layer1ExpectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
                 assert.deepEqual(layer1.features.map(function (f) {
                     return f.properties.name;
                 }), layer1ExpectedNames);
@@ -327,7 +328,7 @@ function mvtTest(usePostGIS) {
         //TODO test token substitution
 
         it('should be able to access layer names by layer id', function(done) {
-            var mapConfig = {
+            const mapConfig = {
                 version: '1.3.0',
                 layers: [
                     {
@@ -367,41 +368,41 @@ function mvtTest(usePostGIS) {
                     }
                 ]
             };
-            var testClient = new TestClient(mapConfig, options);
+            const testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
                 assert.ok(!err, err);
 
-                var vtile = new mapnik.VectorTile(13, 4011, 3088);
+                const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
                 assert.equal(vtile.painted(), true);
                 assert.equal(vtile.empty(), false);
 
-                var result = vtile.toJSON();
+                const result = vtile.toJSON();
                 assert.equal(result.length, 3);
 
-                var layer0 = result[0];
+                const layer0 = result[0];
                 assert.equal(layer0.name, 'test-name');
                 assert.equal(layer0.features.length, 2);
 
-                var layer1 = result[1];
+                const layer1 = result[1];
                 assert.equal(layer1.name, 'layer1');
                 assert.equal(layer1.features.length, 3);
 
-                var layer2 = result[2];
+                const layer2 = result[2];
                 assert.equal(layer2.name, 'test-name-top');
                 assert.equal(layer2.features.length, 5);
 
-                var layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
+                const layer0ExpectedNames = ['Hawai', 'El Estocolmo'];
                 assert.deepEqual(layer0.features.map(function (f) {
                     return f.properties.name;
                 }), layer0ExpectedNames);
 
-                var layer1ExpectedNames = ['El Rey del Tallarín', 'El Lacón', 'El Pico'];
+                const layer1ExpectedNames = ['El Rey del Tallarín', 'El Lacón', 'El Pico'];
                 assert.deepEqual(layer1.features.map(function (f) {
                     return f.properties.name;
                 }), layer1ExpectedNames);
 
-                var layer2ExpectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
+                const layer2ExpectedNames = ['Hawai', 'El Estocolmo', 'El Rey del Tallarín', 'El Lacón', 'El Pico'];
                 assert.deepEqual(layer2.features.map(function (f) {
                     return f.properties.name;
                 }), layer2ExpectedNames);
