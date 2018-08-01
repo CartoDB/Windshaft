@@ -14,7 +14,7 @@ function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
     it('Error with table that does not exist', function (done) {
         const sql = 'select * from this_table_does_not_exist';
-        const mapConfig = TestClient.singleLayerMapConfig(sql, null, null, 'name');
+        const mapConfig = TestClient.mvtLayerMapConfig(sql, null, null, 'name');
         const testClient = new TestClient(mapConfig, options);
 
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err) {
@@ -24,11 +24,10 @@ function mvtTest(usePostGIS) {
         });
     });
 
-
     it('Works with columns with spaces', function (done) {
         const sql = 'SELECT 1 AS "cartodb id", ' +
                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom";
-        const mapConfig = TestClient.singleLayerMapConfig(sql, null, null, 'name');
+        const mapConfig = TestClient.mvtLayerMapConfig(sql, null, null, 'name');
         mapConfig.layers[0].options.geom_column = 'the_geom';
         mapConfig.layers[0].options.srid = 3857;
 
@@ -47,8 +46,34 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    [256, 666, 1024, 2222, 4096, 10000, 4096 * Math.pow(2,18)]
+    .forEach(size => {
+        it('Works with vector_layer_extent '+ size, function (done) {
+            const sql = 'SELECT ' + size + ' AS "cartodb_id", ' +
+                                "'SRID=3857;LINESTRING(-293823 5022065, 3374847 8386059)'::geometry as the_geom";
+            const mapConfig = TestClient.mvtLayerMapConfig(sql, null, null, 'name');
+            mapConfig.layers[0].options.geom_column = 'the_geom';
+            mapConfig.layers[0].options.srid = 3857;
+            const extent_options = JSON.parse(JSON.stringify(options));
+            extent_options.mvt.vector_layer_extent = size;
+            this.testClient = new TestClient(mapConfig, extent_options);
+            this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+                assert.ok(!err, err);
+
+                const vtile = new mapnik.VectorTile(0, 0, 0);
+                vtile.setData(mvtTile);
+                const result = vtile.toJSON();
+                assert.equal(result[0].extent, size);
+                assert.equal(result[0].features.length, 1);
+                assert.equal(result[0].features[0].properties.cartodb_id, size);
+
+                done();
+            });
+        });
+    });
+
     it('single layer', function (done) {
-        const mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+        const mapConfig = TestClient.mvtLayerMapConfig('select * from test_table', null, null, 'name');
         const testClient = new TestClient(mapConfig, options);
 
         testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
@@ -625,19 +650,13 @@ function describe_compare_renderer() {
                     {
                         type: 'mapnik',
                         options: {
-                            sql: 'select * from test_table limit 2',
-                            cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0',
-                            interactivity: ['name']
+                            sql: 'select * from test_table limit 2'
                         }
                     },
                     {
                         type: 'mapnik',
                         options: {
-                            sql: 'select * from test_table limit 3 offset 2',
-                            cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.3.0',
-                            interactivity: ['name']
+                            sql: 'select * from test_table limit 3 offset 2'
                         }
                     }
                 ]
@@ -665,13 +684,13 @@ function describe_compare_renderer() {
 
             const mapnikOptions = {
                 mvt : {
-                    usePostGIS: true,
+                    usePostGIS: false
                 }
             };
 
             const pgOptions = {
                 mvt : {
-                    usePostGIS: false
+                    usePostGIS: true
                 }
             };
 
@@ -1026,6 +1045,62 @@ function describe_compare_renderer() {
 "-189821.934801087 4985133.08649598," +"-189818.054529627 4985129.07872948," +"-189816.829604027 4985127.43227191))" +
 "'::geometry as the_geom, 61374 as cartodb_id",
             knownIssue : "Mapnik uses a different formula for simplification to adapt to TWKB grid"
+        },
+        {
+            name: 'Polygon - Extent 256',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
+"(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
+"'::geometry as the_geom",
+            vector_layer_extent : 256
+        },
+        {
+            name: 'Polygon - Extent 1024',
+            sql:
+"SELECT 2 AS cartodb_id, 'SRID=3857;" +
+"POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
+"(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
+"'::geometry as the_geom",
+            vector_layer_extent : 1024
+        },
+        {
+            name: 'One tile optimization',
+            sql:
+"SELECT '" +
+"MULTILINESTRING((" +
+"-190773.334640355 4986284.45337084,-190771.715102263 4986283.13231332,-190767.939953676 4986279.09976568," +
+"-190762.461517777 4986272.72137811,-190755.771292106 4986264.34694711,-190748.375244109 4986254.32065266," +
+"-190740.790896642 4986242.98167782,-190733.853135184 4986231.4256399,-190720.318376913 4986207.76231744," +
+"-190712.971208273 4986196.06033632,-190705.795179 4986185.53747932,-190685.851007018 4986158.32430334," +
+"-190679.465900889 4986149.2249286,-190673.472775019 4986139.96887625,-190668.055663137 4986130.48253339," +
+"-190663.559676438 4986121.29441797,-190655.051739436 4986102.72286473,-190650.094263293 4986093.04972464," +
+"-190639.653328894 4986073.90945103,-190634.658500513 4986064.24704415,-190625.930623411 4986045.74733144," +
+"-190621.229877404 4986036.62926981,-190614.851744666 4986026.21528448,-190607.690668732 4986016.11136282," +
+"-190599.952715869 4986006.23573456,-190591.795080852 4985996.52671364,-190574.662389955 4985977.44101632," +
+"-190547.894016291 4985949.32535537,-190520.512672672 4985921.83007923,-190501.924504294 4985904.18901056," +
+"-190492.468589953 4985895.74844397,-190482.852549151 4985887.68806805,-190473.020599439 4985880.13930275," +
+"-190462.900445826 4985873.2704264,-190436.304658346 4985857.76559638,-190426.200511031 4985850.88871842," +
+"-190416.392964168 4985843.32862396,-190406.808662836 4985835.25397645,-190397.390761974 4985826.79671236," +
+"-190388.09460054 4985818.05900047,-190369.741374494 4985800.03467653,-190333.474428502 4985762.96822981," +
+"-190188.759592077 4985613.45168872,-190170.873503461 4985594.70522849,-190153.379002083 4985575.80476361," +
+"-190144.89665405 4985566.24933463,-190136.688362864 4985556.58493602,-190128.856763244 4985546.7705535," +
+"-190121.535824516 4985536.75265148,-190114.897621642 4985526.46249081,-190100.017557678 4985499.46310066," +
+"-190093.537394287 4985489.34411495,-190086.428304963 4985479.4755338,-190078.876708329 4985469.78273236," +
+"-190055.130698237 4985441.1340689,-190047.343688138 4985431.53081291,-190039.889969018 4985421.79349919," +
+"-190032.970036454 4985411.84148826,-190026.83071188 4985401.5764096,-190021.778965938 4985390.87560875," +
+"-190018.13553587 4985379.96392709,-190015.472801189 4985368.65880427,-190013.439308376 4985357.1006577," +
+"-190010.030958944 4985333.71656641,-190008.066177675 4985322.12727935,-190005.506964234 4985310.77645019," +
+"-190001.983245204 4985299.8145511,-189997.041174914 4985289.07492709,-189990.966332379 4985278.80388664," +
+"-189984.035517174 4985268.90204282,-189976.459197029 4985259.30175488,-189968.392498125 4985249.96477327," +
+"-189959.944860073 4985240.88092489,-189951.186082965 4985232.06979251,-189942.15209488 4985223.58344988," +
+"-189932.845774305 4985215.51336376,-189923.238834072 4985207.99691413,-189913.09178484 4985201.09176465," +
+"-189891.804256594 4985188.42835604,-189880.25687236 4985181.21490215,-189868.124789728 4985172.73613682," +
+"-189856.496116557 4985163.78358654,-189845.714632381 4985154.8544578,-189836.125895049 4985146.44147802," +
+"-189821.934801087 4985133.08649598," +"-189818.054529627 4985129.07872948," +"-189816.829604027 4985127.43227191))" +
+"'::geometry as the_geom, 61374 as cartodb_id",
+            tile : { z : 0, x: 0, y: 0 },
+            vector_layer_extent : 4096 * Math.pow(2, 18)
         }
     ];
 
@@ -1047,7 +1122,8 @@ function describe_compare_renderer() {
 
             const mapnikOptions = {
                 mvt: {
-                    usePostGIS: false
+                    usePostGIS: false,
+                    vector_layer_extent : test.vector_layer_extent || 4096
                 },
                 mapnik: { grainstore : { datasource : {
                     "row_limit":0,
@@ -1061,7 +1137,8 @@ function describe_compare_renderer() {
 
             const pgOptions = {
                 mvt : {
-                    usePostGIS: true
+                    usePostGIS: true,
+                    vector_layer_extent : test.vector_layer_extent || 4096
                 }
             };
 
