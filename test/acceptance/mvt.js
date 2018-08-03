@@ -500,9 +500,9 @@ function mvtExtractComponents(geometry) {
     });
 }
 
-// Compares (with a tolerance of +- 1) an array of points
+// Compares (with a tolerance of +- 2) an array of points
 function mvtPointArray_cmp(arr1, arr2) {
-    arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1));
+    arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 2));
     assert.equal(arr1.length, 0, "Items not found in Mapnik's: " + JSON.stringify(arr1));
 }
 
@@ -652,18 +652,32 @@ function describe_compare_renderer() {
     LAYER_TESTS.forEach(test => {
         it(test.name, function (done) {
 
-            const testClientMapnik = new TestClient(test.mapConfig, { mvt: { usePostGIS: false } });
-            const testClientPg_mvt = new TestClient(test.mapConfig, { mvt: { usePostGIS: true } });
-            const options = { format : 'mvt' };
+            const mapnikOptions = {
+                mvt : {
+                    usePostGIS: true,
+                }
+            };
 
-            testClientMapnik.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err1, mapnikMVT) {
-                testClientPg_mvt.getTile(test.tile.z, test.tile.x, test.tile.y, options, function (err2, pgMVT) {
-                    if (test.expectedError) {
-                        assert.equal(err1, test.expectedError);
-                        assert.equal(err2, test.expectedError);
-                    } else {
-                        assert.ok(!err1, err1);
-                        assert.ok(!err2, err2);
+            const pgOptions = {
+                mvt : {
+                    usePostGIS: false
+                }
+            };
+
+            const testClientMapnik = new TestClient(test.mapConfig, mapnikOptions);
+            const testClientPg_mvt = new TestClient(test.mapConfig, pgOptions);
+
+            const tileOptions = { format : 'mvt' };
+            const z = test.tile && test.tile.z ? test.tile.z : 0;
+            const x = test.tile && test.tile.x ? test.tile.x : 0;
+            const y = test.tile && test.tile.y ? test.tile.y : 0;
+
+            testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
+                testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
+                    assert.ok(!err1, err1);
+                    assert.ok(!err2, err2);
+                    assert.deepEqual(mheaders, pheaders);
+                    if (mheaders['x-tilelive-contains-data']) {
                         mvt_cmp(mapnikMVT, pgMVT);
                     }
 
@@ -673,14 +687,11 @@ function describe_compare_renderer() {
         });
     });
 
-    const emptyTileError = "Error: Tile does not exist";
 
     const GEOM_TESTS = [
-
         {
             name: 'Null geometry',
-            sql: "SELECT 2 AS cartodb_id, null as the_geom",
-            expectedError : emptyTileError
+            sql: "SELECT 2 AS cartodb_id, null as the_geom"
         },
         {
             name: 'Empty tile',
@@ -688,8 +699,7 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POINT(-293823 5022065)" +
-"'::geometry as the_geom",
-            expectedError : emptyTileError
+"'::geometry as the_geom"
         },
         {
             name: 'Point',
@@ -731,8 +741,7 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(-293823 5022065, -293823 5022065)" +
-"'::geometry as the_geom",
-            expectedError : emptyTileError
+"'::geometry as the_geom"
         },
         {
             name: 'Linestring (repeated points)',
@@ -746,7 +755,8 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "LINESTRING(0 20037508, 0 0, 0 10037508, 0 -10037508, 0 -20037508)" +
-"'::geometry as the_geom"
+"'::geometry as the_geom",
+            tile : { z : 12, x: 12, y: 12 },
         },
         {
             name: 'Linestring (join segments)',
@@ -850,8 +860,7 @@ function describe_compare_renderer() {
             sql:
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, 20037508 -20037508, 20037508 -20037508, 20037508 -20037508, -20037508 20037508))" +
-"'::geometry as the_geom",
-            expectedError : emptyTileError
+"'::geometry as the_geom"
         },
         {
             name: 'Polygon (Duplicates but still valid)',
@@ -901,8 +910,7 @@ function describe_compare_renderer() {
 "SELECT 2 AS cartodb_id, 'SRID=3857;" +
 "POLYGON((-20037508 20037508, -20037508 20037508, -20037508 20037508, -20037508 20037508, " +
 "-20037508 20037508, -20037508 20037508))" +
-"'::geometry as the_geom",
-            expectedError : emptyTileError
+"'::geometry as the_geom"
         },
         {
             name: 'Polygon (Self intersection)',
@@ -1006,8 +1014,7 @@ function describe_compare_renderer() {
 "-189856.496116557 4985163.78358654,-189845.714632381 4985154.8544578,-189836.125895049 4985146.44147802," +
 "-189821.934801087 4985133.08649598," +"-189818.054529627 4985129.07872948," +"-189816.829604027 4985127.43227191))" +
 "'::geometry as the_geom, 61374 as cartodb_id",
-            knownIssue : "Mapnik uses a tile size of 256 to simplify (instead of 4096) and a different formula " +
-                         "Should be more similar after https://github.com/CartoDB/Windshaft/issues/641 is done"
+            knownIssue : "Mapnik uses a different formula for simplification to adapt to TWKB grid"
         }
     ];
 
@@ -1041,21 +1048,25 @@ function describe_compare_renderer() {
                 }}}
             };
 
+            const pgOptions = {
+                mvt : {
+                    usePostGIS: true
+                }
+            };
+
             const testClientMapnik = new TestClient(mapConfig, mapnikOptions);
-            const testClientPg_mvt = new TestClient(mapConfig, { mvt: { usePostGIS: true } });
+            const testClientPg_mvt = new TestClient(mapConfig, pgOptions);
             const tileOptions = { format : 'mvt' };
             const z = test.tile && test.tile.z ? test.tile.z : 0;
             const x = test.tile && test.tile.x ? test.tile.x : 0;
             const y = test.tile && test.tile.y ? test.tile.y : 0;
 
-            testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT) {
-                testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT) {
-                    if (test.expectedError) {
-                        assert.equal(err1, test.expectedError);
-                        assert.equal(err2, test.expectedError);
-                    } else {
-                        assert.ok(!err1, err1);
-                        assert.ok(!err2, err2);
+            testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
+                testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
+                    assert.ok(!err1, err1);
+                    assert.ok(!err2, err2);
+                    assert.deepEqual(mheaders, pheaders);
+                    if (mheaders['x-tilelive-contains-data']) {
                         mvt_cmp(mapnikMVT, pgMVT);
                     }
 
