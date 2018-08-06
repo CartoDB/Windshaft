@@ -12,7 +12,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // Version of this spec to use for validation.
     // Defaults to "1.0.0".
-    version: "1.7.0",
+    version: "1.8.0",
 
     // OPTIONAL
     // default map extent, in map projection

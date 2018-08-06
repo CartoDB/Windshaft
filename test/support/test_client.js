@@ -199,7 +199,7 @@ function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity, att
 
 function mvtLayerMapConfig(sql, geom_column = 'the_geom', srid = 3857) {
     return {
-            version: '1.7.0',
+            version: '1.8.0',
             layers: [
                 {
                     type: 'mapnik',
