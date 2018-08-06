@@ -54,9 +54,8 @@ function mvtTest(usePostGIS) {
             const mapConfig = TestClient.mvtLayerMapConfig(sql, null, null, 'name');
             mapConfig.layers[0].options.geom_column = 'the_geom';
             mapConfig.layers[0].options.srid = 3857;
-            const extent_options = JSON.parse(JSON.stringify(options));
-            extent_options.mvt.vector_layer_extent = size;
-            this.testClient = new TestClient(mapConfig, extent_options);
+            mapConfig.layers[0].options.vector_layer_extent = size;
+            this.testClient = new TestClient(mapConfig, options);
             this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
                 assert.ok(!err, err);
 
@@ -1256,7 +1255,8 @@ function describe_compare_renderer() {
                         options: {
                             geom_column: 'the_geom',
                             srid: 3857,
-                            sql: test.sql
+                            sql: test.sql,
+                            vector_layer_extent : test.vector_layer_extent || 4096
                         }
                     }
                 ]
@@ -1264,8 +1264,7 @@ function describe_compare_renderer() {
 
             const mapnikOptions = {
                 mvt: {
-                    usePostGIS: false,
-                    vector_layer_extent : test.vector_layer_extent || 4096
+                    usePostGIS: false
                 },
                 mapnik: { grainstore : { datasource : {
                     "row_limit":0,
@@ -1279,8 +1278,7 @@ function describe_compare_renderer() {
 
             const pgOptions = {
                 mvt : {
-                    usePostGIS: true,
-                    vector_layer_extent : test.vector_layer_extent || 4096
+                    usePostGIS: true
                 }
             };
 
