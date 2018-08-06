@@ -72,6 +72,148 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    it('Works with vector_layer_extent in the mapConfig', function (done) {
+        const mapConfig = {
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 1 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom",
+                        vector_layer_extent: 666
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig, options);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+            assert.ok(!err, err);
+
+            const vtile = new mapnik.VectorTile(0, 0, 0);
+            vtile.setData(mvtTile);
+            const result = vtile.toJSON();
+            assert.equal(result[0].extent, 666);
+            assert.equal(result[0].features.length, 1);
+            assert.equal(result[0].features[0].properties.cartodb_id, 1);
+
+            done();
+        });
+    });
+
+    it('Error with multiple vector_layer_extent in the mapConfig', function (done) {
+        const mapConfig = {
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 1 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom",
+                        vector_layer_extent: 666
+                    }
+                },
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 4 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom",
+                        vector_layer_extent: 777
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig, options);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err) {
+            assert.ok(err);
+
+            done();
+        });
+    });
+
+    it('Error with multiple vector_layer_extent in the mapConfig (666 and default [4096])', function (done) {
+        const mapConfig = {
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 1 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom",
+                        vector_layer_extent: 888
+                    }
+                },
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 4 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom"
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig, options);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err) {
+            assert.ok(err);
+
+            done();
+        });
+    });
+
+    it('Should work with multiple vector_layer_extent in the mapConfig (4096 and default [4096])', function (done) {
+        const mapConfig = {
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 1 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom",
+                        vector_layer_extent: 4096
+                    }
+                },
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: 'the_geom',
+                        srid: 3857,
+                        sql: 'SELECT 4 AS "cartodb_id", ' +
+                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom"
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig, options);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
+            assert.ok(!err, err);
+
+            const vtile = new mapnik.VectorTile(0, 0, 0);
+            vtile.setData(mvtTile);
+            const result = vtile.toJSON();
+            assert.equal(result[0].extent, 4096);
+            assert.equal(result[0].features.length, 1);
+            assert.equal(result[0].features[0].properties.cartodb_id, 1);
+
+            done();
+        });
+    });
+
     it('single layer', function (done) {
         const mapConfig = TestClient.mvtLayerMapConfig('select * from test_table', null, null, 'name');
         const testClient = new TestClient(mapConfig, options);
