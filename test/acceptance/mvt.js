@@ -80,6 +80,17 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    it('Layer without sql', function (done) {
+        const mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
+        delete mapConfig.layers[0].options.sql;
+        const testClient = new TestClient(mapConfig, options);
+
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err) {
+            assert.ok(err);
+            done();
+        });
+    });
+
     const multipleLayersMapConfig =  {
         version: '1.3.0',
         layers: [
