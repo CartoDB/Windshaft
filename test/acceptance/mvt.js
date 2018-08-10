@@ -500,9 +500,9 @@ function mvtExtractComponents(geometry) {
     });
 }
 
-// Compares (with a tolerance of +- 2) an array of points
+// Compares (with a tolerance of +- 1) an array of points
 function mvtPointArray_cmp(arr1, arr2) {
-    arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 2));
+    arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 1 && Math.abs(p1.y - p2.y) <= 1));
     assert.equal(arr1.length, 0, "Items not found in Mapnik's: " + JSON.stringify(arr1));
 }
 
