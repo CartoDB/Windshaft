@@ -179,8 +179,8 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
 
     // OPTIONAL
     // Extent of the layer for MVTs. Must be the same for all layers
-    // Defaults to 4096
-    vector_layer_extent: 4096
+    // Defaults to 4096. Range between 1 and (2^31 - 1)
+    vector_extent: 4096
 }
 ```
 
@@ -315,7 +315,7 @@ of MapConfig.
 
 ## 1.8.0
 
- - Add support for `vector_layer_extent` in mapnik/cartodb layers.
+ - Add support for `vector_extent` in mapnik/cartodb layers.
 
 ## 1.7.0
 
