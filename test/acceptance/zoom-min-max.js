@@ -213,13 +213,10 @@ describe('minzoom and maxzoom', function() {
 
         const layersValidator = (z, x, y, expectedLayers, done) => {
             return (err, mvtTile) => {
+                assert.ok(!err, err);
                 if (expectedLayers.length === 0) {
-                    assert.ok(err);
-                    assert.equal(err.message, 'Tile does not exist');
                     return done();
                 }
-
-                assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(0, 0, 0);
                 vtile.setData(mvtTile);
