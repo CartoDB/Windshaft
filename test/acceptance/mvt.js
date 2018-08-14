@@ -1192,7 +1192,8 @@ function describe_compare_renderer() {
 "POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
 "(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
 "'::geometry as the_geom",
-            vector_extent : 256
+            vector_extent : 256,
+            vector_simplify_extent : 256
         },
         {
             name: 'Polygon - Extent 1024',
@@ -1201,7 +1202,8 @@ function describe_compare_renderer() {
 "POLYGON((-20037508 20037508, 20037508 20037508, 20037508 -20037508, -20037508 -20037508, -20037508 20037508)," +
 "(-18037508 18037508, -18037508 -18037508, 18037508 -18037508, 18037508 18037508, -18037508 18037508))" +
 "'::geometry as the_geom",
-            vector_extent : 1024
+            vector_extent : 1024,
+            vector_simplify_extent : 1024
         },
         {
             name: 'One tile optimization',
@@ -1239,7 +1241,8 @@ function describe_compare_renderer() {
 "-189821.934801087 4985133.08649598," +"-189818.054529627 4985129.07872948," +"-189816.829604027 4985127.43227191))" +
 "'::geometry as the_geom, 61374 as cartodb_id",
             tile : { z : 0, x: 0, y: 0 },
-            vector_extent : Math.pow(2, 30)
+            vector_extent : Math.pow(2, 30),
+            vector_simplify_extent : Math.pow(2, 30)
         }
     ];
 
@@ -1254,7 +1257,8 @@ function describe_compare_renderer() {
                             geom_column: 'the_geom',
                             srid: 3857,
                             sql: test.sql,
-                            vector_extent : test.vector_extent || 4096
+                            vector_extent : test.vector_extent || 4096,
+                            vector_simplify_extent : test.vector_simplify_extent || 4096
                         }
                     }
                 ]
@@ -1267,7 +1271,6 @@ function describe_compare_renderer() {
                 mapnik: { grainstore : { datasource : {
                     "row_limit":0,
                     "persist_connection": false,
-                    "simplify_geometries": true,
                     "use_overviews": true,
                     "max_size": 500,
                     "twkb_encoding": true

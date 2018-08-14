@@ -11,7 +11,8 @@ Announcements:
   - `tilelive-mapnik` to [`0.6.18-cdb15`](https://github.com/CartoDB/tilelive-mapnik/blob/0.6.18-cdb15/CHANGELOG.carto.md#0618-cdb15): Removes internal use of step and eventEmitter. Also updates and removes some dependencies.
   - `abaculus` to [`2.0.3-cdb11`](https://github.com/CartoDB/abaculus/blob/2.0.3-cdb11/changelog.carto.md#203-cdb11): Keeping up with node-mapnik update.
 - MVT renderers (both): No longer returns error on empty tile. Instead it returns an empty buffer.
-- MVT renderers (both): Add `vector_extent` option in MapConfig to setup the layer extent.
+- MVT renderers (both): Add `vector_extent` option in MapConfig to setup the layer extent in MVTs.
+- MVT renderers (both): Add `vector_simplify_extent` option in MapConfig to configure the simplification process in MVTs.
 
 # Version 4.8.3
 2018-07-19
