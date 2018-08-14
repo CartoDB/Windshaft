@@ -188,7 +188,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // Extent used during for the simplification process of the MVTs.
     // Must be the same for all layers
     // Valid range between 1 and `vector_extent`. Recommended to be equal to `vector_extent`
-    // Defaults to 256.
+    // Defaults to `vector_extent` if set or 256 if it isn't.
     vector_simplify_extent: 256
 }
 ```
