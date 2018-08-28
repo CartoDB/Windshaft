@@ -13,6 +13,7 @@ Announcements:
 - MVT renderers (both): No longer returns error on empty tile. Instead it returns an empty buffer.
 - MVT renderers (both): Add `vector_extent` option in MapConfig to setup the layer extent in MVTs.
 - MVT renderers (both): Add `vector_simplify_extent` option in MapConfig to configure the simplification process in MVTs.
+- pg-mvt renderer: Include the buffer zone in the !bbox! variable.
 
 # Version 4.8.3
 2018-07-19

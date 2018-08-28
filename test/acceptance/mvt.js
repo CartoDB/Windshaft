@@ -1539,6 +1539,14 @@ function describe_compare_renderer() {
             tile : { z : 0, x: 0, y: 0 },
             vector_extent : Math.pow(2, 30),
             vector_simplify_extent : Math.pow(2, 30)
+        },
+        {
+            name: "!bbox! includes geometries in the buffer zone",
+            tile : { z: 12, x : 1204, y: 1540 },
+            sql :
+"SELECT cartodb_id, St_Transform(tg, 3857) as the_geom FROM ( " +
+"SELECT 2 AS cartodb_id, 'SRID=3857;POINT(-8247459.53332372 4959086.55819354)'::geometry as tg " +
+") _a WHERE tg && !bbox!"
         }
     ];
 
