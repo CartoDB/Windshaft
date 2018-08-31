@@ -1547,13 +1547,33 @@ function describe_compare_renderer() {
 "SELECT cartodb_id, St_Transform(tg, 3857) as the_geom FROM ( " +
 "SELECT 2 AS cartodb_id, 'SRID=3857;POINT(-8247459.53332372 4959086.55819354)'::geometry as tg " +
 ") _a WHERE tg && !bbox!"
+        },
+        {
+            name: "Works correctly with buffer size 0",
+            tile : { z: 12, x : 1204, y: 1540 },
+            sql :
+"SELECT cartodb_id, St_Transform(tg, 3857) as the_geom FROM ( " +
+"SELECT 2 AS cartodb_id, 'SRID=3857;POINT(-8247459.53332372 4959086.55819354)'::geometry as tg " +
+") _a ",
+            bufferSize : 0
         }
     ];
 
+    function setTestDefaults(test) {
+        test.vector_extent = test.hasOwnProperty('vector_extent') ? test.vector_extent : 4096;
+        test.vector_simplify_extent = test.hasOwnProperty('vector_simplify_extent') ?
+                test.vector_simplify_extent : 4096;
+        test.tile = Object.assign(test.tile || {}, { x : 0, y : 0, z : 0});
+        test.bufferSize = test.hasOwnProperty('bufferSize') ? test.bufferSize : 64;
+    }
+
     GEOM_TESTS.forEach(test => {
         (test.knownIssue ? it.skip : it)(test.name, function (done) {
+            setTestDefaults(test);
+
             const mapConfig = {
                 version: '1.7.0',
+                buffersize: { 'mvt': test.bufferSize },
                 layers: [
                     {
                         type: 'mapnik',
@@ -1561,8 +1581,8 @@ function describe_compare_renderer() {
                             geom_column: 'the_geom',
                             srid: 3857,
                             sql: test.sql,
-                            vector_extent : test.vector_extent || 4096,
-                            vector_simplify_extent : test.vector_simplify_extent || 4096
+                            vector_extent : test.vector_extent,
+                            vector_simplify_extent : test.vector_simplify_extent
                         }
                     }
                 ]
@@ -1590,9 +1610,9 @@ function describe_compare_renderer() {
             const testClientMapnik = new TestClient(mapConfig, mapnikOptions);
             const testClientPg_mvt = new TestClient(mapConfig, pgOptions);
             const tileOptions = { format : 'mvt' };
-            const z = test.tile && test.tile.z ? test.tile.z : 0;
-            const x = test.tile && test.tile.x ? test.tile.x : 0;
-            const y = test.tile && test.tile.y ? test.tile.y : 0;
+            const z = test.tile.z;
+            const x = test.tile.x;
+            const y = test.tile.y;
 
             testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
                 testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {

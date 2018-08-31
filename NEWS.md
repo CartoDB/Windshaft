@@ -14,6 +14,7 @@ Announcements:
 - MVT renderers (both): Add `vector_extent` option in MapConfig to setup the layer extent in MVTs.
 - MVT renderers (both): Add `vector_simplify_extent` option in MapConfig to configure the simplification process in MVTs.
 - pg-mvt renderer: Include the buffer zone in the !bbox! variable.
+- pg-mvt renderer: Fix bug that caused a buffer size of value 0 being ignored.
 
 # Version 4.8.3
 2018-07-19
