@@ -33,7 +33,7 @@ function mvtTest(usePostGIS) {
 
         const testClient = new TestClient(mapConfig, options);
         testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-            assert.ok(!err, err);
+            assert.ifError(err);
 
             const vtile = new mapnik.VectorTile(0, 0, 0);
             vtile.setData(mvtTile);
@@ -162,7 +162,7 @@ function mvtTest(usePostGIS) {
 
     function multipleLayersValidation(done) {
         return function (err, mvtTile) {
-            assert.ok(!err, err);
+            assert.ifError(err);
 
             const vtile = new mapnik.VectorTile(13, 4011, 3088);
             vtile.setData(mvtTile);
@@ -227,7 +227,7 @@ function mvtTest(usePostGIS) {
         it('select one layer', function(done) {
             const testClient = new TestClient(mixedLayersMapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 1, format: 'mvt'}, function (err, mvtTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
@@ -298,7 +298,7 @@ function mvtTest(usePostGIS) {
             };
             const testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: '1,3', format: 'mvt'}, function (err, mvtTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
@@ -380,7 +380,7 @@ function mvtTest(usePostGIS) {
             };
             const testClient = new TestClient(mapConfig, options);
             testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt'}, function (err, mvtTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(13, 4011, 3088);
                 vtile.setData(mvtTile);
@@ -459,7 +459,7 @@ function mvtTest(usePostGIS) {
                 mapConfig.layers[0].options.sql = tuple.sql;
                 const testClient = new TestClient(mapConfig, options);
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
 
                     const vtile = new mapnik.VectorTile(0, 0, 0);
                     vtile.setData(mvtTile);
@@ -490,7 +490,7 @@ function mvtTest(usePostGIS) {
                 mapConfig.layers[0].options.vector_simplify_extent = size;
                 const testClient = new TestClient(mapConfig, options);
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
 
                     const vtile = new mapnik.VectorTile(0, 0, 0);
                     vtile.setData(mvtTile);
@@ -779,7 +779,7 @@ function mvtTest(usePostGIS) {
 
             const testClient = new TestClient(mapConfig, options);
             testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(0, 0, 0);
                 vtile.setData(mvtTile);
@@ -820,7 +820,7 @@ function mvtTest(usePostGIS) {
 
             const testClient = new TestClient(mapConfig, options);
             testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err) {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -855,7 +855,7 @@ function mvtTest(usePostGIS) {
 
             const testClient = new TestClient(mapConfig, options);
             testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err) {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -902,10 +902,10 @@ function mvtTest(usePostGIS) {
 
             const testClient = new TestClient(mapConfigOriginal, options);
             testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtOriginal) {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 const testClientSimplified = new TestClient(mapConfigPresimplified, options);
                 testClientSimplified.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtSimple) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
                     mvt_cmp(mvtOriginal, mvtSimple);
 
                     // For Mapnik compare again using TWKB this time
@@ -923,10 +923,10 @@ function mvtTest(usePostGIS) {
 
                         const testClientTWKB = new TestClient(mapConfigOriginal, optionsTWKB);
                         testClientTWKB.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtOriginalTWKB) {
-                            assert.ok(!err, err);
+                            assert.ifError(err);
                             const testClientSimpleTWKB = new TestClient(mapConfigPresimplified, optionsTWKB);
                             testClientSimpleTWKB.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtSimpleTWKB) {
-                                assert.ok(!err, err);
+                                assert.ifError(err);
                                 mvt_cmp(mvtOriginalTWKB, mvtSimpleTWKB);
                                 done();
                             });
