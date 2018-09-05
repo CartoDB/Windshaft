@@ -1,6 +1,6 @@
 # 1. Purpose
 
-This specification describes [MapConfig](MapConfig-specification.md) format version 1.6.0.
+This specification describes [MapConfig](MapConfig-specification.md) format version 1.7.0.
 
 
 # 2. File format
