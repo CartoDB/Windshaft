@@ -200,7 +200,7 @@ describe('minzoom and maxzoom', function() {
                     fixturePath(`layers--${scenario.expectedLayers.join('-')}--z${scenario.z}`);
                 var testClient = new TestClient(mapconfig);
                 testClient.getTile(scenario.z, scenario.x, scenario.y, function(err, tile, img) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
                     assert.ok(tile);
                     assert.ok(img);
                     assert.imageEqualsFile(tile, fixture, IMAGE_TOLERANCE_PER_MIL, done);
@@ -213,7 +213,7 @@ describe('minzoom and maxzoom', function() {
 
         const layersValidator = (z, x, y, expectedLayers, done) => {
             return (err, mvtTile) => {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 if (expectedLayers.length === 0) {
                     return done();
                 }

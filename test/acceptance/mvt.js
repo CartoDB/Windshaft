@@ -1139,8 +1139,8 @@ function describe_compare_renderer() {
 
             testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
                 testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
-                    assert.ok(!err1, err1);
-                    assert.ok(!err2, err2);
+                    assert.ifError(err1);
+                    assert.ifError(err2);
                     assert.deepEqual(mheaders, pheaders);
                     if (mheaders['x-tilelive-contains-data']) {
                         mvt_cmp(mapnikMVT, pgMVT);
@@ -1616,8 +1616,8 @@ function describe_compare_renderer() {
 
             testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
                 testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
-                    assert.ok(!err1, err1);
-                    assert.ok(!err2, err2);
+                    assert.ifError(err1);
+                    assert.ifError(err2);
                     assert.deepEqual(mheaders, pheaders);
                     if (mheaders['x-tilelive-contains-data']) {
                         mvt_cmp(mapnikMVT, pgMVT);

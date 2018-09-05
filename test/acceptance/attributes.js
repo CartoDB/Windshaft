@@ -54,7 +54,7 @@ describe('attributes', function() {
 
         var testClient = new TestClient(createMapConfig());
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(attributes, { n: 6 });
             done();
         });
@@ -67,7 +67,7 @@ describe('attributes', function() {
                   "json_agg(row_to_json((SELECT r FROM (SELECT 1 as d, 'Samuel' as name) r),true)) as data";
         var testClient = new TestClient(createMapConfig(sql, 'i', ['n', 'data']));
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(attributes, { n: 6, data: [ { d: 1, name: 'Samuel' } ] });
             done();
         });
@@ -77,7 +77,7 @@ describe('attributes', function() {
 
         var testClient = new TestClient(createMapConfig());
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 2, function (err, attributes) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(attributes, { n: 6 });
             done();
         });
@@ -94,7 +94,7 @@ describe('attributes', function() {
 
         var testClient = new TestClient(createMapConfig(sql, 'i', ['n', 'data']));
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(attributes, { n: 6, data: [ { d: 1, name: 'Samuel' } ] });
             done();
         });
@@ -172,7 +172,7 @@ describe('attributes', function() {
 
         var testClient = new TestClient(createMapConfig(substitutionTokenSql, 'i', Object.keys(expectedAttributes)));
         testClient.getFeatureAttributes(ATTRIBUTES_LAYER, 1, function (err, attributes) {
-            assert.ok(!err, err);
+            assert.ifError(err);
             assert.deepEqual(attributes, expectedAttributes);
             done();
         });

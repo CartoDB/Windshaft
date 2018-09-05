@@ -36,7 +36,7 @@ describe('renderer_plain_image_renderer', function() {
             it('should render image background with image ' + pattern + ' for ' + zxy.join('/'), function(done) {
                 var imageRenderer = new ImageRenderer(buffers[pattern]);
                 function validate(err, tile) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     assert.ok(tile);
                     var image = Image.fromBytes(tile);
                     var fixtureFilename = __dirname +

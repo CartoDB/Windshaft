@@ -49,11 +49,11 @@ describe('layer filtering', function() {
 
             var testClient = new TestClient(mapConfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile) {
-                assert.ok(!err);
+                assert.ifError(err);
                 var filepath = getAssertFilepath(color, limit);
 
                 assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     done();
                 });
             });
@@ -71,11 +71,11 @@ describe('layer filtering', function() {
 
             var testClient = new TestClient(mapConfig);
             testClient.getTile(0, 0, 0, overriddenOptions, function(err, tile) {
-                assert.ok(!err);
+                assert.ifError(err);
                 var filepath = getAssertFilepath(color, limit);
 
                 assert.imageEqualsFile(tile, filepath, IMG_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     done();
                 });
             });

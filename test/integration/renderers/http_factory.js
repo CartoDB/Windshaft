@@ -77,7 +77,7 @@ describe('renderer_http_factory_getRenderer', function() {
             ]
         });
         factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, HttpFallbackRenderer);
             done();
@@ -102,7 +102,7 @@ describe('renderer_http_factory_getRenderer', function() {
             ]
         });
         factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, Renderer);
             done();
@@ -128,7 +128,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 ]
             });
             factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.ok(renderer);
                 assert.equal(renderer.constructor, Renderer);
                 assert.equal(renderer.subdomains.length, 3);
@@ -151,7 +151,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 ]
             });
             factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.ok(renderer);
                 assert.equal(renderer.constructor, Renderer);
                 assert.equal(renderer.subdomains.length, 0);
