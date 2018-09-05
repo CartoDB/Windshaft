@@ -60,7 +60,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
             assert.equal(layergroup.metadata.layers[1].id, typeLayerId('http', 0));
@@ -79,7 +79,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.createLayergroup(function (err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[0].type, 'http');
             assert.ok(!layergroup.metadata.layers[0].meta.cartocss);
@@ -99,7 +99,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             done();
         });

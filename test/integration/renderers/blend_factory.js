@@ -45,7 +45,7 @@ describe('renderer_http_factory_getRenderer', function() {
     describe('happy case', function() {
         it('getRenderer creates renderer for valid filtered layers', function(done) {
             blendFactory.getRenderer(mapConfig, 'png', rendererOptions(1, 2), function(err, renderer) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.ok(renderer);
                 done();
             });

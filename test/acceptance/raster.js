@@ -29,7 +29,7 @@ describe('raster', function() {
 
         var testClient = new TestClient(mapconfig);
         testClient.getTile(0, 0, 0, function(err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/raster_gray_rect.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
 
@@ -89,7 +89,7 @@ describe('raster', function() {
 
         var testClient = new TestClient(mapconfig);
         testClient.getTile(0, 0, 0, function(err, tile, img) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(tile);
             assert.equal(img.width(), 256);
             done();

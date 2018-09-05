@@ -43,7 +43,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } }, strat);
             testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert(!stats.hasOwnProperty('Mapnik'));
                 assert(stats.hasOwnProperty('Mk_Setup'));
                 assert(stats.hasOwnProperty('Mk_Render'));
@@ -79,7 +79,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : false } } }, strat);
             testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert(!stats.hasOwnProperty('Mapnik'));
                 assert(!stats.hasOwnProperty('Mk_Setup'));
                 assert(!stats.hasOwnProperty('Mk_Render'));
@@ -116,7 +116,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } }, strat);
             testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert(!stats.hasOwnProperty('Mapnik'));
                 assert(stats.hasOwnProperty('Mk_Setup'));
                 assert(!stats.hasOwnProperty('Mk_Render'));
@@ -149,7 +149,7 @@ describe('metrics', function() {
 
         var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metatile: 2, metrics : true } } });
         testClient.getTile(1, 1, 1, {format: 'png'}, function(err, tile, img, headers, stats) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert(!stats.hasOwnProperty('Mapnik'));
             assert(stats.hasOwnProperty('Mk_Setup'));
             assert(stats.hasOwnProperty('Mk_Render'));
@@ -232,7 +232,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 3);
                 assert.equal(stats.Mk_Features_cnt_MultiPoint, 2);
                 assert.equal(stats.Mk_Features_cnt_LineString, 2);
@@ -273,7 +273,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Unknown, 4);
                 done();
             });
@@ -319,7 +319,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 10);
                 assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
                 done();
@@ -347,7 +347,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 5);
                 assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
                 done();
@@ -375,7 +375,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 10);
                 assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 10);
                 done();
@@ -403,7 +403,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 10);
                 assert.equal(stats.Mk_Agg_PMS_AttrCache_Miss, 1);
                 assert.equal(stats.Mk_Agg_PMS_EllipseCache_Miss, 1);
@@ -436,7 +436,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_LineString, 2);
                 assert(!stats.hasOwnProperty('Mk_Agg_PMS_EllipseCache_Miss'));
                 done();
@@ -480,7 +480,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, overriddenOptions);
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 10);
                 assert(!stats.hasOwnProperty('Mk_Agg_PMS_EllipseCache_Miss'));
                 resourcesServer.close(done);
@@ -511,7 +511,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 10);
                 assert.equal(stats.Mk_Agg_PMS_ImageCache_Miss, 1);
                 done();
@@ -541,7 +541,7 @@ describe('metrics', function() {
 
             var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
             testClient.getTile(0, 0, 0, {format: "png"}, function(err, tile, img, headers, stats) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.equal(stats.Mk_Features_cnt_Point, 3);
                 assert.equal(stats.Mk_Agg_PMS_ImageCache_Ignored, 3);
                 done();
@@ -600,7 +600,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PBuildS') || stats.hasOwnProperty('Mk_Grid_PBuildS'));
                         done();
                     });
@@ -628,7 +628,7 @@ describe('metrics', function() {
 
                         var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                         testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                            assert.ok(!err);
+                            assert.ifError(err);
                             assert(stats.hasOwnProperty('Mk_Agg_PDotS'));
                             done();
                         });
@@ -657,7 +657,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PGroupS') || stats.hasOwnProperty('Mk_Grid_PGroupS'));
                         done();
                     });
@@ -688,7 +688,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PLinePatternS') ||
                                stats.hasOwnProperty('Mk_Grid_PLinePatternS'));
                         done();
@@ -720,7 +720,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PLineS') || stats.hasOwnProperty('Mk_Grid_PLineS'));
                         done();
                     });
@@ -747,7 +747,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PMarkerS') || stats.hasOwnProperty('Mk_Grid_PMarkerS'));
                         done();
                     });
@@ -774,7 +774,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PPointS') || stats.hasOwnProperty('Mk_Grid_PPointS'));
                         done();
                     });
@@ -809,7 +809,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PPolygonPatternS') ||
                                stats.hasOwnProperty('Mk_Grid_PPolygonPatternS'));
                         done();
@@ -845,7 +845,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PPolygonS') || stats.hasOwnProperty('Mk_Grid_PPolygonS'));
                         done();
                     });
@@ -873,7 +873,7 @@ describe('metrics', function() {
 
                         var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                         testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                            assert.ok(!err);
+                            assert.ifError(err);
                             assert(stats.hasOwnProperty('Mk_Agg_PRasterS'));
                             done();
                         });
@@ -902,7 +902,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PShieldS') || stats.hasOwnProperty('Mk_Grid_PShieldS'));
                         done();
                     });
@@ -930,7 +930,7 @@ describe('metrics', function() {
 
                     var testClient = new TestClient(mapconfig, { mapnik : { mapnik : { metrics : true } } });
                     testClient.getTile(0, 0, 0, {format: format}, function(err, tile, img, headers, stats) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         assert(stats.hasOwnProperty('Mk_Agg_PTextS') || stats.hasOwnProperty('Mk_Grid_PTextS'));
                         done();
                     });

@@ -125,9 +125,9 @@ describe('torque steps', function () {
         it(`should sort dates and vals — step=${step}`, function (done) {
             var testClient = new TestClient(torqueMapConfig(step));
             testClient.getTile(0, 0, 0, { layer: 0, format: 'png' }, function (err, torqueTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     done();
                 });
             });
@@ -137,7 +137,7 @@ describe('torque steps', function () {
     it('should sort dates and vals torque.json', function (done) {
         var testClient = new TestClient(torqueMapConfig(undefined));
         testClient.getTile(0, 0, 0, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
-            assert.ok(!err, err);
+            assert.ifError(err);
             assert.ok(torqueTile);
             assert.deepEqual(torqueTile, expectedTorqueTile);
             done();
@@ -155,9 +155,9 @@ describe('torque steps', function () {
             it(`should be order independent -order=${order_by_step} - step=${step}`, function (done) {
                 var testClient = new TestClient(torqueMapConfig(step));
                 testClient.getTile(0, 0, 0, { layer: 0, format: 'png' }, function (err, torqueTile) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
                     assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function(err) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         done();
                     });
                 });

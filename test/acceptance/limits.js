@@ -48,7 +48,7 @@ describe('render limits', function() {
     it('uses onTileErrorStrategy to handle error and modify response', function(done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyFallback);
         testClient.createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             done();

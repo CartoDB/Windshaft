@@ -110,7 +110,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                 ]
             });
             factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
-                assert.ok(!err, err);
+                assert.ifError(err);
                 assert.ok(renderer);
                 done();
             });
@@ -179,7 +179,7 @@ describe('renderer_plain_factory_getRenderer', function() {
             ]
         });
         factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
-            assert.ok(!err, err);
+            assert.ifError(err);
             assert.ok(renderer);
             done();
         });
@@ -220,7 +220,7 @@ describe('renderer_plain_factory_getRenderer', function() {
             ]
         });
         factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
-            assert.ok(!err, err);
+            assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, ColorRenderer);
             done();

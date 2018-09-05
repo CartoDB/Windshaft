@@ -99,7 +99,7 @@ describe('torque png renderer', function() {
             it('torque png tile ' + zxy.join('/') + '.png', function (done) {
                 testClient.getTile(z, x, y, {layer: 0}, function(err, tile) {
                     assert.imageEqualsFile(tile, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         done();
                     });
                 });
@@ -144,7 +144,7 @@ describe('torque png renderer', function() {
                 assert.imageEqualsFile(tile, fixtureFileCairoLT_1_14, IMAGE_TOLERANCE_PER_MIL, function(err) {
                     if (err) {
                         assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
-                            assert.ok(!err, err);
+                            assert.ifError(err);
                             done();
                         });
                     } else {
@@ -204,7 +204,7 @@ describe('torque png renderer', function() {
                 h = 400;
             var testClient = new TestClient(mapConfigTorqueOffset);
             testClient.getStaticBbox(-170, -87, 170, 87, w, h, function(err, imageBuffer, img) {
-                assert.ok(!err);
+                assert.ifError(err);
 
                 assert.equal(img.width(), w);
                 assert.equal(img.height(), h);

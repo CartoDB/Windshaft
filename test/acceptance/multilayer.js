@@ -107,7 +107,7 @@ describe('multilayer', function() {
     it("layergroup with 2 layers, create layergroup", function(done) {
         var testClient = new TestClient(layergroup);
         testClient.createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             assert.equal(layergroup.metadata.layers.length, 2);
@@ -145,7 +145,7 @@ describe('multilayer', function() {
     it("layergroup with 3 mixed layers, mapnik png torque and attributes", function(done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getTile(0, 0, 0, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.png',
                 IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
@@ -154,7 +154,7 @@ describe('multilayer', function() {
     it("layergroup with 3 mixed layers, mapnik grid.json (layer 0)", function(done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2, done);
         });
     });
@@ -162,7 +162,7 @@ describe('multilayer', function() {
     it("layergroup with 3 mixed layers, mapnik grid.json (layer 1)", function(done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getTile(0, 0, 0, {layer: 1, format: 'grid.json'}, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2, done);
         });
     });
@@ -170,7 +170,7 @@ describe('multilayer', function() {
     it("layergroup with 3 mixed layers, attributes (layer 1)", function(done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getFeatureAttributes(1, 4, function (err, attributes) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(attributes, { n: 40 });
             done();
         });
@@ -179,7 +179,7 @@ describe('multilayer', function() {
     it("layergroup with 3 mixed layers, torque.json (layer 2)", function(done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getTile(0, 0, 0, {layer: 2, format: 'torque.json'}, function (err, torqueTile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(torqueTile[0].vals__uint8, [1]);
             assert.deepEqual(torqueTile[0].dates__uint16, [0]);
             assert.equal(torqueTile[0].x__uint8, 128);
@@ -230,7 +230,7 @@ describe('multilayer', function() {
             function getTile1() {
                 var next = this;
                 testClient1.getTile(0, 0, 0, function(err, tile) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer2.png',
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, next);
                 });
@@ -240,7 +240,7 @@ describe('multilayer', function() {
 
                 var next = this;
                 testClient1.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         next);
                 });
@@ -250,7 +250,7 @@ describe('multilayer', function() {
 
                 var next = this;
                 testClient2.getTile(0, 0, 0, function (err, tile) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer3.png',
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, next);
                 });
@@ -260,7 +260,7 @@ describe('multilayer', function() {
 
                 var next = this;
                 testClient2.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         next);
                 });
@@ -295,7 +295,7 @@ describe('multilayer', function() {
     it("layers are rendered in definition order (create)", function(done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.createLayergroup(function (err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             assert.equal(layergroup.metadata.layers.length, 3);
@@ -306,7 +306,7 @@ describe('multilayer', function() {
     it("layers are rendered in definition order (png)", function(done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.getTile(0, 0, 0, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer4.png',
                 IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
@@ -330,7 +330,7 @@ describe('multilayer', function() {
         ]
       };
         new TestClient(layergroup).createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             assert.equal(layergroup.metadata.layers.length, 2);
@@ -352,7 +352,7 @@ describe('multilayer', function() {
         ]
       };
         new TestClient(layergroup).createLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             assert.equal(layergroup.metadata.layers.length, 1);
@@ -384,7 +384,7 @@ describe('multilayer', function() {
     it('text-wrap-character', function(done) {
         var textName = 'This is a long text that should break into several lines';
         new TestClient(fontLayergroup('DejaVu Sans Book', textName)).getTile(0, 0, 0, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(tile);
             assert.imageEqualsFile(
                 tile,
@@ -406,7 +406,7 @@ describe('multilayer', function() {
 
     it("known text-face-name", function(done) {
         new TestClient(fontLayergroup(available_system_fonts[0])).getTile(0, 0, 0, function (err, tile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(tile);
             done();
         });
@@ -432,7 +432,7 @@ describe('multilayer', function() {
 
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, grid) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(grid);
 
             assert.ok(grid.hasOwnProperty('data'));
@@ -510,7 +510,7 @@ describe('multilayer', function() {
     it("layergroupid didn't change", function(done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.createLayergroup(function (err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
             assert.equal(layergroup.layergroupid, '80dc4ccd7d334435d64feaec7f55c4c5');
