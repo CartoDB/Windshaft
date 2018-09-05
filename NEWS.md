@@ -1,5 +1,5 @@
 # Version 4.9.0
-2018-XX-XX
+2018-09-05
 
 Announcements:
 - pg-mvt renderer: Match current Mapnik behaviour (Filter column with known types, same default buffer size, accept geom_column ifferent than `the_geom_webmercator`).
