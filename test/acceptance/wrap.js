@@ -92,7 +92,7 @@ describe('wrap x coordinate', function() {
                 var testClient = new TestClient(plainTorqueMapConfig(testScenario.plainColor));
                 testClient.getTile(tileRequest.z, tileRequest.x, tileRequest.y, function(err, tile) {
                     assert.imageEqualsFile(tile, blendPngFixture(fixtureZxy), IMG_TOLERANCE_PER_MIL, function(err) {
-                        assert.ok(!err);
+                        assert.ifError(err);
                         done();
                     });
                 });
@@ -104,7 +104,7 @@ describe('wrap x coordinate', function() {
         it("can get a tile with negative x coordinate",  function(done){
             var testClient = new TestClient(TestClient.defaultTableMapConfig('test_table'));
             testClient.getTile(2, -2, 1, function(err, res, img) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.ok(img);
                 assert.equal(img.width(), 256);
                 assert.equal(img.height(), 256);

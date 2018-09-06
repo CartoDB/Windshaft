@@ -1,6 +1,6 @@
 # 1. Purpose
 
-This specification describes [MapConfig](MapConfig-specification.md) format version 1.7.0.
+This specification describes [MapConfig](MapConfig-specification.md) format version 1.8.0.
 
 
 # 2. File format
@@ -12,7 +12,7 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
     // OPTIONAL
     // Version of this spec to use for validation.
     // Defaults to "1.0.0".
-    version: "1.7.0",
+    version: "1.8.0",
 
     // OPTIONAL
     // default map extent, in map projection
@@ -176,6 +176,20 @@ Layergroup files use the JSON format as described in [RFC 4627](http://www.ietf.
         // string list of columns returned by attributes service
         columns: ['column1', 'column2']
     }
+
+    // OPTIONAL
+    // Extent of the layer for MVTs.
+    // Must be the same for all layers
+    // Valid range between 1 and (2^31 - 1)
+    // Defaults to 4096.
+    vector_extent: 4096
+
+    // OPTIONAL
+    // Extent used during for the simplification process of the MVTs.
+    // Must be the same for all layers
+    // Valid range between 1 and `vector_extent`. Recommended to be equal to `vector_extent`
+    // Defaults to `vector_extent` if set or 256 if it isn't.
+    vector_simplify_extent: 256
 }
 ```
 
@@ -307,6 +321,11 @@ of MapConfig.
  - Link to a document describing "CartoCSS" version (ie: what's required for torque etc.)
 
 # History
+
+## 1.8.0
+
+ - Add support for `vector_extent` in mapnik/cartodb layers.
+ - Add support for `vector_simplify_extent` in mapnik/cartodb layers.
 
 ## 1.7.0
 

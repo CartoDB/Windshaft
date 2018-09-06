@@ -200,7 +200,7 @@ describe('minzoom and maxzoom', function() {
                     fixturePath(`layers--${scenario.expectedLayers.join('-')}--z${scenario.z}`);
                 var testClient = new TestClient(mapconfig);
                 testClient.getTile(scenario.z, scenario.x, scenario.y, function(err, tile, img) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
                     assert.ok(tile);
                     assert.ok(img);
                     assert.imageEqualsFile(tile, fixture, IMAGE_TOLERANCE_PER_MIL, done);
@@ -213,13 +213,10 @@ describe('minzoom and maxzoom', function() {
 
         const layersValidator = (z, x, y, expectedLayers, done) => {
             return (err, mvtTile) => {
+                assert.ifError(err);
                 if (expectedLayers.length === 0) {
-                    assert.ok(err);
-                    assert.equal(err.message, 'Tile does not exist');
                     return done();
                 }
-
-                assert.ok(!err, err);
 
                 var vtile = new mapnik.VectorTile(0, 0, 0);
                 vtile.setData(mvtTile);

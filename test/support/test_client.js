@@ -32,7 +32,7 @@ var rendererFactoryOptions = {
 };
 
 function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
-    var options = _.extend({}, rendererFactoryOptions);
+    const options = _.extend({}, JSON.parse(JSON.stringify(rendererFactoryOptions)));
     overrideOptions = overrideOptions || {};
     _.each(overrideOptions, function(overrideConfig, key) {
         options[key] = _.extend({}, options[key], overrideConfig);
@@ -197,6 +197,23 @@ function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity, att
     };
 }
 
+function mvtLayerMapConfig(sql, geom_column = 'the_geom', srid = 3857) {
+    return {
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        geom_column: geom_column,
+                        srid: srid,
+                        sql: sql
+                    }
+                }
+            ]
+    };
+}
+
+
 function defaultTableQuery(tableName) {
     return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
 }
@@ -207,6 +224,7 @@ function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivi
 
 module.exports.singleLayerMapConfig = singleLayerMapConfig;
 module.exports.defaultTableMapConfig = defaultTableMapConfig;
+module.exports.mvtLayerMapConfig = mvtLayerMapConfig;
 
 module.exports.grainstoreOptions = grainstoreOptions;
 module.exports.mapnikOptions = rendererOptions.mapnik;

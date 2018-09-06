@@ -28,7 +28,7 @@ describe('torque regression', function() {
 
         var testClient = new TestClient(londonPointMapConfig);
         testClient.getTile(2, 1, 1, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.deepEqual(torqueTile, [{
                 x__uint8: 255,
                 y__uint8: 172,
@@ -72,7 +72,7 @@ describe('torque regression', function() {
 
         var testClient = new TestClient(resolutionTwoMapConfig);
         testClient.getTile(13, 4255, 2765, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
-            assert.ok(!err);
+            assert.ifError(err);
             /* Sort torqueTile with x___uint8 ascending */
             torqueTile.sort(function(a,b) {
                 return (a.x__uint8 > b.x__uint8);

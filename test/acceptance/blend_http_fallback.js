@@ -99,7 +99,7 @@ describe('blend http fallback', function() {
         it('should fallback on http error while blending layers ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTile(1, 0, 0, {layer: layerFilter}, function(err, tile) {
                 assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err, err);
+                    assert.ifError(err);
                     done();
                 });
             });

@@ -45,7 +45,7 @@ describe('layer filtering regressions', () => {
         it(`should work with mapnik layer ids: ${scenario.layers}`, function(done) {
             const testClient = new TestClient(mapConfig);
             testClient.getTile(0, 0, 0, { layer: scenario.layers, format: 'mvt'}, function (err, mvtTile) {
-                assert.ok(!err, err);
+                assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(0, 0, 0);
                 vtile.setData(mvtTile);

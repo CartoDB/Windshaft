@@ -100,7 +100,7 @@ describe('torque', function() {
         }]
       ];
       torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function(err, renderer) {
-        assert.ok(!err, err);
+        assert.ifError(err);
         assert.ok(!!renderer);
         assert.ok(!!renderer.getTile);
         done();

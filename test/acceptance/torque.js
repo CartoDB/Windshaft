@@ -135,7 +135,7 @@ describe('torque', function() {
 
             var testClient = new TestClient(validTorqueMapConfig);
             testClient.getTile(0, 0, 0, {layer: 0, format: format}, function(err, torqueTile) {
-                assert.ok(!err);
+                assert.ifError(err);
                 assert.deepEqual(torqueTile, expectedTorqueTileAt_0_0_0);
                 done();
             });
@@ -294,7 +294,7 @@ describe('torque', function() {
         testClient.getTile(0, 0, 0, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
             SubstitutionTokens.replace = replaceFn;
 
-            assert.ok(!err, err);
+            assert.ifError(err);
             assert.deepEqual(torqueTile, [{ x__uint8: 128, y__uint8: 128, vals__uint8: [2,3], dates__uint16: [1,0] }]);
 
             assert.equal(expectedSubstitutionTokens.length, 0);

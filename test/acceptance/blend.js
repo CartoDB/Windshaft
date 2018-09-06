@@ -84,7 +84,7 @@ describe('blend png renderer', function() {
             var testClient = new TestClient(plainTorqueMapConfig(testScenario.plainColor));
             testClient.getTile(tileRequest.z, tileRequest.x, tileRequest.y, function(err, tile) {
                 assert.imageEqualsFile(tile, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
+                    assert.ifError(err);
                     done();
                 });
             });

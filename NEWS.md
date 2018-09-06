@@ -1,10 +1,20 @@
-# Version 4.8.4
-2018-XX-XX
+# Version 4.9.0
+2018-09-05
 
 Announcements:
 - pg-mvt renderer: Match current Mapnik behaviour (Filter column with known types, same default buffer size, accept geom_column ifferent than `the_geom_webmercator`).
 - pg-mvt renderer: Remove undocummented filtering by `layer.options.columns`.
-- MVT tests: Compare outputs from Mapnik and pg-mvt renderers.
+- MVT tests: Compare outputs (tile and headers) from Mapnik and pg-mvt renderers.
+- Update deps:
+  - `@carto/mapnik` to [`3.6.2-carto.11`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.11/CHANGELOG.carto.md#362-carto11): Geometries in MVTs created with the mapnik renderer will be simplified based on the layer extent instead of a static 256. This has impact in lines and polygon layers, both in results and performance since geometries were being oversimplified.
+  - `@carto/tilelive-bridge` to [`2.5.1-cdb10`](https://github.com/CartoDB/tilelive-bridge/blob/2.5.1-cdb10/CHANGELOG.carto.md#251-cdb10): MVT Mapnik renderer no longers returns error on empty tile, instead it returns an empty buffer.
+  - `tilelive-mapnik` to [`0.6.18-cdb15`](https://github.com/CartoDB/tilelive-mapnik/blob/0.6.18-cdb15/CHANGELOG.carto.md#0618-cdb15): Removes internal use of step and eventEmitter. Also updates and removes some dependencies.
+  - `abaculus` to [`2.0.3-cdb11`](https://github.com/CartoDB/abaculus/blob/2.0.3-cdb11/changelog.carto.md#203-cdb11): Keeping up with node-mapnik update.
+- MVT renderers (both): No longer returns error on empty tile. Instead it returns an empty buffer.
+- MVT renderers (both): Add `vector_extent` option in MapConfig to setup the layer extent in MVTs.
+- MVT renderers (both): Add `vector_simplify_extent` option in MapConfig to configure the simplification process in MVTs.
+- pg-mvt renderer: Include the buffer zone in the !bbox! variable.
+- pg-mvt renderer: Fix bug that caused a buffer size of value 0 being ignored.
 
 # Version 4.8.3
 2018-07-19
