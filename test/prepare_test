@@ -52,6 +52,11 @@ createdb -EUTF8 windshaft_test || die "Could not create test database"
 psql -c 'create extension postgis' windshaft_test ||
   die "Could not install postgis in test database"
 
+if [ $POSTGIS_VERSION -ge 30000 ]; then
+    echo "Postgis 3+ detected: Installing Postgis Raster extension too"
+    psql -c 'create extension postgis_raster' windshaft_test ||  die "Could not install postgis_raster"
+fi
+
 for i in CDB_XYZ CDB_QueryStatements CDB_QueryTables
 do
   echo "...Installing $i"
