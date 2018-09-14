@@ -1,3 +1,10 @@
+# Version 4.10.0
+2018-XX-XX
+
+Announcements:
+- pg-mvt: Implement timeout in getTile.
+
+
 # Version 4.9.0
 2018-09-05
 
