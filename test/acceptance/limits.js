@@ -62,4 +62,29 @@ describe('render limits', function() {
         });
     });
 
+    const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
+    describe('mvt (mapnik)', () => { mvtTest(false); });
+    describe_pg('mvt (pg-mvt)', () => { mvtTest(true); });
 });
+
+function mvtTest(usePostGIS) {
+    const options = {
+        mvt: { usePostGIS: usePostGIS },
+        mapnik: { mapnik : { limits : { render : 40 } } }
+    };
+
+    it('Error with long query', function (done) {
+        const slow_query = 'SELECT pg_sleep(1), 1 AS "cartodb id", ' +
+                            "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom";
+        const mapConfig = TestClient.mvtLayerMapConfig(slow_query, null, null, 'name');
+        mapConfig.layers[0].options.geom_column = 'the_geom';
+        mapConfig.layers[0].options.srid = 3857;
+
+        const testClient = new TestClient(mapConfig, options);
+        testClient.getTile(0, 0, 0, { format: 'mvt', limits : { render : 40 } }, function (err) {
+            assert.ok(err);
+            assert.equal(err.message, "Render timed out");
+            done();
+        });
+    });
+}

@@ -1563,7 +1563,7 @@ function describe_compare_renderer() {
         test.vector_extent = test.hasOwnProperty('vector_extent') ? test.vector_extent : 4096;
         test.vector_simplify_extent = test.hasOwnProperty('vector_simplify_extent') ?
                 test.vector_simplify_extent : 4096;
-        test.tile = Object.assign(test.tile || {}, { x : 0, y : 0, z : 0});
+        test.tile = Object.assign({ x : 0, y : 0, z : 0}, test.tile || {});
         test.bufferSize = test.hasOwnProperty('bufferSize') ? test.bufferSize : 64;
     }
 
