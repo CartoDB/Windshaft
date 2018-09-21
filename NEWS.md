@@ -3,6 +3,7 @@
 
 Announcements:
 - pg-mvt: Implement timeout in getTile.
+- Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
 
 
 # Version 4.9.0
