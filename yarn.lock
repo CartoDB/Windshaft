@@ -1239,7 +1239,7 @@ mapnik-reference@~8.5.3:
   dependencies:
     semver "^5.1.0"
 
-"mapnik-vector-tile@github:cartodb/mapnik-vector-tile#v1.6.1-carto.2":
+mapnik-vector-tile@cartodb/mapnik-vector-tile#v1.6.1-carto.2:
   version "1.6.1-carto.2"
   resolved "https://codeload.github.com/cartodb/mapnik-vector-tile/tar.gz/e7ca5471f9e5de81243e6035e70444321fc0a82f"
 
