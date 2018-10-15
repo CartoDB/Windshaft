@@ -1,9 +1,8 @@
 # Version 4.11.0
-2018-mm-dd
+2018-10-15
 
 Announcements:
 - pg-mvt: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
-
 
 # Version 4.10.0
 2018-09-24
