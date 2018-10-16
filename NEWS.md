@@ -2,7 +2,7 @@
 2018-mm-dd
 
 Announcements:
- - pg-mvt: Fix bug while building query and there is no columns defined for a layer.
+ - pg-mvt: Fix bug while building query and there is no columns defined for the layer.
 
 
 # Version 4.11.0
