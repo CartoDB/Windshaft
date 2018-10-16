@@ -79,7 +79,7 @@ function mvtTest(usePostGIS) {
         });
     });
 
-    it('single layer and the query retrieves `the_geom_webmercator` only', function (done) {
+    it.only('single layer and the query retrieves `the_geom_webmercator` only', function (done) {
         if (!usePostGIS) {
             return done();
         }
