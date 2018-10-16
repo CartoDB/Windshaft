@@ -79,6 +79,34 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    it('single layer and the query retrieves `the_geom_webmercator` only', function (done) {
+        if (!usePostGIS) {
+            return done();
+        }
+
+        const sql = 'select the_geom_webmercator from test_table';
+        const mapConfig = TestClient.mvtLayerMapConfig(sql, null, null, 'name');
+        const testClient = new TestClient(mapConfig, options);
+
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
+            if (err) {
+                return done(err);
+            }
+
+            const vectorTile = new mapnik.VectorTile(13, 4011, 3088);
+
+            vectorTile.setData(mvtTile);
+            assert.equal(vectorTile.painted(), true);
+            assert.equal(vectorTile.empty(), false);
+
+            const result = vectorTile.toJSON();
+
+            assert.equal(result.length, 1);
+
+            done();
+        });
+    });
+
     it('Layer without sql', function (done) {
         const mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         delete mapConfig.layers[0].options.sql;
