@@ -1,3 +1,9 @@
+# Version 4.11.2
+2018-10-17
+
+Announcements:
+ - pg-mvt: Accept trailing semicolon in queries
+
 # Version 4.11.1
 2018-10-16
 
