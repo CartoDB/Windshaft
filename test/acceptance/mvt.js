@@ -79,6 +79,30 @@ function mvtTest(usePostGIS) {
         });
     });
 
+    it('single layer and the query has a semicolon', function (done) {
+        const sql = "select cartodb_id, the_geom_webmercator from test_table \n\t ;   ";
+        const mapConfig = TestClient.mvtLayerMapConfig(sql, 'the_geom_webmercator', 3857);
+        const testClient = new TestClient(mapConfig, options);
+
+        testClient.getTile(13, 4011, 3088, { layer: 'mapnik', format: 'mvt' }, function (err, mvtTile) {
+            if (err) {
+                return done(err);
+            }
+
+            const vectorTile = new mapnik.VectorTile(13, 4011, 3088);
+
+            vectorTile.setData(mvtTile);
+            assert.equal(vectorTile.painted(), true);
+            assert.equal(vectorTile.empty(), false);
+
+            const result = vectorTile.toJSON();
+
+            assert.equal(result.length, 1);
+
+            done();
+        });
+    });
+
     it('single layer and the query retrieves `the_geom_webmercator` only', function (done) {
         if (!usePostGIS) {
             return done();
