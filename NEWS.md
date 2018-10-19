@@ -1,5 +1,5 @@
 # Version 4.11.3
-2018-mm-dd
+2018-10-19
 
 Announcements:
  - Renderer Cache Entry: Do not throw errors for integrity checks
