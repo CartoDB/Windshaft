@@ -2,7 +2,7 @@
 2018-mm-dd
 
 Announcements:
- - Fix bug when releasing the renderer in some scenarios.
+ - Fix bug when releasing the renderer cache entry in some scenarios.
 
 # Version 4.11.3
 2018-10-19
