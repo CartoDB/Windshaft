@@ -1,5 +1,5 @@
 # Version 4.11.4
-2018-mm-dd
+2018-10-23
 
 Announcements:
  - Fix bug when releasing the renderer cache entry in some scenarios.
