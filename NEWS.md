@@ -1,8 +1,9 @@
 # Version 4.11.4
-2018-10-23
+2018-mm-dd
 
 Announcements:
  - Fix bug when releasing the renderer cache entry in some scenarios.
+ - Upgrade grainstore to [1.9.1](https://github.com/CartoDB/grainstore/releases/tag/1.9.1).
 
 # Version 4.11.3
 2018-10-19
