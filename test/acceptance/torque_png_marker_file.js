@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const fs = require('fs');

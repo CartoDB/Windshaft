@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * User: simon
  * Date: 30/08/2011

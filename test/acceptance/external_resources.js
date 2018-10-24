@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 var fs = require('fs');
@@ -134,4 +136,3 @@ describe('external resources', function() {
     });
 
 });
-

@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');

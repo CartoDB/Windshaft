@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper.js');
 var LayerColumns = require('../../../lib/windshaft/utils/layer-columns');
 var assert = require('assert');

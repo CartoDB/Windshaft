@@ -1,3 +1,5 @@
+'use strict';
+
 //require('../support/test_helper.js');
 
 var assert = require('assert');
@@ -127,4 +129,3 @@ describe('mapconfig-layer-indexes', function() {
     });
 
 });
-

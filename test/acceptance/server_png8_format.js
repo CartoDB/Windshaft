@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -124,4 +126,3 @@ describe('server_png8_format', function() {
         });
     });
 });
-
