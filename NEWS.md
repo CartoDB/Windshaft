@@ -1,5 +1,5 @@
 # Version 4.11.5
-2018-mm-dd
+2018-10-25
 
 Bug fixes:
  - Make all modules to use strict mode semantics.
