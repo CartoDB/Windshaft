@@ -1,3 +1,5 @@
+'use strict';
+
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
@@ -116,7 +118,7 @@ assert.imagesAreSimilarIgnoreDimensions = function(testImage, referenceImage, to
 
     if (biggestImage) {
         biggestImage.premultiplySync();
-        // lanczos method has the best quality 
+        // lanczos method has the best quality
         biggestImage.resize(smallestImage.width(), smallestImage.height(), {scaling_method: mapnik.imageScaling.lanczos}, function(err, biggestImage) {
             imagesAreSimilar(biggestImage, smallestImage, tolerance, callback);
         });

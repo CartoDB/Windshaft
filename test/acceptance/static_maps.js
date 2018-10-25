@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -144,12 +146,12 @@ describe('static_maps', function() {
 
                 var referenceImage = mapnik.Image.fromBytesSync(fs.readFileSync(filepathRetina,  { encoding: null }));
                 assert.imagesAreSimilarIgnoreDimensions(
-                    image, 
-                    referenceImage, 
-                    IMAGE_EQUALS_TOLERANCE_PER_MIL, 
+                    image,
+                    referenceImage,
+                    IMAGE_EQUALS_TOLERANCE_PER_MIL,
                     function(err, similarity) {
                         assert.ifError(err);
-                        done();        
+                        done();
                     }
                 );
             });

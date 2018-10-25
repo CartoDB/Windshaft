@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper.js');
 
 var RedisPool     = require('redis-mpool');
@@ -66,4 +68,3 @@ describe('mapstore', function() {
     });
 
 });
-
