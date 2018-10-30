@@ -23,7 +23,7 @@ before_install:
   - tar xvzf redis-4.0.8.tar.gz
   - cd redis-4.0.8
   - make
-  - make install
+  - sudo make install
   - cd ..
   - rm redis-4.0.8.tar.gz
   - rm -R redis-4.0.8
