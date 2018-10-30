@@ -30,12 +30,13 @@ before_install:
   - sudo apt-get purge -y wget protobuf-c-compiler
   - sudo apt-get autoremove -y
   - set -ex
-  - echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
-  - echo "local     all       all                     trust" >  /etc/postgresql/10/main/pg_hba.conf
-  - echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/10/main/pg_hba.conf
-  - echo "host      all       all       ::1/128       trust" >> /etc/postgresql/10/main/pg_hba.conf
-  - /etc/init.d/postgresql start
-  - createdb template_postgis
-  - createuser publicuser
-  - psql -c "CREATE EXTENSION postgis" template_postgis
-  - /etc/init.d/postgresql stop
+  - sudo echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
+  - sudo echo "local     all       all                     trust" >  /etc/postgresql/10/main/pg_hba.conf
+  - sudo echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/10/main/pg_hba.conf
+  - sudo echo "host      all       all       ::1/128       trust" >> /etc/postgresql/10/main/pg_hba.conf
+  - sudo /etc/init.d/postgresql start
+  - sudo createdb template_postgis
+  - sudo createuser publicuser
+  - sudo psql -c "CREATE EXTENSION postgis" template_postgis
+  - sudo /etc/init.d/postgresql stop
+  - sudo /etc/init.d/postgresql start
