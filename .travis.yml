@@ -1,6 +1,6 @@
 language: node_js
 sudo: false
-dist: trusty
+dist: xenial
 env:
   - PGUSER=postgres PGDATABASE=postgres CXX=g++-4.9 LANG=C.UTF-8
 
@@ -8,6 +8,7 @@ node_js:
   - "6"
 
 before_install:
+  - set -ex
   - sudo apt-get update
   - sudo apt-get install -y software-properties-common locales pkg-config wget zip
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
@@ -15,6 +16,7 @@ before_install:
   - sudo add-apt-repository -y ppa:cartodb/gis
   - sudo locale-gen en_US.UTF-8
   - sudo update-locale LANG=en_US.UTF-8
+  - set -ex
   - sudo apt-get update
   - sudo apt-get install -y g++-4.9 gcc-4.9 git libcairo2-dev libgdal-dev libgdal1i libgdal20 libgeos-dev libgif-dev libjpeg8-dev libjson-c-dev libpango1.0-dev libpixman-1-dev libproj-dev libprotobuf-c-dev libxml2-dev gdal-bin make protobuf-c-compiler postgresql-10 postgresql-10-plproxy postgis=2.4.4.5+carto-1 postgresql-10-postgis-2.4=2.4.4.5+carto-1 postgresql-10-postgis-2.4-scripts=2.4.4.5+carto-1 postgresql-10-postgis-scripts=2.4.4.5+carto-1 postgresql-client-10 postgresql-client-common postgresql-common postgresql-contrib postgresql-plpython-10 postgresql-server-dev-10
   - wget http://download.redis.io/releases/redis-4.0.8.tar.gz
@@ -27,6 +29,7 @@ before_install:
   - rm -R redis-4.0.8
   - sudo apt-get purge -y wget protobuf-c-compiler
   - sudo apt-get autoremove -y
+  - set -ex
   - echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
   - echo "local     all       all                     trust" >  /etc/postgresql/10/main/pg_hba.conf
   - echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/10/main/pg_hba.conf
