@@ -25,8 +25,8 @@ before_install:
   - make
   - sudo make install
   - cd ..
-  - rm redis-4.0.8.tar.gz
-  - rm -R redis-4.0.8
+  - sudo rm redis-4.0.8.tar.gz
+  - sudo rm -R redis-4.0.8
   - sudo apt-get purge -y wget protobuf-c-compiler
   - sudo apt-get autoremove -y
   - set -ex
