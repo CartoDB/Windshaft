@@ -51,8 +51,8 @@
     "scripts": {
         "preinstall": "make pre-install",
         "test": "make test-all",
-        "docker-test": "docker run -v `pwd`:/srv carto/nodejs10-xenial-pg101 bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
-        "docker-bash": "docker run  -it -v `pwd`:/srv carto/nodejs10-xenial-pg101 bash"
+        "docker-test": "./docker-test.sh",
+        "docker-bash": "./docker-bash.sh"
     },
     "engines": {
         "node": ">=6.9",
