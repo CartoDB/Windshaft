@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: $0 [<nodejs_version>]"
+    echo "Usage: $0 [<nodejs6|nodejs10>]"
     exit 1
 }
 
