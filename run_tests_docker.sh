@@ -2,8 +2,7 @@
 /etc/init.d/postgresql start
 
 # install dependencies
-npm install -g yarn@0.27.5
-yarn
+npm install
 
 # run tests
 npm test
