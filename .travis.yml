@@ -3,6 +3,7 @@ jobs:
     - sudo: required
       services:
         - docker
+      language: node_js
       node_js:
         - "6"
       before_install: docker pull carto/nodejs6-xenial-pg101:postgis-2.4.4.5
@@ -10,6 +11,7 @@ jobs:
     - sudo: required
       services:
         - docker
+      language: node_js
       node_js:
         - "10"
       before_install: docker pull carto/nodejs10-xenial-pg101:postgis-2.4.4.5
