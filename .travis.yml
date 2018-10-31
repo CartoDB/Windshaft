@@ -1,20 +1,12 @@
-language: node_js
-sudo: false
-dist: xenial
-env:
-  - PGUSER=postgres PGDATABASE=postgres CXX=g++-4.9 LANG=C.UTF-8
+sudo: required
 
-node_js:
-  - "6"
+services:
+  - docker
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y software-properties-common locales pkg-config
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository -y ppa:cartodb/postgresql-10
-  - sudo add-apt-repository -y ppa:cartodb/gis
-  - sudo locale-gen en_US.UTF-8
-  - sudo update-locale LANG=en_US.UTF-8
-  - sudo apt-get update
-  - sudo apt-get install -y g++-4.9 gcc-4.9 git libcairo2-dev libgdal-dev libgdal1i libgdal20 libgeos-dev libgif-dev libjpeg8-dev libjson-c-dev libpango1.0-dev libpixman-1-dev libproj-dev libprotobuf-c-dev libxml2-dev gdal-bin postgresql-10 postgresql-10-plproxy postgis=2.4.4.5+carto-1 postgresql-10-postgis-2.4=2.4.4.5+carto-1 postgresql-10-postgis-2.4-scripts=2.4.4.5+carto-1 postgresql-10-postgis-scripts=2.4.4.5+carto-1 postgresql-client-10 postgresql-client-common postgresql-common postgresql-contrib postgresql-plpython-10 postgresql-server-dev-10
-  - sudo /etc/init.d/postgresql start
+  - docker pull carto/nodejs10-xenial-pg101
+
+script:
+  - npm run docker-test
+
+language: generic
