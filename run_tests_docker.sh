@@ -2,7 +2,7 @@
 
 usage() {
     /etc/init.d/postgresql stop
-    echo "Usage: $0 [<nodejs_version>]"
+    echo "Usage: $0 [nodejs10|nodejs6]"
     exit 1
 }
 
