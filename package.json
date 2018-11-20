@@ -29,7 +29,7 @@
         "cartodb-psql": "github:cartodb/node-cartodb-psql#nodejs-10",
         "debug": "3.1.0",
         "dot": "1.1.2",
-        "grainstore": "cartodb/grainstore#nodejs-10",
+        "grainstore": "1.10.0",
         "queue-async": "1.1.0",
         "redis-mpool": "cartodb/node-redis-mpool#nodejs-10",
         "request": "2.87.0",
