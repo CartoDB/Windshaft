@@ -24,7 +24,7 @@
         "@carto/mapnik": "3.6.2-carto.11",
         "@carto/tilelive-bridge": "cartodb/tilelive-bridge#2.5.1-cdb11",
         "abaculus": "github:cartodb/abaculus#2.0.3-cdb13",
-        "canvas": "cartodb/node-canvas#nodejs-10",
+        "canvas": "github:cartodb/node-canvas#1.6.2-cdb3",
         "carto": "cartodb/carto#nodejs-10",
         "cartodb-psql": "github:cartodb/node-cartodb-psql#nodejs-10",
         "debug": "3.1.0",
