@@ -1,5 +1,10 @@
-# Version 4.11.6
+# Version 4.12.0
 2018-mm-dd
+
+Announcements:
+ - Support Node.js 10 LTS
+ - Add package-lock.json
+ - Updated Travis configuration to run tests against Node.js 6 and 10
 
 # Version 4.11.5
 2018-10-25
