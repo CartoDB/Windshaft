@@ -1,5 +1,5 @@
 # Version 4.12.0
-2018-mm-dd
+2018-11-21
 
 Announcements:
  - Support Node.js 10 LTS
