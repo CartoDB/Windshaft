@@ -21,7 +21,7 @@ if [ "$NODEJS_VERSION" = "nodejs10" ];
 then
     echo "npm version:"
     npm -v
-    npm install
+    npm ci
 elif [ "$NODEJS_VERSION" = "nodejs6" ];
 then
     npm install -g yarn@0.27.5
