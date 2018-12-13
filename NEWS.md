@@ -1,5 +1,5 @@
 # Version 4.12.1
-2018-12-dd
+2018-12-13
 
 Announcements:
  - Update cartodb-psql to 0.13.1
