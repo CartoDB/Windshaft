@@ -2,6 +2,7 @@
 yyyy-mm-dd
 
 Announcements:
+ - Update docs: compatible Node.js and npm versions
 
 
 # Version 4.12.1

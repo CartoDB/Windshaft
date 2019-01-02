@@ -1,6 +1,6 @@
 1. Test (make clean all check), fix if broken before proceeding.
 2. Merge patch, feature to master.
-3. Ensure proper version in package.json.
+3. Ensure proper version in package.json and package-lock.json.
 4. Ensure NEWS.md section exists for the new version, review it, add release date.
 5. Commit package.json, NEWS.md.
 6. git tag -a Major.Minor.Patch # use NEWS section as content.

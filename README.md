@@ -32,8 +32,8 @@ More examples built on top of Windshaft can be found in [CARTO's gallery](http:/
 
 Dependencies
 ------------
-* Node >= 6.9
-* yarn >= 0.27.5
+* Node >= 10.14.2 or 6.9.2
+* npm >= 6.4.1 or yarn >= 0.27.5
 * Mapnik 3.x. See [Installing Mapnik](#installing-mapnik).
 * PostgreSQL > 8.3.x, PostGIS > 1.5.x
 * Redis > 2.2.x
@@ -49,10 +49,16 @@ sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev li
 
 Install
 -------
+
+- Node.js >= 10.14.2:
 ```
-yarn install [windshaft]
+npm install [windshaft]
 ```
 
+- Node.js 6.9.2:
+```
+yarn [add windshaft]
+```
 
 Usage
 -----
@@ -81,11 +87,17 @@ Tests
 -----
 
 Windshaft has a unit and acceptance test suite.
-To execute them, run `yarn test`.
+To execute them, run `npm test` or `yarn test`.
 
 You'll need to be sure your PGUSER (or your libpq default) is
 set to a "superuser" PostgreSQL account, for example:
 
+- npm
+```shell
+PGUSER=postgres npm test
+```
+
+- yarn
 ```shell
 PGUSER=postgres yarn test
 ```
