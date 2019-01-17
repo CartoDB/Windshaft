@@ -7,6 +7,7 @@ Announcements:
 - Update docs: compatible Node.js and npm versions
 - Deps:
   - mocha@5.2.0
+  - jshint@2.9.7
 
 
 # Version 4.12.1
