@@ -343,12 +343,6 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
-  dependencies:
-    ms "0.7.1"
-
 debug@2.6.9, debug@^2.1.2:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -939,8 +933,8 @@ istanbul@0.4.5:
     wordwrap "^1.0.0"
 
 js-base64@^2.1.9:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.5.0.tgz#42255ba183ab67ce59a0dee640afdc00ab5ae93e"
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
 
 js-string-escape@1.0.1:
   version "1.0.1"
@@ -1148,10 +1142,6 @@ mocha@5.2.0:
     minimatch "3.0.4"
     mkdirp "0.5.1"
     supports-color "5.4.0"
-
-ms@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
 
 ms@2.0.0:
   version "2.0.0"
@@ -1991,13 +1981,13 @@ tilelive@5.12.3:
     queue-async "~1.0.7"
     sphericalmercator "~1.0.1"
 
-torque.js@2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/torque.js/-/torque.js-2.17.0.tgz#d23b95e0d06c5826b29c341d1dbd2799143177b4"
+torque.js@2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/torque.js/-/torque.js-2.17.1.tgz#838118b19b055ffb7c8e3bbe08ac62fce2835237"
   dependencies:
     carto cartodb/carto#master
     d3 "3.5.17"
-    turbo-carto "0.19.0"
+    turbo-carto "^0.21.1"
     turf-jenks "~1.0.1"
 
 tough-cookie@~2.3.3:
@@ -2019,13 +2009,13 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-turbo-carto@0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.19.0.tgz#83fb1932acd42acb426312eef216b5f6ac34708e"
+turbo-carto@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.21.1.tgz#d104c16a7d0a46de01ccbda31258f66cf1cb5edc"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
-    debug "2.2.0"
+    debug "^3.1.0"
     es6-promise "3.1.2"
     postcss "5.0.19"
     postcss-value-parser "3.3.0"
