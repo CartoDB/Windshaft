@@ -3,6 +3,9 @@
 # Version 4.12.3
 2019-mm-dd
 
+Bug fixes:
+- Fix compatible Node.js and npm versions
+
 
 # Version 4.12.2
 2019-01-23
