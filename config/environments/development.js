@@ -19,6 +19,7 @@ module.exports.renderer = {
     mapnik: {
         geometry_field: 'the_geom',
         poolSize: 4,//require('os').cpus().length,
+        poolMaxWaitingClients: 16,
         metatile: 1,
         bufferSize: 64,
         scale_factors: [1, 2],
