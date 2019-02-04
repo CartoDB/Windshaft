@@ -36,7 +36,7 @@
         "semver": "5.5.0",
         "sphericalmercator": "1.0.5",
         "tilelive": "5.12.3",
-        "tilelive-mapnik": "github:cartodb/tilelive-mapnik#dynamic-map-pool",
+        "tilelive-mapnik": "github:cartodb/tilelive-mapnik#0.6.18-cdb17",
         "torque.js": "2.17.1",
         "underscore": "1.6.0"
     },
