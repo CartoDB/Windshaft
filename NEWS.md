@@ -3,6 +3,9 @@
 # Version 4.13.1
 2019-mm-dd
 
+Announcements:
+- Upgrade tilelive-mapnik to version 0.6.18-cdb18.
+
 
 # Version 4.13.0
 2019-02-04
