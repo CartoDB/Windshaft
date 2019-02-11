@@ -1,7 +1,14 @@
 **Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 5.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
 
-# Version 4.12.4
+# Version 4.13.1
 2019-mm-dd
+
+
+# Version 4.13.0
+2019-02-04
+
+Announcements:
+- Upgrade tilelive-mapnik to version 0.6.18-cdb17: be able to load maps with custom pool size and max waiting clients.
 
 
 # Version 4.12.3
