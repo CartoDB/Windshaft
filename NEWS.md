@@ -1,7 +1,9 @@
 **Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 5.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
 
-# Version 4.13.2
+# Version 4.13.3
 2019-03-13
+
+Announcements:
 - Upgrade grainstore to version 1.11.0: do not hang when child process is not able to generate a Mapnik XML
 
 
