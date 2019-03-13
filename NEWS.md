@@ -2,6 +2,7 @@
 
 # Version 4.13.2
 2019-mm-dd
+- Upgrade grainstore to version 1.11.0
 
 
 # Version 4.13.1
