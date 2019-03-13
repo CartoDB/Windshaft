@@ -2,7 +2,7 @@
 
 # Version 4.13.2
 2019-mm-dd
-- Upgrade grainstore to version 1.11.0
+- Upgrade grainstore to version 1.11.0: do not hang when child process is not able to generate a Mapnik XML
 
 
 # Version 4.13.1
