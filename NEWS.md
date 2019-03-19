@@ -1,7 +1,7 @@
 **Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 5.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
 
 # Version 4.13.4
-2019-03-dd
+2019-03-19
 
 Announcements:
 - Upgrade `tilelive-mapnik` to version `0.6.18-cdb19`
