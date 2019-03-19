@@ -3,6 +3,9 @@
 # Version 4.13.5
 2019-mm-dd
 
+Announcements:
+- Upgrade `tilelive-mapnik` to version `0.6.18-cdb20`, add header to know when a tile comes from cache (metatiling)
+
 
 # Version 4.13.4
 2019-03-19
