@@ -105,7 +105,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert.ok(renderer.get().uri.xml);
+            assert.ok(renderer.get().xml);
             done();
         });
     });
@@ -116,7 +116,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get().uri.xml.indexOf('cache-features="true"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="true"') > -1);
             done();
         });
     });
@@ -127,7 +127,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider({'cache-features':false}), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get().uri.xml.indexOf('cache-features="false"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="false"') > -1);
             done();
         });
     });
@@ -138,7 +138,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get().uri.xml.indexOf('cache-features="true"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="true"') > -1);
             done();
         });
     });
