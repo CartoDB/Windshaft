@@ -3,6 +3,9 @@
 # Version 4.13.6
 2019-mm-dd
 
+Bug fixes:
+- Avoid uncaught exception in Blend Renderer
+
 
 # Version 4.13.5
 2019-03-19
