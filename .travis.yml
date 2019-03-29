@@ -4,11 +4,5 @@ jobs:
       services:
         - docker
       language: generic
-      before_install: docker pull carto/nodejs6-xenial-pg101:postgis-2.4.4.5
-      script: npm run docker-test -- nodejs6
-    - sudo: required
-      services:
-        - docker
-      language: generic
-      before_install: docker pull carto/nodejs10-xenial-pg101:postgis-2.4.4.5
-      script: npm run docker-test -- nodejs10
+      before_install: docker pull carto/nodejs-xenial-pg101:latest
+      script: npm run docker-test -- 10.15.1 # Node.js version
