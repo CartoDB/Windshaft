@@ -1,8 +1,10 @@
 # Version 5.0.0
 2019-mm-dd
 
+Breaking changes:
+- Drop support for `Node.js` 6, `npm` 3, `yarn` and, `yarn.lock`
+
 Announcements:
-- Drop support for Node.js 6, npm 3 and yarn
 - Upgrades `torque.js` to version `3.0.0`
 - Upgrades `grainstore` to version `2.0.0`
 - Improves Travis CI workflow
