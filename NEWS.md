@@ -1,8 +1,14 @@
 # Version 5.0.0
-2019-mm-dd
+2019-03-29
 
 Breaking changes:
-- Drop support for `Node.js` 6, `npm` 3, `yarn` and, `yarn.lock`
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Drop support for yarn
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
 
 Announcements:
 - Upgrades `torque.js` to version `3.0.0`
