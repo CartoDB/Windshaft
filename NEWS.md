@@ -5,6 +5,8 @@
 
 Announcements:
 - Drop support for Node.js 6, npm 3 and yarn
+- Upgrades torque.js to versio 3.0.0
+- Upgrades grainstore to versio 2.0.0
 
 Bug fixes:
 - Avoid uncaught exception in Blend Renderer
