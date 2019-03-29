@@ -29,7 +29,7 @@
         "cartodb-psql": "0.13.1",
         "debug": "3.1.0",
         "dot": "1.1.2",
-        "grainstore": "^1.11.0",
+        "grainstore": "^2.0.0",
         "queue-async": "1.1.0",
         "redis-mpool": "0.7.0",
         "request": "2.87.0",
@@ -37,7 +37,7 @@
         "sphericalmercator": "1.0.5",
         "tilelive": "5.12.3",
         "tilelive-mapnik": "github:cartodb/tilelive-mapnik#0.6.18-cdb20",
-        "torque.js": "2.17.1",
+        "torque.js": "^3.0.0",
         "underscore": "1.6.0"
     },
     "devDependencies": {
