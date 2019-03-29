@@ -1,12 +1,11 @@
-**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 5.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
-
 # Version 5.0.0
 2019-mm-dd
 
 Announcements:
 - Drop support for Node.js 6, npm 3 and yarn
-- Upgrades torque.js to versio 3.0.0
-- Upgrades grainstore to versio 2.0.0
+- Upgrades `torque.js` to version `3.0.0`
+- Upgrades `grainstore` to version `2.0.0`
+- Improves Travis CI workflow
 
 Bug fixes:
 - Avoid uncaught exception in Blend Renderer
