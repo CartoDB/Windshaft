@@ -1,6 +1,4 @@
-**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 5.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
-
-# Version 5.0.0
+# Version 5.0.1
 2019-mm-dd
 
 Breaking changes:
@@ -10,6 +8,27 @@ Breaking changes:
 - Drop support for Postgres 9.5
 - Drop support for PosGIS 2.2
 - Drop support for Redis 3
+
+
+# Version 5.0.0
+2019-03-29
+
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Drop support for yarn
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
+
+Announcements:
+- Upgrades `torque.js` to version `3.0.0`
+- Upgrades `grainstore` to version `2.0.0`
+- Improves Travis CI workflow
+
+Bug fixes:
+- Avoid uncaught exception in Blend Renderer
 
 
 # Version 4.13.5
