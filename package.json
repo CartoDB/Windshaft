@@ -37,7 +37,7 @@
         "sphericalmercator": "1.0.5",
         "tilelive": "5.12.3",
         "tilelive-mapnik": "github:cartodb/tilelive-mapnik#0.6.18-cdb20",
-        "torque.js": "^3.0.0",
+        "torque.js": "^3.1.0",
         "underscore": "1.6.0"
     },
     "devDependencies": {
