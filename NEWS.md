@@ -1,6 +1,9 @@
-# Version 5.0.1
+# Version 5.1.0
 2019-mm-dd
 
+Announcements:
+- Upgrade `canvas` to version `2.4.1`
+- Upgrade `torque.js` to version `3.1.0`
 
 # Version 5.0.0
 2019-03-29

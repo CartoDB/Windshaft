@@ -78,9 +78,9 @@ describe('torque png renderer', function() {
                             assert.ifError(err);
                             done();
                         });
+                    } else {
+                        done();
                     }
-
-                    done(new Error(`Tile equal to ${fixtureFileCairo}`));
                 });
             });
         });
