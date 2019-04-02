@@ -1,14 +1,9 @@
-# Version 5.0.1
-2019-mm-dd
+# Version 5.1.0
+2019-04-02
 
-Breaking changes:
-- Drop support for Node.js 6
-- Drop support for npm 3
-- Stop supporting `yarn.lock`
-- Drop support for Postgres 9.5
-- Drop support for PosGIS 2.2
-- Drop support for Redis 3
-
+Announcements:
+- Upgrade `canvas` to version `2.4.1`
+- Upgrade `torque.js` to version `3.1.0`
 
 # Version 5.0.0
 2019-03-29
