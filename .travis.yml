@@ -1,8 +1,12 @@
-jobs:
-  include:
-    - sudo: required
-      services:
-        - docker
-      language: generic
-      before_install: docker pull carto/nodejs-xenial-pg101:latest
-      script: npm run docker-test -- 10.15.1 # Node.js version
+language: generic
+sudo: required
+env:
+  matrix:
+    - NODE_VERSION=10.15.1
+      DOCKER_IMAGE=carto/nodejs-xenial-pg101:latest
+    - NODE_VERSION=10.15.1
+      DOCKER_IMAGE=carto/nodejs-xenial-pg1121:latest
+services:
+  - docker
+before_install: docker pull ${DOCKER_IMAGE}
+script: npm run docker-test -- ${DOCKER_IMAGE} ${NODE_VERSION}
