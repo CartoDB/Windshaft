@@ -1,4 +1,4 @@
 #!/bin/bash
 
-docker run -e "NODEJS_VERSION=${1}" -v `pwd`:/srv carto/nodejs-xenial-pg1121:latest bash run_tests_docker.sh && \
+docker run -e "NODEJS_VERSION=${2}" -v `pwd`:/srv ${1} bash run_tests_docker.sh && \
     docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v
