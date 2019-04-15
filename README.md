@@ -39,7 +39,8 @@ Dependencies
 - PostGIS >= 2.4
 - Redis >= 4
 - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
-- C++11 (to build internal dependencies if needed)
+- In Linux, the Mapnik prebuilt module requires GLIBCXX_3.4.19 (GCC 4.8.3 or higher). On the other hand, to build from sources a C++11 compiler is required.
+
 
 Dependencies installation example:
 
