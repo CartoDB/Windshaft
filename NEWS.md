@@ -1,5 +1,5 @@
 # Version 5.1.1
-2019-mm-dd
+2019-04-15
 
 Announcements:
 - Update @carto/mapnik to [`3.6.2-carto.13`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.13/CHANGELOG.carto.md#362-carto13). This requires updating tilelive-bridge, tilelive-mapnik and abaculus too.
