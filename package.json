@@ -23,7 +23,7 @@
     "dependencies": {
         "@carto/cartonik": "github:cartodb/cartonik#master",
         "@carto/mapnik": "3.6.2-carto.13",
-        "abaculus": "github:cartodb/abaculus#2.0.3-cdb13",
+        "abaculus": "github:cartodb/abaculus#2.0.3-cdb14",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
         "cartodb-psql": "0.13.1",
