@@ -21,7 +21,7 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "@carto/cartonik": "github:cartodb/cartonik#unify-tilelive",
+        "@carto/cartonik": "github:cartodb/cartonik#master",
         "@carto/mapnik": "3.6.2-carto.13",
         "abaculus": "github:cartodb/abaculus#2.0.3-cdb13",
         "canvas": "^2.4.1",
