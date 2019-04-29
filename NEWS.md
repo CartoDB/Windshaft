@@ -1,8 +1,8 @@
-# Version 5.1.2
-2019-XX-XX
+# Version 5.2.0
+2019-04-29
 
 Announcements:
-- 
+- In mapnik renderer, use `@carto/cartonik` instead of `@mapbox/tilelive` to fetch raster/vertor tiles.
 
 # Version 5.1.1
 2019-04-15
