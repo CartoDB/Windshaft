@@ -99,13 +99,13 @@ describe('render_cache', function() {
      * They need a database setup as below with the table test_table defined
      */
 
-    it('can generate a tilelive object', function(done){
+    it('can generate a renderer', function(done){
         var render_cache = makeRenderCache();
 
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert.equal(renderer.get()._uri.protocol, 'mapnik:');
+            assert.ok(renderer.get().xml);
             done();
         });
     });
@@ -116,7 +116,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get()._uri.xml.indexOf('cache-features="true"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="true"') > -1);
             done();
         });
     });
@@ -127,7 +127,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider({'cache-features':false}), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get()._uri.xml.indexOf('cache-features="false"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="false"') > -1);
             done();
         });
     });
@@ -138,12 +138,12 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function(err, renderer){
             assert.ok(renderer, err);
             assert.ok(renderer.get(), err);
-            assert(renderer.get()._uri.xml.indexOf('cache-features="true"') > -1);
+            assert(renderer.get().xml.indexOf('cache-features="true"') > -1);
             done();
         });
     });
 
-    it('can generate > 1 tilelive object', function(done){
+    it('can generate > 1 renderer', function(done){
         var render_cache = makeRenderCache();
 
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
@@ -156,7 +156,7 @@ describe('render_cache', function() {
     });
 
 
-    it('can reuse tilelive object', function(done){
+    it('can reuse renderer', function(done){
         var render_cache = makeRenderCache();
 
         var provider = createMapConfigProvider();
@@ -169,7 +169,7 @@ describe('render_cache', function() {
         });
     });
 
-    it('can delete all tilelive objects when reset', function(done){
+    it('can delete all renderers when reset', function(done){
         var render_cache = makeRenderCache();
 
         var provider = createMapConfigProvider();
@@ -186,7 +186,7 @@ describe('render_cache', function() {
     });
 
 
-    it('can delete only related tilelive objects when reset', function(done){
+    it('can delete only related renderers when reset', function(done){
         var render_cache = makeRenderCache();
 
         var provider = createMapConfigProvider();
@@ -240,7 +240,7 @@ describe('render_cache', function() {
     });
 
 
-    it('can purge all tilelive objects', function(done){
+    it('can purge all renderers', function(done){
         var render_cache = makeRenderCache();
 
         var provider = createMapConfigProvider();
