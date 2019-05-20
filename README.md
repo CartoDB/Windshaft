@@ -39,7 +39,7 @@ Dependencies
 - PostGIS >= 2.4
 - Redis >= 4
 - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
-- In Linux, the Mapnik prebuilt module requires GLIBCXX_3.4.19 (GCC 4.8.3 or higher). On the other hand, to build from sources a C++11 compiler is required.
+- In Linux, the Mapnik prebuilt module requires GLIBCXX_3.4.21 (GCC 5.1.0 / libstdc++-5 or higher). In OSX, the minimum requirement is 10.9. On the other hand, a C++11 compiler is required to build from sources.
 
 
 Dependencies installation example:
@@ -48,6 +48,13 @@ Dependencies installation example:
 sudo add-apt-repository -y ppa:cartodb/cairo
 sudo apt-get update
 sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
+npm ci
+```
+
+To build the node modules dependencies (mapnik, gdal, etc) from source use `install` instead of `ci` with the following flags:
+
+```shell
+NODE_MAPNIK_BUILD=release_base npm install --build-from-source --shared_gdal
 ```
 
 Install
