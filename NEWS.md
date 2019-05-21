@@ -1,5 +1,8 @@
 # Version 5.2.1
-2019-mm-dd
+2019-05-21
+
+Announcements:
+- Update @carto/mapnik to [`3.6.2-carto.15`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.15/CHANGELOG.carto.md#362-carto15). This requires updating cartonik and abaculus too.
 
 # Version 5.2.0
 2019-04-29
