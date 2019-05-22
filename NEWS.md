@@ -2,7 +2,7 @@
 XXXX-XX-XX
 
 Announcements:
-- 
+- Avoid using static variables in BlendFactory.
 
 # Version 5.2.1
 2019-05-21
