@@ -121,8 +121,6 @@ describe('static_maps', function() {
                     return done(err);
                 }
 
-                assert.equal(headers['Content-Type'], 'image/png');
-
                 var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
                 assert.equal(image.width(), width);
                 assert.equal(image.height(), height);
@@ -142,8 +140,6 @@ describe('static_maps', function() {
                 if (err) {
                     return done(err);
                 }
-
-                assert.equal(headers['Content-Type'], 'image/png');
 
                 var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
                 assert.equal(image.width(), width);
@@ -172,8 +168,6 @@ describe('static_maps', function() {
                     return done(err);
                 }
 
-                assert.equal(headers['Content-Type'], 'image/png');
-
                 var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
                 assert.equal(image.width(), bWidth);
                 assert.equal(image.height(), bHeight);
@@ -194,8 +188,6 @@ describe('static_maps', function() {
                 if (err) {
                     return done(err);
                 }
-
-                assert.equal(headers['Content-Type'], 'image/png');
 
                 var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
                 assert.equal(image.width(), width);
