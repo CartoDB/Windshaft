@@ -116,7 +116,7 @@ describe('static_maps', function() {
     it('center image', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
         previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
+            function(err, resource, stats) {
                 if (err) {
                     return done(err);
                 }
@@ -136,7 +136,7 @@ describe('static_maps', function() {
     it('center image with invalid basemap', function (done) {
         var provider = staticMapConfigProvider(invalidUrlTemplate);
         previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
+            function(err, resource, stats) {
                 if (err) {
                     return done(err);
                 }
@@ -163,7 +163,7 @@ describe('static_maps', function() {
     it('bbox', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
         previewBackend.getImage(provider, 'png', bWidth, bHeight, {west: west, south: south, east: east, north: north},
-            function(err, resource, headers, stats) {
+            function(err, resource, stats) {
                 if (err) {
                     return done(err);
                 }
@@ -184,7 +184,7 @@ describe('static_maps', function() {
         var outOfRangeHeight = 3000;
         var provider = staticMapConfigProvider(invalidUrlTemplate);
         previewBackend.getImage(provider, 'png', width, outOfRangeHeight, 1, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
+            function(err, resource, stats) {
                 if (err) {
                     return done(err);
                 }
