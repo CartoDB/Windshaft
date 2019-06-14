@@ -34,7 +34,7 @@
         "request": "2.87.0",
         "semver": "5.5.0",
         "sphericalmercator": "1.0.5",
-        "torque.js": "^3.1.0",
+        "torque.js": "github:cartodb/torque#306-fix-cannot-read-undefined-layer",
         "underscore": "1.6.0"
     },
     "devDependencies": {
