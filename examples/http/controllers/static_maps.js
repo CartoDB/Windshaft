@@ -59,13 +59,10 @@ StaticMapsController.prototype.staticMap = function(req, res, width, height, zoo
         },
         function(err) {
             assert.ifError(err);
-            if (center) {
-                self.previewBackend.getImage(new MapStoreMapConfigProvider(self.mapStore, req.params),
-                    format, width, height, zoom, center, this);
-            } else {
-                self.previewBackend.getImage(new MapStoreMapConfigProvider(self.mapStore, req.params),
-                    format, width, height, zoom /* bounds */, this);
-            }
+            var mapConfigProvider = new MapStoreMapConfigProvider(self.mapStore, req.params);
+            var options = { mapConfigProvider, format, width, height, zoom, center, bbox };
+
+            self.previewBackend.getImage(options), this);
         },
         function handleImage(err, image, headers) {
             if (err) {

@@ -205,7 +205,9 @@ describe('torque png renderer', function() {
             var w = 600,
                 h = 400;
             var testClient = new TestClient(mapConfigTorqueOffset);
-            testClient.getStaticBbox(-170, -87, 170, 87, w, h, function(err, imageBuffer, img) {
+            const options = { south: -170, west: -87, east: 170, north: 87, width: w, height: h };
+
+            testClient.getStaticBbox(options, function(err, imageBuffer, img) {
                 assert.ifError(err);
 
                 assert.equal(img.width(), w);

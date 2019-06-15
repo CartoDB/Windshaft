@@ -103,7 +103,8 @@ describe('static_maps', function() {
 
     it('bbox', function (done) {
         var testClient = new TestClient(staticMapConfig(validUrlTemplate));
-        testClient.getStaticBbox(west, south, east, north, bbWidth, bbHeight, function(err, imageBuffer, image) {
+        const options = { west, south, east, north, width: bbWidth, height: bbHeight };
+        testClient.getStaticBbox(options, function(err, imageBuffer, image) {
             assert.ifError(err);
 
             assert.equal(image.width(), bbWidth);
