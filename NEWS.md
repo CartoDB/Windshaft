@@ -1,8 +1,9 @@
-# Version 5.2.2
-XXXX-XX-XX
+# Version 5.3.0
+2019-mm-dd
 
 Announcements:
-- 
+- In preview backend, use `@carto/cartonik` instead of `@mapbox/abaculus` to build static images.
+- Upgrade `@carto/cartonik` to version 0.6.0.
 
 # Version 5.2.1
 2019-05-21
