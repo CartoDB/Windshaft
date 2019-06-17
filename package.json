@@ -21,7 +21,7 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "@carto/cartonik": "github:cartodb/cartonik#master",
+        "@carto/cartonik": "^0.6.0",
         "@carto/mapnik": "3.6.2-carto.15",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
