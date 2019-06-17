@@ -141,15 +141,22 @@ TestClient.prototype.getStaticCenter = function(zoom, lon, lat, width, height, c
         dbname: 'windshaft_test',
         format: format
     };
-    var provider = new DummyMapConfigProvider(this.config, params);
-    var center = {
-        lng: lon,
-        lat: lat
+    const options = {
+        mapConfigProvider: new DummyMapConfigProvider(this.config, params),
+        format,
+        width,
+        height,
+        zoom,
+        center: {
+            lng: lon,
+            lat: lat
+        }
     };
-    this.previewBackend.getImage(provider, format, width, height, zoom, center, previewImageCallbackWrapper(callback));
+
+    this.previewBackend.getImage(options, previewImageCallbackWrapper(callback));
 };
 
-TestClient.prototype.getStaticBbox = function(west, south, east, north, width, height, callback) {
+TestClient.prototype.getStaticBbox = function({ west, south, east, north, width, height }, callback) {
     var format = 'png';
     var params = {
         layer: 'all',
@@ -157,13 +164,16 @@ TestClient.prototype.getStaticBbox = function(west, south, east, north, width, h
         format: format
     };
     var provider = new DummyMapConfigProvider(this.config, params);
-    var bounds = {
-        west: west,
-        south: south,
-        east: east,
-        north: north
+
+    const options = {
+        mapConfigProvider: provider,
+        format,
+        width,
+        height,
+        bbox: { west, south, east, north }
     };
-    this.previewBackend.getImage(provider, format, width, height, bounds, previewImageCallbackWrapper(callback));
+
+    this.previewBackend.getImage(options, previewImageCallbackWrapper(callback));
 };
 
 

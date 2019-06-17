@@ -115,46 +115,56 @@ describe('static_maps', function() {
 
     it('center image', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
-        previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
-                if (err) {
-                    return done(err);
-                }
+        const options = {
+            mapConfigProvider: provider,
+            format: 'png',
+            width,
+            height,
+            zoom,
+            center: { lng: lon, lat: lat }
+        };
 
-                assert.equal(headers['Content-Type'], 'image/png');
-
-                var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
-                assert.equal(image.width(), width);
-                assert.equal(image.height(), height);
-
-                assert.ok(stats.hasOwnProperty('tiles'));
-                assert.ok(stats.hasOwnProperty('renderAvg'));
-
-                done();
+        previewBackend.getImage(options, function(err, resource, stats) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            assert.equal(image.width(), width);
+            assert.equal(image.height(), height);
+
+            assert.ok(stats.hasOwnProperty('tiles'));
+            assert.ok(stats.hasOwnProperty('renderAvg'));
+
+            done();
+        });
     });
 
     it('center image with invalid basemap', function (done) {
         var provider = staticMapConfigProvider(invalidUrlTemplate);
-        previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
-                if (err) {
-                    return done(err);
-                }
+        const options = {
+            mapConfigProvider: provider,
+            format: 'png',
+            width,
+            height,
+            zoom,
+            center: { lng: lon, lat: lat }
+        };
 
-                assert.equal(headers['Content-Type'], 'image/png');
-
-                var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
-                assert.equal(image.width(), width);
-                assert.equal(image.height(), height);
-
-                assert.ok(stats.hasOwnProperty('tiles'));
-                assert.ok(stats.hasOwnProperty('renderAvg'));
-
-                done();
+        previewBackend.getImage(options, function(err, resource, stats) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            assert.equal(image.width(), width);
+            assert.equal(image.height(), height);
+
+            assert.ok(stats.hasOwnProperty('tiles'));
+            assert.ok(stats.hasOwnProperty('renderAvg'));
+
+            done();
+        });
     });
 
     var west = -90,
@@ -166,53 +176,73 @@ describe('static_maps', function() {
 
     it('bbox', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
-        previewBackend.getImage(provider, 'png', bWidth, bHeight, {west: west, south: south, east: east, north: north},
-            function(err, resource, headers, stats) {
-                if (err) {
-                    return done(err);
-                }
+        const options = {
+            mapConfigProvider: provider,
+            format: 'png',
+            width: bWidth,
+            height: bHeight,
+            bbox: { west, south, east, north }
+        };
 
-                assert.equal(headers['Content-Type'], 'image/png');
-
-                var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
-                assert.equal(image.width(), bWidth);
-                assert.equal(image.height(), bHeight);
-
-                assert.ok(stats.hasOwnProperty('tiles'));
-                assert.ok(stats.hasOwnProperty('renderAvg'));
-
-                done();
+        previewBackend.getImage(options, function (err, resource, stats) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            assert.equal(image.width(), bWidth);
+            assert.equal(image.height(), bHeight);
+
+            assert.ok(stats.hasOwnProperty('tiles'));
+            assert.ok(stats.hasOwnProperty('renderAvg'));
+
+            done();
+        });
     });
 
     it('should not fail for coordinates out of range', function (done) {
         var outOfRangeHeight = 3000;
         var provider = staticMapConfigProvider(invalidUrlTemplate);
-        previewBackend.getImage(provider, 'png', width, outOfRangeHeight, 1, {lng: lon, lat: lat},
-            function(err, resource, headers, stats) {
-                if (err) {
-                    return done(err);
-                }
 
-                assert.equal(headers['Content-Type'], 'image/png');
+        const options = {
+            mapConfigProvider: provider,
+            format: 'png',
+            width,
+            height: outOfRangeHeight,
+            zoom: 1,
+            center: { lng: lon, lat: lat }
+        };
 
-                var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
-                assert.equal(image.width(), width);
-                assert.equal(image.height(), outOfRangeHeight);
-
-                assert.ok(stats.hasOwnProperty('tiles'));
-                assert.ok(stats.hasOwnProperty('renderAvg'));
-
-                done();
+        previewBackend.getImage(options, function(err, resource, stats) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            assert.equal(image.width(), width);
+            assert.equal(image.height(), outOfRangeHeight);
+
+            assert.ok(stats.hasOwnProperty('tiles'));
+            assert.ok(stats.hasOwnProperty('renderAvg'));
+
+            done();
+        });
     });
 
     it('should keep failing for other errors', function (done) {
         var invalidStyleForZoom = '#layer { marker-fill:red; } #layer[zoom='+zoom+'] { marker-width: [wadus] * 2; }';
         var provider = staticMapConfigProvider(validUrlTemplate, invalidStyleForZoom);
-        previewBackend.getImage(provider, 'png', width, height, zoom, {lng: lon, lat: lat}, function(err) {
+
+        const options = {
+            mapConfigProvider: provider,
+            format: 'png',
+            width,
+            height,
+            zoom,
+            center: { lng: lon, lat: lat }
+        };
+
+        previewBackend.getImage(options, function(err) {
             assert.ok(err);
             assert.ok(err.message.match(/column \"wadus\" does not exist/));
 

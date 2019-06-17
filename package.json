@@ -21,9 +21,8 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "@carto/cartonik": "^0.5.1",
+        "@carto/cartonik": "^0.6.0",
         "@carto/mapnik": "3.6.2-carto.15",
-        "abaculus": "github:cartodb/abaculus#2.0.3-cdb15",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
         "cartodb-psql": "0.13.1",
@@ -33,7 +32,6 @@
         "redis-mpool": "0.7.0",
         "request": "2.87.0",
         "semver": "5.5.0",
-        "sphericalmercator": "1.0.5",
         "torque.js": "^3.1.0",
         "underscore": "1.6.0"
     },
