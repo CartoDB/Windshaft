@@ -1,6 +1,8 @@
 # Version 5.3.1
 2019-mm-dd
 
+Announcements:
+- Upgrade `torque.js` to version `3.1.1`
 
 # Version 5.3.0
 2019-06-17
