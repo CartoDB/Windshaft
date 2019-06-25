@@ -32,7 +32,7 @@
         "redis-mpool": "0.7.0",
         "request": "2.87.0",
         "semver": "5.5.0",
-        "torque.js": "github:cartodb/torque#306-fix-cannot-read-undefined-layer",
+        "torque.js": "3.1.1",
         "underscore": "1.6.0"
     },
     "devDependencies": {
