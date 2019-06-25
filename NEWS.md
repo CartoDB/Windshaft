@@ -1,6 +1,9 @@
 # Version 5.4.1
 2019-mm-dd
 
+Announcements:
+- pg-mvt: Remove dependency on cartodb-postgresql extension.
+
 
 # Version 5.4.0
 2019-06-25
