@@ -4,6 +4,7 @@
 Announcements:
 - Expose `utils.WebMercatorHelper` with utilities to calculate webmercator tile resolution and extent.
 - Remove dependency on cartodb-postgresql extension for CDB_XYZ_Resolution and CDB_XYZ_extent.
+- Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16). This requires updating cartonik too.
 
 # Version 5.4.0
 2019-06-25
