@@ -1,6 +1,9 @@
-# Version 5.4.1
+# Version 5.5.0
 2019-mm-dd
 
+Announcements:
+- Expose `utils.WebMercatorHelper` with utilities to calculate webmercator tile resolution and extent.
+- Remove dependency on cartodb-postgresql extension for CDB_XYZ_Resolution and CDB_XYZ_extent.
 
 # Version 5.4.0
 2019-06-25

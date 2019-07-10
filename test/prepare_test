@@ -57,7 +57,7 @@ if [ $POSTGIS_VERSION -ge 30000 ]; then
     psql -c 'create extension postgis_raster' windshaft_test ||  die "Could not install postgis_raster"
 fi
 
-for i in CDB_XYZ CDB_QueryStatements CDB_QueryTables
+for i in CDB_QueryStatements CDB_QueryTables
 do
   echo "...Installing $i"
   #curl -L -s https://raw.githubusercontent.com/CartoDB/cartodb-postgresql/master/scripts-available/$i.sql -o sql/$i.sql
