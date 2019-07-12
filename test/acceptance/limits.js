@@ -64,9 +64,8 @@ describe('render limits', function() {
         });
     });
 
-    const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
     describe('mvt (mapnik)', () => { mvtTest(false); });
-    describe_pg('mvt (pg-mvt)', () => { mvtTest(true); });
+    describe('mvt (pg-mvt)', () => { mvtTest(true); });
 });
 
 function mvtTest(usePostGIS) {

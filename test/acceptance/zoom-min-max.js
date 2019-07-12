@@ -238,10 +238,7 @@ describe('minzoom and maxzoom', function() {
             };
         };
 
-        const suiteConfigurations = [{ mvt: { usePostGIS: false } }];
-        if (process.env.POSTGIS_VERSION >= '20400') {
-            suiteConfigurations.push({ mvt: { usePostGIS: true } });
-        }
+        const suiteConfigurations = [{ mvt: { usePostGIS: false } }, { mvt: { usePostGIS: true } }];
 
         suiteConfigurations.forEach(function(clientOptions) {
             describe(`${JSON.stringify(clientOptions)}`, function() {
