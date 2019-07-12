@@ -28,11 +28,10 @@ describe('mvt (mapnik)', function () {
     mvtTest(false);
 });
 
-if (process.env.POSTGIS_VERSION >= '20400') {
-    describe('mvt (pgsql)', function () {
-        mvtTest(true);
-    });
-}
+describe('mvt (pgsql)', function () {
+    mvtTest(true);
+});
+
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };

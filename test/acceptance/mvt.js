@@ -6,11 +6,10 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test_client');
 const mapnik = require('@carto/mapnik');
 
-const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
 
 describe('mvt (mapnik)', () => { mvtTest(false); });
-describe_pg('mvt (pgsql)', () => { mvtTest(true); });
-describe_pg('Compare mvt renderers', () => { describe_compare_renderer(); });
+describe('mvt (pgsql)', () => { mvtTest(true); });
+describe('Compare mvt renderers', () => { describe_compare_renderer(); });
 
 function mvtTest(usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
