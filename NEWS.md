@@ -2,6 +2,7 @@
 2019-mm-dd
 
 Announcements:
+- Update grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
 - Expose `utils.WebMercatorHelper` with utilities to calculate webmercator tile resolution and extent.
 - Remove dependency on cartodb-postgresql extension for CDB_XYZ_Resolution and CDB_XYZ_extent.
 - Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16). This requires updating cartonik too.
