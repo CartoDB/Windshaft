@@ -1,5 +1,5 @@
 # Version 5.5.0
-2019-mm-dd
+2019-07-16
 
 Announcements:
 - Update grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
