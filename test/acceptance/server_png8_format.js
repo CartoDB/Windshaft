@@ -3,7 +3,6 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var _ = require('underscore');
 var fs = require('fs');
 var TestClient = require('../support/test_client');
 
@@ -16,12 +15,12 @@ describe('server_png8_format', function() {
     before(function(done) {
         testClientPng8 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: _.extend({mapnik_tile_format: 'png8:m=h'}, TestClient.grainstoreOptions)
+                grainstore: Object.assign({mapnik_tile_format: 'png8:m=h'}, TestClient.grainstoreOptions)
             }
         });
         testClientPng32 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: _.extend({mapnik_tile_format: 'png'}, TestClient.grainstoreOptions)
+                grainstore: Object.assign({mapnik_tile_format: 'png'}, TestClient.grainstoreOptions)
             }
         });
         var testPngFilesDir = __dirname + '/../results/png';

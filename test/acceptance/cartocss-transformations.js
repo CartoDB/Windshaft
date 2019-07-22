@@ -5,8 +5,6 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-var _ = require('underscore');
-
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
 describe('cartocss transformation', function () {
@@ -201,7 +199,11 @@ describe('cartocss transformation', function () {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {
-                    grainstore: _.defaults({ mapnik_version: scenario.mapnikVersion }, TestClient.grainstoreOptions)
+                    grainstore: Object.assign(
+                        {},
+                        TestClient.grainstoreOptions,
+                        { mapnik_version: scenario.mapnikVersion }
+                    )
                 }
             };
 
@@ -238,7 +240,11 @@ describe('cartocss transformation', function () {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {
-                    grainstore: _.defaults({ mapnik_version: scenario.mapnikVersion }, TestClient.grainstoreOptions)
+                    grainstore: Object.assign(
+                        {},
+                        TestClient.grainstoreOptions,
+                        { mapnik_version: scenario.mapnikVersion }
+                    )
                 }
             };
 

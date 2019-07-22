@@ -2,7 +2,6 @@
 
 require('../support/test_helper');
 
-var _ = require('underscore');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var rendererOptions = global.environment.renderer;
@@ -36,7 +35,7 @@ describe('server_gettile', function() {
     it("should rewrite queries",  function(done){
         var options = {
             mapnik: {
-                mapnik: _.extend({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
+                mapnik: Object.assign({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
             }
         };
         var mapConfig = TestClient.singleLayerMapConfig('SELECT * FROM _vovw_12_test_table');
@@ -48,7 +47,7 @@ describe('server_gettile', function() {
     it("should rewrite queries with passed data",  function(done){
         var options = {
             mapnik: {
-                mapnik: _.extend({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
+                mapnik: Object.assign({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
             }
         };
         var mapConfig = TestClient.singleLayerMapConfig('SELECT * FROM test_table');

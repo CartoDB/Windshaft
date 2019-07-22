@@ -2,7 +2,6 @@
 
 require('../support/test_helper.js');
 
-var _ = require('underscore');
 var assert = require('assert');
 var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
 var MapStore = require('../../lib/windshaft/storages/mapstore');
@@ -52,7 +51,7 @@ describe('render_cache', function() {
     var mapStore = new MapStore({pool: redisPool});
 
     function requestParams(params) {
-        return _.extend({
+        return Object.assign({
             dbname: "windshaft_test",
             token: mapConfig.id(),
             dbuser: 'postgres',
@@ -91,7 +90,7 @@ describe('render_cache', function() {
 
     it('has a cache of render objects', function(){
         var render_cache = makeRenderCache();
-        assert.ok(_.isObject(render_cache.renderers));
+        assert.ok(typeof render_cache.renderers === 'object');
     });
 
     /**
@@ -149,7 +148,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(createMapConfigProvider(), function(err, renderer){
             assert.ok(renderer, err);
             render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function(/*err, renderer2*/) {
-                assert.equal(_.keys(render_cache.renderers).length, 2);
+                assert.equal(Object.keys(render_cache.renderers).length, 2);
                 done();
             });
         });
@@ -163,7 +162,7 @@ describe('render_cache', function() {
         render_cache.getRenderer(provider, function(err, renderer){
             assert.ok(renderer, err);
             render_cache.getRenderer(provider, function(/*err, renderer*/) {
-                assert.equal(_.keys(render_cache.renderers).length, 1);
+                assert.equal(Object.keys(render_cache.renderers).length, 1);
                 done();
             });
         });
@@ -175,11 +174,11 @@ describe('render_cache', function() {
         var provider = createMapConfigProvider();
         render_cache.getRenderer(provider, function(err, renderer){
             assert.ok(renderer, err);
-            assert.equal(_.keys(render_cache.renderers).length, 1);
+            assert.equal(Object.keys(render_cache.renderers).length, 1);
             render_cache.getRenderer(createMapConfigProvider({ scale_factor: 2}), function(/*err, renderer*/) {
-                assert.equal(_.keys(render_cache.renderers).length, 2);
+                assert.equal(Object.keys(render_cache.renderers).length, 2);
                 render_cache.reset(provider);
-                assert.equal(_.keys(render_cache.renderers).length, 0);
+                assert.equal(Object.keys(render_cache.renderers).length, 0);
                 done();
             });
         });
@@ -196,12 +195,12 @@ describe('render_cache', function() {
             render_cache.getRenderer(provider, function(/*err, renderer*/) {
                 provider = createMapConfigProvider({ token: mapConfig2.id() });
                 render_cache.getRenderer(provider, function(/*err, renderer*/) {
-                    assert.equal(_.keys(render_cache.renderers).length, 3);
+                    assert.equal(Object.keys(render_cache.renderers).length, 3);
 
                     provider = createMapConfigProvider({ token: mapConfig.id() });
                     render_cache.reset(provider);
 
-                    assert.equal(_.keys(render_cache.renderers).length, 1);
+                    assert.equal(Object.keys(render_cache.renderers).length, 1);
 
                     done();
                 });
@@ -227,11 +226,15 @@ describe('render_cache', function() {
 
             render_cache.getRenderer(provider, function(/*err, renderer*/) {
                 render_cache.getRenderer(createMapConfigProvider({ token: mapConfig2.id() }), function() {
-                    assert.equal(_.keys(render_cache.renderers).length, 3);
+                    assert.equal(Object.keys(render_cache.renderers).length, 3);
 
                     render_cache.reset(provider);
 
-                    assert.equal(_.keys(render_cache.renderers).length, 1, _.keys(render_cache.renderers).join('\n'));
+                    assert.equal(
+                        Object.keys(render_cache.renderers).length,
+                        1,
+                        Object.keys(render_cache.renderers).join('\n')
+                    );
 
                     done();
                 });
@@ -252,11 +255,11 @@ describe('render_cache', function() {
                 provider = createMapConfigProvider({ token: mapConfig2.id() });
 
                 render_cache.getRenderer(provider, function(/*err, renderer*/) {
-                    assert.equal(_.keys(render_cache.renderers).length, 3);
+                    assert.equal(Object.keys(render_cache.renderers).length, 3);
 
                     render_cache.purge();
 
-                    assert.equal(_.keys(render_cache.renderers).length, 0);
+                    assert.equal(Object.keys(render_cache.renderers).length, 0);
 
                     done();
                 });
@@ -270,10 +273,10 @@ describe('render_cache', function() {
         var provider = createMapConfigProvider();
         render_cache.getRenderer(provider, function(err, renderer){
             assert.ok(renderer, err);
-            assert.equal(_.keys(render_cache.renderers).length, 1);
+            assert.equal(Object.keys(render_cache.renderers).length, 1);
 
             setTimeout(function() {
-                assert.equal(_.keys(render_cache.renderers).length, 0);
+                assert.equal(Object.keys(render_cache.renderers).length, 0);
                 done();
             },200);
         });
@@ -283,7 +286,7 @@ describe('render_cache', function() {
     // See https://github.com/CartoDB/Windshaft/issues/171
     it('does not keep erroring renderers in cache', function(done){
         var render_cache = makeRenderCache();
-        assert.equal(_.keys(render_cache.renderers).length, 0);
+        assert.equal(Object.keys(render_cache.renderers).length, 0);
         var provider = createMapConfigProvider({ token: 'nonexistant' });
         render_cache.getRenderer(provider, function(err/*, renderer*/) {
             assert.ok(err);
@@ -292,7 +295,7 @@ describe('render_cache', function() {
             setTimeout(function() {
               err = null;
               try {
-                assert.equal(_.keys(render_cache.renderers).length, 0);
+                assert.equal(Object.keys(render_cache.renderers).length, 0);
               }
               catch (e) { err = e; }
               done(err);

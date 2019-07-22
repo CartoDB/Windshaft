@@ -3,7 +3,6 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var _ = require('underscore');
 var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
 var TestClient = require('../support/test_client');
 
@@ -305,8 +304,7 @@ describe('multilayer interactivity and layers order', function() {
     var chaosScenariosSize = 25;
     var chaosScenarios = [];
     for (var i = 0; i < chaosScenariosSize; i++) {
-        // Underscore.js' sample method uses Fisher-Yates shuffle internally, see http://bost.ocks.org/mike/shuffle/
-        var randomLayers = _.sample(allLayers, _.random(1, allLayers.length));
+        var randomLayers = sample(allLayers, random(1, allLayers.length));
         chaosScenarios.push({
             desc: 'chaos scenario – layer types: ' + randomLayers.map(layerType).join(', '),
             layers: randomLayers
@@ -317,3 +315,21 @@ describe('multilayer interactivity and layers order', function() {
     chaosScenarios.forEach(testInteractivityLayersOrderScenario);
 
 });
+
+function sample (arr, num) {
+    num = Math.max(Math.min(num, arr.length), 0);
+    const last = arr.length - 1;
+
+    for (let index = 0; index < num; index++) {
+        const rand = random(index, last);
+        const temp = arr[index];
+        arr[index] = arr[rand];
+        arr[rand] = temp;
+    }
+
+    return arr.slice(0, num);
+}
+
+function random (min, max) {
+    return min + Math.floor(Math.random() * (max - min + 1));
+}

@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
 
@@ -13,7 +12,7 @@ mapnik.register_system_fonts();
 mapnik.register_default_fonts();
 var cartoEnv = {
     validation_data: {
-        fonts: _.keys(mapnik.fontFiles())
+        fonts: Object.keys(mapnik.fontFiles())
     }
 };
 
@@ -34,10 +33,11 @@ var rendererFactoryOptions = {
 };
 
 function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
-    const options = _.extend({}, JSON.parse(JSON.stringify(rendererFactoryOptions)));
+    const options = Object.assign({}, rendererFactoryOptions);
     overrideOptions = overrideOptions || {};
-    _.each(overrideOptions, function(overrideConfig, key) {
-        options[key] = _.extend({}, options[key], overrideConfig);
+
+    Object.keys(overrideOptions).forEach(key => {
+        options[key] = Object.assign({}, options[key], overrideOptions[key]);
     });
 
     if (onTileErrorStrategy) {
@@ -67,7 +67,7 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
         callback = options;
         options = {};
     }
-    var params = _.extend({
+    var params = Object.assign({
         dbname: 'windshaft_test',
         layer: 'all',
         format: 'png',
@@ -107,7 +107,7 @@ TestClient.prototype.createLayergroup = function(options, callback) {
         callback = options;
         options = {};
     }
-    var params = _.extend({
+    var params = Object.assign({
         dbname: 'windshaft_test'
     }, options);
 
@@ -227,7 +227,7 @@ function mvtLayerMapConfig(sql, geom_column = 'the_geom', srid = 3857) {
 
 
 function defaultTableQuery(tableName) {
-    return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
+    return `SELECT * FROM ${tableName}`;
 }
 
 function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
