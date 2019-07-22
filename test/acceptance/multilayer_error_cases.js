@@ -99,9 +99,9 @@ describe('multilayer error cases', function() {
       };
         var testClient = new TestClient(layergroup);
         testClient.createLayergroup(function(err) {
-            assert.ok(err);
-            assert.ok(err.message.match(/^style1: CartoCSS is empty/));
-            done();
+          assert.ok(err);
+          assert.ok(err.message.match(/^style1: CartoCSS is empty/));
+          done();
         });
     });
 
