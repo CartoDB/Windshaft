@@ -3,7 +3,6 @@
 require('../support/test_helper');
 
 var assert = require('../support/assert');
-var _ = require('underscore');
 var fs = require('fs');
 var step = require('step');
 var mapnik = require('@carto/mapnik');
@@ -17,7 +16,7 @@ describe('multilayer', function() {
 
     var resourcesServer;
     var resourcesServerPort = 8033;
-    var available_system_fonts = _.keys(mapnik.fontFiles());
+    var available_system_fonts = Object.keys(mapnik.fontFiles());
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
@@ -440,9 +439,9 @@ describe('multilayer', function() {
             assert.ok(grid.hasOwnProperty('data'));
             assert.ok(grid.data.hasOwnProperty('1'));
             var data = grid.data[1];
-            assert.ok(data.hasOwnProperty('n'), "Missing 'n' from grid data keys: " + _.keys(data));
-            assert.ok(data.hasOwnProperty('i'), "Missing 'i' from grid data keys: " + _.keys(data));
-            assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + _.keys(data));
+            assert.ok(data.hasOwnProperty('n'), "Missing 'n' from grid data keys: " + Object.keys(data));
+            assert.ok(data.hasOwnProperty('i'), "Missing 'i' from grid data keys: " + Object.keys(data));
+            assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + Object.keys(data));
 
             // this should not be undefined, skipping test until this can be fixed
             // the workaround is to cast now() as now()::text

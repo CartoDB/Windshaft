@@ -4,7 +4,6 @@
 // If you want to get something running quickly, follow the instructions for a seed DB in test/windshaft.test.sql
 
 var Server = require('./http/server');
-var _         = require('underscore');
 
 // Force 'development' environment
 var ENV = 'development';
@@ -13,7 +12,7 @@ var PORT = 4000;
 // set environment specific variables
 global.settings     = require('../config/settings');
 global.environment  = require('../config/environments/' + ENV);
-_.extend(global.settings, global.environment);
+global.settings = Object.assign(global.settings, global.environment);
 
 var config = {
     base_url: '/database/:dbname/table/:table',
@@ -25,8 +24,7 @@ var config = {
     enable_cors: true,
     req2params: function(req, callback){
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
-        req.params =  _.extend({}, req.params);
-        _.extend(req.params, req.query);
+        req.params =  Object.assign({}, req.params, req.query);
 
         // send the finished req object on
         callback(null,req);

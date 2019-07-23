@@ -1,7 +1,6 @@
 var debug = require('debug')('windshaft:server');
 var express = require('express');
 var RedisPool = require('redis-mpool');
-var _ = require('underscore');
 var mapnik = require('@carto/mapnik');
 
 var windshaft = require('../../lib/windshaft');
@@ -90,10 +89,10 @@ module.exports = function(opts) {
     });
 
     // initialize render cache
-    var rendererCacheOpts = _.defaults(opts.renderCache || {}, {
+    var rendererCacheOpts = Object.assign({
         ttl: 60000, // 60 seconds TTL by default
         statsInterval: 60000 // reports stats every milliseconds defined here
-    });
+    }, opts.renderCache || {});
     var rendererCache = new windshaft.cache.RendererCache(rendererFactory, rendererCacheOpts);
 
     var attributesBackend = new windshaft.backend.Attributes();
@@ -188,7 +187,9 @@ module.exports = function(opts) {
 };
 
 function validateOptions(opts) {
-    if (!_.isString(opts.base_url) || !_.isFunction(opts.req2params) || !_.isString(opts.base_url_mapconfig)) {
+    if (typeof opts.base_url !== 'string' ||
+        typeof opts.req2params !== 'function' ||
+        typeof opts.base_url_mapconfig !== 'string') {
         throw new Error("Must initialise Windshaft with: 'base_url'/'base_url_mapconfig' URLs and req2params function");
     }
 
@@ -201,7 +202,7 @@ function validateOptions(opts) {
 
 function makeRedisPool(redisOpts) {
     redisOpts = redisOpts || {};
-    return redisOpts.pool || new RedisPool(_.extend(redisOpts, {name: 'windshaft:server'}));
+    return redisOpts.pool || new RedisPool(Object.assign(redisOpts, {name: 'windshaft:server'}));
 }
 
 function bootstrapFonts(opts) {
@@ -212,13 +213,13 @@ function bootstrapFonts(opts) {
     if ( ! cenv.validation_data.fonts ) {
         mapnik.register_system_fonts();
         mapnik.register_default_fonts();
-        cenv.validation_data.fonts = _.keys(mapnik.fontFiles());
+        cenv.validation_data.fonts = Object.keys(mapnik.fontFiles());
     }
 }
 
 function bootstrap(opts) {
     var app;
-    if (_.isObject(opts.https)) {
+    if (typeof opts.https === 'object') {
         // use https if possible
         app = express.createServer(opts.https);
     } else {
@@ -250,10 +251,10 @@ function bootstrap(opts) {
 function addFilters(app, opts) {
 
     // Extend windshaft with all the elements of the options object
-    _.extend(app, opts);
+    app = Object.assign(app, opts);
 
     // filters can be used for custom authentication, caching, logging etc
-    _.defaults(app, {
+    Object.assign({
         // Enable CORS access by web browsers if set
         doCORS: function(res, extraHeaders) {
             if (opts.enable_cors) {
@@ -269,7 +270,7 @@ function addFilters(app, opts) {
         getVersion: function() {
             return windshaft.versions;
         }
-    });
+    }, app);
 }
 
 function statusFromErrorMessage(errMsg) {

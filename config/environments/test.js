@@ -1,7 +1,7 @@
-var _ = require('underscore');
+'use strict';
 
 var development = require('./development');
-var test = _.extend(development, {
+var test = Object.assign(development, {
     name: 'test',
     // Allowed elements in "postgres" config object:
     // user, host, port, geometry_field, srid
@@ -12,10 +12,10 @@ var test = _.extend(development, {
     millstone: {
         cache_basedir: '/tmp/windshaft-test/millstone'
     },
-    redis: _.extend(development.redis, {
+    redis: Object.assign(development.redis, {
         port: 6334 // 6379 is the default, 6333 is used by grainstore
     }),
-    renderer: _.extend(development.renderer, {
+    renderer: Object.assign(development.renderer, {
         http: {
             timeout: 5000,
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],

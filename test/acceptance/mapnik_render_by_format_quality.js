@@ -2,7 +2,6 @@
 
 require('../support/test_helper');
 
-var _ = require('underscore');
 var assert = require('../support/assert');
 var fs = require('fs');
 var TestClient = require('../support/test_client');
@@ -15,7 +14,7 @@ describe('mapnik_render_by_format_quality', function() {
     before(function(done) {
         testClient = new TestClient(layergroup, {
             mapnik: {
-                grainstore: _.extend({mapnik_tile_format: 'png8:m=h'}, TestClient.grainstoreOptions)
+                grainstore: Object.assign({ mapnik_tile_format: 'png8:m=h' }, TestClient.grainstoreOptions)
             }
         });
         var testPngFilesDir = __dirname + '/../results/png';
@@ -34,7 +33,7 @@ describe('mapnik_render_by_format_quality', function() {
     function testOutputForPng32AndPng8(tile, persist, callback) {
         it('intensity visualization; tile: ' + JSON.stringify(tile),  function(done) {
             var options = { layer: 'mapnik' };
-            var optionsForPng32 = _.extend({ format: 'png32' }, options);
+            var optionsForPng32 = Object.assign({ format: 'png32' }, options);
 
             testClient.getTile(tile.z, tile.x, tile.y, optionsForPng32, function(err, tileBuffer) {
                 var bufferPng32 = tileBuffer;

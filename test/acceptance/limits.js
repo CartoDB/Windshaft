@@ -4,7 +4,6 @@ require('../support/test_helper');
 
 var fs = require('fs');
 
-var _ = require('underscore');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
@@ -29,7 +28,7 @@ describe('render limits', function() {
 
     var OVERRIDE_OPTIONS = {
         mapnik: {
-            mapnik: _.extend({}, TestClient.mapnikOptions, {limits: LIMITS_CONFIG})
+            mapnik: Object.assign({}, TestClient.mapnikOptions, {limits: LIMITS_CONFIG})
         }
     };
 

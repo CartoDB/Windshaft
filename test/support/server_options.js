@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('underscore');
 var mapnik = require('@carto/mapnik');
 
 module.exports = (function(opts) {
@@ -27,8 +26,8 @@ module.exports = (function(opts) {
             }
 
             // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
-            req.params =  _.extend({}, req.params);
-            _.extend(req.params, req.query);
+            req.params =  Object.assign({}, req.params);
+            Object.assign(req.params, req.query);
 
             // increment number of calls counter
             // NOTE: "this" would likely point to the server instance
@@ -46,7 +45,7 @@ module.exports = (function(opts) {
 
     };
 
-    _.extend(config,  opts || {});
+    Object.assign(config,  opts || {});
 
     return config;
 })();
