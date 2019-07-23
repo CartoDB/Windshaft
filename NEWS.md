@@ -1,5 +1,5 @@
 # Version 5.5.1
-2019-mm-dd
+2019-07-23
 
 Bug fixes:
 - Remove `queue-async` as a dependency
