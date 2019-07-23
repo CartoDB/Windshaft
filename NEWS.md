@@ -1,6 +1,10 @@
 # Version 5.5.1
 2019-mm-dd
 
+Bug fixes:
+- Remove `queue-async` as a dependency
+- Remove `underscore` as a dependency
+
 
 # Version 5.5.0
 2019-07-16
