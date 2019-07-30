@@ -21,7 +21,7 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "@carto/cartonik": "github:cartodb/cartonik#19-preview-batch-fetchs",
+        "@carto/cartonik": "^0.7.0",
         "@carto/mapnik": "3.6.2-carto.16",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
