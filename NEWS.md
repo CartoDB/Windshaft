@@ -1,5 +1,8 @@
-# Version 5.5.2
-2019-mm-dd
+# Version 5.6.0
+2019-07-30
+
+Announcements:
+- Update @carto/cartonik to version [`v0.7.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.7.0): add `concurrency` param in preview backend to avoid map renderer exhaustion.
 
 # Version 5.5.1
 2019-07-23
@@ -7,7 +10,6 @@
 Bug fixes:
 - Remove `queue-async` as a dependency
 - Remove `underscore` as a dependency
-
 
 # Version 5.5.0
 2019-07-16
