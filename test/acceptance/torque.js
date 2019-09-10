@@ -297,8 +297,10 @@ describe('torque', function() {
             SubstitutionTokens.replace = replaceFn;
 
             assert.ifError(err);
-            assert.deepEqual(torqueTile, [{ x__uint8: 128, y__uint8: 128, vals__uint8: [2,3], dates__uint16: [1,0] }]);
-
+            assert.equal(torqueTile[0].x__uint8, 128);
+            assert.equal(torqueTile[0].y__uint8, 128);
+            assert.ok(torqueTile[0].dates__uint16[0] === (torqueTile[0].vals__uint8[0] === 2 ?  1 : 0));
+            assert.ok(torqueTile[0].dates__uint16[1] === (torqueTile[0].vals__uint8[1] === 2 ?  1 : 0));
             assert.equal(expectedSubstitutionTokens.length, 0);
 
             done();
