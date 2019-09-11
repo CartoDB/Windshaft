@@ -4,7 +4,6 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
-var SubstitutionTokens = require('../../lib/windshaft/utils/substitution_tokens');
 
 describe('torque', function() {
 
@@ -271,37 +270,14 @@ describe('torque', function() {
             ]
         };
 
-        var expectedSubstitutionTokens = [
-            {
-                bbox: 'ST_MakeEnvelope(0,0,0,0)',
-                scale_denominator: '0',
-                pixel_width: '1',
-                pixel_height: '1'
-            },
-            {
-                bbox: 'ST_MakeEnvelope(-20037508.5,20037508.5,20037508.5,-20037508.5,3857)',
-                scale_denominator: 559082268.4151787,
-                pixel_width: 156543.03515625,
-                pixel_height: 156543.03515625
-            }
-        ];
-
-        var replaceFn = SubstitutionTokens.replace;
-        SubstitutionTokens.replace = function(sql, replaceValues) {
-            assert.deepEqual(replaceValues, expectedSubstitutionTokens.shift());
-            return replaceFn(sql, replaceValues);
-        };
-
         var testClient = new TestClient(mapConfig);
         testClient.getTile(0, 0, 0, {layer: 0, format: 'torque.json'}, function(err, torqueTile) {
-            SubstitutionTokens.replace = replaceFn;
 
             assert.ifError(err);
             assert.equal(torqueTile[0].x__uint8, 128);
             assert.equal(torqueTile[0].y__uint8, 128);
             assert.ok(torqueTile[0].dates__uint16[0] === (torqueTile[0].vals__uint8[0] === 2 ?  1 : 0));
             assert.ok(torqueTile[0].dates__uint16[1] === (torqueTile[0].vals__uint8[1] === 2 ?  1 : 0));
-            assert.equal(expectedSubstitutionTokens.length, 0);
 
             done();
         });
