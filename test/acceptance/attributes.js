@@ -166,9 +166,9 @@ describe('attributes', function() {
         ].join('\n');
 
         var expectedAttributes = {
-            scale_denominator: '0',
-            pixel_width: '1',
-            pixel_height: '1',
+            scale_denominator: '559082264.0287178',
+            pixel_width: '156543.03392804097',
+            pixel_height: '156543.03392804097',
             n: 6
         };
 
