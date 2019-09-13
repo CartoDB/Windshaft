@@ -1,9 +1,10 @@
 # Version 5.6.1
-2019-XX-XX
+2019-09-13
 
 Announcements:
 - Update `cartodb-psql` to [`0.14.0`](https://github.com/CartoDB/node-cartodb-psql/blob/0.14.0/NEWS.md#version-0140-2019-09-10) and use the new timeout parameter to simplify pg-mvt.
 - Update `cartodb-query-tables` to version [`0.6.0`](https://github.com/CartoDB/node-cartodb-query-tables/blob/0964b6cce5d3d3e149af8d6685e2fe7fa87a3d32/NEWS.md#version-060).
+- Refactor Torque renderer using ES6 features.
 
 # Version 5.6.0
 2019-07-30
