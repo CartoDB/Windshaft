@@ -1,3 +1,9 @@
+# Version 5.6.1
+2019-XX-XX
+
+Announcements:
+- Update cartodb-psql to [`0.14.0`](https://github.com/CartoDB/node-cartodb-psql/blob/0.14.0/NEWS.md#version-0140-2019-09-10) and use the new timeout parameter to simplify pg-mvt.
+
 # Version 5.6.0
 2019-07-30
 
