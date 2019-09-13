@@ -25,7 +25,7 @@
         "@carto/mapnik": "3.6.2-carto.16",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
-        "cartodb-psql": "github:algunenano/node-cartodb-psql#query_timeout",
+        "cartodb-psql": "^0.14.0",
         "debug": "3.1.0",
         "decimal.js": "^10.2.0",
         "grainstore": "^2.0.1",
