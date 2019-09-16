@@ -26,7 +26,7 @@
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",
         "cartodb-psql": "^0.14.0",
-        "cartodb-query-tables": "^0.6.0",
+        "cartodb-query-tables": "^0.6.1",
         "debug": "3.1.0",
         "grainstore": "^2.0.1",
         "redis-mpool": "0.7.0",

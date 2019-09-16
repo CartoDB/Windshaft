@@ -1,5 +1,9 @@
 # Version 5.6.3
-2019-mm-yy
+2019-09-16
+
+Announcements:
+- Update `cartodb-query-tables` to version [`0.6.1`](https://github.com/CartoDB/node-cartodb-query-tables/blob/8dda0e1fb7292840c4ac381f9be2eb3976d180a1/NEWS.md#version-061).
+
 
 # Version 5.6.2
 2019-09-16
