@@ -1,3 +1,9 @@
+# Version 5.6.2
+2019-09-16
+
+Announcements:
+- Remove uneeded param `the_geom_webmercator` from `ST_AsMVT`, which improves compatibility with other postgis installations when running through FDW's. See https://github.com/CartoDB/Windshaft/pull/704 for details.
+
 # Version 5.6.1
 2019-09-13
 
