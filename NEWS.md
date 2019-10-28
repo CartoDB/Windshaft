@@ -1,3 +1,9 @@
+# Version 5.6.4
+2019-10-28
+
+Announcements:
+- Adding logs of Redis errors in MapStore. More info https://github.com/CartoDB/Windshaft/pull/708
+
 # Version 5.6.3
 2019-09-16
 
