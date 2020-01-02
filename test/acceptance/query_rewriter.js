@@ -7,18 +7,17 @@ var TestClient = require('../support/test_client');
 var rendererOptions = global.environment.renderer;
 
 var testQueryRewriter = {
-    query: function(query, data) {
+    query: function (query, data) {
         var table = (data && data.table) || 'test_table';
         return 'SELECT * FROM ' + table;
-    },
+    }
 };
 
-describe('server_gettile', function() {
-
+describe('server_gettile', function () {
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
-    function imageCompareFn(fixture, done) {
-        return function(err, tile) {
+    function imageCompareFn (fixture, done) {
+        return function (err, tile) {
             if (err) {
                 return done(err);
             }
@@ -26,13 +25,13 @@ describe('server_gettile', function() {
         };
     }
 
-    it("should by default not rewrite queries",  function(done){
+    it('should by default not rewrite queries', function (done) {
         var mapConfig = TestClient.singleLayerMapConfig('SELECT * FROM _vovw_12_test_table');
         new TestClient(mapConfig)
             .getTile(11, 1002, 772, imageCompareFn('_vovw_12_test_table_11_1002_772.png', done));
     });
 
-    it("should rewrite queries",  function(done){
+    it('should rewrite queries', function (done) {
         var options = {
             mapnik: {
                 mapnik: Object.assign({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
@@ -41,10 +40,9 @@ describe('server_gettile', function() {
         var mapConfig = TestClient.singleLayerMapConfig('SELECT * FROM _vovw_12_test_table');
         new TestClient(mapConfig, options)
             .getTile(11, 1002, 772, imageCompareFn('test_table_11_1002_772.png', done));
-
     });
 
-    it("should rewrite queries with passed data",  function(done){
+    it('should rewrite queries with passed data', function (done) {
         var options = {
             mapnik: {
                 mapnik: Object.assign({}, rendererOptions.mapnik, { queryRewriter: testQueryRewriter })
@@ -57,5 +55,4 @@ describe('server_gettile', function() {
         new TestClient(mapConfig, options)
             .getTile(11, 1002, 772, imageCompareFn('_vovw_12_test_table_11_1002_772.png', done));
     });
-
 });

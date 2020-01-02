@@ -12,77 +12,81 @@ var debug = require('debug')('windshaft:test');
 
 var TestClient = require('../support/test_client');
 
-describe('multilayer', function() {
-
+describe('multilayer', function () {
     var resourcesServer;
     var resourcesServerPort = 8033;
     var available_system_fonts = Object.keys(mapnik.fontFiles());
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
-
-    before(function(done) {
-      // Start a server to test external resources
-      resourcesServer = http.createServer( function(request, response) {
-          var filename = __dirname + '/../fixtures/markers' + request.url;
-          fs.readFile(filename, "binary", function(err, file) {
-            if ( err ) {
-              response.writeHead(404, {'Content-Type': 'text/plain'});
-              debug("File '" + filename + "' not found");
-              response.write("404 Not Found\n");
-            } else {
-              response.writeHead(200);
-              response.write(file, "binary");
-            }
-            response.end();
-          });
-      });
-      resourcesServer.listen(resourcesServerPort, done);
+    before(function (done) {
+        // Start a server to test external resources
+        resourcesServer = http.createServer(function (request, response) {
+            var filename = __dirname + '/../fixtures/markers' + request.url;
+            fs.readFile(filename, 'binary', function (err, file) {
+                if (err) {
+                    response.writeHead(404, { 'Content-Type': 'text/plain' });
+                    debug("File '" + filename + "' not found");
+                    response.write('404 Not Found\n');
+                } else {
+                    response.writeHead(200);
+                    response.write(file, 'binary');
+                }
+                response.end();
+            });
+        });
+        resourcesServer.listen(resourcesServerPort, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         // Close the resources server
         resourcesServer.close(done);
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/71
-    it("single layer with multiple css sections", function(done) {
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom',
-               cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }',
-               cartocss_version: '2.0.1'
-             } }
-        ]
-      };
+    it('single layer with multiple css sections', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: 'select st_setsrid(st_makepoint(0, 0), 4326) as the_geom',
+                        cartocss: '#layer { marker-fill:red; } #layer { marker-width:100; }',
+                        cartocss_version: '2.0.1'
+                    }
+                }
+            ]
+        };
 
         var testClient = new TestClient(layergroup);
-        testClient.getTile(0, 0, 0, function(err, tile) {
+        testClient.getTile(0, 0, 0, function (err, tile) {
             assert.imageEqualsFile(tile, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });
 
-      var layergroup =  {
+    var layergroup = {
         version: '1.0.1',
         layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1',
-               interactivity: [ 'cartodb_id' ]
-             } },
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ]
-             } }
+            {
+                options: {
+                    sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+                    cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.1',
+                    interactivity: ['cartodb_id']
+                }
+            },
+            {
+                options: {
+                    sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
+                    cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.2',
+                    interactivity: ['cartodb_id']
+                }
+            }
         ]
-      };
+    };
 
-    it("layergroup with 2 layers, each with its style (png)", function(done) {
+    it('layergroup with 2 layers, each with its style (png)', function (done) {
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, function (err, tile) {
             assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.png',
@@ -90,24 +94,24 @@ describe('multilayer', function() {
         });
     });
 
-    it("layergroup with 2 layers, each with its style (grid.json, layer 0)", function(done) {
+    it('layergroup with 2 layers, each with its style (grid.json, layer 0)', function (done) {
         var testClient = new TestClient(layergroup);
-        testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
+        testClient.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, tile) {
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2, done);
         });
     });
 
-    it("layergroup with 2 layers, each with its style (grid.json, layer 1)", function(done) {
+    it('layergroup with 2 layers, each with its style (grid.json, layer 1)', function (done) {
         var testClient = new TestClient(layergroup);
-        testClient.getTile(0, 0, 0, {layer: 1, format: 'grid.json'}, function (err, tile) {
+        testClient.getTile(0, 0, 0, { layer: 1, format: 'grid.json' }, function (err, tile) {
             assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2, done);
         });
     });
 
-    it("layergroup with 2 layers, create layergroup", function(done) {
+    it('layergroup with 2 layers, create layergroup', function (done) {
         var testClient = new TestClient(layergroup);
-        testClient.createLayergroup(function(err, layergroup) {
+        testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
@@ -116,34 +120,41 @@ describe('multilayer', function() {
         });
     });
 
-      var layergroupWith3Layers = {
+    var layergroupWith3Layers = {
         version: '1.1.0',
         layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1',
-               interactivity: [ 'cartodb_id' ]
-             } },
-           { options: {
-               sql: 'select cartodb_id, cartodb_id*10 as n, ST_Translate(the_geom, -50, 0) as the_geom' +
+            {
+                options: {
+                    sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+                    cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.1',
+                    interactivity: ['cartodb_id']
+                }
+            },
+            {
+                options: {
+                    sql: 'select cartodb_id, cartodb_id*10 as n, ST_Translate(the_geom, -50, 0) as the_geom' +
                    ' from test_table ORDER BY cartodb_id limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ],
-               attributes: { id: 'cartodb_id', columns: ['n'] }
-             } },
-           { type: 'torque', options: {
-               sql: "select cartodb_id, '1970-01-01'::date as d," +
-                   " ST_SnapToGrid(the_geom_webmercator,1e10) as the_geom_webmercator " +
-                   "from test_table WHERE cartodb_id = 4",
-               cartocss: 'Map { -torque-frame-count:1; -torque-resolution:1; -torque-time-attribute:d; ' +
+                    cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.2',
+                    interactivity: ['cartodb_id'],
+                    attributes: { id: 'cartodb_id', columns: ['n'] }
+                }
+            },
+            {
+                type: 'torque',
+                options: {
+                    sql: "select cartodb_id, '1970-01-01'::date as d," +
+                   ' ST_SnapToGrid(the_geom_webmercator,1e10) as the_geom_webmercator ' +
+                   'from test_table WHERE cartodb_id = 4',
+                    cartocss: 'Map { -torque-frame-count:1; -torque-resolution:1; -torque-time-attribute:d; ' +
                    '-torque-aggregation-function:"count(*)"; } #layer { marker-fill:blue; marker-allow-overlap:true; }'
-             } }
+                }
+            }
         ]
-      };
+    };
 
-    it("layergroup with 3 mixed layers, mapnik png torque and attributes", function(done) {
+    it('layergroup with 3 mixed layers, mapnik png torque and attributes', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getTile(0, 0, 0, function (err, tile) {
             assert.ifError(err);
@@ -152,23 +163,23 @@ describe('multilayer', function() {
         });
     });
 
-    it("layergroup with 3 mixed layers, mapnik grid.json (layer 0)", function(done) {
+    it('layergroup with 3 mixed layers, mapnik grid.json (layer 0)', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
-        testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
+        testClient.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, tile) {
             assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2, done);
         });
     });
 
-    it("layergroup with 3 mixed layers, mapnik grid.json (layer 1)", function(done) {
+    it('layergroup with 3 mixed layers, mapnik grid.json (layer 1)', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
-        testClient.getTile(0, 0, 0, {layer: 1, format: 'grid.json'}, function (err, tile) {
+        testClient.getTile(0, 0, 0, { layer: 1, format: 'grid.json' }, function (err, tile) {
             assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2, done);
         });
     });
 
-    it("layergroup with 3 mixed layers, attributes (layer 1)", function(done) {
+    it('layergroup with 3 mixed layers, attributes (layer 1)', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
         testClient.getFeatureAttributes(1, 4, function (err, attributes) {
             assert.ifError(err);
@@ -177,9 +188,9 @@ describe('multilayer', function() {
         });
     });
 
-    it("layergroup with 3 mixed layers, torque.json (layer 2)", function(done) {
+    it('layergroup with 3 mixed layers, torque.json (layer 2)', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
-        testClient.getTile(0, 0, 0, {layer: 2, format: 'torque.json'}, function (err, torqueTile) {
+        testClient.getTile(0, 0, 0, { layer: 2, format: 'torque.json' }, function (err, torqueTile) {
             assert.ifError(err);
             assert.deepEqual(torqueTile[0].vals__uint8, [1]);
             assert.deepEqual(torqueTile[0].dates__uint16, [0]);
@@ -189,64 +200,67 @@ describe('multilayer', function() {
         });
     });
 
-    it("layergroup with 3 mixed layers, torque.json error on layer 1", function(done) {
+    it('layergroup with 3 mixed layers, torque.json error on layer 1', function (done) {
         var testClient = new TestClient(layergroupWith3Layers);
-        testClient.getTile(0, 0, 0, {layer: 1, format: 'torque.json'}, function (err) {
+        testClient.getTile(0, 0, 0, { layer: 1, format: 'torque.json' }, function (err) {
             assert.ok(err);
             assert.equal(err.message, 'Unsupported format torque.json');
             done();
         });
     });
 
-    it("check that distinct maps result in distinct tiles", function(done) {
+    it('check that distinct maps result in distinct tiles', function (done) {
+        var layergroup1 = {
+            version: '1.0.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+                        cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                        cartocss_version: '2.0.1',
+                        interactivity: 'cartodb_id'
+                    }
+                }
+            ]
+        };
 
-      var layergroup1 =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1',
-               interactivity: 'cartodb_id'
-             } }
-        ]
-      };
-
-      var layergroup2 =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.2',
-               interactivity: 'cartodb_id'
-             } }
-        ]
-      };
+        var layergroup2 = {
+            version: '1.0.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
+                        cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                        cartocss_version: '2.0.2',
+                        interactivity: 'cartodb_id'
+                    }
+                }
+            ]
+        };
 
         var testClient1 = new TestClient(layergroup1);
         var testClient2 = new TestClient(layergroup2);
 
         step(
-            function getTile1() {
+            function getTile1 () {
                 var next = this;
-                testClient1.getTile(0, 0, 0, function(err, tile) {
+                testClient1.getTile(0, 0, 0, function (err, tile) {
                     assert.ifError(err);
                     assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer2.png',
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, next);
                 });
             },
-            function getGrid1(err) {
+            function getGrid1 (err) {
                 assert.ifError(err);
 
                 var next = this;
-                testClient1.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
+                testClient1.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, tile) {
                     assert.ifError(err);
                     assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         next);
                 });
             },
-            function getTile2(err) {
+            function getTile2 (err) {
                 assert.ifError(err);
 
                 var next = this;
@@ -256,44 +270,50 @@ describe('multilayer', function() {
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, next);
                 });
             },
-            function getGrid2(err) {
+            function getGrid2 (err) {
                 assert.ifError(err);
 
                 var next = this;
-                testClient2.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, tile) {
+                testClient2.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, tile) {
                     assert.ifError(err);
                     assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         next);
                 });
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    var layergroupOrder =  {
+    var layergroupOrder = {
         version: '1.0.1',
         layers: [
-           { options: {
-               sql: "select st_setsrid('LINESTRING(-60 -60,-60 60)'::geometry, 4326) as the_geom",
-               cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#ff0000; }'
-             } },
-           { options: {
-               sql: "select st_setsrid('LINESTRING(-100 0,100 0)'::geometry, 4326) as the_geom",
-               cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#00ff00; }'
-             } },
-           { options: {
-               sql: "select st_setsrid('LINESTRING(60 -60,60 60)'::geometry, 4326) as the_geom",
-               cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#0000ff; }'
-             } }
+            {
+                options: {
+                    sql: "select st_setsrid('LINESTRING(-60 -60,-60 60)'::geometry, 4326) as the_geom",
+                    cartocss_version: '2.0.2',
+                    cartocss: '#layer { line-width:16; line-color:#ff0000; }'
+                }
+            },
+            {
+                options: {
+                    sql: "select st_setsrid('LINESTRING(-100 0,100 0)'::geometry, 4326) as the_geom",
+                    cartocss_version: '2.0.2',
+                    cartocss: '#layer { line-width:16; line-color:#00ff00; }'
+                }
+            },
+            {
+                options: {
+                    sql: "select st_setsrid('LINESTRING(60 -60,60 60)'::geometry, 4326) as the_geom",
+                    cartocss_version: '2.0.2',
+                    cartocss: '#layer { line-width:16; line-color:#0000ff; }'
+                }
+            }
         ]
-      };
+    };
 
-    it("layers are rendered in definition order (create)", function(done) {
+    it('layers are rendered in definition order (create)', function (done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
@@ -304,7 +324,7 @@ describe('multilayer', function() {
         });
     });
 
-    it("layers are rendered in definition order (png)", function(done) {
+    it('layers are rendered in definition order (png)', function (done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.getTile(0, 0, 0, function (err, tile) {
             assert.ifError(err);
@@ -313,24 +333,27 @@ describe('multilayer', function() {
         });
     });
 
-    it("quotes in CartoCSS", function(done) {
-
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: "select 'single''quote' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-               cartocss: '#s [n="single\'quote" ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
-             } },
-           { options: {
-               sql: "select 'double\"quote' as n, 'SRID=4326;POINT(2 0)'::geometry as the_geom",
-               cartocss: '#s [n="double\\"quote" ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
-             } }
-        ]
-      };
-        new TestClient(layergroup).createLayergroup(function(err, layergroup) {
+    it('quotes in CartoCSS', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: "select 'single''quote' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                        cartocss: '#s [n="single\'quote" ] { marker-fill:red; }',
+                        cartocss_version: '2.1.0'
+                    }
+                },
+                {
+                    options: {
+                        sql: "select 'double\"quote' as n, 'SRID=4326;POINT(2 0)'::geometry as the_geom",
+                        cartocss: '#s [n="double\\"quote" ] { marker-fill:red; }',
+                        cartocss_version: '2.1.0'
+                    }
+                }
+            ]
+        };
+        new TestClient(layergroup).createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
@@ -340,19 +363,20 @@ describe('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/90
-    it("exponential notation in CartoCSS filter", function(done) {
-
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-               cartocss: '#s [n=1e-4 ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
-             } }
-        ]
-      };
-        new TestClient(layergroup).createLayergroup(function(err, layergroup) {
+    it('exponential notation in CartoCSS filter', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                        cartocss: '#s [n=1e-4 ] { marker-fill:red; }',
+                        cartocss_version: '2.1.0'
+                    }
+                }
+            ]
+        };
+        new TestClient(layergroup).createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
@@ -361,28 +385,30 @@ describe('multilayer', function() {
         });
     });
 
-    function fontLayergroup(fontName, text) {
+    function fontLayergroup (fontName, text) {
         text = text || 'wadus';
         return {
             version: '1.0.1',
             layers: [
-                { options: {
-                    sql: "select '" + text + "' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-                    cartocss: [
-                        '#s {',
-                        '  text-name: [n];',
-                        '  text-face-name: "' + fontName + '";',
-                        '  text-wrap-character: " ";',
-                        '  text-wrap-width: 10;',
-                        '}'
-                    ].join('\n'),
-                    cartocss_version: '2.1.0'
-                } }
+                {
+                    options: {
+                        sql: "select '" + text + "' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                        cartocss: [
+                            '#s {',
+                            '  text-name: [n];',
+                            '  text-face-name: "' + fontName + '";',
+                            '  text-wrap-character: " ";',
+                            '  text-wrap-width: 10;',
+                            '}'
+                        ].join('\n'),
+                        cartocss_version: '2.1.0'
+                    }
+                }
             ]
         };
     }
 
-    it('text-wrap-character', function(done) {
+    it('text-wrap-character', function (done) {
         var textName = 'This is a long text that should break into several lines';
         new TestClient(fontLayergroup('DejaVu Sans Book', textName)).getTile(0, 0, 0, function (err, tile) {
             assert.ifError(err);
@@ -397,15 +423,15 @@ describe('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/94
-    it("unknown text-face-name", function(done) {
+    it('unknown text-face-name', function (done) {
         new TestClient(fontLayergroup('bogus')).getTile(0, 0, 0, function (err) {
             assert.ok(err);
-            assert.ok(err.message.match(/Invalid value for text-face-name.*bogus \(of type string\)  was given/));
+            assert.ok(err.message.match(/Invalid value for text-face-name.*bogus \(of type string\) {2}was given/));
             done();
         });
     });
 
-    it("known text-face-name", function(done) {
+    it('known text-face-name', function (done) {
         new TestClient(fontLayergroup(available_system_fonts[0])).getTile(0, 0, 0, function (err, tile) {
             assert.ifError(err);
             assert.ok(tile);
@@ -417,22 +443,23 @@ describe('multilayer', function() {
     //  - https://github.com/CartoDB/Windshaft/issues/103
     //  - https://github.com/mapnik/mapnik/issues/2121
     //  - https://github.com/mapnik/mapnik/issues/764
-    it.skip("layergroup with datetime interactivity", function(done) {
-
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
-               cartocss: '#layer { marker-fill:red; }',
-               cartocss_version: '2.1.1',
-               interactivity: [ 'i', 't', 'n' ]
-             } }
-        ]
-      };
+    it.skip('layergroup with datetime interactivity', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
+                        cartocss: '#layer { marker-fill:red; }',
+                        cartocss_version: '2.1.1',
+                        interactivity: ['i', 't', 'n']
+                    }
+                }
+            ]
+        };
 
         var testClient = new TestClient(layergroup);
-        testClient.getTile(0, 0, 0, {layer: 0, format: 'grid.json'}, function (err, grid) {
+        testClient.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, grid) {
             assert.ifError(err);
             assert.ok(grid);
 
@@ -452,33 +479,35 @@ describe('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/163
-    it("has different token for different database", function(done) {
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1'
-             } }
-        ]
-      };
-      var token1;
+    it('has different token for different database', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
+                        cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                        cartocss_version: '2.0.1'
+                    }
+                }
+            ]
+        };
+        var token1;
 
         var testClient = new TestClient(layergroup);
 
         step(
-            function requestLayergroup1() {
+            function requestLayergroup1 () {
                 testClient.createLayergroup(this);
             },
-            function requestLayergroup2(err, layergroup) {
+            function requestLayergroup2 (err, layergroup) {
                 assert.ifError(err);
 
                 token1 = layergroup.layergroupid;
 
-                testClient.createLayergroup({dbname: 'windshaft_test2'}, this);
+                testClient.createLayergroup({ dbname: 'windshaft_test2' }, this);
             },
-            function handleLayergroup2(err, layergroup) {
+            function handleLayergroup2 (err, layergroup) {
                 assert.ifError(err);
 
                 assert.notEqual(token1, layergroup.layergroupid);
@@ -490,25 +519,27 @@ describe('multilayer', function() {
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/191
-    it("mapnik layer with custom geom_column", function(done) {
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: 'select 1 as i, ST_SetSRID(ST_MakePoint(0,0),4326) as g',
-               cartocss: '#layer { marker-fill:red; marker-width:100; }',
-               cartocss_version: '2.0.1',
-               geom_column: 'g'
-             } }
-        ]
-      };
+    it('mapnik layer with custom geom_column', function (done) {
+        var layergroup = {
+            version: '1.0.1',
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 as i, ST_SetSRID(ST_MakePoint(0,0),4326) as g',
+                        cartocss: '#layer { marker-fill:red; marker-width:100; }',
+                        cartocss_version: '2.0.1',
+                        geom_column: 'g'
+                    }
+                }
+            ]
+        };
         var testClient = new TestClient(layergroup);
-        testClient.getTile(0, 0, 0, function(err, tile) {
+        testClient.getTile(0, 0, 0, function (err, tile) {
             assert.imageEqualsFile(tile, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });
 
-    it("layergroupid didn't change", function(done) {
+    it("layergroupid didn't change", function (done) {
         var testClient = new TestClient(layergroupOrder);
         testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
@@ -518,5 +549,4 @@ describe('multilayer', function() {
             done();
         });
     });
-
 });

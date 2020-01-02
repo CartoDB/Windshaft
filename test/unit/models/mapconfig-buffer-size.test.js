@@ -3,7 +3,7 @@
 var assert = require('assert');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('mapconfig buffer-size', function() {
+describe('mapconfig buffer-size', function () {
     var CARTODB_LAYER = {
         type: 'cartodb',
         options: {
@@ -14,7 +14,7 @@ describe('mapconfig buffer-size', function() {
         }
     };
 
-    it('should not have buffer-size defined', function() {
+    it('should not have buffer-size defined', function () {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
             layers: [
@@ -25,8 +25,7 @@ describe('mapconfig buffer-size', function() {
         assert.equal(mapConfig.getBufferSize(), undefined);
     });
 
-
-    it('should return buffer-size for png, mvt and grid.json formats', function() {
+    it('should return buffer-size for png, mvt and grid.json formats', function () {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
             buffersize: {
@@ -44,7 +43,7 @@ describe('mapconfig buffer-size', function() {
         assert.equal(mapConfig.getBufferSize('grid.json'), 128);
     });
 
-    it('should not return buffer-size when just png is defined and another format is required', function() {
+    it('should not return buffer-size when just png is defined and another format is required', function () {
         var mapConfig = MapConfig.create({
             version: '1.6.0',
             buffersize: {

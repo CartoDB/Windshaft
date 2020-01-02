@@ -6,20 +6,19 @@ var assert = require('../support/assert');
 var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
 var TestClient = require('../support/test_client');
 
-describe('multilayer interactivity and layers order', function() {
-
-    function layerType(layer) {
+describe('multilayer interactivity and layers order', function () {
+    function layerType (layer) {
         return layer.type || 'undefined';
     }
 
-    function testInteractivityLayersOrderScenario(testScenario) {
-        it(testScenario.desc, function(done) {
-            var mapConfig =  {
+    function testInteractivityLayersOrderScenario (testScenario) {
+        it(testScenario.desc, function (done) {
+            var mapConfig = {
                 version: '1.3.0',
                 layers: testScenario.layers
             };
             var testClient = new TestClient(mapConfig);
-            testClient.createLayergroup(function(err, layergroup) {
+            testClient.createLayergroup(function (err, layergroup) {
                 assert.ifError(err);
                 var layergroupId = layergroup.layergroupid;
                 assert.ok(layergroupId);
@@ -35,7 +34,7 @@ describe('multilayer interactivity and layers order', function() {
                     );
                 }
                 // check torque metadata at least match in number
-                var torqueLayers = mapConfig.layers.filter(function(layer) { return layer.type === 'torque'; });
+                var torqueLayers = mapConfig.layers.filter(function (layer) { return layer.type === 'torque'; });
                 if (torqueLayers.length) {
                     assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
                 }
@@ -54,7 +53,7 @@ describe('multilayer interactivity and layers order', function() {
         type: 'http',
         options: {
             urlTemplate: 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
-            subdomains: ['a','b','c']
+            subdomains: ['a', 'b', 'c']
         }
     };
 
@@ -63,12 +62,12 @@ describe('multilayer interactivity and layers order', function() {
         options: {
             sql: "select 1 id, '1970-01-02'::date d, 'POINT(0 0)'::geometry the_geom_webmercator",
             cartocss: [
-                "Map {",
-                    "-torque-frame-count:2;",
-                    "-torque-resolution:3;",
-                    "-torque-time-attribute:d;",
-                    "-torque-aggregation-function:'count(id)';",
-                "}"
+                'Map {',
+                '-torque-frame-count:2;',
+                '-torque-resolution:3;',
+                '-torque-time-attribute:d;',
+                "-torque-aggregation-function:'count(id)';",
+                '}'
             ].join(' '),
             cartocss_version: '2.0.1'
         }
@@ -313,7 +312,6 @@ describe('multilayer interactivity and layers order', function() {
 
     testScenarios.forEach(testInteractivityLayersOrderScenario);
     chaosScenarios.forEach(testInteractivityLayersOrderScenario);
-
 });
 
 function sample (arr, num) {

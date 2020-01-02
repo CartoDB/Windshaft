@@ -6,7 +6,6 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test_client');
 
 describe('torque steps', function () {
-
     const IMAGE_TOLERANCE_PER_MIL = 20;
 
     const sql = `
@@ -66,40 +65,40 @@ describe('torque steps', function () {
         }
     ];
 
-    var torqueMapConfig = (step = 0, order_by = "") => {
-            var _tile_sql = "WITH par AS (" +
-                "WITH innerpar AS (" +
-                    "SELECT " +
-                        "1.0/(({xyz_resolution})*{resolution}) as resinv, " +
-                        "ST_MakeEnvelope({b_xmin}, {b_ymin}, {b_xmax}, {b_ymax}, {srid}) as b_ext, " +
-                        "ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, {srid}) as ext" +
-                ") " +
-                "SELECT " +
-                    "({xyz_resolution})*{resolution} as res, " +
-                    "innerpar.resinv as resinv, " +
-                    "innerpar.b_ext as b_ext, " +
-                    "st_xmin(innerpar.ext) as xmin, " +
-                    "st_ymin(innerpar.ext) as ymin, " +
-                    "round((st_xmax(innerpar.ext) - st_xmin(innerpar.ext))*innerpar.resinv) - 1 as maxx, " +
-                    "round((st_ymax(innerpar.ext) - st_ymin(innerpar.ext))*innerpar.resinv) - 1 as maxy " +
-                "FROM innerpar" +
-            ") " +
-            "SELECT xx x__uint8, " +
-                 "yy y__uint8, " +
-                 "array_agg(c) vals__uint8, " +
-                 "array_agg(d) dates__uint16 " +
-            "FROM ( " +
-            "select " +
-               "GREATEST(0 - {b_size}, LEAST(p.maxx + {b_size}, round((st_x(i.{gcol}) - p.xmin)*resinv))) as xx, " +
-               "GREATEST(0 - {b_size}, LEAST(p.maxy + {b_size}, round((st_y(i.{gcol}) - p.ymin)*resinv))) as yy " +
-               ", {countby} c " +
-               ", floor(({column_conv} - {start})/{step}) d " +
-                "FROM ({_sql}) i, par p " +
-                "WHERE i.{gcol} && p.b_ext " +
-                "{_stepFilter}" +
-            "GROUP BY xx, yy, d  " +
-            ") cte, par  " +
-            "GROUP BY x__uint8, y__uint8";
+    var torqueMapConfig = (step = 0, order_by = '') => {
+        var _tile_sql = 'WITH par AS (' +
+                'WITH innerpar AS (' +
+                    'SELECT ' +
+                        '1.0/(({xyz_resolution})*{resolution}) as resinv, ' +
+                        'ST_MakeEnvelope({b_xmin}, {b_ymin}, {b_xmax}, {b_ymax}, {srid}) as b_ext, ' +
+                        'ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, {srid}) as ext' +
+                ') ' +
+                'SELECT ' +
+                    '({xyz_resolution})*{resolution} as res, ' +
+                    'innerpar.resinv as resinv, ' +
+                    'innerpar.b_ext as b_ext, ' +
+                    'st_xmin(innerpar.ext) as xmin, ' +
+                    'st_ymin(innerpar.ext) as ymin, ' +
+                    'round((st_xmax(innerpar.ext) - st_xmin(innerpar.ext))*innerpar.resinv) - 1 as maxx, ' +
+                    'round((st_ymax(innerpar.ext) - st_ymin(innerpar.ext))*innerpar.resinv) - 1 as maxy ' +
+                'FROM innerpar' +
+            ') ' +
+            'SELECT xx x__uint8, ' +
+                 'yy y__uint8, ' +
+                 'array_agg(c) vals__uint8, ' +
+                 'array_agg(d) dates__uint16 ' +
+            'FROM ( ' +
+            'select ' +
+               'GREATEST(0 - {b_size}, LEAST(p.maxx + {b_size}, round((st_x(i.{gcol}) - p.xmin)*resinv))) as xx, ' +
+               'GREATEST(0 - {b_size}, LEAST(p.maxy + {b_size}, round((st_y(i.{gcol}) - p.ymin)*resinv))) as yy ' +
+               ', {countby} c ' +
+               ', floor(({column_conv} - {start})/{step}) d ' +
+                'FROM ({_sql}) i, par p ' +
+                'WHERE i.{gcol} && p.b_ext ' +
+                '{_stepFilter}' +
+            'GROUP BY xx, yy, d  ' +
+            ') cte, par  ' +
+            'GROUP BY x__uint8, y__uint8';
 
         return {
             version: '1.6.0',
@@ -111,14 +110,14 @@ describe('torque steps', function () {
                         cartocss,
                         cartocss_version: '1.0.0',
                         step,
-                        tile_sql : _tile_sql + order_by
+                        tile_sql: _tile_sql + order_by
                     }
                 }
             ]
         };
     };
 
-    function torquePngFixture(step) {
+    function torquePngFixture (step) {
         return `./test/fixtures/torque/agg-order-step-${step}.png`;
     }
 
@@ -128,7 +127,7 @@ describe('torque steps', function () {
             var testClient = new TestClient(torqueMapConfig(step));
             testClient.getTile(0, 0, 0, { layer: 0, format: 'png' }, function (err, torqueTile) {
                 assert.ifError(err);
-                assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function(err) {
+                assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function (err) {
                     assert.ifError(err);
                     done();
                 });
@@ -147,10 +146,10 @@ describe('torque steps', function () {
     });
 
     const order_by_steps = [
-        " ORDER BY x__uint8 ASC ",
-        " ORDER BY x__uint8 DESC ",
-        " ORDER BY y__uint8 ASC ",
-        " ORDER BY y__uint8 DESC "
+        ' ORDER BY x__uint8 ASC ',
+        ' ORDER BY x__uint8 DESC ',
+        ' ORDER BY y__uint8 ASC ',
+        ' ORDER BY y__uint8 DESC '
     ];
     order_by_steps.forEach(order_by_step => {
         steps.forEach(step => {
@@ -158,7 +157,7 @@ describe('torque steps', function () {
                 var testClient = new TestClient(torqueMapConfig(step));
                 testClient.getTile(0, 0, 0, { layer: 0, format: 'png' }, function (err, torqueTile) {
                     assert.ifError(err);
-                    assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    assert.imageEqualsFile(torqueTile, torquePngFixture(step), IMAGE_TOLERANCE_PER_MIL, function (err) {
                         assert.ifError(err);
                         done();
                     });

@@ -8,8 +8,7 @@ var HttpFallbackRenderer = require('../../../lib/windshaft/renderers/http/fallba
 var Renderer = require('../../../lib/windshaft/renderers/http/renderer');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('renderer_http_factory_getRenderer', function() {
-
+describe('renderer_http_factory_getRenderer', function () {
     var whitelistSample = [
         'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
         'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'
@@ -23,7 +22,7 @@ describe('renderer_http_factory_getRenderer', function() {
 
     var factory = new HttpRendererFactory(whitelistSample, 2000);
 
-    it('getRenderer throws error for empty urlTemplate option', function(done) {
+    it('getRenderer throws error for empty urlTemplate option', function (done) {
         var factory = new HttpRendererFactory(whitelistSample, 2000);
         var mapConfig = MapConfig.create({
             layers: [
@@ -35,7 +34,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, 'Missing mandatory "urlTemplate" option');
@@ -43,7 +42,7 @@ describe('renderer_http_factory_getRenderer', function() {
         });
     });
 
-    it('getRenderer throws error for invalid urlTemplate', function(done) {
+    it('getRenderer throws error for invalid urlTemplate', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -55,7 +54,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, 'Invalid "urlTemplate" for http layer');
@@ -63,7 +62,7 @@ describe('renderer_http_factory_getRenderer', function() {
         });
     });
 
-    it('getRenderer returns a fallback image renderer for invalid urlTemplate', function(done) {
+    it('getRenderer returns a fallback image renderer for invalid urlTemplate', function (done) {
         var factoryWithFallbackImage = new HttpRendererFactory(
             whitelistSample, 2000, undefined, 'http://example.com/fallback.png'
         );
@@ -78,7 +77,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+        factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
             assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, HttpFallbackRenderer);
@@ -86,8 +85,7 @@ describe('renderer_http_factory_getRenderer', function() {
         });
     });
 
-
-    it('returns a renderer for invalid urlTemplate if whitelist is _open-minded_', function(done) {
+    it('returns a renderer for invalid urlTemplate if whitelist is _open-minded_', function (done) {
         var whitelistAnyUrl = ['.*'];
         var factoryWithFallbackImage = new HttpRendererFactory(
             whitelistAnyUrl, 2000, undefined, 'http://example.com/fallback.png'
@@ -103,7 +101,7 @@ describe('renderer_http_factory_getRenderer', function() {
                 }
             ]
         });
-        factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+        factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
             assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, Renderer);
@@ -111,12 +109,11 @@ describe('renderer_http_factory_getRenderer', function() {
         });
     });
 
-    describe('when subdomains are not provided', function() {
-
+    describe('when subdomains are not provided', function () {
         var noSubdomainsUrlTemplate = 'http://wadus.example.com/{z}/{x}/{y}.png';
         var subdomainsUrlTemplate = 'http://{s}.wadus.example.com/{z}/{x}/{y}.png';
 
-        it('returns a renderer with valid subdomains for a subdomain template', function(done) {
+        it('returns a renderer with valid subdomains for a subdomain template', function (done) {
             var whitelistAnyUrl = ['.*'];
             var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
             var mapConfig = MapConfig.create({
@@ -129,7 +126,7 @@ describe('renderer_http_factory_getRenderer', function() {
                     }
                 ]
             });
-            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
                 assert.ifError(err);
                 assert.ok(renderer);
                 assert.equal(renderer.constructor, Renderer);
@@ -139,7 +136,7 @@ describe('renderer_http_factory_getRenderer', function() {
             });
         });
 
-        it('returns a renderer with valid subdomains for a NON subdomain template', function(done) {
+        it('returns a renderer with valid subdomains for a NON subdomain template', function (done) {
             var whitelistAnyUrl = ['.*'];
             var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
             var mapConfig = MapConfig.create({
@@ -152,7 +149,7 @@ describe('renderer_http_factory_getRenderer', function() {
                     }
                 ]
             });
-            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function(err, renderer) {
+            factoryWithFallbackImage.getRenderer(mapConfig, 'png', layerZeroOptions, function (err, renderer) {
                 assert.ifError(err);
                 assert.ok(renderer);
                 assert.equal(renderer.constructor, Renderer);
@@ -161,6 +158,5 @@ describe('renderer_http_factory_getRenderer', function() {
                 done();
             });
         });
-
     });
 });

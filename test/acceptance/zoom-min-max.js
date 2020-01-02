@@ -7,9 +7,7 @@ var mapnik = require('@carto/mapnik');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-
-describe('minzoom and maxzoom', function() {
-
+describe('minzoom and maxzoom', function () {
     const getMapConfig = (minzoomA, maxzoomA, minzoomB, maxzoomB) => {
         return {
             version: '1.7.0',
@@ -26,7 +24,7 @@ describe('minzoom and maxzoom', function() {
                         cartocss: '#layer { marker-fill: red; marker-width: 90; marker-allow-overlap: true; }',
                         cartocss_version: '3.0.12',
                         minzoom: minzoomA,
-                        maxzoom: maxzoomA,
+                        maxzoom: maxzoomA
                     }
                 },
                 {
@@ -41,7 +39,7 @@ describe('minzoom and maxzoom', function() {
                         cartocss: '#layer { marker-fill: green; marker-width: 45; marker-allow-overlap: true; }',
                         cartocss_version: '3.0.12',
                         minzoom: minzoomB,
-                        maxzoom: maxzoomB,
+                        maxzoom: maxzoomB
                     }
                 }
             ]
@@ -180,28 +178,27 @@ describe('minzoom and maxzoom', function() {
             minZoomB: 2,
             maxZoomB: 4,
             expectedLayers: []
-        },
+        }
     ];
 
-    describe('raster tiles', function() {
-
+    describe('raster tiles', function () {
         const IMAGE_TOLERANCE_PER_MIL = 5;
 
         const fixturePath = name => `./test/fixtures/zoom-min-max/${name}.png`;
 
-        scenarios.forEach(function(scenario) {
-            it(scenario.desc, function(done) {
+        scenarios.forEach(function (scenario) {
+            it(scenario.desc, function (done) {
                 const mapconfig = getMapConfig(
                     scenario.minZoomA,
                     scenario.maxZoomA,
                     scenario.minZoomB,
                     scenario.maxZoomB
                 );
-                const fixture = scenario.expectedLayers.length === 0 ?
-                    fixturePath('empty') :
-                    fixturePath(`layers--${scenario.expectedLayers.join('-')}--z${scenario.z}`);
+                const fixture = scenario.expectedLayers.length === 0
+                    ? fixturePath('empty')
+                    : fixturePath(`layers--${scenario.expectedLayers.join('-')}--z${scenario.z}`);
                 var testClient = new TestClient(mapconfig);
-                testClient.getTile(scenario.z, scenario.x, scenario.y, function(err, tile, img) {
+                testClient.getTile(scenario.z, scenario.x, scenario.y, function (err, tile, img) {
                     assert.ifError(err);
                     assert.ok(tile);
                     assert.ok(img);
@@ -211,8 +208,7 @@ describe('minzoom and maxzoom', function() {
         });
     });
 
-    describe('vector tiles', function() {
-
+    describe('vector tiles', function () {
         const layersValidator = (z, x, y, expectedLayers, done) => {
             return (err, mvtTile) => {
                 assert.ifError(err);
@@ -240,11 +236,10 @@ describe('minzoom and maxzoom', function() {
 
         const suiteConfigurations = [{ mvt: { usePostGIS: false } }, { mvt: { usePostGIS: true } }];
 
-        suiteConfigurations.forEach(function(clientOptions) {
-            describe(`${JSON.stringify(clientOptions)}`, function() {
-
-                scenarios.forEach(function(scenario) {
-                    it(scenario.desc, function(done) {
+        suiteConfigurations.forEach(function (clientOptions) {
+            describe(`${JSON.stringify(clientOptions)}`, function () {
+                scenarios.forEach(function (scenario) {
+                    it(scenario.desc, function (done) {
                         const mapconfig = getMapConfig(
                             scenario.minZoomA,
                             scenario.maxZoomA,
@@ -261,9 +256,7 @@ describe('minzoom and maxzoom', function() {
                         );
                     });
                 });
-
             });
         });
     });
-
 });

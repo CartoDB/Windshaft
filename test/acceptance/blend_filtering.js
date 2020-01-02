@@ -7,28 +7,27 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('blend layer filtering', function() {
-
+describe('blend layer filtering', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
     var testClient;
 
-    before(function(done) {
+    before(function (done) {
         testClient = new TestClient(mapConfig);
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+            fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
@@ -59,7 +58,7 @@ describe('blend layer filtering', function() {
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced",
+                    sql: 'SELECT * FROM populated_places_simple_reduced',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -94,8 +93,8 @@ describe('blend layer filtering', function() {
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced " +
-                        "where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
+                    sql: 'SELECT * FROM populated_places_simple_reduced ' +
+                        'where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -135,16 +134,16 @@ describe('blend layer filtering', function() {
         [1, 2, 3, 4]
     ];
 
-    function blendPngFixture(layers) {
+    function blendPngFixture (layers) {
         return './test/fixtures/blend/blend-filtering-layers-' + layers.join('.') + '-zxy-1.0.0.png';
     }
 
-    filteredLayersSuite.forEach(function(filteredLayers) {
+    filteredLayersSuite.forEach(function (filteredLayers) {
         var layerFilter = filteredLayers.join(',');
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
-            testClient.getTile(1, 0, 0, {layer: layerFilter}, function(err, tile) {
-                assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
+            testClient.getTile(1, 0, 0, { layer: layerFilter }, function (err, tile) {
+                assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function (err) {
                     assert.ifError(err);
                     done();
                 });

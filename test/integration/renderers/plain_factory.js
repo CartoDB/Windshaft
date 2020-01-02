@@ -10,22 +10,21 @@ var PlainRendererFactory = require('../../../lib/windshaft/renderers/plain/facto
 var ColorRenderer = require('../../../lib/windshaft/renderers/plain/color_renderer');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('renderer_plain_factory_getRenderer', function() {
-
+describe('renderer_plain_factory_getRenderer', function () {
     var httpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
             if (request.url.match(/fail/)) {
                 response.writeHead(404);
                 response.end();
                 return;
             }
             var filename = __dirname + '/../../fixtures/plain/patterns/congruent_pentagon.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+            fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
@@ -33,11 +32,11 @@ describe('renderer_plain_factory_getRenderer', function() {
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
-    function rendererOptions(layer) {
+    function rendererOptions (layer) {
         return {
             layer: layer
         };
@@ -45,7 +44,7 @@ describe('renderer_plain_factory_getRenderer', function() {
 
     var factory = new PlainRendererFactory();
 
-    it('getRenderer throws error for non plain layer', function(done) {
+    it('getRenderer throws error for non plain layer', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -63,7 +62,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', rendererOptions(1), function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(1), function (err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(err.message, "Layer is not a 'plain' layer");
@@ -71,7 +70,7 @@ describe('renderer_plain_factory_getRenderer', function() {
         });
     });
 
-    it('getRenderer throws error for non plain layer', function(done) {
+    it('getRenderer throws error for non plain layer', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -80,12 +79,12 @@ describe('renderer_plain_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(
                 err.message,
-                "Plain layer: at least one of the options, `color` or `imageUrl`, must be provided."
+                'Plain layer: at least one of the options, `color` or `imageUrl`, must be provided.'
             );
             done();
         });
@@ -95,12 +94,12 @@ describe('renderer_plain_factory_getRenderer', function() {
         'blue',
         '#fff',
         '#ffffff',
-        [255,0,0],
-        [255,0,0,128]
+        [255, 0, 0],
+        [255, 0, 0, 128]
     ];
 
-    validColors.forEach(function(color) {
-        it('getRenderer works for valid color: ' + JSON.stringify(color), function(done) {
+    validColors.forEach(function (color) {
+        it('getRenderer works for valid color: ' + JSON.stringify(color), function (done) {
             var mapConfig = MapConfig.create({
                 layers: [
                     {
@@ -111,7 +110,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                     }
                 ]
             });
-            factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+            factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
                 assert.ifError(err);
                 assert.ok(renderer);
                 done();
@@ -137,17 +136,17 @@ describe('renderer_plain_factory_getRenderer', function() {
             desc: "Invalid color for 'plain' layer: invalid integer array"
         },
         {
-            color: [255,0],
+            color: [255, 0],
             desc: "Invalid color for 'plain' layer: invalid integer array"
         },
         {
-            color: [255,0,0,0,0],
+            color: [255, 0, 0, 0, 0],
             desc: "Invalid color for 'plain' layer: invalid integer array"
         }
     ];
 
-    invalidColors.forEach(function(invalidColor) {
-        it('getRenderer fails for invalid color: ' + JSON.stringify(invalidColor.color), function(done) {
+    invalidColors.forEach(function (invalidColor) {
+        it('getRenderer fails for invalid color: ' + JSON.stringify(invalidColor.color), function (done) {
             var mapConfig = MapConfig.create({
                 version: '1.4.0',
                 layers: [
@@ -159,7 +158,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                     }
                 ]
             });
-            factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+            factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
                 assert.ok(err);
                 assert.ok(!renderer);
                 assert.equal(err.message, invalidColor.desc);
@@ -168,8 +167,7 @@ describe('renderer_plain_factory_getRenderer', function() {
         });
     });
 
-
-    it('getRenderer works for valid imageUrl', function(done) {
+    it('getRenderer works for valid imageUrl', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -180,14 +178,14 @@ describe('renderer_plain_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
             assert.ifError(err);
             assert.ok(renderer);
             done();
         });
     });
 
-    it('should fail to create renderer when imageUrl fails', function(done) {
+    it('should fail to create renderer when imageUrl fails', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -198,7 +196,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
             assert.ok(err);
             assert.ok(!renderer);
             assert.equal(
@@ -209,7 +207,7 @@ describe('renderer_plain_factory_getRenderer', function() {
         });
     });
 
-    it('getRenderer works with both options but returns color renderer', function(done) {
+    it('getRenderer works with both options but returns color renderer', function (done) {
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -221,7 +219,7 @@ describe('renderer_plain_factory_getRenderer', function() {
                 }
             ]
         });
-        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function(err, renderer) {
+        factory.getRenderer(mapConfig, 'png', rendererOptions(0), function (err, renderer) {
             assert.ifError(err);
             assert.ok(renderer);
             assert.equal(renderer.constructor, ColorRenderer);

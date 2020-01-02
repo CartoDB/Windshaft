@@ -5,31 +5,30 @@ require('../support/test_helper');
 var assert = require('assert');
 var Timer = require('../../lib/windshaft/stats/timer');
 
-describe('timer', function() {
-
+describe('timer', function () {
     var label = 'foo';
     var elapsedTimeBetweenDateNowCalls = 5;
 
     var nowFn = Date.now;
 
-    before(function() {
+    before(function () {
         var nowStartTime = 0;
-        Date.now = function() {
+        Date.now = function () {
             nowStartTime += elapsedTimeBetweenDateNowCalls;
             return nowStartTime;
         };
     });
 
-    after(function() {
+    after(function () {
         Date.now = nowFn;
     });
 
-    it('should report empty object after created', function() {
+    it('should report empty object after created', function () {
         var timer = new Timer();
         assert.deepEqual(timer.getTimes(), {});
     });
 
-    it('should report label after start and end', function() {
+    it('should report label after start and end', function () {
         var timer = new Timer();
         timer.start(label);
 
@@ -40,19 +39,19 @@ describe('timer', function() {
         assert.ok(stats[label] >= elapsedTimeBetweenDateNowCalls);
     });
 
-    it('should report empty object after start only called', function() {
+    it('should report empty object after start only called', function () {
         var timer = new Timer();
         timer.start(label);
         assert.deepEqual(timer.getTimes(), {});
     });
 
-    it('should report empty object after end only called', function() {
+    it('should report empty object after end only called', function () {
         var timer = new Timer();
         timer.end(label);
         assert.deepEqual(timer.getTimes(), {});
     });
 
-    it('should not report time when end called before start', function() {
+    it('should not report time when end called before start', function () {
         var timer = new Timer();
         timer.end(label);
 
@@ -62,7 +61,7 @@ describe('timer', function() {
         assert.equal(Object.keys(stats).length, 0);
     });
 
-    it('should report several stats when more than one label is started and ended', function() {
+    it('should report several stats when more than one label is started and ended', function () {
         var wadusLabel = 'wadus';
 
         var timer = new Timer();
@@ -78,5 +77,4 @@ describe('timer', function() {
         assert.ok(stats[label] >= elapsedTimeBetweenDateNowCalls);
         assert.ok(stats[wadusLabel] >= elapsedTimeBetweenDateNowCalls);
     });
-
 });

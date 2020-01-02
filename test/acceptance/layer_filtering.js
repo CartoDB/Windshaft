@@ -7,26 +7,26 @@ var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-describe('layer filtering', function() {
+describe('layer filtering', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
     var httpRendererResourcesServer;
     var testClient;
 
-    before(function(done) {
+    before(function (done) {
         testClient = new TestClient(mapConfig);
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+            fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
@@ -70,7 +70,7 @@ describe('layer filtering', function() {
                 id: 'torque0',
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced",
+                    sql: 'SELECT * FROM populated_places_simple_reduced',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -107,8 +107,8 @@ describe('layer filtering', function() {
                 id: 'torque1',
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced " +
-                        "where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
+                    sql: 'SELECT * FROM populated_places_simple_reduced ' +
+                        'where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -147,21 +147,21 @@ describe('layer filtering', function() {
         ['mapnik0', 'mapnik1'],
         ['mapnik1', 'mapnik0'], // ordering doesn't matter
         ['plain0', 'mapnik0'],
-        ['plain0', 'mapnik1'],
+        ['plain0', 'mapnik1']
     ];
 
-    function getAssertFilepath(layers) {
+    function getAssertFilepath (layers) {
         return './test/fixtures/layers/filter-layers-' + layers.join('.') + '-zxy-1.0.0.png';
     }
 
-    filteredLayersSuite.forEach(function(filteredLayers) {
+    filteredLayersSuite.forEach(function (filteredLayers) {
         var filteredLayersParam = filteredLayers.join(',');
         it('should filter layers on ' + filteredLayersParam + '/1/0/0.png', function (done) {
             var options = {
                 layer: filteredLayersParam
             };
 
-            testClient.getTile(1, 0, 0, options, function(err, tile) {
+            testClient.getTile(1, 0, 0, options, function (err, tile) {
                 if (err) {
                     return done(err);
                 }
@@ -192,19 +192,18 @@ describe('layer filtering', function() {
         ['mapnik1', 0]
     ];
 
-    errorFilteredLayersSuite.forEach(function(filteredLayers) {
+    errorFilteredLayersSuite.forEach(function (filteredLayers) {
         var filteredLayersParam = filteredLayers.join(',');
         it('should return error for bad layer filtering ' + filteredLayersParam + '/1/0/0.png', function (done) {
             var options = {
                 layer: filteredLayersParam
             };
 
-            testClient.getTile(1, 0, 0, options, function(err) {
+            testClient.getTile(1, 0, 0, options, function (err) {
                 assert.ok(err);
                 assert.equal(err.message, 'Invalid layer filtering');
                 done();
             });
         });
     });
-
 });

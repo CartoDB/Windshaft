@@ -1,12 +1,11 @@
 'use strict';
 
-//require('../support/test_helper.js');
+// require('../support/test_helper.js');
 
 var assert = require('assert');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('mapconfig-layer-indexes', function() {
-
+describe('mapconfig-layer-indexes', function () {
     var HTTP_LAYER = {
         type: 'http',
         options: {
@@ -44,10 +43,10 @@ describe('mapconfig-layer-indexes', function() {
         }
     };
 
-    function mapnikBasicLayerId(index) {
+    function mapnikBasicLayerId (index) {
         return 'layer' + index;
     }
-    function typeLayerId(type, index) {
+    function typeLayerId (type, index) {
         return type + '-' + mapnikBasicLayerId(index);
     }
 
@@ -72,13 +71,12 @@ describe('mapconfig-layer-indexes', function() {
                 '-torque-resolution: 3;',
                 '-torque-time-attribute:d;',
                 '-torque-aggregation-function: \'count(id)\';',
-            '}'].join('\n'),
+                '}'].join('\n'),
             cartocss_version: '2.0.1'
-    } };
+        }
+    };
 
-
-
-    it('uses layer{index} notation for happy case', function() {
+    it('uses layer{index} notation for happy case', function () {
         var mapConfig = MapConfig.create({
             version: '1.5.0',
             layers: [
@@ -89,7 +87,7 @@ describe('mapconfig-layer-indexes', function() {
         assert.equal(mapConfig.getLayerId(0), 'layer0');
     });
 
-    it('uses id from layer', function() {
+    it('uses id from layer', function () {
         var mapConfig = MapConfig.create({
             version: '1.5.0',
             layers: [
@@ -100,7 +98,7 @@ describe('mapconfig-layer-indexes', function() {
         assert.equal(mapConfig.getLayerId(0), WADUS_ID);
     });
 
-    it('uses layer0 for mapnik layer even if it is not at index 0', function() {
+    it('uses layer0 for mapnik layer even if it is not at index 0', function () {
         var mapConfig = MapConfig.create({
             version: '1.5.0',
             layers: [
@@ -112,7 +110,7 @@ describe('mapconfig-layer-indexes', function() {
         assert.equal(mapConfig.getLayerId(1), mapnikBasicLayerId(0));
     });
 
-    it('uses layer{index} with type prepended when no mapnik layers', function() {
+    it('uses layer{index} with type prepended when no mapnik layers', function () {
         var mapConfig = MapConfig.create({
             version: '1.5.0',
             layers: [
@@ -127,5 +125,4 @@ describe('mapconfig-layer-indexes', function() {
         assert.equal(mapConfig.getLayerId(4), typeLayerId('torque', 0));
         assert.equal(mapConfig.getLayerId(5), mapnikBasicLayerId(3));
     });
-
 });

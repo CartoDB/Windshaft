@@ -32,8 +32,7 @@ describe('mvt (pgsql)', function () {
     mvtTest(true);
 });
 
-
-function mvtTest(usePostGIS) {
+function mvtTest (usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
 
     describe('vector layergroup', function () {
@@ -77,7 +76,7 @@ function mvtTest(usePostGIS) {
                         options: {
                             sql: POINTS_SQL_2,
                             cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-                            cartocss_version: '2.0.2',
+                            cartocss_version: '2.0.2'
                         }
                     }
                 ]
@@ -123,7 +122,7 @@ function mvtTest(usePostGIS) {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL_2,
+                            sql: POINTS_SQL_2
 
                         }
                     }

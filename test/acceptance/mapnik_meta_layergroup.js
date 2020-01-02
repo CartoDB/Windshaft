@@ -5,13 +5,13 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-describe('Create mapnik layergroup', function() {
-    before(function() {
+describe('Create mapnik layergroup', function () {
+    before(function () {
         this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
         global.environment.enabledFeatures.layerMetadata = true;
     });
 
-    after(function() {
+    after(function () {
         global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
     });
 
@@ -31,7 +31,7 @@ describe('Create mapnik layergroup', function() {
         type: 'http',
         options: {
             urlTemplate: 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
-            subdomains: ['a','b','c']
+            subdomains: ['a', 'b', 'c']
         }
     };
 
@@ -45,14 +45,14 @@ describe('Create mapnik layergroup', function() {
         }
     };
 
-    function mapnikBasicLayerId(index) {
+    function mapnikBasicLayerId (index) {
         return 'layer' + index;
     }
-    function typeLayerId(type, index) {
+    function typeLayerId (type, index) {
         return type + '-' + mapnikBasicLayerId(index);
     }
 
-    it('with mapnik and layer and httplayer should response with layer metadata with same order', function(done) {
+    it('with mapnik and layer and httplayer should response with layer metadata with same order', function (done) {
         var testClient = new TestClient({
             version: '1.4.0',
             layers: [
@@ -61,7 +61,7 @@ describe('Create mapnik layergroup', function() {
             ]
         });
 
-        testClient.createLayergroup(function(err, layergroup) {
+        testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
@@ -71,7 +71,7 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
-    it('with httpLayer and mapnik layer should response with layer metadata with same order', function(done) {
+    it('with httpLayer and mapnik layer should response with layer metadata with same order', function (done) {
         var testClient = new TestClient({
             version: '1.4.0',
             layers: [
@@ -92,7 +92,7 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
-    it('should work with different geom_column', function(done) {
+    it('should work with different geom_column', function (done) {
         var testClient = new TestClient({
             version: '1.4.0',
             layers: [
@@ -100,7 +100,7 @@ describe('Create mapnik layergroup', function() {
             ]
         });
 
-        testClient.createLayergroup(function(err, layergroup) {
+        testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             done();

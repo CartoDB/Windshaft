@@ -5,13 +5,12 @@ require('../support/test_helper.js');
 var assert = require('assert');
 var windshaft = require('../../lib/windshaft');
 
-describe('windshaft', function() {
-
-    it('should have valid global environment',  function() {
+describe('windshaft', function () {
+    it('should have valid global environment', function () {
         assert.equal(global.environment.name, 'test');
     });
 
-    it('should expose version numbers', function() {
+    it('should expose version numbers', function () {
         assert.ok(windshaft.hasOwnProperty('version'), "No 'windshaft' version in " + windshaft);
 
         var versions = windshaft.versions;
@@ -20,5 +19,4 @@ describe('windshaft', function() {
         assert.ok(versions.hasOwnProperty('node_mapnik'), "No 'node_mapnik' version in " + versions);
         assert.ok(versions.hasOwnProperty('mapnik'), "No 'mapnik' version in " + versions);
     });
-
 });

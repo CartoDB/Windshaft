@@ -32,7 +32,7 @@ var rendererFactoryOptions = {
     http: rendererOptions.http
 };
 
-function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
+function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
     const options = Object.assign({}, rendererFactoryOptions);
     overrideOptions = overrideOptions || {};
 
@@ -62,7 +62,7 @@ function TestClient(mapConfig, overrideOptions, onTileErrorStrategy) {
 
 module.exports = TestClient;
 
-TestClient.prototype.getTile = function(z, x, y, options, callback) {
+TestClient.prototype.getTile = function (z, x, y, options, callback) {
     if (!callback) {
         callback = options;
         options = {};
@@ -81,7 +81,7 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
     }
 
     var provider = new DummyMapConfigProvider(this.config, params);
-    this.tileBackend.getTile(provider, params, function(err, tile, headers, stats) {
+    this.tileBackend.getTile(provider, params, function (err, tile, headers, stats) {
         var img;
         if (!err && tile && params.format === 'png') {
             img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
@@ -90,19 +90,19 @@ TestClient.prototype.getTile = function(z, x, y, options, callback) {
     });
 };
 
-TestClient.prototype.getFeatureAttributes = function(layer, featureId, callback) {
+TestClient.prototype.getFeatureAttributes = function (layer, featureId, callback) {
     var params = {
         dbname: 'windshaft_test',
         layer: layer,
         fid: featureId
     };
     var provider = new DummyMapConfigProvider(this.config, params);
-    this.attributesBackend.getFeatureAttributes(provider, params, false, function(err, attributes, stats) {
+    this.attributesBackend.getFeatureAttributes(provider, params, false, function (err, attributes, stats) {
         return callback(err, attributes, stats);
     });
 };
 
-TestClient.prototype.createLayergroup = function(options, callback) {
+TestClient.prototype.createLayergroup = function (options, callback) {
     if (!callback) {
         callback = options;
         options = {};
@@ -112,7 +112,7 @@ TestClient.prototype.createLayergroup = function(options, callback) {
     }, options);
 
     var validatorProvider = new DummyMapConfigProvider(this.config, params);
-    this.mapBackend.createLayergroup(this.config, params, validatorProvider, function(err, layergroup) {
+    this.mapBackend.createLayergroup(this.config, params, validatorProvider, function (err, layergroup) {
         if (layergroup) {
             var redisKey = 'map_cfg|' + layergroup.layergroupid;
             redisClient.del(redisKey, function () {
@@ -124,8 +124,8 @@ TestClient.prototype.createLayergroup = function(options, callback) {
     });
 };
 
-function previewImageCallbackWrapper(callback) {
-    return function(err, imageBuffer) {
+function previewImageCallbackWrapper (callback) {
+    return function (err, imageBuffer) {
         var image;
         if (!err) {
             image = mapnik.Image.fromBytesSync(new Buffer(imageBuffer, 'binary'));
@@ -134,7 +134,7 @@ function previewImageCallbackWrapper(callback) {
     };
 }
 
-TestClient.prototype.getStaticCenter = function(zoom, lon, lat, width, height, callback) {
+TestClient.prototype.getStaticCenter = function (zoom, lon, lat, width, height, callback) {
     var format = 'png';
     var params = {
         layer: 'all',
@@ -156,7 +156,7 @@ TestClient.prototype.getStaticCenter = function(zoom, lon, lat, width, height, c
     this.previewBackend.getImage(options, previewImageCallbackWrapper(callback));
 };
 
-TestClient.prototype.getStaticBbox = function({ west, south, east, north, width, height }, callback) {
+TestClient.prototype.getStaticBbox = function ({ west, south, east, north, width, height }, callback) {
     var format = 'png';
     var params = {
         layer: 'all',
@@ -176,7 +176,6 @@ TestClient.prototype.getStaticBbox = function({ west, south, east, north, width,
     this.previewBackend.getImage(options, previewImageCallbackWrapper(callback));
 };
 
-
 var DEFAULT_POINT_STYLE = [
     '#layer {',
     '  marker-fill: #FF6600;',
@@ -191,7 +190,7 @@ var DEFAULT_POINT_STYLE = [
     '}'
 ].join('');
 
-function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity, attributes) {
+function singleLayerMapConfig (sql, cartocss, cartocssVersion, interactivity, attributes) {
     return {
         version: '1.3.0',
         layers: [
@@ -202,35 +201,34 @@ function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity, att
                     cartocss: cartocss || DEFAULT_POINT_STYLE,
                     cartocss_version: cartocssVersion || '2.3.0',
                     interactivity: interactivity,
-                    attributes: attributes ? attributes : undefined
+                    attributes: attributes || undefined
                 }
             }
         ]
     };
 }
 
-function mvtLayerMapConfig(sql, geom_column = 'the_geom', srid = 3857) {
+function mvtLayerMapConfig (sql, geom_column = 'the_geom', srid = 3857) {
     return {
-            version: '1.8.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        geom_column: geom_column,
-                        srid: srid,
-                        sql: sql
-                    }
+        version: '1.8.0',
+        layers: [
+            {
+                type: 'mapnik',
+                options: {
+                    geom_column: geom_column,
+                    srid: srid,
+                    sql: sql
                 }
-            ]
+            }
+        ]
     };
 }
 
-
-function defaultTableQuery(tableName) {
+function defaultTableQuery (tableName) {
     return `SELECT * FROM ${tableName}`;
 }
 
-function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
+function defaultTableMapConfig (tableName, cartocss, cartocssVersion, interactivity) {
     return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
 }
 
