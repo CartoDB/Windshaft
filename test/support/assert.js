@@ -123,7 +123,6 @@ Celldiff.prototype.toString = function () {
 };
 
 // @param tolerance number of tolerated grid cell differences
-// jshint maxcomplexity:9
 assert.utfgridEqualsFile = function (buffer, referenceFile, tolerance, callback) {
     // fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expectedJson = JSON.parse(fs.readFileSync(referenceFile, 'utf8'));

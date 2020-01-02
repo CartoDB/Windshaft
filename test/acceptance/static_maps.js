@@ -139,7 +139,6 @@ describe('static_maps', function () {
 
     it('resize tiles bigger than 256px', function (done) {
         var renderer = new Renderer(urlHost + retinaUrlPath, [], {});
-        /* jshint unused: vars */
         renderer.getTile(0, 0, 0, function (err, buffer, headers, stats) {
             assert.ifError(err);
             mapnik.Image.fromBytes(buffer, function (err, image) {

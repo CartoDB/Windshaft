@@ -41,4 +41,4 @@ test-all: test eslint
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test
 
-.PHONY: pre-install test jshint coverage
+.PHONY: pre-install test eslint coverage
