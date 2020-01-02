@@ -17,7 +17,6 @@ describe('Default QueryRewriter', function () {
             'SELECT * FROM table1 AS x',
             'WITH a AS (1) SELECT * FROM table1',
             'SELECT * FROM table1 WHERE a=1',
-            // jshint multistr:true
             `SELECT table1.* FROM table1
                 JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom)
                 WHERE areas.name='A'`
