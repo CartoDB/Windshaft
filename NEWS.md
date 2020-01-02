@@ -3,6 +3,7 @@
 
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
+- Remove deprecated coverage tool istanbul, using nyc instead.
 
 # Version 5.6.4
 2019-10-28
