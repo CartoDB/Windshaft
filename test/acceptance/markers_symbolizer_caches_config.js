@@ -40,8 +40,8 @@ describe('markers_symbolizer_caches config', function () {
 
         testClient.getTile(0, 0, 0, { format: FORMAT }, function (err, tile, img, headers, stats) {
             assert.ifError(err);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Miss'), true);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Ignored'), false);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Miss'), true);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Ignored'), false);
             done();
         });
     });
@@ -61,8 +61,8 @@ describe('markers_symbolizer_caches config', function () {
         var testClient = new TestClient(MAPCONFIG, options);
         testClient.getTile(0, 0, 0, { format: FORMAT }, function (err, tile, img, headers, stats) {
             assert.ifError(err);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Miss'), false);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Ignored'), true);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Miss'), false);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Ignored'), true);
             done();
         });
     });
@@ -82,8 +82,8 @@ describe('markers_symbolizer_caches config', function () {
         var testClient = new TestClient(MAPCONFIG, options);
         testClient.getTile(0, 0, 0, { format: FORMAT }, function (err, tile, img, headers, stats) {
             assert.ifError(err);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Miss'), true);
-            assert.equal(stats.hasOwnProperty('Mk_Agg_PMS_ImageCache_Ignored'), false);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Miss'), true);
+            assert.equal(Object.prototype.hasOwnProperty.call(stats, 'Mk_Agg_PMS_ImageCache_Ignored'), false);
             done();
         });
     });

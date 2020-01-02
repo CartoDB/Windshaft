@@ -6,6 +6,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
+const path = require('path');
 
 describe('layer filtering', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
@@ -16,8 +17,9 @@ describe('layer filtering', function () {
         testClient = new TestClient(mapConfig);
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer(function (request, response) {
-            var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+            var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                assert.ifError(err);
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();

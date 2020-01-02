@@ -8,7 +8,7 @@ var http = require('http');
 var fs = require('fs');
 var Renderer = require('../../lib/windshaft/renderers/http/renderer');
 var mapnik = require('@carto/mapnik');
-var assert = require('../support/assert');
+const path = require('path');
 
 describe('static_maps', function () {
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
@@ -18,8 +18,8 @@ describe('static_maps', function () {
     var invalidUrlTemplate = urlHost + '/INVALID/{z}/{x}/{y}.png';
     var retinaUrlPath = '/@2x';
 
-    var filepathRegular = __dirname + '/../fixtures/http/basemap.png';
-    var filepathRetina = __dirname + '/../fixtures/http/mapbox-tile@2x.png';
+    var filepathRegular = path.join(__dirname, '/../fixtures/http/basemap.png');
+    var filepathRetina = path.join(__dirname, '/../fixtures/http/mapbox-tile@2x.png');
 
     var httpRendererResourcesServer;
 
@@ -29,6 +29,7 @@ describe('static_maps', function () {
             var filenpath = request.url === retinaUrlPath ? filepathRetina : filepathRegular;
 
             fs.readFile(filenpath, { encoding: 'binary' }, function (err, file) {
+                assert.ifError(err);
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();
@@ -131,7 +132,7 @@ describe('static_maps', function () {
         var testClient = new TestClient(staticMapConfig(validUrlTemplate, invalidStyleForZoom));
         testClient.getStaticCenter(zoom, lat, lon, width, height, function (err) {
             assert.ok(err);
-            assert.ok(err.message.match(/column \"wadus\" does not exist/));
+            assert.ok(err.message.match(/column "wadus" does not exist/));
             done();
         });
     });
@@ -140,6 +141,7 @@ describe('static_maps', function () {
         var renderer = new Renderer(urlHost + retinaUrlPath, [], {});
         /* jshint unused: vars */
         renderer.getTile(0, 0, 0, function (err, buffer, headers, stats) {
+            assert.ifError(err);
             mapnik.Image.fromBytes(buffer, function (err, image) {
                 assert.ifError(err);
                 assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');

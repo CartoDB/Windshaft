@@ -6,6 +6,7 @@ var fs = require('fs');
 var http = require('http');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+const path = require('path');
 
 describe('torque png renderer', function () {
     describe('tiles', function () {
@@ -54,7 +55,7 @@ describe('torque png renderer', function () {
             testClient = new TestClient(torquePngPointsMapConfig);
             // Start a server to test external resources
             resourcesServer = http.createServer(function (request, response) {
-                var filename = __dirname + '/../fixtures/markers' + request.url;
+                var filename = path.join(__dirname, '/../fixtures/markers' + request.url);
                 fs.readFile(filename, 'binary', function (err, file) {
                     if (err) {
                         response.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -98,6 +99,7 @@ describe('torque png renderer', function () {
             var zxy = [z, x, y];
             it('torque png tile ' + zxy.join('/') + '.png', function (done) {
                 testClient.getTile(z, x, y, { layer: 0 }, function (err, tile) {
+                    assert.ifError(err);
                     assert.imageEqualsFile(tile, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function (err) {
                         assert.ifError(err);
                         done();
@@ -119,8 +121,8 @@ describe('torque png renderer', function () {
                                 'Map {',
                                 '-torque-frame-count:1;',
                                 '\n-torque-animation-duration:30;',
-                                '\n-torque-time-attribute:\"cartodb_id\";',
-                                '\n-torque-aggregation-function:\"count(cartodb_id)\";',
+                                '\n-torque-time-attribute:"cartodb_id";',
+                                '\n-torque-aggregation-function:"count(cartodb_id)";',
                                 '\n-torque-resolution:1;',
                                 '\n-torque-data-aggregation:linear;',
                                 '}',
@@ -136,12 +138,13 @@ describe('torque png renderer', function () {
             };
 
             var fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
-            var fixtureFileCairoLT_1_14 =
+            var fixtureFileCairoLT114 =
                 './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1-cairo-lt-1.14.png';
 
             var testClient = new TestClient(mapConfig);
             testClient.getTile(2, 2, 1, function (err, tile) {
-                assert.imageEqualsFile(tile, fixtureFileCairoLT_1_14, IMAGE_TOLERANCE_PER_MIL, function (err) {
+                assert.ifError(err);
+                assert.imageEqualsFile(tile, fixtureFileCairoLT114, IMAGE_TOLERANCE_PER_MIL, function (err) {
                     if (err) {
                         assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function (err) {
                             assert.ifError(err);

@@ -12,22 +12,6 @@ var debug = require('debug')('windshaft:assert');
 
 var assert = module.exports = exports = require('assert');
 
-function cartodbIdFeatureReducer (byIdAcc, feature) {
-    if (!feature.properties.hasOwnProperty('cartodb_id')) {
-        throw new Error('Expected `cartodb_id` property not found in feature');
-    }
-    byIdAcc[feature.properties.cartodb_id] = feature;
-    return byIdAcc;
-}
-
-function featureCollectionFilter (feature) {
-    return feature.type === 'FeatureCollection';
-}
-
-function nonFeatureCollectionFilter (feature) {
-    return !featureCollectionFilter(feature);
-}
-
 /**
  * Takes an image data as an input and an image path and compare them using Mapnik's Image.compare in case the
  * similarity is not within the tolerance limit it will callback with an error.
@@ -119,6 +103,7 @@ assert.imagesAreSimilarIgnoreDimensions = function (testImage, referenceImage, t
         biggestImage.premultiplySync();
         // lanczos method has the best quality
         biggestImage.resize(smallestImage.width(), smallestImage.height(), { scaling_method: mapnik.imageScaling.lanczos }, function (err, biggestImage) {
+            assert.ifError(err);
             imagesAreSimilar(biggestImage, smallestImage, tolerance, callback);
         });
     } else {
@@ -141,23 +126,23 @@ Celldiff.prototype.toString = function () {
 // jshint maxcomplexity:9
 assert.utfgridEqualsFile = function (buffer, referenceFile, tolerance, callback) {
     // fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
-    var expected_json = JSON.parse(fs.readFileSync(referenceFile, 'utf8'));
+    var expectedJson = JSON.parse(fs.readFileSync(referenceFile, 'utf8'));
 
-    var obtained_json = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
+    var obtainedJson = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
 
     // compare grid
-    var obtained_grid = obtained_json.grid;
-    var expected_grid = expected_json.grid;
-    var nrows = obtained_grid.length;
-    if (nrows !== expected_grid.length) {
+    var obtainedGrid = obtainedJson.grid;
+    var expectedGrid = expectedJson.grid;
+    var nrows = obtainedGrid.length;
+    if (nrows !== expectedGrid.length) {
         return callback(
-            new Error('Obtained grid rows (' + nrows + ') != expected grid rows (' + expected_grid.length + ')')
+            new Error('Obtained grid rows (' + nrows + ') != expected grid rows (' + expectedGrid.length + ')')
         );
     }
     var celldiff = [];
     for (var i = 0; i < nrows; ++i) {
-        var ocols = obtained_grid[i];
-        var ecols = expected_grid[i];
+        var ocols = obtainedGrid[i];
+        var ecols = expectedGrid[i];
         var ncols = ocols.length;
         if (ncols !== ecols.length) {
             return callback(
@@ -178,7 +163,7 @@ assert.utfgridEqualsFile = function (buffer, referenceFile, tolerance, callback)
     }
 
     try {
-        assert.deepEqual(obtained_json.keys, expected_json.keys);
+        assert.deepEqual(obtainedJson.keys, expectedJson.keys);
     } catch (e) {
         return callback(e);
     }

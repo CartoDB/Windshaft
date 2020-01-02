@@ -65,8 +65,8 @@ describe('torque steps', function () {
         }
     ];
 
-    var torqueMapConfig = (step = 0, order_by = '') => {
-        var _tile_sql = 'WITH par AS (' +
+    var torqueMapConfig = (step = 0, orderBy = '') => {
+        var tileSql = 'WITH par AS (' +
                 'WITH innerpar AS (' +
                     'SELECT ' +
                         '1.0/(({xyz_resolution})*{resolution}) as resinv, ' +
@@ -110,7 +110,7 @@ describe('torque steps', function () {
                         cartocss,
                         cartocss_version: '1.0.0',
                         step,
-                        tile_sql: _tile_sql + order_by
+                        tile_sql: tileSql + orderBy
                     }
                 }
             ]
@@ -145,15 +145,15 @@ describe('torque steps', function () {
         });
     });
 
-    const order_by_steps = [
+    const orderBySteps = [
         ' ORDER BY x__uint8 ASC ',
         ' ORDER BY x__uint8 DESC ',
         ' ORDER BY y__uint8 ASC ',
         ' ORDER BY y__uint8 DESC '
     ];
-    order_by_steps.forEach(order_by_step => {
+    orderBySteps.forEach(orderByStep => {
         steps.forEach(step => {
-            it(`should be order independent -order=${order_by_step} - step=${step}`, function (done) {
+            it(`should be order independent -order=${orderByStep} - step=${step}`, function (done) {
                 var testClient = new TestClient(torqueMapConfig(step));
                 testClient.getTile(0, 0, 0, { layer: 0, format: 'png' }, function (err, torqueTile) {
                     assert.ifError(err);

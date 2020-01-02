@@ -83,6 +83,7 @@ describe('torque tiles at 0,0 point', function () {
     tiles.forEach(function (tile) {
         it(tile.what, function (done) {
             testClient.getTile(3, tile.x, tile.y, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
+                assert.ifError(err);
                 try {
                     assert.deepEqual(torqueTile, tile.expects);
                 } catch (ex) {

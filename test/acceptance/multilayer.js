@@ -7,6 +7,7 @@ var fs = require('fs');
 var step = require('step');
 var mapnik = require('@carto/mapnik');
 var http = require('http');
+const path = require('path');
 
 var debug = require('debug')('windshaft:test');
 
@@ -15,14 +16,14 @@ var TestClient = require('../support/test_client');
 describe('multilayer', function () {
     var resourcesServer;
     var resourcesServerPort = 8033;
-    var available_system_fonts = Object.keys(mapnik.fontFiles());
+    var availableSystemFonts = Object.keys(mapnik.fontFiles());
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
     before(function (done) {
         // Start a server to test external resources
         resourcesServer = http.createServer(function (request, response) {
-            var filename = __dirname + '/../fixtures/markers' + request.url;
+            var filename = path.join(__dirname, '/../fixtures/markers' + request.url);
             fs.readFile(filename, 'binary', function (err, file) {
                 if (err) {
                     response.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -60,6 +61,7 @@ describe('multilayer', function () {
 
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, function (err, tile) {
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });
@@ -89,6 +91,7 @@ describe('multilayer', function () {
     it('layergroup with 2 layers, each with its style (png)', function (done) {
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, function (err, tile) {
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.png',
                 IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
@@ -97,6 +100,7 @@ describe('multilayer', function () {
     it('layergroup with 2 layers, each with its style (grid.json, layer 0)', function (done) {
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, { layer: 0, format: 'grid.json' }, function (err, tile) {
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2, done);
         });
     });
@@ -432,7 +436,7 @@ describe('multilayer', function () {
     });
 
     it('known text-face-name', function (done) {
-        new TestClient(fontLayergroup(available_system_fonts[0])).getTile(0, 0, 0, function (err, tile) {
+        new TestClient(fontLayergroup(availableSystemFonts[0])).getTile(0, 0, 0, function (err, tile) {
             assert.ifError(err);
             assert.ok(tile);
             done();
@@ -463,12 +467,12 @@ describe('multilayer', function () {
             assert.ifError(err);
             assert.ok(grid);
 
-            assert.ok(grid.hasOwnProperty('data'));
-            assert.ok(grid.data.hasOwnProperty('1'));
+            assert.ok(Object.prototype.hasOwnProperty.call(grid, 'data'));
+            assert.ok(Object.prototype.hasOwnProperty.call(grid.data, '1'));
             var data = grid.data[1];
-            assert.ok(data.hasOwnProperty('n'), "Missing 'n' from grid data keys: " + Object.keys(data));
-            assert.ok(data.hasOwnProperty('i'), "Missing 'i' from grid data keys: " + Object.keys(data));
-            assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + Object.keys(data));
+            assert.ok(Object.prototype.hasOwnProperty.call(data, 'n'), "Missing 'n' from grid data keys: " + Object.keys(data));
+            assert.ok(Object.prototype.hasOwnProperty.call(data, 'i'), "Missing 'i' from grid data keys: " + Object.keys(data));
+            assert.ok(Object.prototype.hasOwnProperty.call(data, 't'), "Missing 't' from grid data keys: " + Object.keys(data));
 
             // this should not be undefined, skipping test until this can be fixed
             // the workaround is to cast now() as now()::text
@@ -535,6 +539,7 @@ describe('multilayer', function () {
         };
         var testClient = new TestClient(layergroup);
         testClient.getTile(0, 0, 0, function (err, tile) {
+            assert.ifError(err);
             assert.imageEqualsFile(tile, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });

@@ -10,6 +10,7 @@ describe('basic grid json', function () {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig);
         testClient.getTile(13, 4011, 3088, { layer: 0, format: 'grid.json' }, function (err, tile) {
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
     });
@@ -18,14 +19,15 @@ describe('basic grid json', function () {
         var mapConfig = TestClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         var testClient = new TestClient(mapConfig);
         testClient.getTile(13, 4011, 3088, { layer: 0, format: 'grid.json' }, function (err, tile) {
-            var expected_json = {
+            assert.ifError(err);
+            var expectedJson = {
                 1: { name: 'Hawai' },
                 2: { name: 'El Estocolmo' },
                 3: { name: 'El Rey del Tallarín' },
                 4: { name: 'El Lacón' },
                 5: { name: 'El Pico' }
             };
-            assert.deepEqual(tile.data, expected_json);
+            assert.deepEqual(tile.data, expectedJson);
             done();
         });
     });
@@ -46,6 +48,7 @@ describe('basic grid json', function () {
         var mapConfig = TestClient.singleLayerMapConfig(query, null, null, 'name');
         var testClient = new TestClient(mapConfig);
         testClient.getTile(13, 4011, 3088, { layer: 0, format: 'grid.json' }, function (err, tile) {
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
     });
@@ -56,6 +59,7 @@ describe('basic grid json', function () {
         var mapConfig = TestClient.singleLayerMapConfig(query, null, null, 'cartodb_id');
         var testClient = new TestClient(mapConfig);
         testClient.getTile(13, 4011, 3088, { layer: 0, format: 'grid.json' }, function (err, tile) {
+            assert.ifError(err);
             assert.utfgridEqualsFile(tile, './test/fixtures/test_table_13_4011_3088_empty.grid.json', 2, done);
         });
     });
@@ -67,14 +71,16 @@ describe('basic grid json', function () {
         var mapConfigName = TestClient.singleLayerMapConfig(query, style211, null, 'name');
         var testClient = new TestClient(mapConfigName);
         testClient.getTile(3, 2, 2, { layer: 0, format: 'grid.json' }, function (err, tile) {
-            var expected_data = { 1: { name: 'west' } };
-            assert.deepEqual(tile.data, expected_data);
+            assert.ifError(err);
+            var expectedData = { 1: { name: 'west' } };
+            assert.deepEqual(tile.data, expectedData);
 
             var mapConfigCartodbId = TestClient.singleLayerMapConfig(query, style211, null, 'cartodb_id');
             testClient = new TestClient(mapConfigCartodbId);
             testClient.getTile(3, 2, 2, { layer: 0, format: 'grid.json' }, function (err, tile) {
-                var expected_data = { 1: { cartodb_id: '1' } };
-                assert.deepEqual(tile.data, expected_data);
+                assert.ifError(err);
+                var expectedData = { 1: { cartodb_id: '1' } };
+                assert.deepEqual(tile.data, expectedData);
                 done();
             });
         });

@@ -84,7 +84,7 @@ TestClient.prototype.getTile = function (z, x, y, options, callback) {
     this.tileBackend.getTile(provider, params, function (err, tile, headers, stats) {
         var img;
         if (!err && tile && params.format === 'png') {
-            img = mapnik.Image.fromBytesSync(new Buffer(tile, 'binary'));
+            img = mapnik.Image.fromBytesSync(Buffer.from(tile, 'binary'));
         }
         return callback(err, tile, img, headers, stats);
     });
@@ -128,7 +128,7 @@ function previewImageCallbackWrapper (callback) {
     return function (err, imageBuffer) {
         var image;
         if (!err) {
-            image = mapnik.Image.fromBytesSync(new Buffer(imageBuffer, 'binary'));
+            image = mapnik.Image.fromBytesSync(Buffer.from(imageBuffer, 'binary'));
         }
         return callback(err, imageBuffer, image);
     };

@@ -19,7 +19,7 @@ module.exports = (function (opts) {
         log_format: null, // do not log anything
         req2params: function (req, callback) {
             if (req.query.testUnexpectedError) {
-                callback('test unexpected error');
+                callback(new Error('test unexpected error'));
                 return;
             }
 

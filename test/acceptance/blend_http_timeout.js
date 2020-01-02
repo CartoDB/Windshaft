@@ -6,6 +6,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
+const path = require('path');
 
 describe.skip('blend http client timeout', function () {
     var mapConfig = {
@@ -44,8 +45,9 @@ describe.skip('blend http client timeout', function () {
         // Start a server to test external resources
         slowHttpRendererResourcesServer = http.createServer(function (request, response) {
             setTimeout(function () {
-                var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+                var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                    assert.ifError(err);
                     response.writeHead(200);
                     response.write(file, 'binary');
                     response.end();

@@ -100,6 +100,7 @@ describe('torque', function () {
     it('should create a layergroup for valid mapconfig', function (done) {
         var testClient = new TestClient(validTorqueMapConfig);
         testClient.createLayergroup(function (err, layergroup) {
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers.length, 1);
             var meta = layergroup.metadata;
             assert.ok(meta, 'No metadata in torque MapConfig creation response: ' + layergroup);
@@ -130,7 +131,7 @@ describe('torque', function () {
 
     ['torque.json', 'json.torque'].forEach(function (format) {
         it('should render a torque tile for valid mapconfig, format=' + format, function (done) {
-            var expectedTorqueTileAt_0_0_0 = [
+            var expectedTorqueTileAt000 = [
                 {
                     x__uint8: 43,
                     y__uint8: 43,
@@ -142,7 +143,7 @@ describe('torque', function () {
             var testClient = new TestClient(validTorqueMapConfig);
             testClient.getTile(0, 0, 0, { layer: 0, format: format }, function (err, torqueTile) {
                 assert.ifError(err);
-                assert.deepEqual(torqueTile, expectedTorqueTileAt_0_0_0);
+                assert.deepEqual(torqueTile, expectedTorqueTileAt000);
                 done();
             });
         });

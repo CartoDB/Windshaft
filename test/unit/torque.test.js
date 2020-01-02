@@ -22,7 +22,7 @@ function dummyPSQL () {
 }
 
 describe('torque', function () {
-    var layergroup_notorque = {
+    var layergroupNoTorque = {
         layers: [
             {
                 type: 'cartodb',
@@ -34,7 +34,7 @@ describe('torque', function () {
             }
         ]
     };
-    var mapConfig_notorque = MapConfig.create(layergroup_notorque);
+    var mapConfigNoTorque = MapConfig.create(layergroupNoTorque);
 
     function makeCartoCss (mapAttributes) {
         mapAttributes = mapAttributes || [
@@ -192,7 +192,7 @@ describe('torque', function () {
         });
 
         it('should raise an error when layer is not set', function (done) {
-            torque.getRenderer(mapConfig_notorque, 'json.torque', { params: {} }, function (err/*, renderer */) {
+            torque.getRenderer(mapConfigNoTorque, 'json.torque', { params: {} }, function (err/*, renderer */) {
                 assert.ok(err !== null);
                 assert.ok(err instanceof Error);
                 assert.equal(err.message, 'torque renderer only supports a single layer');
@@ -222,6 +222,7 @@ describe('torque', function () {
             torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function (err, renderer) {
                 assert.ok(err === null);
                 renderer.getMetadata(function (err, m) {
+                    assert.ifError(err);
                     assert.equal(0, m.start);
                     assert.equal(10000, m.end);
                     assert.equal(1, m.data_steps);
@@ -245,8 +246,9 @@ describe('torque', function () {
                 }]
             ];
             torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function (err, renderer) {
+                assert.ifError(err);
                 renderer.getTile(0, 0, 0, function (err, tile) {
-                    assert.ok(err === null);
+                    assert.ifError(err);
                     assert.ok(!!tile);
                     assert.ok(tile[0].x__uint8 !== undefined);
                     assert.ok(tile[0].y__uint8 !== undefined);
@@ -285,6 +287,7 @@ describe('torque', function () {
                 [null, { rows: [{ num_steps: 0, max_date: null, min_date: null }] }]
             ];
             torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function (err, renderer) {
+                assert.ifError(err);
                 assert.equal(renderer.attrs.step, 1, 'Number of steps cannot be Infinity');
                 done();
             });

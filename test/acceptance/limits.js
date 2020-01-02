@@ -13,11 +13,13 @@ describe('render limits', function () {
     }
 
     var FIXTURE_IMAGE = './test/fixtures/limits/fallback.png';
+    /* eslint-disable handle-callback-err */
     function onTileErrorStrategyFallback (err, tile, headers, stats, format, callback) {
         fs.readFile(FIXTURE_IMAGE, { encoding: null }, function (err, img) {
             callback(null, img, { 'Content-Type': 'image/png' }, {});
         });
     }
+    /* eslint-enable handle-callback-err */
 
     var LIMITS_CONFIG = {
         render: 50,
@@ -57,6 +59,7 @@ describe('render limits', function () {
     it('returns a fallback tile that was modified via onTileErrorStrategy', function (done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyFallback);
         testClient.getTile(0, 0, 0, function (err, tile) {
+            assert.ifError(err);
             assert.imageEqualsFile(tile, FIXTURE_IMAGE, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });
@@ -72,9 +75,9 @@ function mvtTest (usePostGIS) {
     };
 
     it('Error with long query', function (done) {
-        const slow_query = 'SELECT pg_sleep(1), 1 AS "cartodb id", ' +
+        const slowQuery = 'SELECT pg_sleep(1), 1 AS "cartodb id", ' +
                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom";
-        const mapConfig = TestClient.mvtLayerMapConfig(slow_query, null, null, 'name');
+        const mapConfig = TestClient.mvtLayerMapConfig(slowQuery, null, null, 'name');
         mapConfig.layers[0].options.geom_column = 'the_geom';
         mapConfig.layers[0].options.srid = 3857;
 

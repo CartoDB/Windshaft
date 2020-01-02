@@ -18,13 +18,13 @@ describe('Default QueryRewriter', function () {
             'WITH a AS (1) SELECT * FROM table1',
             'SELECT * FROM table1 WHERE a=1',
             // jshint multistr:true
-            "SELECT table1.* FROM table1 \
-         JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom) \
-         WHERE areas.name='A'"
+            `SELECT table1.* FROM table1
+                JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom)
+                WHERE areas.name='A'`
         ];
         queries.forEach(function (sql) {
-            var rewritten_sql = queryRewriter.query(sql);
-            assert.equal(rewritten_sql, sql);
+            var rewrittenSql = queryRewriter.query(sql);
+            assert.equal(rewrittenSql, sql);
         });
         done();
     });

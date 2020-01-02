@@ -12,10 +12,10 @@ var MapConfig = require('../../lib/windshaft/models/mapconfig');
 var debug = require('debug')('windshaft:test');
 
 describe('mapstore', function () {
-    var redis_pool = new RedisPool(serverOptions.redis);
+    var redisPool = new RedisPool(serverOptions.redis);
 
     it('fails loading unexistent map', function (done) {
-        var mapStore = new MapStore({ pool: redis_pool, expire_time: 50000 });
+        var mapStore = new MapStore({ pool: redisPool, expire_time: 50000 });
         mapStore.load('unexistent', function (err) {
             assert.ok(err);
             assert.equal(err.message, "Invalid or nonexistent map configuration token 'unexistent'");
@@ -24,7 +24,7 @@ describe('mapstore', function () {
     });
 
     it('can save a map and tell if it existed already', function (done) {
-        var map_store = new MapStore({ pool: redis_pool, expire_time: 50000 });
+        var mapStore = new MapStore({ pool: redisPool, expire_time: 50000 });
         var map = MapConfig.create({
             version: '1.0.1',
             layers: [
@@ -40,13 +40,13 @@ describe('mapstore', function () {
         var mapID;
         step(
             function saveMap () {
-                map_store.save(map, this);
+                mapStore.save(map, this);
             },
-            function checkSaved_reSave (err, id, known) {
+            function checkSavedReSave (err, id, known) {
                 assert.ifError(err);
                 mapID = id;
                 assert.ok(!known);
-                map_store.save(map, this);
+                mapStore.save(map, this);
             },
             function checkReSaved (err, id, known) {
                 assert.ifError(err);
@@ -55,7 +55,7 @@ describe('mapstore', function () {
             },
             function delMap (err) {
                 var next = this;
-                map_store.del(mapID, function (e) {
+                mapStore.del(mapID, function (e) {
                     if (e) {
                         debug('Could not delete map ' + mapID + ': ' + e);
                     }

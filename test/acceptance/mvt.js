@@ -8,7 +8,7 @@ const mapnik = require('@carto/mapnik');
 
 describe('mvt (mapnik)', () => { mvtTest(false); });
 describe('mvt (pgsql)', () => { mvtTest(true); });
-describe('Compare mvt renderers', () => { describe_compare_renderer(); });
+describe('Compare mvt renderers', () => { describeCompareRenderer(); });
 
 function mvtTest (usePostGIS) {
     const options = { mvt: { usePostGIS: usePostGIS } };
@@ -956,7 +956,7 @@ function mvtTest (usePostGIS) {
                 const testClientSimplified = new TestClient(mapConfigPresimplified, options);
                 testClientSimplified.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtSimple) {
                     assert.ifError(err);
-                    mvt_cmp(mvtOriginal, mvtSimple);
+                    mvtCmp(mvtOriginal, mvtSimple);
 
                     // For Mapnik compare again using TWKB this time
                     if (usePostGIS) {
@@ -981,7 +981,7 @@ function mvtTest (usePostGIS) {
                             const testClientSimpleTWKB = new TestClient(mapConfigPresimplified, optionsTWKB);
                             testClientSimpleTWKB.getTile(0, 0, 0, { format: 'mvt' }, function (err, mvtSimpleTWKB) {
                                 assert.ifError(err);
-                                mvt_cmp(mvtOriginalTWKB, mvtSimpleTWKB);
+                                mvtCmp(mvtOriginalTWKB, mvtSimpleTWKB);
                                 done();
                             });
                         });
@@ -1001,17 +1001,17 @@ function mvtInteger (parameterInteger) {
 // considering at all its type (or the finishing point of a polygon)
 function mvtExtractComponents (geometry) {
     const points = [{ x: 0, y: 0 }];
-    let cmd_points = 0;
+    let cmdPoints = 0;
     for (let i = 0; i < geometry.length; i++) {
-        if (cmd_points === 0) {
+        if (cmdPoints === 0) {
             // Read the next command and extract the number of points pending
             if (geometry[i] === 15) {
                 // Ignore ClosePath
                 continue;
             }
-            cmd_points = geometry[i] >> 3;
+            cmdPoints = geometry[i] >> 3;
         } else {
-            cmd_points--;
+            cmdPoints--;
             // The point coordinates are in relation to the previous one
             points.push({
                 x: mvtInteger(geometry[i]) + points[points.length - 1].x,
@@ -1026,28 +1026,28 @@ function mvtExtractComponents (geometry) {
 }
 
 // Compares (with a tolerance of +- 2) an array of points
-function mvtPointArray_cmp (arr1, arr2) {
+function mvtPointArrayCmp (arr1, arr2) {
     arr1 = arr1.filter(p1 => !arr2.find(p2 => Math.abs(p1.x - p2.x) <= 2 && Math.abs(p1.y - p2.y) <= 2));
     assert.equal(arr1.length, 0, "Items not found in Mapnik's: " + JSON.stringify(arr1));
 }
 
 // Check if 2 MVT features are equivalent
 // Does not compare feature.id since it's optional (Mapnik sets it, St_AsMVT doesn't)
-function mvtFeature_cmp (feature1, feature2) {
+function mvtFeatureCmp (feature1, feature2) {
     assert.equal(feature1.type, feature2.type);
     assert.deepEqual(feature1.properties, feature2.properties);
 
     assert.equal(feature1.geometry.length, feature2.geometry.length,
         (feature1.geometry.length > feature2.geometry.length ? "Mapnik's" : "Postgres'") +
                 ' feature has a geometry made of more points');
-    const f1_points = mvtExtractComponents(feature1.geometry);
-    const f2_points = mvtExtractComponents(feature2.geometry);
+    const f1Points = mvtExtractComponents(feature1.geometry);
+    const f2Points = mvtExtractComponents(feature2.geometry);
 
-    mvtPointArray_cmp(f1_points, f2_points);
+    mvtPointArrayCmp(f1Points, f2Points);
 }
 
 // Check if 2 MVT layers are equivalent
-function mvtLayer_cmp (layer1, layer2) {
+function mvtLayerCmp (layer1, layer2) {
     assert.equal(layer1.name, layer2.name);
     assert.equal(layer1.version, layer2.version);
     assert.equal(layer1.extent, layer2.extent);
@@ -1067,12 +1067,12 @@ function mvtLayer_cmp (layer1, layer2) {
             'Comparison requires properties with cartodb_id. Got: ' + JSON.stringify(f1));
         const f2 = layer2.features.find(feature => f1.properties.cartodb_id === feature.properties.cartodb_id);
         assert.ok(f2, "Could not find feature with cartodb_id '" + f1.properties.cartodb_id + "'");
-        mvtFeature_cmp(f1, f2);
+        mvtFeatureCmp(f1, f2);
     });
 }
 
 // Check if 2 MVT tiles are equivalent
-function mvt_cmp (tileData1, tileData2) {
+function mvtCmp (tileData1, tileData2) {
     const vtile1 = new mapnik.VectorTile(0, 0, 0);
     vtile1.setData(tileData1);
 
@@ -1104,12 +1104,12 @@ function mvt_cmp (tileData1, tileData2) {
         // We look for a layer with the same name as the order isn't guaranteed
         const layer2 = t2.find(layer => layer.name === layer1.name);
         assert.ok(layer2, "Could not find layer named '" + layer1.name + "'");
-        mvtLayer_cmp(layer1, layer2);
+        mvtLayerCmp(layer1, layer2);
     });
 }
 
 // Compares the output returned by both renderers (mapnik and pg_mvt) given the same input
-function describe_compare_renderer () {
+function describeCompareRenderer () {
     const LAYER_TESTS = [
         {
             name: 'Single layer',
@@ -1179,7 +1179,7 @@ function describe_compare_renderer () {
             };
 
             const testClientMapnik = new TestClient(test.mapConfig, mapnikOptions);
-            const testClientPg_mvt = new TestClient(test.mapConfig, pgOptions);
+            const testClientPgMvt = new TestClient(test.mapConfig, pgOptions);
 
             const tileOptions = { format: 'mvt' };
             const z = test.tile && test.tile.z ? test.tile.z : 0;
@@ -1187,12 +1187,12 @@ function describe_compare_renderer () {
             const y = test.tile && test.tile.y ? test.tile.y : 0;
 
             testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
-                testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
+                testClientPgMvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
                     assert.ifError(err1);
                     assert.ifError(err2);
                     assert.deepEqual(mheaders, pheaders);
                     if (mheaders['x-tilelive-contains-data']) {
-                        mvt_cmp(mapnikMVT, pgMVT);
+                        mvtCmp(mapnikMVT, pgMVT);
                     }
 
                     done();
@@ -1608,11 +1608,11 @@ function describe_compare_renderer () {
     ];
 
     function setTestDefaults (test) {
-        test.vector_extent = test.hasOwnProperty('vector_extent') ? test.vector_extent : 4096;
-        test.vector_simplify_extent = test.hasOwnProperty('vector_simplify_extent')
+        test.vector_extent = Object.prototype.hasOwnProperty.call(test, 'vector_extent') ? test.vector_extent : 4096;
+        test.vector_simplify_extent = Object.prototype.hasOwnProperty.call(test, 'vector_simplify_extent')
             ? test.vector_simplify_extent : 4096;
         test.tile = Object.assign({ x: 0, y: 0, z: 0 }, test.tile || {});
-        test.bufferSize = test.hasOwnProperty('bufferSize') ? test.bufferSize : 64;
+        test.bufferSize = Object.prototype.hasOwnProperty.call(test, 'bufferSize') ? test.bufferSize : 64;
     }
 
     GEOM_TESTS.forEach(test => {
@@ -1660,19 +1660,19 @@ function describe_compare_renderer () {
             };
 
             const testClientMapnik = new TestClient(mapConfig, mapnikOptions);
-            const testClientPg_mvt = new TestClient(mapConfig, pgOptions);
+            const testClientPgMvt = new TestClient(mapConfig, pgOptions);
             const tileOptions = { format: 'mvt' };
             const z = test.tile.z;
             const x = test.tile.x;
             const y = test.tile.y;
 
             testClientMapnik.getTile(z, x, y, tileOptions, function (err1, mapnikMVT, img, mheaders) {
-                testClientPg_mvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
+                testClientPgMvt.getTile(z, x, y, tileOptions, function (err2, pgMVT, img, pheaders) {
                     assert.ifError(err1);
                     assert.ifError(err2);
                     assert.deepEqual(mheaders, pheaders);
                     if (mheaders['x-tilelive-contains-data']) {
-                        mvt_cmp(mapnikMVT, pgMVT);
+                        mvtCmp(mapnikMVT, pgMVT);
                     }
 
                     done();

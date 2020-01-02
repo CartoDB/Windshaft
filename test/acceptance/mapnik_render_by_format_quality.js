@@ -5,6 +5,7 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var fs = require('fs');
 var TestClient = require('../support/test_client');
+const path = require('path');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
@@ -16,7 +17,7 @@ describe('mapnik_render_by_format_quality', function () {
                 grainstore: Object.assign({ mapnik_tile_format: 'png8:m=h' }, TestClient.grainstoreOptions)
             }
         });
-        var testPngFilesDir = __dirname + '/../results/png';
+        var testPngFilesDir = path.join(__dirname, '/../results/png');
         fs.readdirSync(testPngFilesDir)
             .filter(function (fileName) {
                 return /.*\.png$/.test(fileName);
@@ -35,8 +36,10 @@ describe('mapnik_render_by_format_quality', function () {
             var optionsForPng32 = Object.assign({ format: 'png32' }, options);
 
             testClient.getTile(tile.z, tile.x, tile.y, optionsForPng32, function (err, tileBuffer) {
+                assert.ifError(err);
                 var bufferPng32 = tileBuffer;
                 testClient.getTile(tile.z, tile.x, tile.y, options, function (err, tileBuffer) {
+                    assert.ifError(err);
                     var bufferPng8 = tileBuffer;
 
                     assert.ok(bufferPng8.length < bufferPng32.length);

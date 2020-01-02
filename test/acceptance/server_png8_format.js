@@ -5,6 +5,7 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var fs = require('fs');
 var TestClient = require('../support/test_client');
+const path = require('path');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
@@ -22,7 +23,7 @@ describe('server_png8_format', function () {
                 grainstore: Object.assign({ mapnik_tile_format: 'png' }, TestClient.grainstoreOptions)
             }
         });
-        var testPngFilesDir = __dirname + '/../results/png';
+        var testPngFilesDir = path.join(__dirname, '/../results/png');
         fs.readdirSync(testPngFilesDir)
             .filter(function (fileName) {
                 return /.*\.png$/.test(fileName);
@@ -38,10 +39,11 @@ describe('server_png8_format', function () {
     function testOutputForPng32AndPng8 (tile, persist, callback) {
         it('intensity visualization; tile: ' + JSON.stringify(tile), function (done) {
             testClientPng32.getTile(tile.z, tile.x, tile.y, function (err, tileBuffer) {
+                assert.ifError(err);
                 var bufferPng32 = tileBuffer;
                 testClientPng8.getTile(tile.z, tile.x, tile.y, function (err, tileBuffer) {
+                    assert.ifError(err);
                     var bufferPng8 = tileBuffer;
-
                     assert.ok(bufferPng8.length < bufferPng32.length);
                     assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL, persist,
                         function (err, imagePaths, similarity) {

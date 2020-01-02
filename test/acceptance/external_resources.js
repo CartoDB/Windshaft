@@ -9,8 +9,9 @@ var redis = require('redis');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+const path = require('path');
 
-function rmdir_recursive_sync (dirname) {
+function rmdirRecursiveSync (dirname) {
     if (!fs.existsSync(dirname)) {
         return;
     }
@@ -21,7 +22,7 @@ function rmdir_recursive_sync (dirname) {
         if (s.isFile()) {
             fs.unlinkSync(f);
         } else {
-            rmdir_recursive_sync(f);
+            rmdirRecursiveSync(f);
         }
     }
 }
@@ -36,13 +37,13 @@ describe('external resources', function () {
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     beforeEach(function (done) {
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+        rmdirRecursiveSync(global.environment.millstone.cache_basedir);
         numRequests = 0;
 
         // Start a server to test external resources
         resourcesServer = http.createServer(function (request, response) {
             numRequests++;
-            var filename = __dirname + '/../fixtures/markers' + request.url;
+            var filename = path.join(__dirname, '/../fixtures/markers' + request.url);
             fs.readFile(filename, 'binary', function (err, file) {
                 if (err) {
                     response.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -100,11 +101,12 @@ describe('external resources', function () {
             assert.equal(numRequests, ++externalResourceRequestsCount);
 
             new TestClient(externalResourceMapConfig).createLayergroup(function (err, layergroup) {
+                assert.ifError(err);
                 assert.equal(numRequests, externalResourceRequestsCount);
 
                 redisClient.del('map_cfg|' + layergroup.layergroupid, function () {
                     // reset resources cache
-                    rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+                    rmdirRecursiveSync(global.environment.millstone.cache_basedir);
 
                     new TestClient(externalResourceMapConfig).createLayergroup(function () {
                         assert.equal(numRequests, ++externalResourceRequestsCount);

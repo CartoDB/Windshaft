@@ -10,12 +10,13 @@ const TestClient = require('../support/test_client');
 const IMAGE_TOLERANCE_PER_MIL = 20;
 const fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
 const fixtureFileCairo = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1-cairo-lt-1.14.png';
+const path = require('path');
 
 describe('torque png renderer', function () {
     describe('tiles witn marker-file pointing to a server', function () {
         before(function (done) {
             this.resourcesServer = http.createServer((request, response) => {
-                const fileStream = fs.createReadStream(__dirname + '/../fixtures/markers' + request.url);
+                const fileStream = fs.createReadStream(path.join(__dirname, '/../fixtures/markers' + request.url));
                 response.writeHead(200, { 'content-encoding': 'gzip' });
                 fileStream.pipe(zlib.createGzip()).pipe(response);
             });
@@ -48,8 +49,8 @@ describe('torque png renderer', function () {
                                 'Map {',
                                 '-torque-frame-count:1;',
                                 '\n-torque-animation-duration:30;',
-                                '\n-torque-time-attribute:\"cartodb_id\";',
-                                '\n-torque-aggregation-function:\"count(cartodb_id)\";',
+                                '\n-torque-time-attribute:"cartodb_id";',
+                                '\n-torque-aggregation-function:"count(cartodb_id)";',
                                 '\n-torque-resolution:1;',
                                 '\n-torque-data-aggregation:linear;',
                                 '}',

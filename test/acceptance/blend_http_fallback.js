@@ -6,6 +6,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 var fs = require('fs');
 var http = require('http');
+const path = require('path');
 
 describe('blend http fallback', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
@@ -21,11 +22,12 @@ describe('blend http fallback', function () {
                 response.writeHead(404);
                 response.end();
             } else {
-                var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+                var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
                 if (request.url.match(/^\/dark\//)) {
-                    filename = __dirname + '/../fixtures/http/dark_nolabels-1-0-0.png';
+                    filename = path.join(__dirname, '/../fixtures/http/dark_nolabels-1-0-0.png');
                 }
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                    assert.ifError(err);
                     response.writeHead(200);
                     response.write(file, 'binary');
                     response.end();
@@ -99,6 +101,7 @@ describe('blend http fallback', function () {
 
         it('should fallback on http error while blending layers ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTile(1, 0, 0, { layer: layerFilter }, function (err, tile) {
+                assert.ifError(err);
                 assert.imageEqualsFile(tile, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function (err) {
                     assert.ifError(err);
                     done();

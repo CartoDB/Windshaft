@@ -227,6 +227,7 @@ describe('torque boundary points', function () {
             var y = tileRequest.y;
 
             testClient.getTile(z, x, y, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
+                assert.ifError(err);
                 var i = 0;
                 torqueTile.sort(function (a, b) {
                     if (a.x__uint8 === b.x__uint8) {

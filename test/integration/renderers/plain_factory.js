@@ -5,6 +5,7 @@ require('../../support/test_helper.js');
 var assert = require('assert');
 var fs = require('fs');
 var http = require('http');
+const path = require('path');
 
 var PlainRendererFactory = require('../../../lib/windshaft/renderers/plain/factory');
 var ColorRenderer = require('../../../lib/windshaft/renderers/plain/color_renderer');
@@ -21,8 +22,9 @@ describe('renderer_plain_factory_getRenderer', function () {
                 response.end();
                 return;
             }
-            var filename = __dirname + '/../../fixtures/plain/patterns/congruent_pentagon.png';
+            var filename = path.join(__dirname, '/../../fixtures/plain/patterns/congruent_pentagon.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                assert.ifError(err);
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();
