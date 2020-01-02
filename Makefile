@@ -32,11 +32,11 @@ test-unit:
 	@echo "***unit tests***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE_UNIT)
 
-jshint:
-	@echo "***jshint***"
-	@./node_modules/.bin/jshint lib/ test/
+eslint:
+	@echo "***eslint***"
+	@./node_modules/.bin/eslint lib/ test/
 
-test-all: test jshint
+test-all: test eslint
 
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test
