@@ -42,8 +42,8 @@
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
         "express": "4.16.3",
-        "istanbul": "0.4.5",
         "mocha": "5.2.0",
+        "nyc": "^15.0.0",
         "redis": "2.8.0",
         "step": "1.0.0"
     },
@@ -51,7 +51,8 @@
         "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
         "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
         "preinstall": "make pre-install",
-        "test": "make test-all",
+        "test": "PGUSER=postgres make test-all",
+        "cover": "nyc --reporter=lcov npm test",
         "docker-test": "./docker-test.sh",
         "docker-bash": "./docker-bash.sh"
     },
