@@ -8,14 +8,14 @@ var http = require('http');
 var fs = require('fs');
 var windshaft = require('../../lib/windshaft');
 var DummyMapConfigProvider = require('../../lib/windshaft/models/providers/dummy_mapconfig_provider');
+const path = require('path');
 
 var mapnik = require('@carto/mapnik');
-//var RedisPool = require('redis-mpool');
+// var RedisPool = require('redis-mpool');
 
-describe('static_maps', function() {
-
+describe('static_maps', function () {
 //    var redisPool = new RedisPool(global.environment.redis);
-//    var mapStore  = new windshaft.storage.MapStore({ pool: redisPool });
+    //    var mapStore  = new windshaft.storage.MapStore({ pool: redisPool });
 
     var rendererFactory = new windshaft.renderer.Factory({
         mapnik: {
@@ -26,7 +26,7 @@ describe('static_maps', function() {
                 gc_prob: 0 // run the garbage collector at each invocation
             },
             mapnik: {
-                poolSize: 4,//require('os').cpus().length,
+                poolSize: 4, // require('os').cpus().length,
                 metatile: 1,
                 bufferSize: 64,
                 snapToGrid: false,
@@ -44,7 +44,7 @@ describe('static_maps', function() {
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
             fallbackImage: {
                 type: 'fs',
-                src: __dirname + '/../../test/fixtures/http/basemap.png'
+                src: path.join(__dirname, '../test/fixtures/http/basemap.png')
             }
         }
     });
@@ -59,24 +59,24 @@ describe('static_maps', function() {
 
     var httpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
-            var filename = __dirname + '/../fixtures/http/basemap.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
+            fs.readFile(path.join(__dirname, '../fixtures/http/basemap.png'), { encoding: 'binary' }, function (err, file) {
+                assert.ifError(err);
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
-    function staticMapConfigProvider(urlTemplate, cartocss) {
+    function staticMapConfigProvider (urlTemplate, cartocss) {
         var layergroup = {
             version: '1.2.0',
             layers: [
@@ -107,11 +107,11 @@ describe('static_maps', function() {
         return new DummyMapConfigProvider(mapConfig, defaultParams);
     }
 
-    var zoom = 3,
-        lat = 0,
-        lon = 0,
-        width = 400,
-        height = 300;
+    var zoom = 3;
+    var lat = 0;
+    var lon = 0;
+    var width = 400;
+    var height = 300;
 
     it('center image', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
@@ -124,17 +124,17 @@ describe('static_maps', function() {
             center: { lng: lon, lat: lat }
         };
 
-        previewBackend.getImage(options, function(err, resource, stats) {
+        previewBackend.getImage(options, function (err, resource, stats) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            var image = mapnik.Image.fromBytesSync(Buffer.from(resource, 'binary'));
             assert.equal(image.width(), width);
             assert.equal(image.height(), height);
 
-            assert.ok(stats.hasOwnProperty('tiles'));
-            assert.ok(stats.hasOwnProperty('renderAvg'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'tiles'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'renderAvg'));
 
             done();
         });
@@ -151,28 +151,28 @@ describe('static_maps', function() {
             center: { lng: lon, lat: lat }
         };
 
-        previewBackend.getImage(options, function(err, resource, stats) {
+        previewBackend.getImage(options, function (err, resource, stats) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            var image = mapnik.Image.fromBytesSync(Buffer.from(resource, 'binary'));
             assert.equal(image.width(), width);
             assert.equal(image.height(), height);
 
-            assert.ok(stats.hasOwnProperty('tiles'));
-            assert.ok(stats.hasOwnProperty('renderAvg'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'tiles'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'renderAvg'));
 
             done();
         });
     });
 
-    var west = -90,
-        south = -45,
-        east = 90,
-        north = 45,
-        bWidth = 640,
-        bHeight = 480;
+    var west = -90;
+    var south = -45;
+    var east = 90;
+    var north = 45;
+    var bWidth = 640;
+    var bHeight = 480;
 
     it('bbox', function (done) {
         var provider = staticMapConfigProvider(validUrlTemplate);
@@ -189,12 +189,12 @@ describe('static_maps', function() {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            var image = mapnik.Image.fromBytesSync(Buffer.from(resource, 'binary'));
             assert.equal(image.width(), bWidth);
             assert.equal(image.height(), bHeight);
 
-            assert.ok(stats.hasOwnProperty('tiles'));
-            assert.ok(stats.hasOwnProperty('renderAvg'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'tiles'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'renderAvg'));
 
             done();
         });
@@ -202,7 +202,7 @@ describe('static_maps', function() {
 
     it('should not fail for coordinates out of range', function (done) {
         var outOfRangeHeight = 3000;
-        var provider = staticMapConfigProvider(invalidUrlTemplate);
+        var provider = staticMapConfigProvider(validUrlTemplate);
 
         const options = {
             mapConfigProvider: provider,
@@ -213,24 +213,24 @@ describe('static_maps', function() {
             center: { lng: lon, lat: lat }
         };
 
-        previewBackend.getImage(options, function(err, resource, stats) {
+        previewBackend.getImage(options, function (err, resource, stats) {
             if (err) {
                 return done(err);
             }
 
-            var image = new mapnik.Image.fromBytesSync(new Buffer(resource, 'binary'));
+            var image = mapnik.Image.fromBytesSync(Buffer.from(resource, 'binary'));
             assert.equal(image.width(), width);
             assert.equal(image.height(), outOfRangeHeight);
 
-            assert.ok(stats.hasOwnProperty('tiles'));
-            assert.ok(stats.hasOwnProperty('renderAvg'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'tiles'));
+            assert.ok(Object.prototype.hasOwnProperty.call(stats, 'renderAvg'));
 
             done();
         });
     });
 
     it('should keep failing for other errors', function (done) {
-        var invalidStyleForZoom = '#layer { marker-fill:red; } #layer[zoom='+zoom+'] { marker-width: [wadus] * 2; }';
+        var invalidStyleForZoom = '#layer { marker-fill:red; } #layer[zoom=' + zoom + '] { marker-width: [wadus] * 2; }';
         var provider = staticMapConfigProvider(validUrlTemplate, invalidStyleForZoom);
 
         const options = {
@@ -242,12 +242,11 @@ describe('static_maps', function() {
             center: { lng: lon, lat: lat }
         };
 
-        previewBackend.getImage(options, function(err) {
+        previewBackend.getImage(options, function (err) {
             assert.ok(err);
-            assert.ok(err.message.match(/column \"wadus\" does not exist/));
+            assert.ok(err.message.match(/column "wadus" does not exist/));
 
             done();
         });
     });
-
 });

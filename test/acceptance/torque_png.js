@@ -6,21 +6,20 @@ var fs = require('fs');
 var http = require('http');
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
+const path = require('path');
 
-describe('torque png renderer', function() {
-
-    describe('tiles', function() {
-
+describe('torque png renderer', function () {
+    describe('tiles', function () {
         var IMAGE_TOLERANCE_PER_MIL = 20;
 
-        var torquePngPointsMapConfig =  {
+        var torquePngPointsMapConfig = {
             version: '1.2.0',
             layers: [
                 {
                     type: 'torque',
                     options: {
-                        sql: "SELECT * FROM populated_places_simple_reduced where the_geom" +
-                            " && ST_MakeEnvelope(-90, 0, 90, 65)",
+                        sql: 'SELECT * FROM populated_places_simple_reduced where the_geom' +
+                            ' && ST_MakeEnvelope(-90, 0, 90, 65)',
                         cartocss: [
                             'Map {',
                             '    buffer-size:0;',
@@ -52,18 +51,18 @@ describe('torque png renderer', function() {
         var resourcesServerPort = 8033;
 
         var testClient;
-        before(function(done) {
+        before(function (done) {
             testClient = new TestClient(torquePngPointsMapConfig);
             // Start a server to test external resources
-            resourcesServer = http.createServer(function(request, response) {
-                var filename = __dirname + '/../fixtures/markers' + request.url;
-                fs.readFile(filename, "binary", function(err, file) {
-                    if ( err ) {
-                        response.writeHead(404, {'Content-Type': 'text/plain'});
-                        response.write("404 Not Found\n");
+            resourcesServer = http.createServer(function (request, response) {
+                var filename = path.join(__dirname, '/../fixtures/markers' + request.url);
+                fs.readFile(filename, 'binary', function (err, file) {
+                    if (err) {
+                        response.writeHead(404, { 'Content-Type': 'text/plain' });
+                        response.write('404 Not Found\n');
                     } else {
                         response.writeHead(200);
-                        response.write(file, "binary");
+                        response.write(file, 'binary');
                     }
                     response.end();
                 });
@@ -71,7 +70,7 @@ describe('torque png renderer', function() {
             resourcesServer.listen(resourcesServerPort, done);
         });
 
-        after(function(done) {
+        after(function (done) {
             // Close the resources server
             resourcesServer.close(done);
         });
@@ -89,18 +88,19 @@ describe('torque png renderer', function() {
             }
         ];
 
-        function torquePngFixture(zxy) {
+        function torquePngFixture (zxy) {
             return './test/fixtures/torque/populated_places_simple_reduced-' + zxy.join('.') + '.png';
         }
 
-        tileRequests.forEach(function(tileRequest) {
-            var z = tileRequest.z,
-                x = tileRequest.x,
-                y = tileRequest.y;
+        tileRequests.forEach(function (tileRequest) {
+            var z = tileRequest.z;
+            var x = tileRequest.x;
+            var y = tileRequest.y;
             var zxy = [z, x, y];
             it('torque png tile ' + zxy.join('/') + '.png', function (done) {
-                testClient.getTile(z, x, y, {layer: 0}, function(err, tile) {
-                    assert.imageEqualsFile(tile, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function(err) {
+                testClient.getTile(z, x, y, { layer: 0 }, function (err, tile) {
+                    assert.ifError(err);
+                    assert.imageEqualsFile(tile, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL, function (err) {
                         assert.ifError(err);
                         done();
                     });
@@ -108,28 +108,28 @@ describe('torque png renderer', function() {
             });
         });
 
-        it('should support marker-file with url', function(done) {
+        it('should support marker-file with url', function (done) {
             var markerFileUrl = 'http://localhost:' + resourcesServerPort + '/maki/circle-24.png';
             var mapConfig = {
                 version: '1.3.0',
-                "layers": [
+                layers: [
                     {
                         type: 'torque',
                         options: {
-                            "sql": 'select * from populated_places_simple_reduced',
-                            "cartocss": [
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: [
                                 'Map {',
-                                    '-torque-frame-count:1;',
-                                    '\n-torque-animation-duration:30;',
-                                    '\n-torque-time-attribute:\"cartodb_id\";',
-                                    '\n-torque-aggregation-function:\"count(cartodb_id)\";',
-                                    '\n-torque-resolution:1;',
-                                    '\n-torque-data-aggregation:linear;',
+                                '-torque-frame-count:1;',
+                                '\n-torque-animation-duration:30;',
+                                '\n-torque-time-attribute:"cartodb_id";',
+                                '\n-torque-aggregation-function:"count(cartodb_id)";',
+                                '\n-torque-resolution:1;',
+                                '\n-torque-data-aggregation:linear;',
                                 '}',
                                 '',
                                 '#protected_areas_points{',
-                                    'marker-width: 4;',
-                                    'marker-file: url(' + markerFileUrl + ');',
+                                'marker-width: 4;',
+                                'marker-file: url(' + markerFileUrl + ');',
                                 '}'
                             ].join(' ')
                         }
@@ -138,14 +138,15 @@ describe('torque png renderer', function() {
             };
 
             var fixtureFile = './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1.png';
-            var fixtureFileCairoLT_1_14 =
+            var fixtureFileCairoLT114 =
                 './test/fixtures/torque/populated_places_simple_reduced-marker-file-2.2.1-cairo-lt-1.14.png';
 
             var testClient = new TestClient(mapConfig);
-            testClient.getTile(2, 2, 1, function(err, tile) {
-                assert.imageEqualsFile(tile, fixtureFileCairoLT_1_14, IMAGE_TOLERANCE_PER_MIL, function(err) {
+            testClient.getTile(2, 2, 1, function (err, tile) {
+                assert.ifError(err);
+                assert.imageEqualsFile(tile, fixtureFileCairoLT114, IMAGE_TOLERANCE_PER_MIL, function (err) {
                     if (err) {
-                        assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                        assert.imageEqualsFile(tile, fixtureFile, IMAGE_TOLERANCE_PER_MIL, function (err) {
                             assert.ifError(err);
                             done();
                         });
@@ -157,14 +158,14 @@ describe('torque png renderer', function() {
         });
     });
 
-    describe('static map', function() {
+    describe('static map', function () {
         var mapConfigTorqueOffset = {
             version: '1.3.0',
             layers: [
                 {
                     type: 'torque',
                     options: {
-                        sql: "SELECT * FROM populated_places_simple_reduced",
+                        sql: 'SELECT * FROM populated_places_simple_reduced',
                         cartocss: [
                             'Map {',
                             'buffer-size:0;',
@@ -201,13 +202,13 @@ describe('torque png renderer', function() {
             ]
         };
 
-        it('torque static map with offset', function(done) {
-            var w = 600,
-                h = 400;
+        it('torque static map with offset', function (done) {
+            var w = 600;
+            var h = 400;
             var testClient = new TestClient(mapConfigTorqueOffset);
             const options = { south: -170, west: -87, east: 170, north: 87, width: w, height: h };
 
-            testClient.getStaticBbox(options, function(err, imageBuffer, img) {
+            testClient.getStaticBbox(options, function (err, imageBuffer, img) {
                 assert.ifError(err);
 
                 assert.equal(img.width(), w);
@@ -215,12 +216,11 @@ describe('torque png renderer', function() {
 
                 done();
             });
-
         });
 
-        it('torque layer with commented out turbo-carto', function(done) {
-            var w = 600,
-                h = 400;
+        it('torque layer with commented out turbo-carto', function (done) {
+            var w = 600;
+            var h = 400;
             var cartocss = [
                 'Map {',
                 '  -torque-frame-count: 1;',
@@ -248,7 +248,7 @@ describe('torque png renderer', function() {
                     {
                         type: 'torque',
                         options: {
-                            sql: "SELECT * FROM populated_places_simple_reduced",
+                            sql: 'SELECT * FROM populated_places_simple_reduced',
                             cartocss: cartocss,
                             cartocss_version: '2.3.0'
                         }
@@ -259,7 +259,7 @@ describe('torque png renderer', function() {
             var testClient = new TestClient(mapConfigTorqueTurboCarto);
             const options = { south: -170, west: -87, east: 170, north: 87, width: w, height: h };
 
-            testClient.getStaticBbox(options, function(err, imageBuffer, img) {
+            testClient.getStaticBbox(options, function (err, imageBuffer, img) {
                 assert.ifError(err);
 
                 assert.equal(img.width(), w);
@@ -267,8 +267,6 @@ describe('torque png renderer', function() {
 
                 done();
             });
-
         });
     });
-
 });

@@ -5,7 +5,6 @@ var cartocssUtils = require('../../../lib/windshaft/utils/cartocss_utils');
 
 describe('cartocss utils', function () {
     describe('.getColumnNamesFromCartoCSS()', function () {
-
         var testScenarios = [
             {
                 cartocss: [
@@ -220,6 +219,5 @@ describe('cartocss utils', function () {
             var columns = cartocssUtils.getColumnNamesFromCartoCSS(cartocss);
             assert.deepEqual(columns, []);
         });
-
     });
 });

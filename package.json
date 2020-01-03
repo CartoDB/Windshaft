@@ -35,14 +35,21 @@
         "torque.js": "3.1.1"
     },
     "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-standard": "^14.1.0",
+        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-node": "^11.0.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
         "express": "4.16.3",
         "istanbul": "0.4.5",
-        "jshint": "2.9.7",
         "mocha": "5.2.0",
         "redis": "2.8.0",
         "step": "1.0.0"
     },
     "scripts": {
+        "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
+        "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
         "preinstall": "make pre-install",
         "test": "make test-all",
         "docker-test": "./docker-test.sh",

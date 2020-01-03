@@ -8,7 +8,6 @@ var TestClient = require('../support/test_client');
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
 describe('cartocss transformation', function () {
-
     var pointsQuery = [
         'SELECT',
         '    row_number() OVER (ORDER BY x DESC) AS cartodb_id,',
@@ -195,7 +194,7 @@ describe('cartocss transformation', function () {
     var scenarios = scenariosMapnik3.concat(scenariosMapnik2);
 
     scenarios.forEach(function (scenario) {
-        it(scenario.description,  function (done) {
+        it(scenario.description, function (done) {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {
@@ -236,7 +235,7 @@ describe('cartocss transformation', function () {
     }];
 
     errorScenarios.forEach(function (scenario) {
-        it(scenario.description,  function (done) {
+        it(scenario.description, function (done) {
             var mapConfig = TestClient.singleLayerMapConfig(scenario.sql, scenario.cartocss, scenario.cartocssVersion);
             var options = {
                 mapnik: {

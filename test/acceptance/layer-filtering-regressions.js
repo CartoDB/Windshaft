@@ -24,7 +24,7 @@ describe('layer filtering regressions', () => {
                 options: {
                     sql: 'select * from test_table limit 1'
                 }
-            },
+            }
         ]
     };
 
@@ -44,9 +44,9 @@ describe('layer filtering regressions', () => {
     ];
 
     scenarios.forEach(scenario => {
-        it(`should work with mapnik layer ids: ${scenario.layers}`, function(done) {
+        it(`should work with mapnik layer ids: ${scenario.layers}`, function (done) {
             const testClient = new TestClient(mapConfig);
-            testClient.getTile(0, 0, 0, { layer: scenario.layers, format: 'mvt'}, function (err, mvtTile) {
+            testClient.getTile(0, 0, 0, { layer: scenario.layers, format: 'mvt' }, function (err, mvtTile) {
                 assert.ifError(err);
 
                 const vtile = new mapnik.VectorTile(0, 0, 0);

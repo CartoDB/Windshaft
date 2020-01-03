@@ -7,8 +7,8 @@ var BlendRendererFactory = require('../../../lib/windshaft/renderers/blend/facto
 var RendererFactory = require('../../../lib/windshaft/renderers/renderer_factory');
 var MapConfig = require('../../../lib/windshaft/models/mapconfig');
 
-describe('renderer_http_factory_getRenderer', function() {
-    function rendererOptions() {
+describe('renderer_http_factory_getRenderer', function () {
+    function rendererOptions () {
         return {
             layer: Array.prototype.join.call(arguments, ','),
             params: {
@@ -44,9 +44,9 @@ describe('renderer_http_factory_getRenderer', function() {
         ]
     });
 
-    describe('happy case', function() {
-        it('getRenderer creates renderer for valid filtered layers', function(done) {
-            blendFactory.getRenderer(mapConfig, 'png', rendererOptions(1, 2), function(err, renderer) {
+    describe('happy case', function () {
+        it('getRenderer creates renderer for valid filtered layers', function (done) {
+            blendFactory.getRenderer(mapConfig, 'png', rendererOptions(1, 2), function (err, renderer) {
                 assert.ifError(err);
                 assert.ok(renderer);
                 done();
@@ -54,7 +54,7 @@ describe('renderer_http_factory_getRenderer', function() {
         });
     });
 
-    describe('error cases', function() {
+    describe('error cases', function () {
         var suite = [
             {
                 desc: 'getRenderer throws error for out of bounds layers',
@@ -70,12 +70,12 @@ describe('renderer_http_factory_getRenderer', function() {
             }
         ];
 
-        suite.forEach(function(scenario) {
-            it(scenario.desc, function(done) {
-                blendFactory.getRenderer(mapConfig, 'png', scenario.options, function(err, renderer) {
+        suite.forEach(function (scenario) {
+            it(scenario.desc, function (done) {
+                blendFactory.getRenderer(mapConfig, 'png', scenario.options, function (err, renderer) {
                     assert.ok(err);
                     assert.ok(!renderer);
-                    assert.equal(err.message, "Invalid layer filtering");
+                    assert.equal(err.message, 'Invalid layer filtering');
                     done();
                 });
             });

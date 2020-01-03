@@ -4,22 +4,22 @@ require('../support/test_helper');
 
 var fs = require('fs');
 
-
 var assert = require('../support/assert');
 var TestClient = require('../support/test_client');
 
-describe('render limits', function() {
-
-    function onTileErrorStrategyPass(err, tile, headers, stats, format, callback) {
+describe('render limits', function () {
+    function onTileErrorStrategyPass (err, tile, headers, stats, format, callback) {
         callback(err, tile, headers, stats);
     }
 
     var FIXTURE_IMAGE = './test/fixtures/limits/fallback.png';
-    function onTileErrorStrategyFallback(err, tile, headers, stats, format, callback) {
-        fs.readFile(FIXTURE_IMAGE, {encoding: null}, function(err, img) {
-            callback(null, img, {'Content-Type': 'image/png'}, {});
+    /* eslint-disable handle-callback-err */
+    function onTileErrorStrategyFallback (err, tile, headers, stats, format, callback) {
+        fs.readFile(FIXTURE_IMAGE, { encoding: null }, function (err, img) {
+            callback(null, img, { 'Content-Type': 'image/png' }, {});
         });
     }
+    /* eslint-enable handle-callback-err */
 
     var LIMITS_CONFIG = {
         render: 50,
@@ -28,7 +28,7 @@ describe('render limits', function() {
 
     var OVERRIDE_OPTIONS = {
         mapnik: {
-            mapnik: Object.assign({}, TestClient.mapnikOptions, {limits: LIMITS_CONFIG})
+            mapnik: Object.assign({}, TestClient.mapnikOptions, { limits: LIMITS_CONFIG })
         }
     };
 
@@ -37,18 +37,18 @@ describe('render limits', function() {
     var slowQuery = 'select pg_sleep(1), * from test_table limit 2';
     var slowQueryMapConfig = TestClient.singleLayerMapConfig(slowQuery);
 
-    it('slow query/render returns with 400 status', function(done) {
+    it('slow query/render returns with 400 status', function (done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyPass);
-        testClient.createLayergroup(function(err) {
+        testClient.createLayergroup(function (err) {
             assert.ok(err);
             assert.equal(err.message, 'Render timed out');
             done();
         });
     });
 
-    it('uses onTileErrorStrategy to handle error and modify response', function(done) {
+    it('uses onTileErrorStrategy to handle error and modify response', function (done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyFallback);
-        testClient.createLayergroup(function(err, layergroup) {
+        testClient.createLayergroup(function (err, layergroup) {
             assert.ifError(err);
             assert.ok(layergroup);
             assert.ok(layergroup.layergroupid);
@@ -56,9 +56,10 @@ describe('render limits', function() {
         });
     });
 
-    it('returns a fallback tile that was modified via onTileErrorStrategy', function(done) {
+    it('returns a fallback tile that was modified via onTileErrorStrategy', function (done) {
         var testClient = new TestClient(slowQueryMapConfig, OVERRIDE_OPTIONS, onTileErrorStrategyFallback);
-        testClient.getTile(0, 0, 0, function(err, tile) {
+        testClient.getTile(0, 0, 0, function (err, tile) {
+            assert.ifError(err);
             assert.imageEqualsFile(tile, FIXTURE_IMAGE, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         });
     });
@@ -67,23 +68,23 @@ describe('render limits', function() {
     describe('mvt (pg-mvt)', () => { mvtTest(true); });
 });
 
-function mvtTest(usePostGIS) {
+function mvtTest (usePostGIS) {
     const options = {
         mvt: { usePostGIS: usePostGIS },
-        mapnik: { mapnik : { limits : { render : 40 } } }
+        mapnik: { mapnik: { limits: { render: 40 } } }
     };
 
     it('Error with long query', function (done) {
-        const slow_query = 'SELECT pg_sleep(1), 1 AS "cartodb id", ' +
+        const slowQuery = 'SELECT pg_sleep(1), 1 AS "cartodb id", ' +
                             "'SRID=3857;POINT(-293823 5022065)'::geometry as the_geom";
-        const mapConfig = TestClient.mvtLayerMapConfig(slow_query, null, null, 'name');
+        const mapConfig = TestClient.mvtLayerMapConfig(slowQuery, null, null, 'name');
         mapConfig.layers[0].options.geom_column = 'the_geom';
         mapConfig.layers[0].options.srid = 3857;
 
         const testClient = new TestClient(mapConfig, options);
-        testClient.getTile(0, 0, 0, { format: 'mvt', limits : { render : 40 } }, function (err) {
+        testClient.getTile(0, 0, 0, { format: 'mvt', limits: { render: 40 } }, function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Render timed out");
+            assert.equal(err.message, 'Render timed out');
             done();
         });
     });

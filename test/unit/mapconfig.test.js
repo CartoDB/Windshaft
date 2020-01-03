@@ -5,17 +5,16 @@ require('../support/test_helper.js');
 var assert = require('assert');
 var MapConfig = require('../../lib/windshaft/models/mapconfig');
 
-describe('mapconfig', function() {
-
-    it('can not create mapconfig with invalid version', function(done) {
+describe('mapconfig', function () {
+    it('can not create mapconfig with invalid version', function (done) {
         var version = '0.1.0';
         assert.throws(
-            function() {
+            function () {
                 MapConfig.create({
                     version: version
                 });
             },
-            function(err) {
+            function (err) {
                 assert.equal(err.message, 'Unsupported layergroup configuration version ' + version);
                 done();
                 return true;
@@ -23,9 +22,9 @@ describe('mapconfig', function() {
         );
     });
 
-    it('can not create mapconfig with no options in layer', function(done) {
+    it('can not create mapconfig with no options in layer', function (done) {
         assert.throws(
-            function() {
+            function () {
                 MapConfig.create({
                     version: '1.3.0',
                     layers: [
@@ -35,7 +34,7 @@ describe('mapconfig', function() {
                     ]
                 });
             },
-            function(err) {
+            function (err) {
                 assert.equal(err.message, 'Missing options from layer 0 of layergroup config');
                 done();
                 return true;
@@ -43,7 +42,7 @@ describe('mapconfig', function() {
         );
     });
 
-    it('interactivity array gets converted into comma joined string', function(done) {
+    it('interactivity array gets converted into comma joined string', function (done) {
         var mapConfig = MapConfig.create({
             version: '1.3.0',
             layers: [
@@ -64,7 +63,7 @@ describe('mapconfig', function() {
         done();
     });
 
-    it('interactivity array gets converted into comma joined string', function(done) {
+    it('interactivity array gets converted into comma joined string', function (done) {
         var mapConfig = MapConfig.create({
             version: '1.3.0',
             layers: [
@@ -131,7 +130,7 @@ describe('mapconfig', function() {
                 options: {
                     sql: 'select 1 a, 2 b, null::geometry the_geom',
                     cartocss: '#layer{}',
-                    cartocss_version: '2.3.0',
+                    cartocss_version: '2.3.0'
                 }
             }]
         });
@@ -139,7 +138,6 @@ describe('mapconfig', function() {
         var sql = mapConfig.getLayerOption(0, 'sql');
         assert.equal(sql, 'select 1 a, 2 b, null::geometry the_geom');
     });
-
 
     it('.getLayerOption() with default value provided should return it when option does not exist', function () {
         var mapConfig = MapConfig.create({
@@ -150,7 +148,7 @@ describe('mapconfig', function() {
                 options: {
                     sql: 'select 1 a, 2 b, null::geometry the_geom',
                     cartocss: '#layer{}',
-                    cartocss_version: '2.3.0',
+                    cartocss_version: '2.3.0'
                 }
             }]
         });
@@ -158,7 +156,6 @@ describe('mapconfig', function() {
         var srid = mapConfig.getLayerOption(0, 'srid', 4326);
         assert.equal(srid, 4326);
     });
-
 
     it('.getLayerDatasource() should return datasource', function () {
         var mapConfig = MapConfig.create({
@@ -170,7 +167,7 @@ describe('mapconfig', function() {
                     options: {
                         sql: 'select 1 a, 2 b, null::geometry the_geom',
                         cartocss: '#layer{}',
-                        cartocss_version: '2.3.0',
+                        cartocss_version: '2.3.0'
                     }
                 }]
             },
@@ -197,7 +194,7 @@ describe('mapconfig', function() {
                     options: {
                         sql: 'select 1 a, 2 b, null::geometry the_geom',
                         cartocss: '#layer{}',
-                        cartocss_version: '2.3.0',
+                        cartocss_version: '2.3.0'
                     }
                 }]
             },
@@ -239,5 +236,4 @@ describe('mapconfig', function() {
             srid: 3857
         });
     });
-
 });
