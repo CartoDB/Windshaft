@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
     CAIRO_PKG_CONFIG=`pkg-config cairo --cflags-only-I 2> /dev/null`
     RESULT=$?
 
