@@ -36,15 +36,15 @@ $ npm install
 
 ### Installing Mapnik
 
-**Note**: only needed while developing `Mapnik`
+**Note**: only needed while developing `Mapnik` and/or `node-mapnik`.
 
-[`node-mapnik`](https://github.com/mapnik/node-mapnik) comes compiled for some platforms and architectures, in case you need it you can always compile, package and install it manually. The recommended option is to install Mapnik via binaries, see [`mason`](https://github.com/mapbox/mason#installation) and install `mapnik` like:
+[`node-mapnik`](https://github.com/mapnik/node-mapnik) comes compiled for some platforms and architectures, in case you need it you can always compile, package and install it manually. The recommended option is via binaries, see [`mason`](https://github.com/mapbox/mason#installation) and install `Mapnik` like:
 
 ```shell
 $ mason install mapnik <version>
 ```
 
-Where `<version>` is the latest released version of Mapnik. You can also use other alternatives:
+Where `<version>` is the latest released version of `Mapnik`. You can also use other alternatives:
 
 * [`Source`](https://github.com/mapnik/mapnik)
 * [`OSX`](https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew)
