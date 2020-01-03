@@ -30,8 +30,10 @@ async function dropDatabase ({ name = TEST_DB } = {}) {
     });
 }
 
-async function createDatabase ({ name = TEST_DB, template = 'template_postgis' } = {}) {
-    await exec(`createdb -T ${template} -EUTF8 "${name}"`, {
+async function createDatabase ({ name = TEST_DB, template } = {}) {
+    const createDatabaseCmd = template ? `createdb -T ${template} -EUTF8 "${name}"` : `createdb  -EUTF8 "${name}"`;
+
+    await exec(createDatabaseCmd, {
         env: Object.assign({ PGUSER }, process.env)
     });
 }
@@ -48,6 +50,14 @@ async function populateDatabase ({ name = TEST_DB } = {}) {
     `;
 
     await exec(populateDatabaseCmd, {
+        env: Object.assign({ PGUSER }, process.env)
+    });
+}
+
+async function createPostGIS ({ name = TEST_DB } = {}) {
+    const installPostGISRasterCmd = `psql -c 'CREATE EXTENSION IF NOT EXISTS postgis' ${name}`;
+
+    await exec(installPostGISRasterCmd, {
         env: Object.assign({ PGUSER }, process.env)
     });
 }
@@ -81,6 +91,7 @@ async function main (args) {
             await startRedis();
             await dropDatabase({ name: TEST_DB });
             await createDatabase({ name: TEST_DB });
+            await createPostGIS({ name: TEST_DB });
             await createPostGISRaster({ name: TEST_DB });
             await populateDatabase({ name: TEST_DB });
             await dropDatabase({ name: TEST_DB_2 });
