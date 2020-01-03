@@ -36,11 +36,11 @@ $ npm install
 
 ### Installing Mapnik
 
-Latest [node-mapnik](https://github.com/mapnik/node-mapnik) versions comes compiled for some platforms and architectures, in case you need it you can always compile, package and install it manually. The recommended option is to use [mapnik-packaging](https://github.com/mapnik/mapnik-packaging). You can also use other alternatives:
+[`node-mapnik`](https://github.com/mapnik/node-mapnik) comes compiled for some platforms and architectures, in case you need it you can always compile, package and install it manually. The recommended option is to use [mapnik-packaging](https://github.com/mapnik/mapnik-packaging). You can also use other alternatives:
 
-* **Source**: https://github.com/mapnik/mapnik
-* **OSX**: https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
-* **Linux**: https://github.com/mapnik/mapnik/wiki/LinuxInstallation
+* [`Source`](https://github.com/mapnik/mapnik)
+* [`OSX`](https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew)
+* [`Linux`](https://github.com/mapnik/mapnik/wiki/LinuxInstallation)
 
 ### Usage
 
