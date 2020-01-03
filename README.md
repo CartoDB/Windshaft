@@ -1,19 +1,15 @@
 # Windshaft [![Build Status](https://travis-ci.org/CartoDB/Windshaft.svg?branch=master)](https://travis-ci.org/CartoDB/Windshaft)
 
-A Node.js map tile library for PostGIS and torque.js, with CartoCSS styling.
+A Node.js map tile library for [`PostGIS`](https://postgis.net/) and [`torque.js`](https://github.com/CartoDB/torque), with [`CartoCSS`](https://cartocss.readthedocs.io/en/latest/) styling.
 
 * Can render arbitrary SQL queries
 * Generates image and UTFGrid interactivity tiles
-* Accepts, stores, serves, and applies map styles written in [CartoCSS](https://cartocss.readthedocs.io/en/latest/)
+* Accepts, stores, serves, and applies map styles written in [`CartoCSS`](https://cartocss.readthedocs.io/en/latest/)
 * Supports re-projections
 
-Being a dynamic map renderer, windshaft commits some map server 'sins' in its raw form. The idea is that you the developer will want to graft your own auth/metrics/caching/scaling on top of decent core components. Same old story: high cohesion, low coupling makes us happy.
+Windshaft is a library used by [`CARTO`](https://carto.com/), a location intelligence and data visualization tool.
 
-See [Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb).
-
-Windshaft is a library used by [CARTO](https://carto.com/), a location intelligence and data visualization tool.
-
-Some examples
+## Examples
 -------------
 ![Playing with colors by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_0.png) ![Circumpolar Arctic Vegetation by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_1.png)
 ![Bolivia deforestation by @saleiva](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_2.png) ![Traffic accidents by @rochoa](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_3.png)
@@ -51,15 +47,15 @@ $ npm install
 
 Latest [node-mapnik](https://github.com/mapnik/node-mapnik) versions comes compiled for some platforms and architectures, in case you need it you can always compile, package and install it manually. The recommended option is to use [mapnik-packaging](https://github.com/mapnik/mapnik-packaging). You can also use other alternatives:
 
- - **Source**: https://github.com/mapnik/mapnik
- - **OSX**: https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
- - **Linux**: https://github.com/mapnik/mapnik/wiki/LinuxInstallation
+* **Source**: https://github.com/mapnik/mapnik
+* **OSX**: https://github.com/mapnik/mapnik/wiki/MacInstallation_Homebrew
+* **Linux**: https://github.com/mapnik/mapnik/wiki/LinuxInstallation
 
 ### Usage
 
 An example http service is implemented in [examples/http/server.js](examples/http/server.js), [examples/readme_server.js](examples/readme_server.js) extends its behaviour.
 
-Probably one of the more advanced uses of Windshaft library can be found at [Windshaft-cartodb](https://github.com/CartoDB/Windshaft-cartodb) project.
+Probably one of the more advanced uses of Windshaft library can be found at [`Windshaft-cartodb`](https://github.com/CartoDB/Windshaft-cartodb) project.
 
 ### Test
 
