@@ -1,16 +1,11 @@
 # Please read carefully before editing, and especially removing lines:
 # https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
-
-# Biggest dirs not needed in npm package
 test/
 examples/
-
-# Patterns from .gitignore
-.idea
-redis.pid
-test.log
-npm-debug.log
 coverage/
-.vscode
 docker/
 doc/
+.*
+*.pid
+*.log
+HOW_TO_RELEASE.md
