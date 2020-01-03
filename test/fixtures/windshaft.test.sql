@@ -174,3 +174,8 @@ COPY world_borders_extract (cartodb_id, the_geom, the_geom_webmercator, name) FR
 
 CREATE INDEX _world_borders_extract_the_geom_idx ON world_borders_extract USING gist (the_geom);
 CREATE INDEX _world_borders_extract_the_geom_webmercator_idx ON world_borders_extract USING gist (the_geom_webmercator);
+
+
+VACUUM ANALYZE test_table;
+VACUUM ANALYZE test_table_2;
+VACUUM ANALYZE test_table_3;

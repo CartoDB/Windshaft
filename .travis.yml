@@ -9,4 +9,4 @@ env:
 services:
   - docker
 before_install: docker pull ${DOCKER_IMAGE}
-script: npm run docker-test -- ${DOCKER_IMAGE} ${NODE_VERSION}
+script: npm run test:docker
