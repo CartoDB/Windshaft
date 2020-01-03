@@ -9,14 +9,15 @@ var MapConfig = require('../../lib/models/mapconfig');
 var MapStoreMapConfigProvider = require('../../lib/models/providers/mapstore-mapconfig-provider');
 var RendererFactory = require('../../lib/renderers/renderer-factory');
 var RedisPool = require('redis-mpool');
-var serverOptions = require('../support/server-options');
 
 describe('renderCache', function () {
-    var redisPool = new RedisPool(serverOptions.redis);
+    var redisPool = new RedisPool(global.environment.redis);
 
     var rendererFactory = new RendererFactory({
         mapnik: {
-            grainstore: serverOptions.grainstore
+            grainstore: {
+                mapnik_version: '3.0.15'
+            }
         }
     });
 
