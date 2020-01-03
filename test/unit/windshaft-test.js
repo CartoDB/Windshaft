@@ -6,10 +6,6 @@ var assert = require('assert');
 var windshaft = require('../../lib');
 
 describe('windshaft', function () {
-    it('should have valid global environment', function () {
-        assert.equal(global.environment.name, 'test');
-    });
-
     it('should expose version numbers', function () {
         assert.ok(Object.prototype.hasOwnProperty.call(windshaft, 'version'), "No 'windshaft' version in " + windshaft);
 
