@@ -1,6 +1,6 @@
 'use strict';
 
-require('../../support/test-helper.js');
+require('../../support/test-helper');
 
 const assert = require('assert');
 const MapConfig = require('../../../lib/models/mapconfig');

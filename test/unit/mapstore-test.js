@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test-helper.js');
+require('../support/test-helper');
 
 var RedisPool = require('redis-mpool');
 var assert = require('assert');

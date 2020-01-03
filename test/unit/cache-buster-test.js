@@ -1,9 +1,9 @@
 'use strict';
 
-require('../support/test-helper.js');
+require('../support/test-helper');
 
 var assert = require('assert');
-var CacheEntry = require('../../lib/cache/cache-entry.js');
+var CacheEntry = require('../../lib/cache/cache-entry');
 var RendererCache = require('../../lib/cache/renderer-cache');
 
 describe('cache_buster', function () {

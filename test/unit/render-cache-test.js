@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test-helper.js');
+require('../support/test-helper');
 
 var assert = require('assert');
 var RendererCache = require('../../lib/cache/renderer-cache');

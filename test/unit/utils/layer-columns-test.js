@@ -1,6 +1,6 @@
 'use strict';
 
-require('../../support/test-helper.js');
+require('../../support/test-helper');
 var LayerColumns = require('../../../lib/utils/layer-columns');
 var assert = require('assert');
 
