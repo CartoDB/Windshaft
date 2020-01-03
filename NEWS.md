@@ -4,6 +4,10 @@
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
 - Remove deprecated coverage tool istanbul, using nyc instead.
+- Stop using two different tools for package management, testing, and any other developer workflow.
+  - Removes Makefile and related bash scripts
+  - Use npm scripts as the only tool for testing, CI and linting.
+  - Simplified CI configuration.
 
 # Version 5.6.4
 2019-10-28
