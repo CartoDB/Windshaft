@@ -9,7 +9,7 @@ if (!process.env.NODE_ENV) {
     process.exit(1);
 }
 
-const environment = require(`../config/environments/${process.env.NODE_ENV}.js`);
+const environment = require('./support/environment');
 const REDIS_PORT = environment.redis.port;
 
 const TEST_DB = 'windshaft_test';

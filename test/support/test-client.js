@@ -6,7 +6,7 @@ var RedisPool = require('redis-mpool');
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 
-const environment = require('./../../config/environments/test');
+const environment = require('./environment');
 
 var redisClient = require('redis').createClient(environment.redis.port);
 
