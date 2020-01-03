@@ -9,9 +9,10 @@ var MapConfig = require('../../lib/models/mapconfig');
 var MapStoreMapConfigProvider = require('../../lib/models/providers/mapstore-mapconfig-provider');
 var RendererFactory = require('../../lib/renderers/renderer-factory');
 var RedisPool = require('redis-mpool');
+var TestClient = require('../support/test-client');
 
 describe('renderCache', function () {
-    var redisPool = new RedisPool(global.environment.redis);
+    var redisPool = new RedisPool(TestClient.redisOptions);
 
     var rendererFactory = new RendererFactory({
         mapnik: {

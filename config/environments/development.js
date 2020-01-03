@@ -18,7 +18,7 @@ module.exports.redis = {
 module.exports.renderer = {
     mapnik: {
         geometry_field: 'the_geom',
-        poolSize: 4,//require('os').cpus().length,
+        poolSize: 4,
         poolMaxWaitingClients: 16,
         metatile: 1,
         bufferSize: 64,
@@ -29,12 +29,12 @@ module.exports.renderer = {
         },
         geojson: {
             dbPoolParams: {
-                  // maximum number of resources to create at any given time
-                  size: 16,
-                  // max milliseconds a resource can go unused before it should be destroyed
-                  idleTimeout: 3000,
-                  // frequency to check for idle resources
-                  reapInterval: 1000
+                // maximum number of resources to create at any given time
+                size: 16,
+                // max milliseconds a resource can go unused before it should be destroyed
+                idleTimeout: 3000,
+                // frequency to check for idle resources
+                reapInterval: 1000
             },
 
             // SQL queries will be wrapped with ST_ClipByBox2D
