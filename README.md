@@ -104,13 +104,13 @@ You need to install fonts at system level to be able to use them. If you face an
 
 ## Contributing
 
-* The issue tracker: [`Github`](https://github.com/CartoDB/Windshaft-cartodb/issues).
+* The issue tracker: [`Github`](https://github.com/CartoDB/Windshaft/issues).
 * We love Pull Requests from everyone, see [contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/#contributing).
 * You'll need to sign a Contributor License Agreement (CLA) before submitting a Pull Request. [Learn more here](https://carto.com/contributions).
 
 ## Versioning
 
-We follow [`SemVer`](http://semver.org/) for versioning. For available versions, see the [tags on this repository](https://github.com/CartoDB/Windshaft-cartodb/tags).
+We follow [`SemVer`](http://semver.org/) for versioning. For available versions, see the [tags on this repository](https://github.com/CartoDB/Windshaft/tags).
 
 ## License
 
