@@ -12,3 +12,5 @@ test.log
 npm-debug.log
 coverage/
 .vscode
+docker/
+doc/
