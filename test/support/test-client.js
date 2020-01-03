@@ -54,7 +54,7 @@ function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
-        pool: new RedisPool(global.settings.redis)
+        pool: new RedisPool(global.environment.redis)
     });
     this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
     this.previewBackend = new windshaft.backend.Preview(this.rendererCache);

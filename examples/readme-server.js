@@ -10,9 +10,7 @@ var ENV = 'development';
 var PORT = 4000;
 
 // set environment specific variables
-global.settings = require('../config/settings');
 global.environment = require('../config/environments/' + ENV);
-global.settings = Object.assign(global.settings, global.environment);
 
 var config = {
     base_url: '/database/:dbname/table/:table',

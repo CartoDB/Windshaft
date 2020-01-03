@@ -11,9 +11,7 @@ var assert = require('assert');
 var redis = require('redis');
 
 // set environment specific variables
-global.settings = require('./../../config/settings');
 global.environment = require('./../../config/environments/test');
-global.settings = Object.assign(global.settings, global.environment);
 process.env.NODE_ENV = 'test';
 
 var redisClient;
