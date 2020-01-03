@@ -58,7 +58,8 @@ async function createPostGISRaster ({ name = TEST_DB } = {}) {
     const { stdout } = await exec(getPostGISVersionCmd, {
         env: Object.assign({ PGUSER }, process.env)
     });
-    const postgisVersion = stdout.trim();
+
+    const { version: postgisVersion } = semver.coerce(stdout.trim());
 
     if (semver.lt(postgisVersion, '3.0.0')) {
         return;
