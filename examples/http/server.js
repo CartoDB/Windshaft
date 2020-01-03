@@ -5,7 +5,7 @@ var mapnik = require('@carto/mapnik');
 
 var windshaft = require('../../lib/');
 
-var StaticMapsController = require('./controllers/static_maps');
+var StaticMapsController = require('./controllers/static-maps');
 var MapController = require('./controllers/map');
 
 //
@@ -55,7 +55,7 @@ var MapController = require('./controllers/map');
 //        }
 //     }
 //
-module.exports = function(opts) {
+module.exports = function (opts) {
     opts = opts || {};
 
     opts.grainstore = opts.grainstore || {};
@@ -71,7 +71,7 @@ module.exports = function(opts) {
 
     var redisPool = makeRedisPool(opts.redis);
 
-    var map_store  = new windshaft.storage.MapStore({
+    var mapStore = new windshaft.storage.MapStore({
         pool: redisPool,
         expire_time: opts.grainstore.default_layergroup_ttl
     });
@@ -99,15 +99,15 @@ module.exports = function(opts) {
     var previewBackend = new windshaft.backend.Preview(rendererCache);
     var tileBackend = new windshaft.backend.Tile(rendererCache);
     var mapValidatorBackend = new windshaft.backend.MapValidator(tileBackend, attributesBackend);
-    var mapBackend = new windshaft.backend.Map(rendererCache, map_store, mapValidatorBackend);
+    var mapBackend = new windshaft.backend.Map(rendererCache, mapStore, mapValidatorBackend);
 
-    app.sendResponse = function(res, args) {
-      res.send.apply(res, args);
+    app.sendResponse = function (res, args) {
+        res.send.apply(res, args);
     };
 
-    app.findStatusCode = function(err) {
+    app.findStatusCode = function (err) {
         var statusCode;
-        if ( err.http_status ) {
+        if (err.http_status) {
             statusCode = err.http_status;
         } else {
             statusCode = statusFromErrorMessage('' + err);
@@ -115,54 +115,54 @@ module.exports = function(opts) {
         return statusCode;
     };
 
-    app.sendError = function(res, err, statusCode, label, tolog) {
-      var olabel = '[';
-      if ( label ) {
-          olabel += label + ' ';
-      }
-      olabel += 'ERROR]';
-      if ( ! tolog ) {
-          tolog = err;
-      }
-      var log_msg = olabel + " -- " + statusCode + ": " + tolog;
-      //if ( tolog.stack ) log_msg += "\n" + tolog.stack;
-      debug(log_msg); // use console.log for statusCode != 500 ?
-      // If a callback was requested, force status to 200
-      if ( res.req ) {
+    app.sendError = function (res, err, statusCode, label, tolog) {
+        var olabel = '[';
+        if (label) {
+            olabel += label + ' ';
+        }
+        olabel += 'ERROR]';
+        if (!tolog) {
+            tolog = err;
+        }
+        var logMsg = olabel + ' -- ' + statusCode + ': ' + tolog;
+        // if ( tolog.stack ) logMsg += "\n" + tolog.stack;
+        debug(logMsg); // use console.log for statusCode != 500 ?
+        // If a callback was requested, force status to 200
+        if (res.req) {
         // NOTE: res.req can be undefined when we fake a call to
         //       ourself from POST to /layergroup
-        if ( res.req.query.callback ) {
-            statusCode = 200;
+            if (res.req.query.callback) {
+                statusCode = 200;
+            }
         }
-      }
-      // Strip connection info, if any
-      // See https://github.com/CartoDB/Windshaft/issues/173
-      err = JSON.stringify(err);
-      err = err.replace(/Connection string: '[^']*'\\n/, '');
-      // See https://travis-ci.org/CartoDB/Windshaft/jobs/20703062#L1644
-      err = err.replace(/is the server.*encountered/im, 'encountered');
-      err = JSON.parse(err);
+        // Strip connection info, if any
+        // See https://github.com/CartoDB/Windshaft/issues/173
+        err = JSON.stringify(err);
+        err = err.replace(/Connection string: '[^']*'\\n/, '');
+        // See https://travis-ci.org/CartoDB/Windshaft/jobs/20703062#L1644
+        err = err.replace(/is the server.*encountered/im, 'encountered');
+        err = JSON.parse(err);
 
-      res.send(err, statusCode);
+        res.send(err, statusCode);
     };
 
     /*******************************************************************************************************************
      * Routing
      ******************************************************************************************************************/
 
-    var mapController = new MapController(app, map_store, mapBackend, tileBackend, attributesBackend);
+    var mapController = new MapController(app, mapStore, mapBackend, tileBackend, attributesBackend);
     mapController.register(app);
 
-    var staticMapsController = new StaticMapsController(app, map_store, previewBackend);
+    var staticMapsController = new StaticMapsController(app, mapStore, previewBackend);
     staticMapsController.register(app);
 
     // simple testable route
-    app.get('/', function(req, res) {
+    app.get('/', function (req, res) {
         res.send('This is an example HTTP server using windshaft library');
     });
 
     // version
-    app.get('/version', function(req, res) {
+    app.get('/version', function (req, res) {
         res.send(app.getVersion(), 200);
     });
 
@@ -171,7 +171,7 @@ module.exports = function(opts) {
      ******************************************************************************************************************/
 
     // temporary measure until we upgrade to newer version expressjs so we can check err.status
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         if (err) {
             if (err.name === 'SyntaxError') {
                 app.sendError(res, { errors: [err.name + ': ' + err.message] }, 400, 'JSON', err);
@@ -186,7 +186,7 @@ module.exports = function(opts) {
     return app;
 };
 
-function validateOptions(opts) {
+function validateOptions (opts) {
     if (typeof opts.base_url !== 'string' ||
         typeof opts.req2params !== 'function' ||
         typeof opts.base_url_mapconfig !== 'string') {
@@ -200,24 +200,24 @@ function validateOptions(opts) {
     }
 }
 
-function makeRedisPool(redisOpts) {
+function makeRedisPool (redisOpts) {
     redisOpts = redisOpts || {};
-    return redisOpts.pool || new RedisPool(Object.assign(redisOpts, {name: 'windshaft:server'}));
+    return redisOpts.pool || new RedisPool(Object.assign(redisOpts, { name: 'windshaft:server' }));
 }
 
-function bootstrapFonts(opts) {
+function bootstrapFonts (opts) {
     // Set carto renderer configuration for MMLStore
     opts.grainstore.carto_env = opts.grainstore.carto_env || {};
     var cenv = opts.grainstore.carto_env;
     cenv.validation_data = cenv.validation_data || {};
-    if ( ! cenv.validation_data.fonts ) {
+    if (!cenv.validation_data.fonts) {
         mapnik.register_system_fonts();
         mapnik.register_default_fonts();
         cenv.validation_data.fonts = Object.keys(mapnik.fontFiles());
     }
 }
 
-function bootstrap(opts) {
+function bootstrap (opts) {
     var app;
     if (typeof opts.https === 'object') {
         // use https if possible
@@ -248,45 +248,41 @@ function bootstrap(opts) {
 }
 
 // set default before/after filters if not set in opts object
-function addFilters(app, opts) {
-
+function addFilters (app, opts) {
     // Extend windshaft with all the elements of the options object
     app = Object.assign(app, opts);
 
     // filters can be used for custom authentication, caching, logging etc
     Object.assign({
         // Enable CORS access by web browsers if set
-        doCORS: function(res, extraHeaders) {
+        doCORS: function (res, extraHeaders) {
             if (opts.enable_cors) {
-                var baseHeaders = "X-Requested-With, X-Prototype-Version, X-CSRF-Token";
-                if(extraHeaders) {
-                    baseHeaders += ", " + extraHeaders;
+                var baseHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token';
+                if (extraHeaders) {
+                    baseHeaders += ', ' + extraHeaders;
                 }
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Access-Control-Allow-Headers", baseHeaders);
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Headers', baseHeaders);
             }
         },
 
-        getVersion: function() {
+        getVersion: function () {
             return windshaft.versions;
         }
     }, app);
 }
 
-function statusFromErrorMessage(errMsg) {
+function statusFromErrorMessage (errMsg) {
     // Find an appropriate statusCode based on message
     var statusCode = 400;
-    if ( -1 !== errMsg.indexOf('permission denied') ) {
+    if (errMsg.indexOf('permission denied') !== -1) {
         statusCode = 403;
-    }
-    else if ( -1 !== errMsg.indexOf('authentication failed') ) {
+    } else if (errMsg.indexOf('authentication failed') !== -1) {
         statusCode = 403;
-    }
-    else if (errMsg.match(/Postgis Plugin.*[\s|\n].*column.*does not exist/)) {
+    } else if (errMsg.match(/Postgis Plugin.*[\s|\n].*column.*does not exist/)) {
         statusCode = 400;
-    }
-    else if ( -1 !== errMsg.indexOf('does not exist') ) {
-        if ( -1 !== errMsg.indexOf(' role ') ) {
+    } else if (errMsg.indexOf('does not exist') !== -1) {
+        if (errMsg.indexOf(' role ') !== -1) {
             statusCode = 403; // role 'xxx' does not exist
         } else {
             statusCode = 404;
@@ -295,6 +291,6 @@ function statusFromErrorMessage(errMsg) {
     return statusCode;
 }
 
-function mapnikVersion(opts) {
+function mapnikVersion (opts) {
     return opts.grainstore.mapnik_version || mapnik.versions.mapnik;
 }

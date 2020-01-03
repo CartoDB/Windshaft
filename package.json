@@ -48,8 +48,8 @@
         "step": "1.0.0"
     },
     "scripts": {
-        "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
-        "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
+        "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
+        "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
         "preinstall": "scripts/darwin-pre-install.sh",
         "pretest:setup": "npm run lint",
         "test:setup": "NODE_ENV=test node test setup",

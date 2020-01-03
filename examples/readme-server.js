@@ -10,29 +10,29 @@ var ENV = 'development';
 var PORT = 4000;
 
 // set environment specific variables
-global.settings     = require('../config/settings');
-global.environment  = require('../config/environments/' + ENV);
+global.settings = require('../config/settings');
+global.environment = require('../config/environments/' + ENV);
 global.settings = Object.assign(global.settings, global.environment);
 
 var config = {
     base_url: '/database/:dbname/table/:table',
     base_url_mapconfig: '/database/:dbname/layergroup',
     grainstore: {
-                 datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
-    }, //see grainstore npm for other options
-    redis: {host: '127.0.0.1', port: 6379},
+        datasource: { user: 'postgres', host: '127.0.0.1', port: 5432 }
+    }, // see grainstore npm for other options
+    redis: { host: '127.0.0.1', port: 6379 },
     enable_cors: true,
-    req2params: function(req, callback){
+    req2params: function (req, callback) {
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
-        req.params =  Object.assign({}, req.params, req.query);
+        req.params = Object.assign({}, req.params, req.query);
 
         // send the finished req object on
-        callback(null,req);
+        callback(null, req);
     }
 };
 
 // Initialize tile server
 var server = new Server(config);
-server.listen(PORT, function() {
-    console.log("map tiles are now being served out of: http://localhost:" + PORT + config.base_url_mapconfig);
+server.listen(PORT, function () {
+    console.log('map tiles are now being served out of: http://localhost:' + PORT + config.base_url_mapconfig);
 });
