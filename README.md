@@ -52,7 +52,7 @@ Where `<version>` is the latest released version of `Mapnik`. You can also use o
 
 ### Usage
 
-An example http service is implemented in [examples/http/server.js](examples/http/server.js), [examples/readme-server.js](examples/readme-server.js) extends its behaviour. Probably one of the more advanced uses of `Windshaft` library can be found at [`Windshaft-cartodb`](https://github.com/CartoDB/Windshaft-cartodb) project.
+Probably one of the more advanced uses of `Windshaft` library can be found at [`Windshaft-cartodb`](https://github.com/CartoDB/Windshaft-cartodb) project.
 
 ### Test
 
