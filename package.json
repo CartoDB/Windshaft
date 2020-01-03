@@ -8,7 +8,7 @@
         "carto",
         "map",
         "tile",
-        "postgis",
+        "PostGIS",
         "CartoCSS"
     ],
     "url": "https://github.com/CartoDB/Windshaft",
