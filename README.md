@@ -10,7 +10,7 @@ A Node.js map tile library for [`PostGIS`](https://postgis.net/) and [`torque.js
 Windshaft is a library used by [`CARTO`](https://carto.com/), a location intelligence and data visualization tool.
 
 ## Examples
--------------
+
 ![Playing with colors by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_0.png) ![Circumpolar Arctic Vegetation by @andrewxhill](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_1.png)
 ![Bolivia deforestation by @saleiva](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_2.png) ![Traffic accidents by @rochoa](https://github.com/CartoDB/Windshaft/raw/master/examples/images/screen_3.png)
 
@@ -25,15 +25,6 @@ Requirements:
 * [`Redis >= 4`](https://redis.io/download)
 * `libcairo2-dev`, `libpango1.0-dev`, `libjpeg8-dev` and `libgif-dev` for server side canvas support
 * `C++11` to build internal dependencies. When there's no pre-built binaries for your OS/architecture distribution.
-
-### PostGIS setup
-
-A `template_postgis` database is expected. One can be set up with
-
-```shell
-$ createdb --owner postgres --template template0 template_postgis
-$ psql -d template_postgis -c 'CREATE EXTENSION postgis;'
-```
 
 ### Install
 
