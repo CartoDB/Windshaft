@@ -65,7 +65,7 @@ async function createPostGISRaster ({ name = TEST_DB } = {}) {
         return;
     }
 
-    const installPostGISRasterCmd = `psql -c 'CREATE EXTENSION postgis_raster' ${name}`;
+    const installPostGISRasterCmd = `psql -c 'CREATE EXTENSION IF NOT EXISTS postgis_raster' ${name}`;
 
     await exec(installPostGISRasterCmd, {
         env: Object.assign({ PGUSER }, process.env)
