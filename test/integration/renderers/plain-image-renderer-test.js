@@ -7,7 +7,7 @@ var fs = require('fs');
 var Image = require('@carto/mapnik').Image;
 const path = require('path');
 
-var ImageRenderer = require('../../../lib/windshaft/renderers/plain/image_renderer');
+var ImageRenderer = require('../../../lib/renderers/plain/image-renderer');
 
 describe('renderer_plain_image_renderer', function () {
     var patterns = [

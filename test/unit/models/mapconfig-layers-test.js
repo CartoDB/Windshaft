@@ -3,7 +3,7 @@
 // require('../support/test-helper.js');
 
 var assert = require('assert');
-var MapConfig = require('../../../lib/windshaft/models/mapconfig');
+var MapConfig = require('../../../lib/models/mapconfig');
 
 describe('mapconfig-layer-indexes', function () {
     var HTTP_LAYER = {

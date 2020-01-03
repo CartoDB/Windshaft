@@ -3,7 +3,7 @@
 require('../support/test-helper');
 
 var assert = require('assert');
-var MapStoreProvider = require('../../lib/windshaft/models/providers/mapstore_mapconfig_provider');
+var MapStoreProvider = require('../../lib/models/providers/mapstore-mapconfig-provider');
 
 describe('renderer_params', function () {
     var SUITE_COMMON_PARAMS = {

@@ -3,7 +3,7 @@
 require('../../support/test-helper');
 
 var assert = require('assert');
-var HttpRendererFactory = require('../../../lib/windshaft/renderers/http/factory');
+var HttpRendererFactory = require('../../../lib/renderers/http/factory');
 
 describe('renderer_http_factory', function () {
     var validUrlTemplate = 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';

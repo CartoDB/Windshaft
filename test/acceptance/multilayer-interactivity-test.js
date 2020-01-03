@@ -3,7 +3,7 @@
 require('../support/test-helper');
 
 var assert = require('../support/assert');
-var getLayerTypeFn = require('../../lib/windshaft/models/mapconfig').prototype.getType;
+var getLayerTypeFn = require('../../lib/models/mapconfig').prototype.getType;
 var TestClient = require('../support/test-client');
 
 describe('multilayer interactivity and layers order', function () {

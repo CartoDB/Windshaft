@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var cartocssUtils = require('../../../lib/windshaft/utils/cartocss_utils');
+var cartocssUtils = require('../../../lib/utils/cartocss-utils');
 
 describe('cartocss utils', function () {
     describe('.getColumnNamesFromCartoCSS()', function () {

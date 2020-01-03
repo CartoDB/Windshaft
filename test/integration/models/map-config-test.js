@@ -3,7 +3,7 @@
 require('../../support/test-helper.js');
 
 const assert = require('assert');
-const MapConfig = require('../../../lib/windshaft/models/mapconfig');
+const MapConfig = require('../../../lib/models/mapconfig');
 
 describe('Map Config model', function () {
     function createMapConfigRaw (buffersize) {

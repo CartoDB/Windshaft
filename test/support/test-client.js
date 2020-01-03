@@ -3,8 +3,8 @@
 var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
 
-var windshaft = require('../../lib/windshaft');
-var DummyMapConfigProvider = require('../../lib/windshaft/models/providers/dummy_mapconfig_provider');
+var windshaft = require('../../lib');
+var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 
 var redisClient = require('redis').createClient(global.environment.redis.port);
 

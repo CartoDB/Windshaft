@@ -6,7 +6,7 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 var http = require('http');
 var fs = require('fs');
-var Renderer = require('../../lib/windshaft/renderers/http/renderer');
+var Renderer = require('../../lib/renderers/http/renderer');
 var mapnik = require('@carto/mapnik');
 const path = require('path');
 

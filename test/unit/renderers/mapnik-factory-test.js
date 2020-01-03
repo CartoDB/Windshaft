@@ -3,8 +3,8 @@
 require('../../support/test-helper');
 
 var assert = require('assert');
-var MapnikRendererFactory = require('../../../lib/windshaft/renderers/mapnik/factory');
-var MapConfig = require('../../../lib/windshaft/models/mapconfig');
+var MapnikRendererFactory = require('../../../lib/renderers/mapnik/factory');
+var MapConfig = require('../../../lib/models/mapconfig');
 
 describe('renderer-mapnik-factory metatile', function () {
     it('should use default metatile value', function () {

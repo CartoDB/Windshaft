@@ -6,8 +6,8 @@ var RedisPool = require('redis-mpool');
 var assert = require('assert');
 var step = require('step');
 var serverOptions = require('../support/server-options');
-var MapStore = require('../../lib/windshaft/storages/mapstore');
-var MapConfig = require('../../lib/windshaft/models/mapconfig');
+var MapStore = require('../../lib/storages/mapstore');
+var MapConfig = require('../../lib/models/mapconfig');
 
 var debug = require('debug')('windshaft:test');
 

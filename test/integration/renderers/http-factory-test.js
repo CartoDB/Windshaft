@@ -3,10 +3,10 @@
 require('../../support/test-helper.js');
 
 var assert = require('assert');
-var HttpRendererFactory = require('../../../lib/windshaft/renderers/http/factory');
-var HttpFallbackRenderer = require('../../../lib/windshaft/renderers/http/fallback_renderer');
-var Renderer = require('../../../lib/windshaft/renderers/http/renderer');
-var MapConfig = require('../../../lib/windshaft/models/mapconfig');
+var HttpRendererFactory = require('../../../lib/renderers/http/factory');
+var HttpFallbackRenderer = require('../../../lib/renderers/http/fallback-renderer');
+var Renderer = require('../../../lib/renderers/http/renderer');
+var MapConfig = require('../../../lib/models/mapconfig');
 
 describe('renderer_http_factory_getRenderer', function () {
     var whitelistSample = [

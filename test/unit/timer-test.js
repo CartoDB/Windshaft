@@ -3,7 +3,7 @@
 require('../support/test-helper');
 
 var assert = require('assert');
-var Timer = require('../../lib/windshaft/stats/timer');
+var Timer = require('../../lib/stats/timer');
 
 describe('timer', function () {
     var label = 'foo';

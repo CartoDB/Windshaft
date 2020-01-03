@@ -3,11 +3,11 @@
 require('../support/test-helper.js');
 
 var assert = require('assert');
-var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
-var MapStore = require('../../lib/windshaft/storages/mapstore');
-var MapConfig = require('../../lib/windshaft/models/mapconfig');
-var MapStoreMapConfigProvider = require('../../lib/windshaft/models/providers/mapstore_mapconfig_provider');
-var RendererFactory = require('../../lib/windshaft/renderers/renderer_factory');
+var RendererCache = require('../../lib/cache/renderer-cache');
+var MapStore = require('../../lib/storages/mapstore');
+var MapConfig = require('../../lib/models/mapconfig');
+var MapStoreMapConfigProvider = require('../../lib/models/providers/mapstore-mapconfig-provider');
+var RendererFactory = require('../../lib/renderers/renderer-factory');
 var RedisPool = require('redis-mpool');
 var serverOptions = require('../support/server-options');
 

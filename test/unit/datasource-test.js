@@ -3,7 +3,7 @@
 require('../support/test-helper.js');
 
 var assert = require('assert');
-var Datasource = require('../../lib/windshaft/models/datasource');
+var Datasource = require('../../lib/models/datasource');
 
 describe('datasource', function () {
     it('empty datasource reports isEmpty', function (done) {

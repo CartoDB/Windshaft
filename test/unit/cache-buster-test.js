@@ -3,8 +3,8 @@
 require('../support/test-helper.js');
 
 var assert = require('assert');
-var CacheEntry = require('../../lib/windshaft/cache/cache_entry.js');
-var RendererCache = require('../../lib/windshaft/cache/renderer_cache');
+var CacheEntry = require('../../lib/cache/cache-entry.js');
+var RendererCache = require('../../lib/cache/renderer-cache');
 
 describe('cache_buster', function () {
     var rendererCache = new RendererCache();

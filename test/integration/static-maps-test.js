@@ -6,8 +6,8 @@ var assert = require('../support/assert');
 var crypto = require('crypto');
 var http = require('http');
 var fs = require('fs');
-var windshaft = require('../../lib/windshaft');
-var DummyMapConfigProvider = require('../../lib/windshaft/models/providers/dummy_mapconfig_provider');
+var windshaft = require('../../lib');
+var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const path = require('path');
 
 var mapnik = require('@carto/mapnik');

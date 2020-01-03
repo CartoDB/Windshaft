@@ -3,7 +3,7 @@
 require('../support/test-helper.js');
 
 var assert = require('assert');
-var windshaft = require('../../lib/windshaft');
+var windshaft = require('../../lib');
 
 describe('windshaft', function () {
     it('should have valid global environment', function () {

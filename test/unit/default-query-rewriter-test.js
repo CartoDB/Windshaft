@@ -3,7 +3,7 @@
 require('../support/test-helper.js');
 
 var assert = require('assert');
-var DefaultQueryRewriter = require('../../lib/windshaft/utils/default_query_rewriter');
+var DefaultQueryRewriter = require('../../lib/utils/default-query-rewriter');
 var queryRewriter = new DefaultQueryRewriter();
 
 describe('Default QueryRewriter', function () {

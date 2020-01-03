@@ -1,7 +1,7 @@
 'use strict';
 
 require('../../support/test-helper.js');
-var LayerColumns = require('../../../lib/windshaft/utils/layer-columns');
+var LayerColumns = require('../../../lib/utils/layer-columns');
 var assert = require('assert');
 
 describe('mvt-utils', function () {

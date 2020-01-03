@@ -3,8 +3,8 @@
 require('../support/test-helper');
 
 var assert = require('assert');
-var TorqueFactory = require('../../lib/windshaft/renderers/torque').factory;
-var MapConfig = require('../../lib/windshaft/models/mapconfig');
+var TorqueFactory = require('../../lib/renderers/torque').factory;
+var MapConfig = require('../../lib/models/mapconfig');
 
 function dummyPSQL () {
     PSQLDummy.n = Date.now();

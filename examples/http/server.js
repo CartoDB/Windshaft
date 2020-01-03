@@ -3,7 +3,7 @@ var express = require('express');
 var RedisPool = require('redis-mpool');
 var mapnik = require('@carto/mapnik');
 
-var windshaft = require('../../lib/windshaft');
+var windshaft = require('../../lib/');
 
 var StaticMapsController = require('./controllers/static_maps');
 var MapController = require('./controllers/map');

@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var MapConfig = require('../../../lib/windshaft/models/mapconfig');
+var MapConfig = require('../../../lib/models/mapconfig');
 
 describe('mapconfig buffer-size', function () {
     var CARTODB_LAYER = {

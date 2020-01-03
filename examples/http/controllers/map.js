@@ -1,9 +1,9 @@
 var assert = require('assert');
 var step = require('step');
-var windshaft = require('../../../lib/windshaft');
+var windshaft = require('../../../lib/');
 
 var MapConfig = windshaft.model.MapConfig;
-var DummyMapConfigProvider = require('../../../lib/windshaft/models/providers/dummy_mapconfig_provider');
+var DummyMapConfigProvider = require('../../../lib/models/providers/dummy-mapconfig-provider');
 
 var MapStoreMapConfigProvider = windshaft.model.provider.MapStoreMapConfig;
 

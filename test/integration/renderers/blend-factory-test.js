@@ -3,9 +3,9 @@
 require('../../support/test-helper.js');
 
 var assert = require('assert');
-var BlendRendererFactory = require('../../../lib/windshaft/renderers/blend/factory');
-var RendererFactory = require('../../../lib/windshaft/renderers/renderer_factory');
-var MapConfig = require('../../../lib/windshaft/models/mapconfig');
+var BlendRendererFactory = require('../../../lib/renderers/blend/factory');
+var RendererFactory = require('../../../lib/renderers/renderer-factory');
+var MapConfig = require('../../../lib/models/mapconfig');
 
 describe('renderer_http_factory_getRenderer', function () {
     function rendererOptions () {
