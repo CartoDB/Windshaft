@@ -5,11 +5,6 @@ mapnik.register_system_fonts();
 mapnik.register_default_fonts();
 
 module.exports = {
-    name: 'test',
-    postgres: {
-        geometry_field: 'the_geom',
-        srid: 4326
-    },
     millstone: {
         cache_basedir: '/tmp/windshaft-test/millstone'
     },
