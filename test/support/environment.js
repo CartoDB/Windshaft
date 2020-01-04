@@ -35,19 +35,9 @@ module.exports = {
                 poolMaxWaitingClients: 16,
                 metatile: 1,
                 bufferSize: 64,
-                scale_factors: [1, 2],
                 limits: {
                     render: 0,
                     cacheOnTimeout: true
-                },
-                geojson: {
-                    dbPoolParams: {
-                        size: 16,
-                        idleTimeout: 3000,
-                        reapInterval: 1000
-                    },
-                    clipByBox2d: false,
-                    removeRepeatedPoints: false
                 },
                 'cache-features': true,
                 metrics: false,

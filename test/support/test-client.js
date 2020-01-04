@@ -2,12 +2,9 @@
 
 var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
-
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
-
 const environment = require('../support/environment');
-
 var redisClient = require('redis').createClient(environment.redis.port);
 
 function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
