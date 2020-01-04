@@ -1,7 +1,12 @@
 const path = require('path');
+const mapnik = require('@carto/mapnik');
+
+mapnik.register_system_fonts();
+mapnik.register_default_fonts();
 
 module.exports = {
     name: 'test',
+    mapnik_version: undefined,
     postgres: {
         geometry_field: 'the_geom',
         srid: 4326
@@ -17,29 +22,44 @@ module.exports = {
     },
     renderer: {
         mapnik: {
-            geometry_field: 'the_geom',
-            poolSize: 4,
-            poolMaxWaitingClients: 16,
-            metatile: 1,
-            bufferSize: 64,
-            scale_factors: [1, 2],
-            limits: {
-                render: 0,
-                cacheOnTimeout: true
-            },
-            geojson: {
-                dbPoolParams: {
-                    size: 16,
-                    idleTimeout: 3000,
-                    reapInterval: 1000
+            grainstore: {
+                carto_env: {
+                    validation_data: {
+                        fonts: Object.keys(mapnik.fontFiles())
+                    }
                 },
-                clipByBox2d: false,
-                removeRepeatedPoints: false
+                datasource: {
+                    geometry_field: 'the_geom',
+                    srid: 4326
+                },
+                cachedir: '/tmp/windshaft-test/millstone',
+                mapnik_version: mapnik.versions.mapnik
             },
-            'cache-features': true,
-            metrics: false,
-            markers_symbolizer_caches: {
-                disabled: false
+            mapnik: {
+                geometry_field: 'the_geom',
+                poolSize: 4,
+                poolMaxWaitingClients: 16,
+                metatile: 1,
+                bufferSize: 64,
+                scale_factors: [1, 2],
+                limits: {
+                    render: 0,
+                    cacheOnTimeout: true
+                },
+                geojson: {
+                    dbPoolParams: {
+                        size: 16,
+                        idleTimeout: 3000,
+                        reapInterval: 1000
+                    },
+                    clipByBox2d: false,
+                    removeRepeatedPoints: false
+                },
+                'cache-features': true,
+                metrics: false,
+                markers_symbolizer_caches: {
+                    disabled: false
+                }
             }
         },
         torque: {
@@ -57,11 +77,5 @@ module.exports = {
                 src: path.join(__dirname, '../test/fixtures/http/basemap.png')
             }
         }
-    },
-    mapnik_version: undefined,
-    windshaft_port: 8083,
-    enable_cors: true,
-    enabledFeatures: {
-        layerMetadata: false
     }
 };

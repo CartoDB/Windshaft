@@ -10,30 +10,8 @@ const environment = require('./environment');
 
 var redisClient = require('redis').createClient(environment.redis.port);
 
-mapnik.register_system_fonts();
-mapnik.register_default_fonts();
-
-var grainstoreOptions = {
-    carto_env: {
-        validation_data: {
-            fonts: Object.keys(mapnik.fontFiles())
-        }
-    },
-    datasource: environment.postgres,
-    cachedir: environment.millstone.cache_basedir,
-    mapnik_version: environment.mapnik_version || mapnik.versions.mapnik
-};
-var rendererFactoryOptions = {
-    mapnik: {
-        grainstore: grainstoreOptions,
-        mapnik: environment.renderer.mapnik
-    },
-    torque: environment.renderer.torque,
-    http: environment.renderer.http
-};
-
 function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
-    const options = Object.assign({}, rendererFactoryOptions);
+    const options = Object.assign({}, environment.renderer);
     overrideOptions = overrideOptions || {};
 
     Object.keys(overrideOptions).forEach(key => {
@@ -236,8 +214,8 @@ module.exports.singleLayerMapConfig = singleLayerMapConfig;
 module.exports.defaultTableMapConfig = defaultTableMapConfig;
 module.exports.mvtLayerMapConfig = mvtLayerMapConfig;
 
-module.exports.grainstoreOptions = grainstoreOptions;
+module.exports.grainstoreOptions = environment.renderer.mapnik.grainstore;
 module.exports.redisOptions = environment.redis;
 module.exports.millstoneOptions = environment.millstone;
-module.exports.mapnikOptions = environment.renderer.mapnik;
+module.exports.mapnikOptions = environment.renderer.mapnik.mapnik;
 module.exports.mapnik_version = environment.mapnik_version;
