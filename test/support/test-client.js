@@ -6,7 +6,7 @@ var RedisPool = require('redis-mpool');
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 
-const environment = require('./environment');
+const environment = require('../support/environment');
 
 var redisClient = require('redis').createClient(environment.redis.port);
 
@@ -213,9 +213,3 @@ function defaultTableMapConfig (tableName, cartocss, cartocssVersion, interactiv
 module.exports.singleLayerMapConfig = singleLayerMapConfig;
 module.exports.defaultTableMapConfig = defaultTableMapConfig;
 module.exports.mvtLayerMapConfig = mvtLayerMapConfig;
-
-module.exports.grainstoreOptions = environment.renderer.mapnik.grainstore;
-module.exports.redisOptions = environment.redis;
-module.exports.millstoneOptions = environment.millstone;
-module.exports.mapnikOptions = environment.renderer.mapnik.mapnik;
-module.exports.mapnik_version = environment.mapnik_version;

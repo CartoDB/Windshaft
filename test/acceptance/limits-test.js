@@ -6,6 +6,7 @@ var fs = require('fs');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+const environment = require('../support/environment');
 
 describe('render limits', function () {
     function onTileErrorStrategyPass (err, tile, headers, stats, format, callback) {
@@ -28,7 +29,7 @@ describe('render limits', function () {
 
     var OVERRIDE_OPTIONS = {
         mapnik: {
-            mapnik: Object.assign({}, TestClient.mapnikOptions, { limits: LIMITS_CONFIG })
+            mapnik: Object.assign({}, environment.renderer.mapnik.mapnik, { limits: LIMITS_CONFIG })
         }
     };
 

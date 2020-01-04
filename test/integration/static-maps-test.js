@@ -9,7 +9,7 @@ var fs = require('fs');
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const path = require('path');
-var TestClient = require('../support/test-client');
+const environment = require('../support/environment');
 
 var mapnik = require('@carto/mapnik');
 
@@ -17,8 +17,8 @@ describe('static maps', function () {
     var rendererFactory = new windshaft.renderer.Factory({
         mapnik: {
             grainstore: {
-                cachedir: TestClient.millstoneOptions.cache_basedir,
-                mapnik_version: TestClient.mapnik_version || mapnik.versions.mapnik,
+                cachedir: environment.millstone.cache_basedir,
+                mapnik_version: mapnik.versions.mapnik,
                 gc_prob: 0 // run the garbage collector at each invocation
             },
             mapnik: {

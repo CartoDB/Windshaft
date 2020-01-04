@@ -6,7 +6,6 @@ mapnik.register_default_fonts();
 
 module.exports = {
     name: 'test',
-    mapnik_version: undefined,
     postgres: {
         geometry_field: 'the_geom',
         srid: 4326

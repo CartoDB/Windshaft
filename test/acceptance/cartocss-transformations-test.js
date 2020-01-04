@@ -4,6 +4,7 @@ require('../support/test-helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+const environment = require('../support/environment');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
@@ -200,7 +201,7 @@ describe('cartocss transformation', function () {
                 mapnik: {
                     grainstore: Object.assign(
                         {},
-                        TestClient.grainstoreOptions,
+                        environment.renderer.mapnik.grainstore,
                         { mapnik_version: scenario.mapnikVersion }
                     )
                 }
@@ -241,7 +242,7 @@ describe('cartocss transformation', function () {
                 mapnik: {
                     grainstore: Object.assign(
                         {},
-                        TestClient.grainstoreOptions,
+                        environment.renderer.mapnik.grainstore,
                         { mapnik_version: scenario.mapnikVersion }
                     )
                 }

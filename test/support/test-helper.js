@@ -2,12 +2,12 @@
 
 var assert = require('assert');
 var redis = require('redis');
-var TestClient = require('./test-client');
+const environment = require('./environment');
 
 var redisClient;
 beforeEach(function () {
     if (!redisClient) {
-        redisClient = redis.createClient(TestClient.redisOptions.port);
+        redisClient = redis.createClient(environment.redis.port);
     }
 });
 

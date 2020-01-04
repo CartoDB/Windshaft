@@ -6,6 +6,7 @@ var assert = require('../support/assert');
 var fs = require('fs');
 var TestClient = require('../support/test-client');
 const path = require('path');
+const environment = require('../support/environment');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
@@ -15,12 +16,12 @@ describe('server_png8_format', function () {
     before(function (done) {
         testClientPng8 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: Object.assign({ mapnik_tile_format: 'png8:m=h' }, TestClient.grainstoreOptions)
+                grainstore: Object.assign({ mapnik_tile_format: 'png8:m=h' }, environment.renderer.mapnik.grainstore)
             }
         });
         testClientPng32 = new TestClient(layergroup, {
             mapnik: {
-                grainstore: Object.assign({ mapnik_tile_format: 'png' }, TestClient.grainstoreOptions)
+                grainstore: Object.assign({ mapnik_tile_format: 'png' }, environment.renderer.mapnik.grainstore)
             }
         });
         var testPngFilesDir = path.join(__dirname, '/../results/png');

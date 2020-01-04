@@ -10,6 +10,7 @@ var redis = require('redis');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 const path = require('path');
+const environment = require('../support/environment');
 
 function rmdirRecursiveSync (dirname) {
     if (!fs.existsSync(dirname)) {
@@ -32,12 +33,12 @@ describe('external resources', function () {
     var resourcesServerPort = 8033;
     var numRequests;
 
-    var redisClient = redis.createClient(TestClient.redisOptions.port);
+    var redisClient = redis.createClient(environment.redis.port);
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     beforeEach(function (done) {
-        rmdirRecursiveSync(TestClient.millstoneOptions.cache_basedir);
+        rmdirRecursiveSync(environment.millstone.cache_basedir);
         numRequests = 0;
 
         // Start a server to test external resources
@@ -106,7 +107,7 @@ describe('external resources', function () {
 
                 redisClient.del('map_cfg|' + layergroup.layergroupid, function () {
                     // reset resources cache
-                    rmdirRecursiveSync(TestClient.millstoneOptions.cache_basedir);
+                    rmdirRecursiveSync(environment.millstone.cache_basedir);
 
                     new TestClient(externalResourceMapConfig).createLayergroup(function () {
                         assert.equal(numRequests, ++externalResourceRequestsCount);
