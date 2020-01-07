@@ -7,12 +7,12 @@ var assert = require('assert');
 var step = require('step');
 var MapStore = require('../../lib/storages/mapstore');
 var MapConfig = require('../../lib/models/mapconfig');
-const environment = require('../support/environment');
+const config = require('../support/config');
 
 var debug = require('debug')('windshaft:test');
 
 describe('mapstore', function () {
-    var redisPool = new RedisPool(environment.redis);
+    var redisPool = new RedisPool(config.redis);
 
     it('fails loading unexistent map', function (done) {
         var mapStore = new MapStore({ pool: redisPool, expire_time: 50000 });

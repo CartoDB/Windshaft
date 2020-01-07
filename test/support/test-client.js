@@ -4,11 +4,11 @@ var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
-const environment = require('../support/environment');
-var redisClient = require('redis').createClient(environment.redis.port);
+const config = require('./config');
+var redisClient = require('redis').createClient(config.redis.port);
 
 function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
-    const options = Object.assign({}, environment.renderer);
+    const options = Object.assign({}, config.renderer);
     overrideOptions = overrideOptions || {};
 
     Object.keys(overrideOptions).forEach(key => {
@@ -29,7 +29,7 @@ function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
-        pool: new RedisPool(environment.redis)
+        pool: new RedisPool(config.redis)
     });
     this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
     this.previewBackend = new windshaft.backend.Preview(this.rendererCache);
