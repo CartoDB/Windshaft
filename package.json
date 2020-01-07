@@ -2,9 +2,14 @@
     "name": "windshaft",
     "version": "5.6.4",
     "main": "./lib/index.js",
-    "description": "A Node.js map tile server for PostGIS with CartoCSS styling",
+    "description": "A Node.js map tile library for PostGIS with CartoCSS styling",
     "keywords": [
-        "cartodb"
+        "cartodb",
+        "carto",
+        "map",
+        "tile",
+        "PostGIS",
+        "CartoCSS"
     ],
     "url": "https://github.com/CartoDB/Windshaft",
     "license": "BSD-3-Clause",
@@ -12,7 +17,11 @@
         "type": "git",
         "url": "git://github.com/CartoDB/Windshaft.git"
     },
-    "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
+    "files": [
+        "lib",
+        "scripts"
+    ],
+    "author": "CARTO (https://carto.com)",
     "contributors": [
         "Simon Tokumine <simon@vizzuality.com>",
         "Javi Santana <jsantana@vizzuality.com>",
@@ -48,8 +57,8 @@
         "step": "1.0.0"
     },
     "scripts": {
-        "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
-        "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\" \"examples/**/*.js\"",
+        "lint:fix": "eslint --fix \"lib/**/*.js\" \"test/**/*.js\"",
+        "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
         "preinstall": "scripts/darwin-pre-install.sh",
         "pretest:setup": "npm run lint",
         "test:setup": "NODE_ENV=test node test setup",

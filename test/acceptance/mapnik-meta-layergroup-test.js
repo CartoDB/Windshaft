@@ -6,15 +6,6 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 
 describe('Create mapnik layergroup', function () {
-    before(function () {
-        this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
-        global.environment.enabledFeatures.layerMetadata = true;
-    });
-
-    after(function () {
-        global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
-    });
-
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
 

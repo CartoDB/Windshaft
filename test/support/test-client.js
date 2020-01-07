@@ -2,38 +2,13 @@
 
 var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
-
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
-
-var redisClient = require('redis').createClient(global.environment.redis.port);
-
-mapnik.register_system_fonts();
-mapnik.register_default_fonts();
-var cartoEnv = {
-    validation_data: {
-        fonts: Object.keys(mapnik.fontFiles())
-    }
-};
-
-var rendererOptions = global.environment.renderer;
-var grainstoreOptions = {
-    carto_env: cartoEnv,
-    datasource: global.environment.postgres,
-    cachedir: global.environment.millstone.cache_basedir,
-    mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik
-};
-var rendererFactoryOptions = {
-    mapnik: {
-        grainstore: grainstoreOptions,
-        mapnik: rendererOptions.mapnik
-    },
-    torque: rendererOptions.torque,
-    http: rendererOptions.http
-};
+const config = require('./config');
+var redisClient = require('redis').createClient(config.redis.port);
 
 function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
-    const options = Object.assign({}, rendererFactoryOptions);
+    const options = Object.assign({}, config.renderer);
     overrideOptions = overrideOptions || {};
 
     Object.keys(overrideOptions).forEach(key => {
@@ -54,7 +29,7 @@ function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
 
     var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
     var mapStore = new windshaft.storage.MapStore({
-        pool: new RedisPool(global.settings.redis)
+        pool: new RedisPool(config.redis)
     });
     this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
     this.previewBackend = new windshaft.backend.Preview(this.rendererCache);
@@ -235,6 +210,3 @@ function defaultTableMapConfig (tableName, cartocss, cartocssVersion, interactiv
 module.exports.singleLayerMapConfig = singleLayerMapConfig;
 module.exports.defaultTableMapConfig = defaultTableMapConfig;
 module.exports.mvtLayerMapConfig = mvtLayerMapConfig;
-
-module.exports.grainstoreOptions = grainstoreOptions;
-module.exports.mapnikOptions = rendererOptions.mapnik;

@@ -9,20 +9,16 @@ var fs = require('fs');
 var windshaft = require('../../lib');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const path = require('path');
+const config = require('../support/config');
 
 var mapnik = require('@carto/mapnik');
-// var RedisPool = require('redis-mpool');
 
-describe('static_maps', function () {
-//    var redisPool = new RedisPool(global.environment.redis);
-    //    var mapStore  = new windshaft.storage.MapStore({ pool: redisPool });
-
+describe('static maps', function () {
     var rendererFactory = new windshaft.renderer.Factory({
         mapnik: {
             grainstore: {
-                datasource: global.environment.postgres,
-                cachedir: global.environment.millstone.cache_basedir,
-                mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik,
+                cachedir: config.millstone.cache_basedir,
+                mapnik_version: mapnik.versions.mapnik,
                 gc_prob: 0 // run the garbage collector at each invocation
             },
             mapnik: {

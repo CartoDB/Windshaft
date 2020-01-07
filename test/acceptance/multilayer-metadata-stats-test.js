@@ -6,14 +6,6 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 
 describe('multilayer metadata disabled', function () {
-    before(function () {
-        global.environment.enabledFeatures.layerMetadata = false;
-    });
-
-    after(function () {
-        global.environment.enabledFeatures.layerMetadata = true;
-    });
-
     function testLayerMetadataStats (testScenario) {
         it(testScenario.desc, function (done) {
             var mapConfig = {
