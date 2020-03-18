@@ -40,7 +40,7 @@ describe('static maps', function () {
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
             fallbackImage: {
                 type: 'fs',
-                src: path.join(__dirname, '../test/fixtures/http/basemap.png')
+                src: path.join(__dirname, '/../fixtures/http/basemap.png')
             }
         }
     });

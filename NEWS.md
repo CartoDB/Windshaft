@@ -1,7 +1,14 @@
 # Version 5.6.5
-2020-01-dd
+2020-mm-dd
 
 Announcements:
+- Upgrades `@carto/cartonik` to version `0.8.0` (don't released yet)
+- New signature for renderers:
+  - `.getTile(z, x, y, callback)` => `.getTile(format, z, x, y) -> Promise`
+  - `.getMetadata(callback)` => `.getMetadata() -> Promise`
+  - `.close(callback)` => `.close() -> Promise`
+- In renderers, applied some ES7/8 features: classes, async/await, spread syntax, etc..
+- Fix test that fails quietly
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style
 - Remove deprecated coverage tool istanbul, using nyc instead
 - Stop using two different tools for package management, testing, and any other developer workflow

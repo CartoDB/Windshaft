@@ -221,14 +221,15 @@ describe('torque', function () {
             ];
             torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function (err, renderer) {
                 assert.ok(err === null);
-                renderer.getMetadata(function (err, m) {
-                    assert.ifError(err);
-                    assert.equal(0, m.start);
-                    assert.equal(10000, m.end);
-                    assert.equal(1, m.data_steps);
-                    assert.equal('date', m.column_type);
-                    done();
-                });
+                renderer.getMetadata()
+                    .then(m => {
+                        assert.equal(0, m.start);
+                        assert.equal(10000, m.end);
+                        assert.equal(1, m.data_steps);
+                        assert.equal('date', m.column_type);
+                        done();
+                    })
+                    .catch(err => done(err));
             });
         });
         it('should get a tile', function (done) {
@@ -247,15 +248,16 @@ describe('torque', function () {
             ];
             torque.getRenderer(mapConfig, 'json.torque', layerZeroOptions, function (err, renderer) {
                 assert.ifError(err);
-                renderer.getTile(0, 0, 0, function (err, tile) {
-                    assert.ifError(err);
-                    assert.ok(!!tile);
-                    assert.ok(tile[0].x__uint8 !== undefined);
-                    assert.ok(tile[0].y__uint8 !== undefined);
-                    assert.ok(tile[0].vals__uint8 !== undefined);
-                    assert.ok(tile[0].dates__uint16 !== undefined);
-                    done();
-                });
+                renderer.getTile('json.torque', 0, 0, 0)
+                    .then(({ buffer: tile }) => {
+                        assert.ok(!!tile);
+                        assert.ok(tile[0].x__uint8 !== undefined);
+                        assert.ok(tile[0].y__uint8 !== undefined);
+                        assert.ok(tile[0].vals__uint8 !== undefined);
+                        assert.ok(tile[0].dates__uint16 !== undefined);
+                        done();
+                    })
+                    .catch((err) => done(err));
             });
         });
 

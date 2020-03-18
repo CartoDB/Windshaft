@@ -8,6 +8,10 @@ var http = require('http');
 var fs = require('fs');
 var Renderer = require('../../lib/renderers/http/renderer');
 var mapnik = require('@carto/mapnik');
+const { promisify } = require('util');
+const fromBytes = promisify(mapnik.Image.fromBytes);
+const readFile = promisify(fs.readFile);
+const imagesAreSimilarIgnoreDimensions = promisify(assert.imagesAreSimilarIgnoreDimensions);
 const path = require('path');
 
 describe('static_maps', function () {
@@ -137,25 +141,15 @@ describe('static_maps', function () {
         });
     });
 
-    it('resize tiles bigger than 256px', function (done) {
+    it('resize tiles bigger than 256px', async function () {
         var renderer = new Renderer(urlHost + retinaUrlPath, [], {});
-        renderer.getTile(0, 0, 0, function (err, buffer, headers, stats) {
-            assert.ifError(err);
-            mapnik.Image.fromBytes(buffer, function (err, image) {
-                assert.ifError(err);
-                assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');
+        const { buffer } = await renderer.getTile('png', 0, 0, 0);
+        const image = await fromBytes(buffer);
+        assert.ok(image.height() === 256 && image.width() === 256, 'Tile not resized to 256x256px');
 
-                var referenceImage = mapnik.Image.fromBytesSync(fs.readFileSync(filepathRetina, { encoding: null }));
-                assert.imagesAreSimilarIgnoreDimensions(
-                    image,
-                    referenceImage,
-                    IMAGE_EQUALS_TOLERANCE_PER_MIL,
-                    function (err, similarity) {
-                        assert.ifError(err);
-                        done();
-                    }
-                );
-            });
-        });
+        const retinaBuffer = await readFile(filepathRetina, { encoding: null });
+        const referenceImage = await fromBytes(retinaBuffer);
+
+        await imagesAreSimilarIgnoreDimensions(image, referenceImage, IMAGE_EQUALS_TOLERANCE_PER_MIL);
     });
 });
