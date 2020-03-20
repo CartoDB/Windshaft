@@ -75,12 +75,12 @@ getName()
 ```
  - @return `{String}` the name of the factory
 
-## getAdaptor(renderer, format, onTileErrorStrategy)
+## getAdaptor(renderer, onTileErrorStrategy)
 
 Returns an renderer adaptor
 
 ```javascript
-getAdaptor(renderer, format, onTileErrorStrategy)
+getAdaptor(renderer, onTileErrorStrategy)
 ```
  - @param `{Renderer} renderer` A raw renderer
  - @param `{String} format` The format extension

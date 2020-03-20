@@ -7,6 +7,7 @@ Announcements:
   - `.getTile(z, x, y, callback)` => `.getTile(format, z, x, y) -> Promise`
   - `.getMetadata(callback)` => `.getMetadata() -> Promise`
   - `.close(callback)` => `.close() -> Promise`
+- Removes `format` argument in adaptor's constructors as is no longer needed.
 - In renderers, applied some ES7/8 features: classes, async/await, spread syntax, etc..
 - Fix test that fails quietly
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style
