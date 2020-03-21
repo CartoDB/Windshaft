@@ -1,7 +1,13 @@
-# Version 5.6.5
+# Version 6.0.0
 2020-mm-dd
 
+Breaking changes:
+
+- Improved renderer reporting:
+  - now `renderer.getStats()` returns a Map<key, value> with information about renderer's performance
+
 Announcements:
+- now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
 - Upgrades `@carto/cartonik` to version `0.8.0` (don't released yet)
 - New signature for renderers:
   - `.getTile(z, x, y, callback)` => `.getTile(format, z, x, y) -> Promise`

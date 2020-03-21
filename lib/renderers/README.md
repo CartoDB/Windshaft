@@ -38,6 +38,17 @@ async getMetadata()
   - `{Object} meta` Format of the 'meta' object is renderer-specific, see renderer documentation for that
   - `{Error} err` for any problem, or null
 
+## getStats()
+
+Get information about the renderer's performance
+
+```javascript
+getStats()
+```
+- @returns `{Map.<key{string}|value{integer}>}` where:
+  - `key`: the stat to report, for instance: `pool.waiting`, `cache.png`, etc..
+  - `value`: the current value of the stat
+
 # Factory
 
 Renderer factories are expected to expose the following interface:
@@ -83,6 +94,5 @@ Returns an renderer adaptor
 getAdaptor(renderer, onTileErrorStrategy)
 ```
  - @param `{Renderer} renderer` A raw renderer
- - @param `{String} format` The format extension
  - @param `{Function} onTileErrorStrategy` An optional function that will handle the error case
  - @return `{Adaptor}` An adapted renderer
