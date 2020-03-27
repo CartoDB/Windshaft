@@ -2,25 +2,23 @@
 
 require('../support/test-helper');
 
-var fs = require('fs');
-
-var assert = require('../support/assert');
-var TestClient = require('../support/test-client');
+const fs = require('fs');
+const { promisify } = require('util');
+const readFile = promisify(fs.readFile);
+const assert = require('../support/assert');
+const TestClient = require('../support/test-client');
 const config = require('../support/config');
 
 describe('render limits', function () {
-    function onTileErrorStrategyPass (err, tile, headers, stats, format, callback) {
-        callback(err, tile, headers, stats);
+    async function onTileErrorStrategyPass (err) {
+        throw err;
     }
 
-    var FIXTURE_IMAGE = './test/fixtures/limits/fallback.png';
-    /* eslint-disable handle-callback-err */
-    function onTileErrorStrategyFallback (err, tile, headers, stats, format, callback) {
-        fs.readFile(FIXTURE_IMAGE, { encoding: null }, function (err, img) {
-            callback(null, img, { 'Content-Type': 'image/png' }, {});
-        });
+    const FIXTURE_IMAGE = './test/fixtures/limits/fallback.png';
+    async function onTileErrorStrategyFallback () {
+        const img = await readFile(FIXTURE_IMAGE, { encoding: null });
+        return { buffer: img, headers: { 'Content-Type': 'image/png' }, stats: {} };
     }
-    /* eslint-enable handle-callback-err */
 
     var LIMITS_CONFIG = {
         render: 50,

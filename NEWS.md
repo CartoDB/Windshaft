@@ -3,8 +3,11 @@
 
 Breaking changes:
 
+- New signature for `onTileErrorStrategy`:
+  - From `onTileErrorStrategy(err, tile, headers, stats, format, callback)` to `async onTileErrorStrategy(err, format)`
+  - From `callbacks` to `promises` to match with the new internal signature for renderers
 - Improved renderer reporting:
-  - now `renderer.getStats()` returns a Map<key, value> with information about renderer's performance
+  - now `renderer.getStats()` returns a `Map<key, value>` with information about renderer's performance
 
 Announcements:
 - now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
