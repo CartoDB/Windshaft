@@ -2,8 +2,16 @@
 
 var mapnik = require('@carto/mapnik');
 var RedisPool = require('redis-mpool');
-var windshaft = require('../../lib');
-var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
+const RendererFactory = require('../../lib/renderers/renderer-factory');
+const RendererCache = require('../../lib/cache/renderer-cache');
+const TileBackend = require('../../lib/backends/tile');
+const AttributesBackend = require('../../lib/backends/attributes');
+const MapValidator = require('../../lib/backends/map-validator');
+const MapStore = require('../../lib/storages/mapstore');
+const MapConfig = require('../../lib/models/mapconfig');
+const MapBackend = require('../../lib/backends/map');
+const PreviewBackend = require('../../lib/backends/preview');
+const DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const config = require('./config');
 var redisClient = require('redis').createClient(config.redis.port);
 
@@ -19,20 +27,20 @@ function TestClient (mapConfig, overrideOptions, onTileErrorStrategy) {
         options.onTileErrorStrategy = onTileErrorStrategy;
     }
 
-    this.config = windshaft.model.MapConfig.create(mapConfig);
+    this.config = MapConfig.create(mapConfig);
 
-    this.rendererFactory = new windshaft.renderer.Factory(options);
-    this.rendererCache = new windshaft.cache.RendererCache(this.rendererFactory);
+    this.rendererFactory = new RendererFactory(options);
+    this.rendererCache = new RendererCache(this.rendererFactory);
 
-    this.tileBackend = new windshaft.backend.Tile(this.rendererCache);
-    this.attributesBackend = new windshaft.backend.Attributes();
+    this.tileBackend = new TileBackend(this.rendererCache);
+    this.attributesBackend = new AttributesBackend();
 
-    var mapValidatorBackend = new windshaft.backend.MapValidator(this.tileBackend, this.attributesBackend);
-    var mapStore = new windshaft.storage.MapStore({
+    var mapValidatorBackend = new MapValidator(this.tileBackend, this.attributesBackend);
+    var mapStore = new MapStore({
         pool: new RedisPool(config.redis)
     });
-    this.mapBackend = new windshaft.backend.Map(this.rendererCache, mapStore, mapValidatorBackend);
-    this.previewBackend = new windshaft.backend.Preview(this.rendererCache);
+    this.mapBackend = new MapBackend(this.rendererCache, mapStore, mapValidatorBackend);
+    this.previewBackend = new PreviewBackend(this.rendererCache);
 }
 
 module.exports = TestClient;
