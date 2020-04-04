@@ -2,7 +2,7 @@
 2020-mm-dd
 
 Breaking changes:
-- Stops providing several classes and delegating how to build this library to the clients (e.g: Windshaft-CartoDB). Now it provides a factory method that creates the required backend instances and exposes them along the MapConfig model and the Datasource helper. Everything else is removed, even the version info of dependencies such as `grainstore`, `node-mapnik`, and `mapnik`.
+- Stops providing several classes and delegating how to build this library to the clients (e.g: Windshaft-CartoDB). Now it provides a factory method that creates the required backend instances and exposes them along with the MapConfig model and the Datasource helper. Everything else is removed, even the version info of dependencies such as `grainstore`, `node-mapnik`, and `mapnik`.
 - New signature for `onTileErrorStrategy`:
   - From `onTileErrorStrategy(err, tile, headers, stats, format, callback)` to `async onTileErrorStrategy(err, format)`
   - From `callbacks` to `promises` to match with the new internal signature for renderers
@@ -10,7 +10,7 @@ Breaking changes:
   - Now `renderer.getStats()` returns a `Map<key, value>` with information about renderer's performance
 
 Announcements:
-- Bootstrap system fonts to register them into mapnik and make them accesible to CartoCSS Renderer in Grainstore
+- Bootstrap system fonts to register them into mapnik and make them accessible to CartoCSS Renderer in Grainstore
 - Rename `MapValidatorBackend` by `MapValidator`
 - Now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
 - Upgrades `@carto/cartonik` to version `0.8.0` (don't released yet)
