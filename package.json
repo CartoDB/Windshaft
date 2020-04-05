@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "5.6.4",
+    "version": "6.0.0",
     "main": "./lib/index.js",
     "description": "A Node.js map tile library for PostGIS with CartoCSS styling",
     "keywords": [
