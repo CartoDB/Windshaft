@@ -9,32 +9,45 @@ Renderers are a high level abstraction over lower level rendering functions.
 
 Renderers are expected to expose the following interfaces:
 
-## getTile(z, x, y, callback)
+## getTile(format, z, x, y)
 
 Get a tile given ZXY params
 
 ```javascript
-getTile(z, x, y, callback)
+async getTile(format, z, x, y)
 ```
- - @param `{Number} z` zoom level
- - @param `{Number} x`
- - @param `{Number} y`
- - @param `{Function} callback` function(err, tileObj, meta, stats)
-   * `{Error} err` will be an instance of Error on any problem, or null
-   * `{Object} tileObj` will be an opaque object
-   * `{Object} meta` will contain info about `tileObj`, like mime-type of the tile 'image/png'
-   * `{Object} stats` an object with query, render, encode times
+- @param `{String} format` the format/encoding to render
+- @param `{Number} z` zoom level
+- @param `{Number} x`
+- @param `{Number} y`
+- @returns `{Promise.<(Object|Error)>}` where:
+  - `{Object}`:
+    - `{Buffer} tile` will be an opaque object
+    - `{Object} headers` will contain info about `tileObj`, like mime-type of the tile 'image/png'
+    - `{Object} stats` an object with query, render, encode times
+  - `{Error}`: will be an instance of Error on any problem
 
-## getMetadata(callback)
+## getMetadata()
 
 Get metadata information about the tile set
 
 ```javascript
-getMetadata(callback)
+async getMetadata()
 ```
- - @param `{Function} callback` function(err, meta)
-   * `{Error} err` for any problem, or null
-   * `{Object} meta` Format of the 'meta' object is renderer-specific, see renderer documentation for that.
+- @returns `{Promise.<(Object|Error)>}` where:
+  - `{Object} meta` Format of the 'meta' object is renderer-specific, see renderer documentation for that
+  - `{Error} err` for any problem, or null
+
+## getStats()
+
+Get information about the renderer's performance
+
+```javascript
+getStats()
+```
+- @returns `{Map.<key{string}|value{integer}>}` where:
+  - `key`: the stat to report, for instance: `pool.waiting`, `cache.png`, etc..
+  - `value`: the current value of the stat
 
 # Factory
 
@@ -73,14 +86,13 @@ getName()
 ```
  - @return `{String}` the name of the factory
 
-## getAdaptor(renderer, format, onTileErrorStrategy)
+## getAdaptor(renderer, onTileErrorStrategy)
 
 Returns an renderer adaptor
 
 ```javascript
-getAdaptor(renderer, format, onTileErrorStrategy)
+getAdaptor(renderer, onTileErrorStrategy)
 ```
  - @param `{Renderer} renderer` A raw renderer
- - @param `{String} format` The format extension
  - @param `{Function} onTileErrorStrategy` An optional function that will handle the error case
  - @return `{Adaptor}` An adapted renderer

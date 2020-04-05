@@ -1,7 +1,26 @@
-# Version 5.6.5
-2020-01-dd
+# Version 6.0.0
+2020-mm-dd
+
+Breaking changes:
+- Stops providing several classes and delegating how to build this library to the clients (e.g: Windshaft-CartoDB). Now it provides a factory method that creates the required backend instances and exposes them along with the MapConfig model and the Datasource helper. Everything else is removed, even the version info of dependencies such as `grainstore`, `node-mapnik`, and `mapnik`.
+- New signature for `onTileErrorStrategy`:
+  - From `onTileErrorStrategy(err, tile, headers, stats, format, callback)` to `async onTileErrorStrategy(err, format)`
+  - From `callbacks` to `promises` to match with the new internal signature for renderers
+- Improved renderer reporting:
+  - Now `renderer.getStats()` returns a `Map<key, value>` with information about renderer's performance
 
 Announcements:
+- Bootstrap system fonts to register them into mapnik and make them accessible to CartoCSS Renderer in Grainstore
+- Rename `MapValidatorBackend` by `MapValidator`
+- Now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
+- Upgrades `@carto/cartonik` to version [`0.8.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.8.0)
+- New signature for renderers:
+  - `.getTile(z, x, y, callback)` => `.getTile(format, z, x, y) -> Promise`
+  - `.getMetadata(callback)` => `.getMetadata() -> Promise`
+  - `.close(callback)` => `.close() -> Promise`
+- Removes `format` argument in adaptor's constructors as is no longer needed.
+- In renderers, applied some ES7/8 features: classes, async/await, spread syntax, etc..
+- Fix test that fails quietly
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style
 - Remove deprecated coverage tool istanbul, using nyc instead
 - Stop using two different tools for package management, testing, and any other developer workflow

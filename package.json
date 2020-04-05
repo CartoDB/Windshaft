@@ -1,6 +1,6 @@
 {
     "name": "windshaft",
-    "version": "5.6.4",
+    "version": "6.0.0",
     "main": "./lib/index.js",
     "description": "A Node.js map tile library for PostGIS with CartoCSS styling",
     "keywords": [
@@ -30,7 +30,7 @@
         "Daniel Garcia Aubert <dgaubert@carto.com>"
     ],
     "dependencies": {
-        "@carto/cartonik": "^0.7.0",
+        "@carto/cartonik": "^0.8.0",
         "@carto/mapnik": "3.6.2-carto.16",
         "canvas": "^2.4.1",
         "carto": "github:cartodb/carto#0.15.1-cdb5",

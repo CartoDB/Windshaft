@@ -9,8 +9,8 @@ var http = require('http');
 const path = require('path');
 
 describe('metrics', function () {
-    function onTileErrorStrategyPass (err, tile, headers, stats, format, callback) {
-        callback(err, tile, headers, stats);
+    async function onTileErrorStrategyPass (err) {
+        throw err;
     }
 
     var ON_TILE_ERROR = [null, onTileErrorStrategyPass];

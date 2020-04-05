@@ -6,7 +6,10 @@ var assert = require('../support/assert');
 var crypto = require('crypto');
 var http = require('http');
 var fs = require('fs');
-var windshaft = require('../../lib');
+const RendererFactory = require('../../lib/renderers/renderer-factory');
+const RendererCache = require('../../lib/cache/renderer-cache');
+const Preview = require('../../lib/backends/preview');
+const MapConfig = require('../../lib/models/mapconfig');
 var DummyMapConfigProvider = require('../../lib/models/providers/dummy-mapconfig-provider');
 const path = require('path');
 const config = require('../support/config');
@@ -14,7 +17,7 @@ const config = require('../support/config');
 var mapnik = require('@carto/mapnik');
 
 describe('static maps', function () {
-    var rendererFactory = new windshaft.renderer.Factory({
+    var rendererFactory = new RendererFactory({
         mapnik: {
             grainstore: {
                 cachedir: config.millstone.cache_basedir,
@@ -40,15 +43,15 @@ describe('static maps', function () {
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
             fallbackImage: {
                 type: 'fs',
-                src: path.join(__dirname, '../test/fixtures/http/basemap.png')
+                src: path.join(__dirname, '/../fixtures/http/basemap.png')
             }
         }
     });
 
     // initialize render cache
-    var rendererCache = new windshaft.cache.RendererCache(rendererFactory);
+    var rendererCache = new RendererCache(rendererFactory);
 
-    var previewBackend = new windshaft.backend.Preview(rendererCache);
+    var previewBackend = new Preview(rendererCache);
 
     var validUrlTemplate = 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png';
     var invalidUrlTemplate = 'http://127.0.0.1:8033/INVALID/{z}/{x}/{y}.png';
@@ -93,7 +96,7 @@ describe('static maps', function () {
                 }
             ]
         };
-        var mapConfig = windshaft.model.MapConfig.create(layergroup);
+        var mapConfig = MapConfig.create(layergroup);
         var defaultParams = {
             dbname: 'windshaft_test',
             token: crypto.createHash('md5').update(JSON.stringify(layergroup)).digest('hex'),

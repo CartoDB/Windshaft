@@ -36,21 +36,21 @@ describe('renderer_plain_image_renderer', function () {
         tiles.forEach(function (zxy) {
             it('should render image background with image ' + pattern + ' for ' + zxy.join('/'), function (done) {
                 var imageRenderer = new ImageRenderer(buffers[pattern]);
-                function validate (err, tile) {
-                    assert.ifError(err);
-                    assert.ok(tile);
-                    var image = Image.fromBytes(tile);
-                    var fixtureFilename = path.join(__dirname, '/../../fixtures/plain/plain_' + pattern + '_reference_' + zxy.join('-') + '.png');
-                    fs.readFile(fixtureFilename, { encoding: 'binary' }, function (err, fixtureBuffer) {
-                        if (err) {
-                            done(err);
-                        }
-                        var diff = image.compare(Image.fromBytes(Buffer.from(fixtureBuffer, 'binary')));
-                        assert.ok(diff < 16, 'unexpected number of different pixels: ' + diff);
-                        done();
-                    });
-                }
-                imageRenderer.getTile.apply(imageRenderer, zxy.concat(validate));
+                imageRenderer.getTile('png', ...zxy)
+                    .then(({ buffer: tile }) => {
+                        assert.ok(tile);
+                        var image = Image.fromBytes(tile);
+                        var fixtureFilename = path.join(__dirname, '/../../fixtures/plain/plain_' + pattern + '_reference_' + zxy.join('-') + '.png');
+                        fs.readFile(fixtureFilename, { encoding: 'binary' }, function (err, fixtureBuffer) {
+                            if (err) {
+                                done(err);
+                            }
+                            var diff = image.compare(Image.fromBytes(Buffer.from(fixtureBuffer, 'binary')));
+                            assert.ok(diff < 16, 'unexpected number of different pixels: ' + diff);
+                            done();
+                        });
+                    })
+                    .catch(err => done(err));
             });
         });
     });
