@@ -1,5 +1,5 @@
 # Version 6.0.0
-2020-mm-dd
+2020-04-05
 
 Breaking changes:
 - Stops providing several classes and delegating how to build this library to the clients (e.g: Windshaft-CartoDB). Now it provides a factory method that creates the required backend instances and exposes them along with the MapConfig model and the Datasource helper. Everything else is removed, even the version info of dependencies such as `grainstore`, `node-mapnik`, and `mapnik`.
@@ -10,6 +10,7 @@ Breaking changes:
   - Now `renderer.getStats()` returns a `Map<key, value>` with information about renderer's performance
 
 Announcements:
+- Bumps [acorn](https://github.com/acornjs/acorn) from 7.1.0 to 7.1.1
 - Bootstrap system fonts to register them into mapnik and make them accessible to CartoCSS Renderer in Grainstore
 - Rename `MapValidatorBackend` by `MapValidator`
 - Now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
