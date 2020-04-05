@@ -13,7 +13,7 @@ Announcements:
 - Bootstrap system fonts to register them into mapnik and make them accessible to CartoCSS Renderer in Grainstore
 - Rename `MapValidatorBackend` by `MapValidator`
 - Now `rendererCache` implements a new method `.getStats() -> Map<key, value>` where accumulates stats from different renderers alive in the cache
-- Upgrades `@carto/cartonik` to version `0.8.0` (don't released yet)
+- Upgrades `@carto/cartonik` to version [`0.8.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.8.0)
 - New signature for renderers:
   - `.getTile(z, x, y, callback)` => `.getTile(format, z, x, y) -> Promise`
   - `.getMetadata(callback)` => `.getMetadata() -> Promise`
