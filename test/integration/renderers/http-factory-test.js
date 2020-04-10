@@ -63,9 +63,12 @@ describe('renderer_http_factory_getRenderer', function () {
     });
 
     it('getRenderer returns a fallback image renderer for invalid urlTemplate', function (done) {
-        var factoryWithFallbackImage = new HttpRendererFactory(
-            whitelistSample, 2000, undefined, 'http://example.com/fallback.png'
-        );
+        var factoryWithFallbackImage = new HttpRendererFactory({
+            whitelist: whitelistSample,
+            timeout: 2000,
+            proxy: undefined,
+            fallbackImage: 'http://example.com/fallback.png'
+        });
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -87,9 +90,12 @@ describe('renderer_http_factory_getRenderer', function () {
 
     it('returns a renderer for invalid urlTemplate if whitelist is _open-minded_', function (done) {
         var whitelistAnyUrl = ['.*'];
-        var factoryWithFallbackImage = new HttpRendererFactory(
-            whitelistAnyUrl, 2000, undefined, 'http://example.com/fallback.png'
-        );
+        var factoryWithFallbackImage = new HttpRendererFactory({
+            whitelist: whitelistAnyUrl,
+            timeout: 2000,
+            proxy: undefined,
+            fallbackImage: 'http://example.com/fallback.png'
+        });
         var mapConfig = MapConfig.create({
             layers: [
                 {
@@ -115,7 +121,10 @@ describe('renderer_http_factory_getRenderer', function () {
 
         it('returns a renderer with valid subdomains for a subdomain template', function (done) {
             var whitelistAnyUrl = ['.*'];
-            var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
+            var factoryWithFallbackImage = new HttpRendererFactory({
+                whitelist: whitelistAnyUrl,
+                timeout: 2000
+            });
             var mapConfig = MapConfig.create({
                 layers: [
                     {
@@ -138,7 +147,10 @@ describe('renderer_http_factory_getRenderer', function () {
 
         it('returns a renderer with valid subdomains for a NON subdomain template', function (done) {
             var whitelistAnyUrl = ['.*'];
-            var factoryWithFallbackImage = new HttpRendererFactory(whitelistAnyUrl, 2000);
+            var factoryWithFallbackImage = new HttpRendererFactory({
+                whitelist: whitelistAnyUrl,
+                timeout: 2000
+            });
             var mapConfig = MapConfig.create({
                 layers: [
                     {
