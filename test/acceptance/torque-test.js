@@ -27,7 +27,7 @@ describe('torque', function () {
         var testClient = new TestClient(createTorqueMapConfig('Map { marker-fill:blue; }'));
         testClient.createLayergroup(function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Missing required property '-torque-frame-count' in torque layer CartoCSS");
+            assert.equal(err.message, "TorqueRenderer: Missing required property '-torque-frame-count' in torque layer CartoCSS");
             done();
         });
     });
@@ -36,7 +36,7 @@ describe('torque', function () {
         var testClient = new TestClient(createTorqueMapConfig('Map { -torque-frame-count: 2; }'));
         testClient.createLayergroup(function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Missing required property '-torque-resolution' in torque layer CartoCSS");
+            assert.equal(err.message, "TorqueRenderer: Missing required property '-torque-resolution' in torque layer CartoCSS");
             done();
         });
     });
@@ -49,7 +49,7 @@ describe('torque', function () {
             assert.ok(err);
             assert.equal(
                 err.message,
-                "Missing required property '-torque-aggregation-function' in torque layer CartoCSS"
+                "TorqueRenderer: Missing required property '-torque-aggregation-function' in torque layer CartoCSS"
             );
             done();
         });
@@ -75,7 +75,7 @@ describe('torque', function () {
         var testClient = new TestClient(layergroup);
         testClient.createLayergroup(function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Unexpected type for property '-torque-aggregation-function', expected string");
+            assert.equal(err.message, "TorqueRenderer: Unexpected type for property '-torque-aggregation-function', expected string");
             done();
         });
     });
@@ -250,7 +250,7 @@ describe('torque', function () {
         var testClient = new TestClient(layergroup);
         testClient.createLayergroup(function (err) {
             assert.ok(err);
-            assert.equal(err.message, "Unexpected type for property '-torque-aggregation-function', expected string");
+            assert.equal(err.message, "TorqueRenderer: Unexpected type for property '-torque-aggregation-function', expected string");
             done();
         });
     });
