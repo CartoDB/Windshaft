@@ -9,7 +9,7 @@ var MapConfig = require('../../../lib/models/mapconfig');
 describe('renderer-mapnik-factory metatile', function () {
     it('should use default metatile value', function () {
         var factory = new MapnikRendererFactory({});
-        assert.equal(factory.getMetatile('png'), 4);
+        assert.equal(factory._getMetatile('png'), 4);
     });
 
     it('should use provided metatile value', function () {
@@ -18,7 +18,7 @@ describe('renderer-mapnik-factory metatile', function () {
                 metatile: 1
             }
         });
-        assert.equal(factory.getMetatile('png'), 1);
+        assert.equal(factory._getMetatile('png'), 1);
     });
 
     it('should use provided formatMetatile value', function () {
@@ -30,7 +30,7 @@ describe('renderer-mapnik-factory metatile', function () {
                 }
             }
         });
-        assert.equal(factory.getMetatile('png'), 4);
+        assert.equal(factory._getMetatile('png'), 4);
     });
 });
 
@@ -60,7 +60,7 @@ describe('renderer-mapnik-factory buffer-size', function () {
 
     it('should use default buffer-size value', function () {
         var factory = new MapnikRendererFactory({});
-        assert.equal(factory.getBufferSize(mapConfig, 'png'), 64);
+        assert.equal(factory._getBufferSize(mapConfig, 'png'), 64);
     });
 
     it('should use provided buffer-size value', function () {
@@ -69,7 +69,7 @@ describe('renderer-mapnik-factory buffer-size', function () {
                 bufferSize: 128
             }
         });
-        assert.equal(factory.getBufferSize(mapConfig, 'png'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'png'), 128);
     });
 
     it('should use provided formatBufferSize value', function () {
@@ -81,7 +81,7 @@ describe('renderer-mapnik-factory buffer-size', function () {
                 }
             }
         });
-        assert.equal(factory.getBufferSize(mapConfig, 'png'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'png'), 128);
     });
 
     it('should use provided buffer-size value', function () {
@@ -93,7 +93,7 @@ describe('renderer-mapnik-factory buffer-size', function () {
                 }
             }
         });
-        assert.equal(factory.getBufferSize(mapConfig, 'mvt'), 64);
+        assert.equal(factory._getBufferSize(mapConfig, 'mvt'), 64);
     });
 
     it('should use value provided by mapConfig for png and mvt', function () {
@@ -121,9 +121,9 @@ describe('renderer-mapnik-factory buffer-size', function () {
                 }
             }
         });
-        assert.equal(factory.getBufferSize(mapConfig, 'png'), 128);
-        assert.equal(factory.getBufferSize(mapConfig, 'mvt'), 0);
-        assert.equal(factory.getBufferSize(mapConfig, 'grid.json'), 64);
+        assert.equal(factory._getBufferSize(mapConfig, 'png'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'mvt'), 0);
+        assert.equal(factory._getBufferSize(mapConfig, 'grid.json'), 64);
     });
 
     it('should use value provided by mapConfig for png and mvt', function () {
@@ -151,8 +151,8 @@ describe('renderer-mapnik-factory buffer-size', function () {
                 }
             }
         });
-        assert.equal(factory.getBufferSize(mapConfig, 'png'), 128);
-        assert.equal(factory.getBufferSize(mapConfig, 'mvt'), 128);
-        assert.equal(factory.getBufferSize(mapConfig, 'grid.json'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'png'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'mvt'), 128);
+        assert.equal(factory._getBufferSize(mapConfig, 'grid.json'), 128);
     });
 });

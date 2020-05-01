@@ -39,6 +39,6 @@ Returns a number representing the last modification time of the MapConfig so it'
 must be recreated or not.
 
 ```javascript
-getKey()
+getCacheBuster()
 ```
  - @return `{Number}` the last modified time for the MapConfig, aka buster
