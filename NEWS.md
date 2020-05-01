@@ -1,6 +1,9 @@
 # Version 6.0.1
 2020-mm-dd
 
+Announcements:
+- Apply ES2018 syntax uniformly (#724)
+- Better error messages for TorqueRenderer.
 
 # Version 6.0.0
 2020-04-05
