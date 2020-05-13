@@ -1,9 +1,14 @@
-# Version 6.0.1
+# Version 7.0.0
 2020-mm-dd
+
+Breaking changes:
+- Drop support for Node.js 10
 
 Announcements:
 - Apply ES2018 syntax uniformly (#724)
 - Better error messages for TorqueRenderer.
+- Support Node.js 12
+- Upgrades `@carto/cartonik` to version [`0.9.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.9.0)
 
 # Version 6.0.0
 2020-04-05
