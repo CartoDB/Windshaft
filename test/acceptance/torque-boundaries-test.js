@@ -229,6 +229,8 @@ describe('torque boundary points', function () {
             testClient.getTile(z, x, y, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
                 assert.ifError(err);
                 var i = 0;
+                // Depending on the PG version the default order of the query may vary. In order to have consistent assertions
+                // we need to sort the result of the torque tile
                 torqueTile.sort((a, b) => a.x__uint8 - b.x__uint8 === 0 ? a.y__uint8 - b.y__uint8 : b.x__uint8 - a.x__uint8);
                 tileRequest.expects.forEach(function (expected) {
                     assert.equal(
