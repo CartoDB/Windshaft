@@ -1,5 +1,5 @@
 # Version 7.0.0
-2020-mm-dd
+2020-05-14
 
 Breaking changes:
 - Drop support for Node.js 10
