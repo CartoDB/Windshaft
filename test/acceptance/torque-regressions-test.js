@@ -80,21 +80,18 @@ describe('torque regression', function () {
         var testClient = new TestClient(resolutionTwoMapConfig);
         testClient.getTile(13, 4255, 2765, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
             assert.ifError(err);
-            /* Sort torqueTile with x___uint8 ascending */
-            torqueTile.sort(function (a, b) {
-                return (a.x__uint8 > b.x__uint8);
-            });
+            torqueTile.sort((a, b) => a.x__uint8 - b.x__uint8 === 0 ? a.y__uint8 - b.y__uint8 : b.x__uint8 - a.x__uint8);
             assert.deepEqual(torqueTile, [
-                {
-                    x__uint8: 47,
-                    y__uint8: 127,
-                    vals__uint8: [2],
-                    dates__uint16: [0]
-                },
                 {
                     x__uint8: 48,
                     y__uint8: 127,
                     vals__uint8: [1],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 47,
+                    y__uint8: 127,
+                    vals__uint8: [2],
                     dates__uint16: [0]
                 }
             ]);
