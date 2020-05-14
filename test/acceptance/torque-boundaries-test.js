@@ -76,15 +76,6 @@ describe('torque boundary points', function () {
             y: 0,
             expects: [
                 {
-                    x__uint8: 128,
-                    y__uint8: 255,
-                    vals__uint8: [{
-                        v: 2,
-                        d: 'i=10 and i=12'
-                    }],
-                    dates__uint16: [0]
-                },
-                {
                     x__uint8: 255,
                     y__uint8: 128,
                     vals__uint8: [{
@@ -99,6 +90,15 @@ describe('torque boundary points', function () {
                     vals__uint8: [{
                         v: 8,
                         d: 'i=[1..8]'
+                    }],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 128,
+                    y__uint8: 255,
+                    vals__uint8: [{
+                        v: 2,
+                        d: 'i=10 and i=12'
                     }],
                     dates__uint16: [0]
                 }
@@ -117,12 +117,6 @@ describe('torque boundary points', function () {
             expects: [
                 {
                     x__uint8: 255,
-                    y__uint8: 255,
-                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
-                    dates__uint16: [0]
-                },
-                {
-                    x__uint8: 255,
                     y__uint8: 0,
                     vals__uint8: [{ v: 2, d: 'i=6 (-r1,r1) and i=7(-r1/2,r1)' }],
                     dates__uint16: [0]
@@ -131,6 +125,12 @@ describe('torque boundary points', function () {
                     x__uint8: 255,
                     y__uint8: 1,
                     vals__uint8: [{ v: 2, d: 'i=1 and i=3' }],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 255,
+                    y__uint8: 255,
+                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
                     dates__uint16: [0]
                 }
             ]
@@ -147,12 +147,6 @@ describe('torque boundary points', function () {
             y: 0,
             expects: [
                 {
-                    x__uint8: 0,
-                    y__uint8: 255,
-                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
-                    dates__uint16: [0]
-                },
-                {
                     x__uint8: 255,
                     y__uint8: 0,
                     vals__uint8: [{ v: 2, d: 'i=9 and i=11' }],
@@ -162,6 +156,12 @@ describe('torque boundary points', function () {
                     x__uint8: 0,
                     y__uint8: 0,
                     vals__uint8: [{ v: 2, d: 'i=1 and i=5' }],
+                    dates__uint16: [0]
+                },
+                {
+                    x__uint8: 0,
+                    y__uint8: 255,
+                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
                     dates__uint16: [0]
                 }
             ]
@@ -229,7 +229,7 @@ describe('torque boundary points', function () {
             testClient.getTile(z, x, y, { layer: 0, format: 'torque.json' }, function (err, torqueTile) {
                 assert.ifError(err);
                 var i = 0;
-                torqueTile.sort((a, b) => a.x__uint8 === b.x__uint8 ? a.y__uint8 > b.y__uint8 : a.x__uint8 < b.x__uint8);
+                torqueTile.sort((a, b) => a.x__uint8 - b.x__uint8 === 0 ? a.y__uint8 - b.y__uint8 : b.x__uint8 - a.x__uint8);
                 tileRequest.expects.forEach(function (expected) {
                     assert.equal(
                         torqueTile[i].x__uint8,
