@@ -8,7 +8,7 @@ Announcements:
 - Apply ES2018 syntax uniformly (#724)
 - Better error messages for TorqueRenderer.
 - Support Node.js 12
-- Upgrades `@carto/cartonik` to version [`0.9.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.9.0)
+- Upgrades `@carto/cartonik` to version [`0.9.1`](https://github.com/CartoDB/cartonik/releases/tag/v0.9.1)
 - Upgrades `redis-mpool` to version [`0.8.0`](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.8.0)
 
 Bug Fixes:
