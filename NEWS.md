@@ -9,6 +9,10 @@ Announcements:
 - Better error messages for TorqueRenderer.
 - Support Node.js 12
 - Upgrades `@carto/cartonik` to version [`0.9.0`](https://github.com/CartoDB/cartonik/releases/tag/v0.9.0)
+- Upgrades `redis-mpool` to version [`0.8.0`](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.8.0)
+
+Bug Fixes:
+- Use `Array.prototype.sort()`'s callback properly while testing. It should return a number not a boolean.
 
 # Version 6.0.0
 2020-04-05
