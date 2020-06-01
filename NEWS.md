@@ -1,5 +1,5 @@
 # Version 7.0.1
-2020-mm-dd
+2020-06-01
 
 Bug Fixes:
 - Update dependencies to avoid security vulnerabilities
