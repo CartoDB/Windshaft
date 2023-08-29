@@ -38,6 +38,7 @@
         "cartodb-query-tables": "^0.6.1",
         "debug": "3.1.0",
         "grainstore": "^3.0.0",
+        "png-to-jpeg": "^1.0.1",
         "redis-mpool": "^0.8.0",
         "request": "2.87.0",
         "semver": "5.5.0",
