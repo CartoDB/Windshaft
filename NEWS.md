@@ -1,3 +1,9 @@
+# Version 7.0.2
+2023-08-30
+
+Bug Fixes:
+- Avoid generating JPG images with Mapnik as they're generated wrongly, and generate them in PNG to transform them to JPG with `png-to-jpeg` instead.
+
 # Version 7.0.1
 2020-06-01
 
